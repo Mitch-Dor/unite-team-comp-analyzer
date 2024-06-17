@@ -15,5 +15,8 @@
   "dependencies": {
     "express": "^4.19.2",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.7"
   }
 }

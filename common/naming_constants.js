@@ -68,7 +68,7 @@ export const METAGROSS_NAME = 'Metagross';
 export const GYARADOS_NAME = 'Gyarados';
 export const MIRAIDON_NAME = 'Miraidon';
 export const FALINKS_NAME = 'Falinks';
-
+ 
 
 // Roles
 export const ATTACKER = 'Attacker';
@@ -78,14 +78,39 @@ export const SPEEDSTER = 'Speedster';
 export const SUPPORTER = 'Supporter';
 
 //// Attributes
+//// Split into good and bad attributes. Try to mimic the good attributes of known comps and minimize the bad attributes or cancel out the bad attributes.
 // General Attributes
 export const GOOD_LANE = 'Good Laner';
-export const BAD_LANE = 'Bad Laner';
 export const GOOD_JUNGLER = 'Good Jungler';
-export const BAD_JUNGLER = 'Bad Jungler';
 export const STRONG_EARLY = 'Strong Early Game';
 export const STRONG_MIDDLE = 'Strong Mid Game';
 export const STRONG_LATE = 'Strong Late Game';
-export const WEAK_EARLY = 'Weak Early Game';
-export const WEAK_MIDDLE = 'Weak Mid Game';
-export const WEAK_LATE = 'Weak Late Game';
+export const MEELE = 'Melee';
+export const LOW_RANGE = 'Low Range';
+export const MID_RANGE = 'Mid Range';
+export const LONG_RANGE = 'Long Range';
+export const SUSCEPTIBLE_TO_INVADES = 'Susceptible To Invades'; // Things like Kubfu that struggle to do their first clear quickly
+export const SPLITS_JUNGLE = 'Splits Jungle'; // Things like eldegoss that like to take red buff and help speed up the jungler's first clear
+export const FULL_SPLIT_JUNGLE = 'Full Split Jungler'; // Things like two eevees that can each take half of the jungle or really anything that spikes at level 4.
+
+export const HIGH_MOBILITY = 'Very Mobile';
+export const ADC = 'ADC';
+export const GOOD_SCORING = 'Good Scoring';
+export const GROUP_HEALING = 'Group Healing';
+export const GOOD_SUSTAIN = 'Good Sustain';
+export const SINGLE_TARGET_HEALING = 'Single Target Healing';
+export const HEAVY_SHIELDS = 'Heavy Shields';
+export const TRUE_DAMAGE = 'True Damage';
+export const GIVES_UNSTOPPABLE = 'Gives Unstoppable';
+export const HAS_UNSTOPPABLE = 'Has Unstoppable';
+export const GROUP_CC = 'Group CC';
+export const SINGLE_CC = 'Single Target CC';
+export const SNOWBALL = 'Snowballs';
+export const SOLO_CARRY = 'Solo Carry';
+export const BURST_DAMAGE = 'Burst Damage';
+export const TEAMFIGHTER = 'Good Teamfight';
+export const GOOD_1V1 = 'Good Duelist';
+export const FINDS_PICKS = 'Forces Picks';
+export const GOOD_BACKCAP = 'Good Backcapper';
+export const FAST_RIP = 'Fast Rip';
+
