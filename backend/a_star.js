@@ -21,12 +21,8 @@ function getTeamTraits(givenTeam) {
     return teamTraits;
 }
 
-function getKnownComps(){
+function getSynergies(){
     // Basically do a select all on the known comps table
-}
-
-function compareClosenessOfComps(){
-    // Go through each comp in known comps and do compareTwoComps and return the one with greatest 
 }
 
 function compareTwoComps(){
