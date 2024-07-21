@@ -1,0 +1,294 @@
+                   Char 1        Char 2        Char 3        Char 4        Char 5 	         Ban 1         Ban 2          Team        Region
+     Team 1:      Sylveon     Metagross       Mr-Mime      Blaziken      Eldegoss 	      Gyarados       Falinks         Exile            NA
+
+     Team 2:      Crustle       Leafeon        Espeon         Hoopa      Garchomp 	     Trevenant     Tyranitar     Ignorance            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Sylveon       Mr-Mime       Crustle       Falinks      Blaziken 	     Trevenant        Comfey     Ignorance            NA
+
+     Team 2:    Metagross      Eldegoss     Cramorant       Umbreon        Scizor 	      Gyarados     Tyranitar         Exile            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Tyranitar      Blaziken       Mr-Mime     Cramorant      Eldegoss 	      Gyarados       Falinks         Exile            NA
+
+     Team 2:      Crustle       Leafeon       Machamp         Hoopa       Delphox 	     Trevenant       Sylveon     Ignorance            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Leafeon       Mr-Mime     Cramorant       Blissey       Falinks 	       Umbreon       Sylveon Luminosity Gaming            NA
+
+     Team 2:      Snorlax         Hoopa      Inteleon   Meowscarada    Talonflame 	     Tyranitar     Trevenant Brave Birders            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Leafeon       Snorlax         Hoopa   Meowscarada      Venusaur 	     Trevenant       Falinks Brave Birders            NA
+
+     Team 2:    Cramorant       Sylveon       Zoroark       Mr-Mime        Comfey 	     Tyranitar       Umbreon Luminosity Gaming            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Blissey       Falinks       Snorlax     Cramorant      Blaziken 	       Sylveon     Tyranitar Orange Juicers            NA
+
+     Team 2:      Leafeon     Trevenant           Mew         Hoopa       Lucario 	       Umbreon        Dodrio           Gee            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Umbreon         Hoopa      Gyarados   Meowscarada      Greninja 	        Dodrio           Mew           Gee            NA
+
+     Team 2:    Trevenant       Blissey       Snorlax       Falinks     Cramorant 	       Sylveon     Tyranitar Orange Juicers            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Crustle         Hoopa           Mew      Gyarados      Blaziken 	     Trevenant       Sylveon     Ignorance            NA
+
+     Team 2:      Leafeon       Falinks       Blissey       Umbreon     Cramorant 	     Tyranitar      Venusaur           Gee            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Umbreon         Hoopa           Mew   Meowscarada      Blaziken 	     Tyranitar       Blissey           Gee            NA
+
+     Team 2:      Sylveon       Leafeon        Lapras       Sableye     Metagross 	     Trevenant       Falinks     Ignorance            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Leafeon         Hoopa       Mr-Mime        Dodrio     Gardevoir 	       Umbreon       Sylveon Luminosity Gaming            NA
+
+     Team 2:    Trevenant       Crustle    Chandelure     Blastoise      Greedent 	     Tyranitar     Cramorant        Ni Hao            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Tyranitar       Mr-Mime     Cramorant        Dodrio         Hoopa 	       Umbreon       Sylveon Luminosity Gaming            NA
+
+     Team 2:    Trevenant       Blissey       Glaceon     Dragonite      Greninja 	       Leafeon       Falinks        Ni Hao            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Tyranitar         Hoopa     Cramorant       Mr-Mime        Dodrio 	       Umbreon       Blissey Luminosity Gaming            NA
+
+     Team 2:    Trevenant       Sylveon      Eldegoss      Garchomp      Greninja 	       Leafeon       Falinks        Ni Hao            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Trevenant       Sylveon       Falinks         Hoopa       Crustle 	     Cramorant       Leafeon Orange Juicers            NA
+
+     Team 2:      Blissey      Blaziken    Chandelure       Slowbro     Metagross 	       Umbreon     Tyranitar       Nemesis            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Trevenant       Blissey       Crustle           Mew      Blaziken 	     Cramorant       Leafeon Orange Juicers            NA
+
+     Team 2:      Sylveon       Falinks     Blastoise         Hoopa       Glaceon 	       Umbreon     Tyranitar       Nemesis            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Trevenant           Mew         Hoopa        Lapras     Gardevoir 	     Cramorant       Leafeon Orange Juicers            NA
+
+     Team 2:      Crustle       Sylveon       Blissey       Glaceon      Gyarados 	       Umbreon       Falinks       Nemesis            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Leafeon       Falinks       Mr-Mime     Cramorant      Clefable 	       Umbreon     Tyranitar Luminosity Gaming            NA
+
+     Team 2:       Dodrio       Blissey       Lucario     Trevenant       Sylveon 	         Hoopa        Comfey           Gee            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Leafeon       Mr-Mime       Sylveon      Clefable      Blaziken 	       Umbreon     Tyranitar Luminosity Gaming            NA
+
+     Team 2:      Falinks       Blissey     Cramorant     Trevenant   Meowscarada 	        Comfey        Dodrio           Gee            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Tyranitar         Hoopa     Cramorant       Mr-Mime        Dodrio 	       Umbreon       Blissey Luminosity Gaming            NA
+
+     Team 2:      Leafeon     Trevenant      Buzzwole      Eldegoss       Sylveon 	        Comfey       Falinks           Gee            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Umbreon         Hoopa       Sylveon       Glaceon      Gyarados 	     Trevenant     Tyranitar       Nemesis            NA
+
+     Team 2:      Blissey     Cramorant      Blaziken       Mr-Mime       Mimikyu 	       Leafeon       Falinks Luminosity Gaming            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Leafeon       Mr-Mime     Cramorant      Clefable      Venusaur 	       Umbreon       Blissey Luminosity Gaming            NA
+
+     Team 2:        Hoopa       Falinks       Sylveon       Slowbro       Glaceon 	     Trevenant     Tyranitar       Nemesis            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Trevenant           Mew         Hoopa      Buzzwole        Dodrio 	     Cramorant       Leafeon Orange Juicers            NA
+
+     Team 2:      Crustle       Sylveon      Blaziken       Zoroark       Sableye 	       Umbreon       Falinks       Nemesis            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Trevenant         Hoopa      Blaziken           Mew       Slowbro 	     Cramorant       Leafeon Orange Juicers            NA
+
+     Team 2:      Crustle       Sylveon        Comfey       Zoroark     Tyranitar 	       Umbreon       Falinks       Nemesis            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Leafeon       Crustle      Inteleon      Gyarados         Hoopa 	       Umbreon     Metagross       Nemesis            NA
+
+     Team 2:      Sylveon     Trevenant      Blaziken       Blissey        Dodrio 	     Cramorant       Falinks Orange Juicers            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:    Trevenant      Gyarados         Hoopa    Chandelure      Blaziken 	     Cramorant       Leafeon Orange Juicers            NA
+
+     Team 2:      Crustle       Sylveon      Eldegoss       Mimikyu      Tsareena 	       Umbreon       Falinks       Nemesis            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Sylveon       Blissey       Snorlax      Garchomp           Mew 	     Cramorant       Crustle Orange Juicers            NA
+
+     Team 2:    Trevenant       Leafeon      Inteleon      Eldegoss      Gyarados 	       Umbreon       Falinks       Nemesis            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Falinks       Crustle      Venusaur       Glaceon         Hoopa 	       Umbreon       Sylveon       Nemesis            NA
+
+     Team 2:      Blissey     Trevenant           Mew      Garchomp     Tyranitar 	     Cramorant       Leafeon Orange Juicers            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Falinks       Crustle      Venusaur       Glaceon      Eldegoss 	       Umbreon       Blissey       Nemesis            NA
+
+     Team 2:        Hoopa     Trevenant       Sylveon     Tyranitar      Garchomp 	     Cramorant       Leafeon Orange Juicers            NA
+
+		^^^		Match Stats:     Winning Team: 1    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+     Team 1:      Falinks       Crustle      Venusaur       Glaceon      Eldegoss 	       Umbreon       Blissey       Nemesis            NA
+
+     Team 2:        Hoopa     Trevenant       Sylveon     Tyranitar        Lapras 	     Cramorant       Leafeon Orange Juicers            NA
+
+		^^^		Match Stats:     Winning Team: 2    Event: NAIC 2024    Date: 06/07/2024		^^^
+
+--------------------------------------------------
+
+
+
+              Name:     # Pick      # Ban      # Win     # Loss   Pick Rate    Ban Rate    Presence    Win Rate           Pick Str
+         Cinderace:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+          Garchomp:          5          0          2          3      17.9%        0.0%       17.9%       40.0%              64546
+            Gengar:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+         Cramorant:         14          8          9          5      50.0%       28.6%       78.6%       64.3%     45325663354323
+  Alolan-Ninetales:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+        Wigglytuff:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+           Machamp:          1          0          1          0       3.6%        0.0%        3.6%      100.0%                  4
+             Absol:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+           Slowbro:          3          0          2          1      10.7%        0.0%       10.7%       66.7%                445
+           Mr-Mime:         13          0          8          5      46.4%        0.0%       46.4%       61.5%      3333433533543
+          Venusaur:          5          1          1          4      17.9%        3.6%       21.4%       20.0%              65333
+           Lucario:          2          0          0          2       7.1%        0.0%        7.1%        0.0%                 64
+        Talonflame:          1          0          0          1       3.6%        0.0%        3.6%        0.0%                  6
+          Eldegoss:          9          0          3          6      32.1%        0.0%       32.1%       33.3%          525444455
+          Greninja:          3          0          1          2      10.7%        0.0%       10.7%       33.3%                566
+           Crustle:         15          1          7          8      53.6%        3.6%       57.1%       46.7%    232135322232333
+           Snorlax:          5          0          3          2      17.9%        0.0%       17.9%       60.0%              22343
+         Charizard:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+           Pikachu:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+           Zeraora:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+         Gardevoir:          2          0          2          0       7.1%        0.0%        7.1%      100.0%                 55
+           Blissey:         14          6          8          6      50.0%       21.4%       71.4%       57.1%     51242234222432
+         Blastoise:          2          0          1          1       7.1%        0.0%        7.1%       50.0%                 54
+         Mamoswine:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+           Sylveon:         20          7         11          9      71.4%       25.0%       96.4%       55.0% 11222322636342222144
+          Greedent:          1          0          0          1       3.6%        0.0%        3.6%        0.0%                  5
+         Decidueye:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+          Tsareena:          1          0          1          0       3.6%        0.0%        3.6%      100.0%                  6
+         Dragonite:          1          0          1          0       3.6%        0.0%        3.6%      100.0%                  4
+         Trevenant:         19          5          8         11      67.9%       17.9%       85.7%       42.1% 2212211144211212222
+         Aegislash:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+             Hoopa:         24          0         13         11      85.7%        0.0%       85.7%       54.2% 442443333535433323353522
+         Duraludon:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+         Azumarill:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+            Espeon:          1          0          0          1       3.6%        0.0%        3.6%        0.0%                  4
+           Delphox:          1          0          1          0       3.6%        0.0%        3.6%      100.0%                  6
+           Glaceon:          8          0          5          3      28.6%        0.0%       28.6%       62.5%           46456555
+          Buzzwole:          2          0          0          2       7.1%        0.0%        7.1%        0.0%                 45
+         Tyranitar:          8         11          4          4      28.6%       39.3%       67.9%       50.0%           11116644
+               Mew:          9          1          5          4      32.1%        3.6%       35.7%       55.6%          433533554
+            Dodrio:          7          3          3          4      25.0%       10.7%       35.7%       42.9%            5552556
+            Scizor:          1          0          0          1       3.6%        0.0%        3.6%        0.0%                  6
+           Scyther:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+          Clefable:          3          0          1          2      10.7%        0.0%       10.7%       33.3%                555
+           Zoroark:          3          0          2          1      10.7%        0.0%       10.7%       66.7%                444
+           Sableye:          2          0          1          1       7.1%        0.0%        7.1%       50.0%                 46
+        Urshifu-SS:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+        Urshifu-RS:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+         Dragapult:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+            Comfey:          2          2          1          1       7.1%        7.1%       14.3%       50.0%                 64
+            Zacian:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+            Goodra:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+            Lapras:          3          0          2          1      10.7%        0.0%       10.7%       66.7%                456
+        Chandelure:          3          0          0          3      10.7%        0.0%       10.7%        0.0%                345
+           Umbreon:          5         13          3          2      17.9%       46.4%       64.3%       60.0%              41411
+           Leafeon:         14          9          6          8      50.0%       32.1%       82.1%       42.9%     22122221112112
+          Inteleon:          3          0          1          2      10.7%        0.0%       10.7%       33.3%                434
+          Mewtwo-Y:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+          Mewtwo-X:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+          Blaziken:         14          0          6          8      50.0%        0.0%       50.0%       42.9%     55355525544345
+           Mimikyu:          2          0          1          1       7.1%        0.0%        7.1%       50.0%                 64
+       Meowscarada:          5          0          2          3      17.9%        0.0%       17.9%       40.0%              44556
+         Metagross:          4          1          1          3      14.3%        3.6%       17.9%       25.0%               3266
+          Gyarados:          7          2          2          5      25.0%        7.1%       32.1%       28.6%            3565536
+          Miraidon:          0          0          0          0       0.0%        0.0%        0.0%        0.0%                   
+           Falinks:         13         14         11          2      46.4%       50.0%       96.4%       84.6%      5534232322111

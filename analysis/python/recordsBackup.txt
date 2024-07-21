@@ -1,0 +1,84 @@
+Sylveon,Metagross,Mr-Mime,Blaziken,Eldegoss|Gyarados,Falinks|Exile|NA|fp
+Crustle,Leafeon,Espeon,Hoopa,Garchomp|Trevenant,Tyranitar|Ignorance|NA|lp
+1|NAIC 2024|06/07/2024
+Sylveon,Mr-Mime,Crustle,Falinks,Blaziken|Trevenant,Comfey|Ignorance|NA|fp
+Metagross,Eldegoss,Cramorant,Umbreon,Scizor|Gyarados,Tyranitar|Exile|NA|lp
+1|NAIC 2024|06/07/2024
+Tyranitar,Blaziken,Mr-Mime,Cramorant,Eldegoss|Gyarados,Falinks|Exile|NA|fp
+Crustle,Leafeon,Machamp,Hoopa,Delphox|Trevenant,Sylveon|Ignorance|NA|lp
+2|NAIC 2024|06/07/2024
+Leafeon,Mr-Mime,Cramorant,Blissey,Falinks|Umbreon,Sylveon|Luminosity Gaming|NA|fp
+Snorlax,Hoopa,Inteleon,Meowscarada,Talonflame|Tyranitar,Trevenant|Brave Birders|NA|lp
+1|NAIC 2024|06/07/2024
+Leafeon,Snorlax,Hoopa,Meowscarada,Venusaur|Trevenant,Falinks|Brave Birders|NA|lp
+Cramorant,Sylveon,Zoroark,Mr-Mime,Comfey|Tyranitar,Umbreon|Luminosity Gaming|NA|lp
+2|NAIC 2024|06/07/2024
+Blissey,Falinks,Snorlax,Cramorant,Blaziken|Sylveon,Tyranitar|Orange Juicers|NA|fp
+Leafeon,Trevenant,Mew,Hoopa,Lucario|Umbreon,Dodrio|Gee|NA|lp
+1|NAIC 2024|06/07/2024
+Umbreon,Hoopa,Gyarados,Meowscarada,Greninja|Dodrio,Mew|Gee|NA|fp
+Trevenant,Blissey,Snorlax,Falinks,Cramorant|Sylveon,Tyranitar|Orange Juicers|NA|lp
+2|NAIC 2024|06/07/2024
+Crustle,Hoopa,Mew,Gyarados,Blaziken|Trevenant,Sylveon|Ignorance|NA|fp
+Leafeon,Falinks,Blissey,Umbreon,Cramorant|Tyranitar,Venusaur|Gee|NA|lp
+2|NAIC 2024|06/07/2024
+Umbreon,Hoopa,Mew,Meowscarada,Blaziken|Tyranitar,Blissey|Gee|NA|fp
+Sylveon,Leafeon,Lapras,Sableye,Metagross|Trevenant,Falinks|Ignorance|NA|lp
+1|NAIC 2024|06/07/2024
+Leafeon,Hoopa,Mr-Mime,Dodrio,Gardevoir|Umbreon,Sylveon|Luminosity Gaming|NA|fp
+Trevenant,Crustle,Chandelure,Blastoise,Greedent|Tyranitar,Cramorant|Ni Hao|NA|fp
+1|NAIC 2024|06/07/2024
+Tyranitar,Mr-Mime,Cramorant,Dodrio,Hoopa|Umbreon,Sylveon|Luminosity Gaming|NA|fp
+Trevenant,Blissey,Glaceon,Dragonite,Greninja|Leafeon,Falinks|Ni Hao|NA|lp
+2|NAIC 2024|06/07/2024
+Tyranitar,Hoopa,Cramorant,Mr-Mime,Dodrio|Umbreon,Blissey|Luminosity Gaming|NA|fp
+Trevenant,Sylveon,Eldegoss,Garchomp,Greninja|Leafeon,Falinks|Ni Hao|NA|lp
+1|NAIC 2024|06/07/2024
+Trevenant,Sylveon,Falinks,Hoopa,Crustle|Cramorant,Leafeon|Orange Juicers|NA|fp
+Blissey,Blaziken,Chandelure,Slowbro,Metagross|Umbreon,Tyranitar|Nemesis|NA|lp
+1|NAIC 2024|06/07/2024
+Trevenant,Blissey,Crustle,Mew,Blaziken|Cramorant,Leafeon|Orange Juicers|NA|fp
+Sylveon,Falinks,Blastoise,Hoopa,Glaceon|Umbreon,Tyranitar|Nemesis|NA|lp
+2|NAIC 2024|06/07/2024
+Trevenant,Mew,Hoopa,Lapras,Gardevoir|Cramorant,Leafeon|Orange Juicers|NA|fp
+Crustle,Sylveon,Blissey,Glaceon,Gyarados|Umbreon,Falinks|Nemesis|NA|lp
+1|NAIC 2024|06/07/2024
+Leafeon,Falinks,Mr-Mime,Cramorant,Clefable|Umbreon,Tyranitar|Luminosity Gaming|NA|fp
+Dodrio,Blissey,Lucario,Trevenant,Sylveon|Hoopa,Comfey|Gee|NA|lp
+1|NAIC 2024|06/07/2024
+Leafeon,Mr-Mime,Sylveon,Clefable,Blaziken|Umbreon,Tyranitar|Luminosity Gaming|NA|fp
+Falinks,Blissey,Cramorant,Trevenant,Meowscarada|Comfey,Dodrio|Gee|NA|lp
+2|NAIC 2024|06/07/2024
+Tyranitar,Hoopa,Cramorant,Mr-Mime,Dodrio|Umbreon,Blissey|Luminosity Gaming|NA|fp
+Leafeon,Trevenant,Buzzwole,Eldegoss,Sylveon|Comfey,Falinks|Gee|NA|lp
+1|NAIC 2024|06/07/2024
+Umbreon,Hoopa,Sylveon,Glaceon,Gyarados|Trevenant,Tyranitar|Nemesis|NA|fp
+Blissey,Cramorant,Blaziken,Mr-Mime,Mimikyu|Leafeon,Falinks|Luminosity Gaming|NA|lp
+1|NAIC 2024|06/07/2024
+Leafeon,Mr-Mime,Cramorant,Clefable,Venusaur|Umbreon,Blissey|Luminosity Gaming|NA|fp
+Hoopa,Falinks,Sylveon,Slowbro,Glaceon|Trevenant,Tyranitar|Nemesis|NA|lp
+2|NAIC 2024|06/07/2024
+Trevenant,Mew,Hoopa,Buzzwole,Dodrio|Cramorant,Leafeon|Orange Juicers|NA|fp
+Crustle,Sylveon,Blaziken,Zoroark,Sableye|Umbreon,Falinks|Nemesis|NA|lp
+2|NAIC 2024|06/07/2024
+Trevenant,Hoopa,Blaziken,Mew,Slowbro|Cramorant,Leafeon|Orange Juicers|NA|fp
+Crustle,Sylveon,Comfey,Zoroark,Tyranitar|Umbreon,Falinks|Nemesis|NA|lp
+1|NAIC 2024|06/07/2024
+Leafeon,Crustle,Inteleon,Gyarados,Hoopa|Umbreon,Metagross|Nemesis|NA|fp
+Sylveon,Trevenant,Blaziken,Blissey,Dodrio|Cramorant,Falinks|Orange Juicers|NA|lp
+1|NAIC 2024|06/07/2024
+Trevenant,Gyarados,Hoopa,Chandelure,Blaziken|Cramorant,Leafeon|Orange Juicers|NA|fp
+Crustle,Sylveon,Eldegoss,Mimikyu,Tsareena|Umbreon,Falinks|Nemesis|NA|lp
+2|NAIC 2024|06/07/2024
+Sylveon,Blissey,Snorlax,Garchomp,Mew|Cramorant,Crustle|Orange Juicers|NA|fp
+Trevenant,Leafeon,Inteleon,Eldegoss,Gyarados|Umbreon,Falinks|Nemesis|NA|lp
+1|NAIC 2024|06/07/2024
+Falinks,Crustle,Venusaur,Glaceon,Hoopa|Umbreon,Sylveon|Nemesis|NA|fp
+Blissey,Trevenant,Mew,Garchomp,Tyranitar|Cramorant,Leafeon|Orange Juicers|NA|lp
+2|NAIC 2024|06/07/2024
+Falinks,Crustle,Venusaur,Glaceon,Eldegoss|Umbreon,Blissey|Nemesis|NA|fp
+Hoopa,Trevenant,Sylveon,Tyranitar,Garchomp|Cramorant,Leafeon|Orange Juicers|NA|lp
+1|NAIC 2024|06/07/2024
+Falinks,Crustle,Venusaur,Glaceon,Eldegoss|Umbreon,Blissey|Nemesis|NA|fp
+Hoopa,Trevenant,Sylveon,Tyranitar,Lapras|Cramorant,Leafeon|Orange Juicers|NA|lp
+2|NAIC 2024|06/07/2024
