@@ -1,0 +1,68 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#scoreContainer {
+    display: flex;
+    height: 90vh;
+    width: 99vw;
+    flex-wrap: wrap;
+    flex-direction: row;
+    top: 0px;
+}
+
+#characterSlots {
+    width: 99vw;
+    height: 35vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.characterPortrait {
+    height: 28vh;
+    width: 12vw;
+    border: 2px solid black;
+}
+
+#characterTraits {
+    width: 99vw;
+    height: 25vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.traitsContainer {
+    width: 12vw;
+    display: flex;
+    overflow-y: scroll;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.trait {
+    margin: 5%;
+    width: 80%;
+    border-bottom-left-radius: 5%;
+    border-bottom-right-radius: 5%;
+    border-top-left-radius: 5%;
+    border-top-right-radius: 5%;
+}
+
+#bottomContainer {
+    width: 99vw;
+    height: 30vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#legend {
+
+}
+
+#compScore {
+
+}

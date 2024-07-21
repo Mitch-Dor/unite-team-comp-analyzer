@@ -1,0 +1,31 @@
+#miniPopupContainer {
+    /* Will have an event listener attached that closes the popup when clicked */
+    height: 90vh;
+    width: 99vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#miniPopup {
+    /* CHANGE WIDTH AND HEIGHT TO COVER ALL BUTTONS */
+    height: 20vh;
+    width: 30vw;
+    border: 2px solid black;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.reportInfo {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    width: 100%;
+}
+
+#submitBTN {
+    width: 100%;
+}

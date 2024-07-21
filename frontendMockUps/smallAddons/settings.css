@@ -1,0 +1,58 @@
+#popupContainer {
+    /* Will have an event listener attached that closes the popup when clicked */
+    height: 90vh;
+    width: 99vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#popup {
+    /* CHANGE WIDTH AND HEIGHT TO COVER ALL BUTTONS */
+    height: 70vh;
+    width: 80vw;
+    border: 2px solid black;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-flow: row wrap;
+}
+
+#popupCharacters {
+    width: 98%;
+    height: 50%;
+    margin: 1%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: left;
+    overflow-y: scroll;
+}
+
+.characterSelect {
+    width: 9%;
+    height: 30%;
+    margin: 0px;
+    border: 1px solid black;
+}
+
+#popupSettingsSelect {
+    width: 98%;
+    height: 20%;
+    margin: 1%;
+}
+
+.popupSetting {
+    
+}
+
+#popupApplyContainer {
+    width: 98%;
+    height: auto;
+    margin: 1%;
+    display: flex;
+    align-items: end;
+}
+
+#popupApplyBTN {
+    width: 100%;
+    height: 50%;
+}

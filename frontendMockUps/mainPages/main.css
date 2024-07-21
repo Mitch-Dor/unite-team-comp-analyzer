@@ -1,0 +1,73 @@
+#mainContainer {
+    width: 99vw;
+    height: 90vh;
+    background-image: none; /* FIX */
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+#cornerContainer {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    border: 1px solid black;
+}
+
+#bigBTNContainer {
+    
+}
+
+.bigBTNs {
+    width: 20vw;
+    height: 8vh;
+}
+
+#titleContainer {
+    width: 100%;
+    height: 55%;
+}
+
+#modesContainer {
+    display: flex;
+    justify-content: space-around;
+}
+
+#settingContainer {
+    display: flex;
+    justify-content: space-around;
+}
+
+#modesContainer .bigBTNs {
+    width: 30vw;
+}
+
+.cornerBTN {
+    width: 3vw;
+    height: 3vw;
+    margin: 1vw;
+}
+
+.modeBTN {
+    margin-bottom: 5vh;
+}
+
+.settingBTN {   
+    width: 20vw;
+    height: 8vh;
+}
+
+.dummyAlignmentBTN {
+    visibility: hidden;
+}
+
+#nametag {
+    height: 5%;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: 2vw;
+}
