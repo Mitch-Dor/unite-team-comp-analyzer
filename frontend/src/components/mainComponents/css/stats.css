@@ -1,0 +1,50 @@
+#mainContainer {
+    width: 99vw;
+    height: 90vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+select {
+    width: 20vw;
+    margin: 2%;
+}
+
+input {
+    width: 20vw;
+    margin: 1%;
+}
+
+h3 {
+    width: 100%;
+    text-align: center;
+    text-decoration: underline;
+}
+
+#filterContainer {
+    width: 44vw;
+    height: 25vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-flow: row wrap;
+}
+
+#searchContainer {
+    width: 44vw;
+    height: 25vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-flow: row wrap;
+}
+
+#graphContainer {
+    height: 65vh;
+    width: 99vw;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-flow: row wrap;
+}
