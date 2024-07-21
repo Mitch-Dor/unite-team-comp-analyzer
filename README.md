@@ -1,3 +1,16 @@
+# How to Run
+
+```
+npm install react-scripts --save
+[FROM frontend folder] npm start
+```
+
+## Installs Done
+```
+npm install react-scripts --saves
+npm i react-router-dom # Used in RouteControl to navigate to different pages
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
