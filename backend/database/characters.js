@@ -9,11 +9,23 @@ class Characters {
 
     // SQL FUNCTIONS GO HERE
     async getCharacterTraits(name){
-        const traits = this.db.prepare(`select attribute from playable_characters natural join pokemon_attributes where pokemon_name like ?`).all(name);
-        console.log(traits);
-        return traits;
+      
     }
+
+    async getAllCharacterIdentifyInformation(){
+      return new Promise((resolve, reject) => {
+        this.db.all('select pokemon_id, pokemon_name from playable_characters', (err, rows) => {
+          if (err) {
+            console.error(err.message);
+            reject(err);
+          } else {
+            console.log(rows);
+            resolve(rows);
+          }
+        });
+      });
+    }    
 
 }
 
-exports.default = Characters;
+module.exports = Characters;

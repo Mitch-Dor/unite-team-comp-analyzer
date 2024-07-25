@@ -61,18 +61,20 @@ body {
 
 .banDisplay {
     filter: grayscale(1);
-    width: 2vh;
-    height: 2vh;
 }
 
 #purpleBans .banDisplay {
     margin-left: 1vw;
     margin-top: auto;
+    width: 2vh;
+    height: 2vh;
 }
 
 #orangeBans .banDisplay {
     margin-right: 1vw;
     margin-top: auto;
+    width: 2vh;
+    height: 2vh;
 }
 
 .characterPortrait {

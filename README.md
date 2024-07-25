@@ -9,6 +9,8 @@ npm install react-scripts --save
 ```
 npm install react-scripts --saves
 npm i react-router-dom # Used in RouteControl to navigate to different pages
+http-proxy-middleware on backend
+cors on backend
 ```
 
 # Getting Started with Create React App

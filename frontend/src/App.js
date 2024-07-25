@@ -21,6 +21,17 @@ function App() {
   //     </header>
   //   </div>
   // );
+  
+  // fetch('/api/ping')
+  // .then(response => response.json())
+  // .then(data => console.log(data))
+  // .catch(error => console.error('Error:', error));
+
+  // fetch('/api/allCharactersIdsAndNames')
+  // .then(response => response.json())
+  // .then(data => console.log(data))
+  // .catch(error => console.error('Error:', error));
+
   return <RouteControl />;
 }
 
