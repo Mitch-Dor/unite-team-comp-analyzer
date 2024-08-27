@@ -10,7 +10,7 @@ function Draft() {
                 <image id="ban1P" class="characterPortrait banDisplay"></image>
                 <image id="ban2P" class="characterPortrait banDisplay"></image>
             </div>
-            < CharacterList />
+            { /* Do this in another component */ }
             <div id="pick1" class="characterSelection purpleSelection">
                 <h3>Character</h3>
                 <image class="characterPortrait"></image>
@@ -36,114 +36,11 @@ function Draft() {
         <div id="middlePartsContainer">
             <div id="timerContainer">
                 <button id="timer"></button> 
-                {/* Timer will not actually do anything on-click */}
             </div>
             <div id="draftBoardContainer">
                 <input type="text" id="searchBar" placeholder="Search..."></input>
                 <div class="characterSelect">
-                    {
-                        
-                    }
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait ban"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait selected"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait selected"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait selected"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
-                    <div class="draftCharacter">
-                        <image class="characterPortrait"></image>
-                        <h4>Character</h4>
-                    </div>
+                    < CharacterList />
                 </div>
             </div>
             <div id="lockInContainer">

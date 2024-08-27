@@ -5,13 +5,12 @@ const routes = require('../../../../common/route_constants.js');
 
 const CharacterList = () => {
     // Get characters from the database and create the below characters object
-    const characterRawInfo = fetchCharacterIdAndName();
-    console.log(characterRawInfo);
-    const characters = [
-        { id: 1, name: 'Character 1', imageSrc: 'path_to_image1.jpg' },
-        { id: 2, name: 'Character 2', imageSrc: 'path_to_image2.jpg' },
-        // Add more characters as needed
-    ];
+    const characterInfo = fetchCharacterIdAndName();
+    console.log(characterInfo);
+    let characters = [];
+    characterInfo.forEach( (character, index) => {
+        characters.push({id: character.poekmon_id, name: character.pokemon_name, imageSrc: ''}) // FIXME
+    });
 
     return (
         <div>
