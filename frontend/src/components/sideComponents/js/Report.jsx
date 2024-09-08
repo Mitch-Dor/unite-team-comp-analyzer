@@ -7,7 +7,7 @@ function Report() {
             <div id="miniPopup">
                 {/* Have one popup component that has just this shell that is just the black box. Then have it build something specific based off what was clicked */}
                 <div id="reportInformationContainer">
-                    <div id="ReportTypeContainer" class="reportInfo">
+                    <div id="ReportTypeContainer" className="reportInfo">
                         <label for="typeOfIssue">Type of Issue: </label>
                         <select name="typeOfIssue" id="typeOfIssue">
                             <option value="visual">Visual</option>
@@ -16,11 +16,11 @@ function Report() {
                             <option value="other">Other</option>
                         </select>
                     </div>
-                    <div id="subjectContainer" class="reportInfo">
+                    <div id="subjectContainer" className="reportInfo">
                         <label for="subject">Subject: </label>
                         <input type="text" id="subject"></input>
                     </div>
-                    <div id="descriptionContainer" class="reportInfo">
+                    <div id="descriptionContainer" className="reportInfo">
                         <label for="description">Description: </label>
                         <input type="text" id="description"></input>
                     </div>

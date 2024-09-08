@@ -3,7 +3,7 @@ module.exports = function (app, database) {
     // Database we can get to the database SQL functions using database.characters.XXX()
     app.get('/allCharactersIdsAndNames', (req, res) => {
         console.log("In backend");
-        database.characters.getAllCharacterIdentifyInformation().then(data => {
+        database.characters.getAllCharacterDisplayInformation().then(data => {
             console.log(data);
             res.json(data);
         })

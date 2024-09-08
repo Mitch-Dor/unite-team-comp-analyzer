@@ -12,14 +12,14 @@ class Characters {
       
     }
 
-    async getAllCharacterIdentifyInformation(){
+    // ID, Name, Class, img link
+    async getAllCharacterDisplayInformation(){
       return new Promise((resolve, reject) => {
-        this.db.all('select pokemon_id, pokemon_name from playable_characters', (err, rows) => {
+        this.db.all('select pokemon_id, pokemon_name, pokemon_class from playable_characters', (err, rows) => {
           if (err) {
             console.error(err.message);
             reject(err);
           } else {
-            console.log(rows);
             resolve(rows);
           }
         });

@@ -3,6 +3,7 @@
 ```
 npm install react-scripts --save
 [FROM frontend folder] npm start
+[FROM backed folder] node app.js
 ```
 
 ## Installs Done

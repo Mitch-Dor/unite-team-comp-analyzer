@@ -5,37 +5,37 @@ function Score() {
   return (
     <div id="scoreContainer">
         <div id="characterSlots">
-            <button id="character1" class="characterPortrait"></button>
-            <button id="character2" class="characterPortrait"></button>
-            <button id="character3" class="characterPortrait"></button>
-            <button id="character4" class="characterPortrait"></button>
-            <button id="character5" class="characterPortrait"></button>
+            <button id="character1" className="characterPortrait"></button>
+            <button id="character2" className="characterPortrait"></button>
+            <button id="character3" className="characterPortrait"></button>
+            <button id="character4" className="characterPortrait"></button>
+            <button id="character5" className="characterPortrait"></button>
         </div>
         <div id="characterTraits">
-            <div id="character1Traits" class="traitsContainer">
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
+            <div id="character1Traits" className="traitsContainer">
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
             </div>
-            <div id="character2Traits" class="traitsContainer">
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
+            <div id="character2Traits" className="traitsContainer">
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
             </div>
-            <div id="character3Traits" class="traitsContainer">
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
+            <div id="character3Traits" className="traitsContainer">
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
             </div>
-            <div id="character4Traits" class="traitsContainer">
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
+            <div id="character4Traits" className="traitsContainer">
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
             </div>
-            <div id="character5Traits" class="traitsContainer">
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
-                <button class="trait">Trait</button>
+            <div id="character5Traits" className="traitsContainer">
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
+                <button className="trait">Trait</button>
             </div>
         </div>
         <div id="bottomContainer">
