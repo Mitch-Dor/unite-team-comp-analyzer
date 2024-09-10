@@ -1,4 +1,4 @@
-# Copy pasted from ChatGPT
+# Asked ChatGPT to write this for me to save time.
 
 import csv
 
@@ -10,38 +10,66 @@ def convert_to_csv(input_filename, output_filename):
     # Split the input data into lines
     lines = data.strip().split('\n')
     
-    # Define the CSV header based on the provided categories
+    # Define the CSV header with separate columns for each Pokemon and Ban
     header = [
-        "Team1Pokemon", "Team1Bans", "Team1Name", "Team1Region", "FirstPick?",
-        "Team2Pokemon", "Team2Bans", "Team2Name", "Team2Region", "FirstPick?",
+        "Team1Pokemon1", "Team1Pokemon2", "Team1Pokemon3", "Team1Pokemon4", "Team1Pokemon5",
+        "Team1Ban1", "Team1Ban2", "Team1Name", "Team1Region", "FirstPick?",
+        "Team2Pokemon1", "Team2Pokemon2", "Team2Pokemon3", "Team2Pokemon4", "Team2Pokemon5",
+        "Team2Ban1", "Team2Ban2", "Team2Name", "Team2Region", "FirstPick?",
         "WinningTeam", "Event", "MatchDate"
     ]
     
     # Prepare the CSV data
     csv_data = [header]
-    for line in lines:
-        # Split each line into fields
-        fields = line.split('|')
-        # Handle the case where there might be fewer fields in the input data
-        if len(fields) < 7:
-            fields.extend([''] * (7 - len(fields)))  # Fill missing fields for each line
+    
+    # Process lines in groups of three
+    for i in range(0, len(lines), 3):
+        # Initialize empty fields for the data
+        team1_pokemon = [''] * 5
+        team1_bans = [''] * 2
+        team1_name = ''
+        team1_region = ''
+        first_pick1 = ''
         
-        # Separate FirstPick? and Team2Bans
-        team1_bans = fields[1] if len(fields) > 1 else ''
-        team1_name = fields[2] if len(fields) > 2 else ''
-        team1_region = fields[3] if len(fields) > 3 else ''
-        first_pick = fields[4] if len(fields) > 4 else ''
+        team2_pokemon = [''] * 5
+        team2_bans = [''] * 2
+        team2_name = ''
+        team2_region = ''
+        first_pick2 = ''
         
-        team2_bans = fields[5] if len(fields) > 5 else ''
-        team2_name = fields[6] if len(fields) > 6 else ''
-        team2_region = fields[7] if len(fields) > 7 else ''
-        winning_team = fields[8] if len(fields) > 8 else ''
-        event = fields[9] if len(fields) > 9 else ''
-        match_date = fields[10] if len(fields) > 10 else ''
+        winning_team = ''
+        event = ''
+        match_date = ''
         
+        # Process the first line (Team 1's information)
+        if i < len(lines):
+            fields = lines[i].split('|')
+            team1_pokemon = fields[0].split(',') if len(fields) > 0 else [''] * 5
+            team1_bans = fields[1].split(',') if len(fields) > 1 else [''] * 2
+            team1_name = fields[2] if len(fields) > 2 else ''
+            team1_region = fields[3] if len(fields) > 3 else ''
+            first_pick1 = fields[4] if len(fields) > 4 else ''
+        
+        # Process the second line (Team 2's information)
+        if i + 1 < len(lines):
+            fields = lines[i + 1].split('|')
+            team2_pokemon = fields[0].split(',') if len(fields) > 0 else [''] * 5
+            team2_bans = fields[1].split(',') if len(fields) > 1 else [''] * 2
+            team2_name = fields[2] if len(fields) > 2 else ''
+            team2_region = fields[3] if len(fields) > 3 else ''
+            first_pick2 = fields[4] if len(fields) > 4 else ''
+        
+        # Process the third line (Winning team, event, and match date)
+        if i + 2 < len(lines):
+            fields = lines[i + 2].split('|')
+            winning_team = fields[0] if len(fields) > 0 else ''
+            event = fields[1] if len(fields) > 1 else ''
+            match_date = fields[2] if len(fields) > 2 else ''
+        
+        # Append the formatted row to csv_data
         csv_data.append([
-            fields[0], team1_bans, team1_name, team1_region, first_pick,
-            team2_bans, team2_name, team2_region, first_pick,
+            *team1_pokemon, *team1_bans, team1_name, team1_region, first_pick1,
+            *team2_pokemon, *team2_bans, team2_name, team2_region, first_pick2,
             winning_team, event, match_date
         ])
     
