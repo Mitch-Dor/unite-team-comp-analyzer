@@ -1,11 +1,24 @@
 #mainContainer {
-    width: 99vw;
-    height: 90vh;
+    width: 100vw;
+    height: 100vh;
     background-image: none; /* FIX */
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
 }
+
+.scrollingBackground {
+    animation: scrollBackground 20s linear infinite; /* Adjust the duration for speed */
+}
+
+@keyframes scrollBackground {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: -2000px 0; /* Adjust based on the image width */
+    }
+  }
 
 #cornerContainer {
     width: 100%;
@@ -30,6 +43,12 @@ button {
 #titleContainer {
     width: 100%;
     height: 55%;
+    justify-content: center;
+    align-items: center;
+}
+
+#titleImage {
+    size: contain;
 }
 
 #modesContainer {
