@@ -21,8 +21,8 @@ const DraftListing = ({ pokemonList, updatePokemonStatus }) => { // Adding {} ar
         <>
             {pokemonList && pokemonList.length > 0 ? (
                 pokemonList.map(pokemon => (
-                <div className="draftCharacter" key={pokemon.pokemon_id}>
-                    <img className="characterPortrait" src={""} alt={pokemon.pokemon_name} />
+                <div className={`draftCharacter ${pokemon.pokemon_class}`} key={pokemon.pokemon_id}>
+                    <img className="characterPortrait" src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
                     <h4>{pokemon.pokemon_name}</h4>
                 </div>
                 ))

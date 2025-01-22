@@ -9,23 +9,23 @@ function Main() {
     let rand = Math.floor(Math.random() * 5); // 5 Possible backgrounds
     switch(rand){
         case 0:
-            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Auroma_Park.png"))
+            setBackground("/assets/landingPageBackgrounds/Blurred/UNITE_Auroma_Park.png")
             break;
         case 1:
-            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Mer_Stadium.png"))
+            setBackground("/assets/landingPageBackgrounds/Blurred/UNITE_Mer_Stadium.png")
             break;
         case 2:
-            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Remoat_Stadium.png"))
+            setBackground("/assets/landingPageBackgrounds/Blurred/UNITE_Remoat_Stadium.png")
             break;
         case 3:
-            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Shivre_City.png"))
+            setBackground("/assets/landingPageBackgrounds/Blurred/UNITE_Shivre_City.png")
             break;
         case 4:
-            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png"))
+            setBackground("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png")
             break;
         default:
             console.error("Background Generation Error");
-            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png"))
+            setBackground("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png")
             break;
     }
   }
@@ -41,7 +41,7 @@ function Main() {
 
   function setTitle(){
     const titleContainer = document.getElementById("titleContainer");
-    const titleImage = require("./assets/Title.png");
+    const titleImage = "/assets/Title.png";
     if (titleContainer) {
       titleContainer.style.backgroundImage = `url(${titleImage})`;
       titleContainer.style.backgroundSize = "contain";
