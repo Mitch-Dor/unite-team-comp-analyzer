@@ -190,6 +190,14 @@ body {
     justify-content: center;
 }
 
+.available {
+    cursor: pointer
+}
+
+.unavailable {
+    filter: grayscale(1);
+}
+
 .draftCharacter .characterPortrait {
     width: 6vw;
     height: 6vw;
@@ -224,7 +232,8 @@ body {
     border-bottom-left-radius: 5vh;
 }
 
-.All-Rounder .characterPortrait {
+.All-Rounder .characterPortrait,
+.All-Rounder.characterPortrait {
     background-image: linear-gradient(
         45deg,
         purple 0%,
@@ -265,7 +274,8 @@ body {
     background-size: 6vw 6vw;
 }
 
-.Attacker .characterPortrait {
+.Attacker .characterPortrait,
+.Attacker.characterPortrait {
     background-image: linear-gradient(
         45deg,
         fireBrick 0%,
@@ -306,7 +316,8 @@ body {
     background-size: 6vw 6vw;
 }
 
-.Speedster .characterPortrait {
+.Speedster .characterPortrait,
+.Speedster.characterPortrait {
     background-image: linear-gradient(
         45deg,
         dodgerBlue 0%,
@@ -347,7 +358,8 @@ body {
     background-size: 6vw 6vw;
 }
 
-.Defender .characterPortrait {
+.Defender .characterPortrait,
+.Defender.characterPortrait {
     background-image: linear-gradient(
         45deg,
         SeaGreen 0%,
@@ -388,7 +400,8 @@ body {
     background-size: 6vw 6vw;
 }
 
-.Supporter .characterPortrait {
+.Supporter .characterPortrait,
+.Supporter.characterPortrait {
     background-image: linear-gradient(
         45deg,
         gold 0%,

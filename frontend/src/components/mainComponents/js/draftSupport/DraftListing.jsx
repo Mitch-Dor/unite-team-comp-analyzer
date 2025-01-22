@@ -1,31 +1,75 @@
 import React from 'react';
-import { fetchCharacterIdAndName } from '../backendCalls/http.js';
 const constants = require('../../../../common/naming_constants.js');
 const routes = require('../../../../common/route_constants.js');
 
-const DraftListing = ({ pokemonList, updatePokemonStatus }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
-    const setBan1 = (pokemonId) => {
-        updatePokemonStatus(pokemonId, "ban1");
+const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, updateDraftState, updatePokemonStatus }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
+    const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5'];
+    const setBan1 = (pokemon) => {
+        updatePokemonStatus(pokemon, "ban1");
     }
-    const setBan2 = (pokemonId) => {
-        updatePokemonStatus(pokemonId, "ban2");
+    const setBan2 = (pokemon) => {
+        updatePokemonStatus(pokemon, "ban2");
     }
-    const setTeam1 = (pokemonId) => {
-        updatePokemonStatus(pokemonId, "team1");
+    const setTeam1 = (pokemon) => {
+        updatePokemonStatus(pokemon, "team1");
     }
-    const setTeam2 = (pokemonId) => {
-        updatePokemonStatus(pokemonId, "team2");
+    const setTeam2 = (pokemon) => {
+        updatePokemonStatus(pokemon, "team2");
+    }
+    const doAction = (pokemon) => {
+        // Can just move to next index in draftProgression to keep track of draft state
+        const currentIndex = draftProgression.indexOf(draftState);
+        // Ensure it's not the last state
+        if (currentIndex >= 0 && currentIndex < draftProgression.length) {
+            // Get the next state
+            const nextState = draftProgression[currentIndex + 1];
+            // Update the draft state
+            updateDraftState(nextState);
+            // Perform the action based on the current state
+            switch (draftState) {
+                case 'team1Ban1':
+                case 'team1Ban2':
+                    setBan1(pokemon);
+                    break;
+                case 'team2Ban1':
+                case 'team2Ban2':
+                    setBan2(pokemon);
+                    break;
+                case 'team1Pick1':
+                case 'team1Pick2':
+                case 'team1Pick3':
+                case 'team1Pick4':
+                case 'team1Pick5':
+                    setTeam1(pokemon);
+                    break;
+                case 'team2Pick1':
+                case 'team2Pick2':
+                case 'team2Pick3':
+                case 'team2Pick4':
+                case 'team2Pick5':
+                    setTeam2(pokemon);
+                    break;
+                default:
+                    console.error('Unhandled draft state:', draftState);
+            }
+        } else {
+            console.warn('Draft is already at the final state or invalid state.');
+        }
     }
 
     return (
         <>
             {pokemonList && pokemonList.length > 0 ? (
-                pokemonList.map(pokemon => (
-                <div className={`draftCharacter ${pokemon.pokemon_class}`} key={pokemon.pokemon_id}>
-                    <img className="characterPortrait" src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
-                    <h4>{pokemon.pokemon_name}</h4>
-                </div>
-                ))
+                pokemonList.map(pokemon => {
+                    // Check if the pokemon is already picked/banned
+                    const isUnavailable = team1Bans.includes(pokemon) || team2Bans.includes(pokemon) || team1Picks.includes(pokemon) || team2Picks.includes(pokemon);
+                    return (
+                        <div className={`draftCharacter ${pokemon.pokemon_class} ${isUnavailable ? 'unavailable' : 'available'}`} key={pokemon.pokemon_id} onClick={() => {doAction(pokemon)}}>
+                            <img className="characterPortrait" src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
+                            <h4>{pokemon.pokemon_name}</h4>
+                        </div>
+                    );
+                })
             ) : (
                 <p>No Pokémon available</p>
             )}
