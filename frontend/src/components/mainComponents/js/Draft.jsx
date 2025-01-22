@@ -20,7 +20,8 @@ function Draft() {
             }
         }
 
-        fetchCharacterListing(); // Call the fetch function to populate pokemonListwhen d
+        fetchCharacterListing(); // Call the fetch function to populate pokemonList
+        setBackground();
     }, []); // Empty dependency array ensures this runs once when the component mounts
 
     function updatePokemonStatus(id, newStatus) {
@@ -30,6 +31,15 @@ function Draft() {
             )
         );
     };
+
+    function setBackground(){
+        const mainContainer = document.getElementById("draftContainer");
+        if (mainContainer) {
+            let backgroundPath = require("./assets/Draft/Background.png");
+            mainContainer.style.backgroundImage = `url(${backgroundPath})`;
+            mainContainer.style.backgroundSize = "cover";
+        }
+    }
 
     // Loading message while we're waiting on pokemonList
     if (loading) {

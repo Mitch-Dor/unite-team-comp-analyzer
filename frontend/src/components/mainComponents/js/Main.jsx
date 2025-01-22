@@ -9,23 +9,23 @@ function Main() {
     let rand = Math.floor(Math.random() * 5); // 5 Possible backgrounds
     switch(rand){
         case 0:
-            setBackground(require("./assets/landingPageBackgrounds/UNITE_Auroma_Park.png"))
+            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Auroma_Park.png"))
             break;
         case 1:
-            setBackground(require("./assets/landingPageBackgrounds/UNITE_Mer_Stadium.png"))
+            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Mer_Stadium.png"))
             break;
         case 2:
-            setBackground(require("./assets/landingPageBackgrounds/UNITE_Remoat_Stadium.png"))
+            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Remoat_Stadium.png"))
             break;
         case 3:
-            setBackground(require("./assets/landingPageBackgrounds/UNITE_Shivre_City.png"))
+            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Shivre_City.png"))
             break;
         case 4:
-            setBackground(require("./assets/landingPageBackgrounds/UNITE_Theia_Sky_Ruins.png"))
+            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png"))
             break;
         default:
             console.error("Background Generation Error");
-            setBackground(require("./assets/landingPageBackgrounds/UNITE_Theia_Sky_Ruins.png"))
+            setBackground(require("./assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png"))
             break;
     }
   }
@@ -68,10 +68,10 @@ function Main() {
                 <button id="AIvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/ai-vs-ai')}>AI VS AI</button>
             </div>
             <div id="settingContainer">
-                <button id="YOUvsAIset" className="settingBTN bigBTNs">Person VS AI Settings</button>
-                <button id="compScore" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
-                <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
-                <button id="AIvsAIset" className="settingBTN bigBTNs">AI VS AI Settings</button>
+                <button id="YOUvsAIset" className="settingBTN bigBTNs Left">Person VS AI Settings</button>
+                <button id="compScore" className="modeBTN bigBTNs Left" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
+                <button id="stats" className="modeBTN bigBTNs Right" onClick={() => navigate('/stats')}>Stats</button>
+                <button id="AIvsAIset" className="settingBTN bigBTNs Right">AI VS AI Settings</button>
             </div>  
         </div>
         <div id="nametag">Created by Mitchell Dorward</div>

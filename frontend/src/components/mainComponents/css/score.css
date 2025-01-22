@@ -5,8 +5,8 @@ body {
 
 #scoreContainer {
     display: flex;
-    height: 90vh;
-    width: 99vw;
+    height: 100vh;
+    width: 100vw;
     flex-wrap: wrap;
     flex-direction: row;
     top: 0px;

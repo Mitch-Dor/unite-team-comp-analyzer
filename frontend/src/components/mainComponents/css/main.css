@@ -1,7 +1,6 @@
 #mainContainer {
     width: 100vw;
     height: 100vh;
-    background-image: none; /* FIX */
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -16,7 +15,7 @@
       background-position: 0 0;
     }
     100% {
-      background-position: -2000px 0; /* Adjust based on the image width */
+      background-position: -100vw 0; 
     }
   }
 
@@ -28,7 +27,8 @@
 }
 
 button {
-    border: 1px solid black;
+    border: 2px solid black;
+    border-radius: 10px;
 }
 
 #bigBTNContainer {
@@ -38,6 +38,9 @@ button {
 .bigBTNs {
     width: 20vw;
     height: 8vh;
+    font-size: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
 }
 
 #titleContainer {
@@ -69,15 +72,25 @@ button {
     width: 3vw;
     height: 3vw;
     margin: 1vw;
+    background-color: rgb(95, 95, 95);
+    color: white;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 15px;
 }
 
 .modeBTN {
     margin-bottom: 5vh;
+    background-color: rgb(137, 73, 203);
+    /* background-color: rgb(229, 140, 49); */
+    color: white;
 }
 
 .settingBTN {   
     width: 20vw;
     height: 8vh;
+    /* background-color: rgb(137, 73, 203); */
+    background-color: rgb(229, 140, 49);
+    color: white;
 }
 
 .dummyAlignmentBTN {
@@ -89,4 +102,9 @@ button {
     margin-top: auto;
     margin-left: auto;
     margin-right: 2vw;
+    color: white;
+    -webkit-text-stroke: 1px black;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bolder;
+    font-size: 24px;
 }
