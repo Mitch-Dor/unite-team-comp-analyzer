@@ -18,7 +18,7 @@ const DraftListing = ({ pokemonList, updatePokemonStatus }) => { // Adding {} ar
     }
 
     return (
-        <div>
+        <>
             {pokemonList && pokemonList.length > 0 ? (
                 pokemonList.map(pokemon => (
                 <div className="draftCharacter" key={pokemon.pokemon_id}>
@@ -29,7 +29,7 @@ const DraftListing = ({ pokemonList, updatePokemonStatus }) => { // Adding {} ar
             ) : (
                 <p>No Pokémon available</p>
             )}
-        </div>
+        </>
     );
 };
 

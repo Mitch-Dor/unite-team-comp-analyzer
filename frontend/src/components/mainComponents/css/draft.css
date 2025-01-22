@@ -31,7 +31,7 @@ body {
 #timer {
     width: 30vw;
     height: 5vh;
-    border: 1px solid black;
+    border: 3px solid black;
     border-top: none;
     border-bottom-left-radius: 50%;
     border-bottom-right-radius: 50%;
@@ -61,6 +61,7 @@ body {
 
 .banDisplay {
     filter: grayscale(1);
+    background-color: rgb(201, 201, 201);
 }
 
 #purpleBans .banDisplay {
@@ -104,9 +105,18 @@ body {
     height: 10vh;
     width: 18vw;
     margin-top: 2vh;
-    border: solid 1px black;
+    border: solid 3px black;
     display: flex;
     align-items: center;
+    background-color: white;
+}
+
+.purpleSelection {
+    background-color: rgb(194, 161, 228);
+}
+
+.orangeSelection {
+    background-color: rgb(225, 165, 106);
 }
 
 #purpleDraftContainer {
@@ -138,7 +148,8 @@ body {
     margin-bottom: 5vh;
     margin-left: 5vw;
     margin-right: 5vw;
-    border: 2px solid black;
+    border: none;
+    background: transparent;
 }
 
 #searchBar {
@@ -148,6 +159,7 @@ body {
     margin-bottom: 1vh;
     height: 2vh;
     width: 47vw;
+    border: 2px solid black;
 }
 
 .characterSelect {
@@ -156,6 +168,13 @@ body {
     display: flex;
     flex-flow: row wrap;
     overflow-y: scroll;
+    color: rgb(255, 255, 255);
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.characterSelect::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
 }
 
 .draftCharacter {
@@ -174,6 +193,7 @@ body {
 .draftCharacter .characterPortrait {
     width: 6vw;
     height: 6vw;
+    border-color: rgb(255, 255, 255)
 }
 
 .draftCharacter h4 {

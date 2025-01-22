@@ -33,7 +33,7 @@ function Draft() {
     };
 
     function setBackground(){
-        const mainContainer = document.getElementById("draftContainer");
+        const mainContainer = document.getElementById("root");
         if (mainContainer) {
             let backgroundPath = require("./assets/Draft/Background.png");
             mainContainer.style.backgroundImage = `url(${backgroundPath})`;
