@@ -65,6 +65,7 @@ function Main() {
         <div id="bigBTNContainer">
             <div id="modesContainer">
                 <button id="YOUvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/person-vs-ai')}>Person VS AI</button>
+                <button id="PERSONvsPERSON" className="modeBTN bigBTNs" onClick={() => navigate('/person-vs-person')}>Person VS Person</button>
                 <button id="AIvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/ai-vs-ai')}>AI VS AI</button>
             </div>
             <div id="settingContainer">

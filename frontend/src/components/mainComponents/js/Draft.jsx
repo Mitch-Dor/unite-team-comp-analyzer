@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import DraftListing from './draftSupport/DraftListing';
 import TeamDisplay from './draftSupport/TeamDisplay.jsx';
+import Filtering from './draftSupport/Filtering.jsx';
 import { fetchCharacterDisplayInfo } from './backendCalls/http.js';
 import '../css/draft.css';
 
 function Draft() {
     const [pokemonList, updatePokemonList] = useState([]); // Says pokemonList is updatable with updatePokemonList and is initialized as a blank array (because we have to wait on an async function to give us the data)
+    const [filteredList, updateFilteredList] = useState([]);
     const [team1Bans, updateTeam1Bans] = useState([]);
     const [team2Bans, updateTeam2Bans] = useState([]);
     const [team1Picks, updateTeam1Picks] = useState([]);
@@ -19,6 +21,7 @@ function Draft() {
             try {
                 const listing = await fetchCharacterDisplayInfo();
                 updatePokemonList(listing);
+                updateFilteredList(listing);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching Pokemon Data:", error);
@@ -71,9 +74,9 @@ function Draft() {
                 <button id="timer"></button> 
             </div>
             <div id="draftBoardContainer">
-                <input type="text" id="searchBar" placeholder="Search..."></input>
+                < Filtering pokemonList={pokemonList} updateFilteredList={updateFilteredList} ></Filtering>
                 <div className="characterSelect">
-                    < DraftListing pokemonList={pokemonList} team1Bans={team1Bans}  team2Bans={team2Bans}  team1Picks={team1Picks}  team2Picks={team2Picks} draftState={draftState} updateDraftState={updateDraftState} updatePokemonStatus={updatePokemonStatus} />
+                    < DraftListing pokemonList={filteredList} team1Bans={team1Bans}  team2Bans={team2Bans}  team1Picks={team1Picks}  team2Picks={team2Picks} draftState={draftState} updateDraftState={updateDraftState} updatePokemonStatus={updatePokemonStatus} />
                 </div>
             </div>
             <div id="lockInContainer">

@@ -152,14 +152,60 @@ body {
     background: transparent;
 }
 
+.filtering {
+    width: 47vw;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+
 #searchBar {
     margin-left: 1vw;
     margin-right: 1vw;
     margin-top: 1vh;
     margin-bottom: 1vh;
     height: 2vh;
-    width: 47vw;
+    width: 28vw;
     border: 2px solid black;
+}
+
+.laneFilters {
+    margin-left: 1vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    height: 2vh;
+    width: 7vw;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.laneFilters img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.classFilters {
+    margin-right: 1vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    height: 2vh;
+    width: 7vw;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.classFilters img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.filterIcon.active {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.487), transparent);
 }
 
 .characterSelect {
@@ -167,6 +213,8 @@ body {
     width: 49vw;
     display: flex;
     flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
     overflow-y: scroll;
     color: rgb(255, 255, 255);
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
