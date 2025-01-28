@@ -1,23 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
+import HoverInsights from './HoverInsights';
 
 const TeamDisplay = ({ team, bans, picks }) => {
+    const [hoveredPokemon, setHoveredPokemon] = useState(null);
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+    const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 })
+
+    const handleMouseEnter = (event, pokemon, index) => {
+        setHoveredPokemon(pokemon); 
+        setHoveredIndex(index);
+        const rect = event.target.getBoundingClientRect();
+        setHoverPosition({ x: rect.right + 10, y: rect.top });
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredPokemon(null);
+        setHoveredIndex(null);
+    };
 
     return (
         <>
             <div id={`${team}Bans`}>
                 {/* Create as many character portraits as there are picks but add blanks so there are 5 total */}
                 {[...bans, ...Array(2 - bans.length).fill(null)].map((pokemon, index) => (
-                    <>
+                    <div key={index}>
                         {pokemon ? (
                             <>
-                                <img key={index} className="characterPortrait banDisplay" src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`}></img>
+                                <img className="characterPortrait banDisplay" src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} ></img>
                             </>
                         ) : (
                             <>
-                                <img key={index} className="characterPortrait banDisplay"></img>
+                                <img className="characterPortrait banDisplay"></img>
                             </>
                         )}
-                    </>
+                    </div>
                 ))}
             </div>
             {/* Create as many character portraits as there are picks but add blanks so there are 5 total */}
@@ -28,11 +44,11 @@ const TeamDisplay = ({ team, bans, picks }) => {
                         team === 'purple' ? (
                             <>
                                 <h3>{pokemon.pokemon_name}</h3>
-                                <img className={`characterPortrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
+                                <img className={`characterPortrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} onMouseEnter={(e) => handleMouseEnter(e, pokemon, index)} onMouseLeave={handleMouseLeave} />
                             </>
                         ) : (
                             <>
-                                <img className={`characterPortrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
+                                <img className={`characterPortrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} onMouseEnter={(e) => handleMouseEnter(e, pokemon, index)} onMouseLeave={handleMouseLeave} />
                                 <h3>{pokemon.pokemon_name}</h3>
                             </>
                         )
@@ -51,6 +67,11 @@ const TeamDisplay = ({ team, bans, picks }) => {
                     )}
                 </div>
             ))}
+            {hoveredPokemon && (
+                <div id="hoverDiv" style={{ top: hoverPosition.y, left: hoverPosition.x }} >
+                    <HoverInsights pokemon={hoveredPokemon} index={hoveredIndex} />
+                </div>
+            )}
         </>
     );
 };

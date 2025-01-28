@@ -47,9 +47,9 @@ const Filtering = ({ pokemonList, updateFilteredList }) => {
             <div className="laneFilters">
                 {possibleLanes.map((lane, index) => {
                     return (
-                        <>
-                            <img key={index} title={`${lane}`} src={`./assets/Draft/filterIcons/${lane}.png`} className={`filterIcon ${laneFilters.includes(lane) ? 'active' : ''}`} onClick={() => {doUpdateLaneFilters(lane)}}></img>
-                        </>
+                        <div key={"lane"+index} >
+                            <img title={`${lane}`} src={`./assets/Draft/filterIcons/${lane}.png`} className={`filterIcon ${laneFilters.includes(lane) ? 'active' : ''}`} onClick={() => {doUpdateLaneFilters(lane)}}></img>
+                        </div>
                     );
                 })}
             </div>
@@ -57,9 +57,9 @@ const Filtering = ({ pokemonList, updateFilteredList }) => {
             <div className="classFilters">
                 {possibleClasses.map((charClass, index) => {
                     return (
-                        <>
-                            <img key={index} title={`${charClass}`} src={`./assets/Draft/filterIcons/${charClass}.png`} className={`filterIcon ${classFilter === charClass ? 'active' : ''}`} onClick={() => {doUpdateClassFilter(charClass)}}></img>
-                        </>
+                        <div key={"class"+index} >
+                            <img title={`${charClass}`} src={`./assets/Draft/filterIcons/${charClass}.png`} className={`filterIcon ${classFilter === charClass ? 'active' : ''}`} onClick={() => {doUpdateClassFilter(charClass)}}></img>
+                        </div>
                     );
                 })}
             </div>

@@ -280,6 +280,18 @@ body {
     border-bottom-left-radius: 5vh;
 }
 
+#hoverDiv {
+    position: absolute;
+    z-index: 1000;
+    pointer-events: 'none'; /* Prevent blocking other elements */
+}
+
+.hoverInsights {
+    border: 1px solid black;
+    background-color: white;
+    padding: 10px;
+}
+
 .All-Rounder .characterPortrait,
 .All-Rounder.characterPortrait {
     background-image: linear-gradient(
