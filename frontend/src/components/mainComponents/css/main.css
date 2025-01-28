@@ -94,6 +94,7 @@ button {
 }
 
 .dummyAlignmentBTN {
+    width: 10vw;
     visibility: hidden;
 }
 
@@ -107,4 +108,41 @@ button {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: bolder;
     font-size: 24px;
+}
+
+#setSettings {
+    position: absolute;
+    z-index: 1000;
+    border: 1px solid black;
+    background-color: white;
+    width: 20vw;
+    height: 20vh;
+}
+
+#settingsInputs {
+    display: flex;
+    align-items: center;
+    flex-flow: row wrap;
+}
+
+#settingsInputs label {
+    padding: 10px;
+}
+
+#settingsInputs input {
+    margin: 10px;
+    width: 15vw;
+}
+
+#settingsInputs select {
+    width: 10vw;
+}
+
+.informationHover {
+    width: 10px;
+    height: 10px;
+    border: 1px solid black;
+    color: black;
+    font-size: 10px;
+    margin: 10px;
 }

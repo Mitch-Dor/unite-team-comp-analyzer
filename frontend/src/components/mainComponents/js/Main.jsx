@@ -1,8 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/main.css'
+import Settings from './Settings';
 
 function Main() {
+  const [settings, setSettings] = useState({timer: 25, userTurn: "first"});
+  const [settingsActive, setSettingsActive] = useState(false);
+  const [settingsLocation, setSettingsLocation] = useState({x: 0, y: 0});
   const navigate = useNavigate();
 
   function chooseBackgrounds(){
@@ -50,6 +54,12 @@ function Main() {
     }
   }
 
+  function openCloseSettings (event) {
+    setSettingsActive(!settingsActive);
+    const rect = event.target.getBoundingClientRect();
+    setSettingsLocation({ x: ((rect.left + rect.right)/2)-(window.innerWidth/10), y: rect.top - (window.innerHeight/4) });
+  }
+
   useEffect(() => {
     chooseBackgrounds(); // Choose the background on the component mounting
     setTitle();
@@ -64,18 +74,24 @@ function Main() {
         <div id="titleContainer"></div>
         <div id="bigBTNContainer">
             <div id="modesContainer">
-                <button id="YOUvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/person-vs-ai')}>Person VS AI</button>
-                <button id="PERSONvsPERSON" className="modeBTN bigBTNs" onClick={() => navigate('/person-vs-person')}>Person VS Person</button>
-                <button id="AIvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/ai-vs-ai')}>AI VS AI</button>
+                <button id="YOUvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/person-vs-ai', {state: {numUsers: 1, settings: settings}})}>Person VS AI</button>
+                <button id="PERSONvsPERSON" className="modeBTN bigBTNs" onClick={() => navigate('/person-vs-person', {state: {numUsers: 2, settings: settings}})}>Person VS Person</button>
+                <button id="AIvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/ai-vs-ai', {state: {numUsers: 0, settings: settings}})}>AI VS AI</button>
             </div>
             <div id="settingContainer">
-                <button id="YOUvsAIset" className="settingBTN bigBTNs Left">Person VS AI Settings</button>
-                <button id="compScore" className="modeBTN bigBTNs Left" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
-                <button id="stats" className="modeBTN bigBTNs Right" onClick={() => navigate('/stats')}>Stats</button>
-                <button id="AIvsAIset" className="settingBTN bigBTNs Right">AI VS AI Settings</button>
+                <button className="dummyAlignmentBTN"></button>
+                <button id="compScore" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
+                <button id="settings" className="settingBTN bigBTNs" onClick={(e) => openCloseSettings(e)}>Draft Settings</button>
+                <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
+                <button className="dummyAlignmentBTN"></button>
             </div>  
         </div>
         <div id="nametag">Created by Mitchell Dorward</div>
+        { settingsActive && (
+          <div id="setSettings" style={{ top: settingsLocation.y, left: settingsLocation.x }}>
+            < Settings settings={settings} updateSettings={setSettings} ></Settings>
+          </div>
+        )}
     </div>
   );
 }

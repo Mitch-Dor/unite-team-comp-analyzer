@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import DraftListing from './draftSupport/DraftListing';
 import TeamDisplay from './draftSupport/TeamDisplay.jsx';
 import Filtering from './draftSupport/Filtering.jsx';
@@ -6,7 +7,9 @@ import { fetchCharacterDisplayInfo } from './backendCalls/http.js';
 import '../css/draft.css';
 
 function Draft() {
-    const [pokemonList, updatePokemonList] = useState([]); // Says pokemonList is updatable with updatePokemonList and is initialized as a blank array (because we have to wait on an async function to give us the data)
+    const location = useLocation();
+    const { numUsers, settings } = location.state || {};
+    const [pokemonList, updatePokemonList] = useState([]);
     const [filteredList, updateFilteredList] = useState([]);
     const [team1Bans, updateTeam1Bans] = useState([]);
     const [team2Bans, updateTeam2Bans] = useState([]);
