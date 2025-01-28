@@ -52,18 +52,22 @@ function Draft() {
     }, [draftState, loading]); // reset the timer any time draft state changes
 
     function countdownTimer() {
-        const timer = document.getElementById("timer");
-        const currTime = Number(timer.innerHTML);
-        if(currTime !== 0){
-            timer.innerHTML = currTime - 1;
-            setTimeout(() => {
-                if (stateRef.current === draftState) {
-                    timer.innerHTML = currTime - 1;
-                    countdownTimer(); // Continue countdown
+        if(stateRef.current !== 'done'){
+            const timer = document.getElementById("timer");
+            const currTime = Number(timer.innerHTML);
+            if(currTime > 0){
+                timer.innerHTML = currTime - 1;
+                setTimeout(() => {
+                    if (stateRef.current === draftState) {
+                        countdownTimer(); // Continue countdown
+                    }
+                }, 1000);
+            } else {
+                if(Number.isNaN(currTime)){
+                    return;
                 }
-            }, 1000);
-        } else {
-            ranOutOfTime();
+                ranOutOfTime();
+            }
         }
     }
 
@@ -163,7 +167,7 @@ function Draft() {
             <div id="draftBoardContainer">
                 < Filtering pokemonList={pokemonList} updateFilteredList={updateFilteredList} ></Filtering>
                 <div className="characterSelect">
-                    < DraftListing pokemonList={filteredList} team1Bans={team1Bans}  team2Bans={team2Bans}  team1Picks={team1Picks}  team2Picks={team2Picks} draftState={draftState} updateDraftState={updateDraftState} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} />
+                    < DraftListing pokemonList={filteredList} team1Bans={team1Bans}  team2Bans={team2Bans}  team1Picks={team1Picks}  team2Picks={team2Picks} draftState={draftState} updateDraftState={updateDraftState} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} />
                 </div>
             </div>
             <div id="lockInContainer">

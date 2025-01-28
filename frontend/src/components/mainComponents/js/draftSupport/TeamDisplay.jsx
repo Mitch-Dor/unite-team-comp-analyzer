@@ -18,10 +18,12 @@ const TeamDisplay = ({ team, bans, picks }) => {
         setHoveredIndex(null);
     };
 
+    console.log(team, bans, picks);
+
     return (
         <>
             <div id={`${team}Bans`}>
-                {/* Create as many character portraits as there are picks but add blanks so there are 5 total */}
+                {/* Create as many character portraits as there are picks but add blanks so there are 2 total */}
                 {[...bans, ...Array(2 - bans.length).fill(null)].map((pokemon, index) => (
                     <div key={index}>
                         {pokemon ? (
