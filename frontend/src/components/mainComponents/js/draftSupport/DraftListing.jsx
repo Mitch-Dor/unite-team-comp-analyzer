@@ -2,8 +2,7 @@ import React from 'react';
 const constants = require('../../../../common/naming_constants.js');
 const routes = require('../../../../common/route_constants.js');
 
-const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, updateDraftState, updatePokemonStatus }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
-    const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5'];
+const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, updateDraftState, updatePokemonStatus, draftProgression }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
     const setBan1 = (pokemon) => {
         updatePokemonStatus(pokemon, "ban1");
     }
@@ -20,7 +19,7 @@ const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Pick
         // Can just move to next index in draftProgression to keep track of draft state
         const currentIndex = draftProgression.indexOf(draftState);
         // Ensure it's not the last state
-        if (currentIndex >= 0 && currentIndex < draftProgression.length) {
+        if (currentIndex >= 0 && currentIndex < draftProgression.length - 1) {
             // Get the next state
             const nextState = draftProgression[currentIndex + 1];
             // Update the draft state
