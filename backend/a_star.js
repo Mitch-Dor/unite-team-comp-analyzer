@@ -1,4 +1,5 @@
 const MinHeap = require('./MinHeap');
+const rawTraitData = require('./dataConversion/pokemonData');
 
 // When it is the AI's turn, it will run its A* function to determine what Pokemon to pick.
 // The Pokemon will have 2 scores: a counter pick score and a synergies score.
@@ -7,7 +8,7 @@ const MinHeap = require('./MinHeap');
 // Maybe could use these numbers only if there is sufficient data
 
 
-export function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
+function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
     // First, get a list of all remaining pokemon
     remainingPokemon = allPokemon.filter(pokemon => !yourTeam.includes(pokemon));
     remainingPokemon = remainingPokemon.filter(pokemon => !enemyTeam.includes(pokemon));
@@ -79,8 +80,33 @@ function heuristic(yourTeam, enemyTeam, remainingPokemon){
 
 function heuristic_synergy_score(yourTeam){
     // Hard-coded rules for now
-
+    const attrCounts = countAttributes(yourTeam);
+    console.log(attrCounts);
 }
+
+function countAttributes(data) {
+    const categories = {
+        EarlyGame: {}, MidGame: {}, LateGame: {},
+        Mobility: {}, Range: {}, Bulk: {}, Damage: {},
+        DamageType: {}, DamageAffect: {}, CC: {},
+        PlayStyle: {}, Classification: {}, OtherAttr: {}
+    };
+    
+    data.forEach(entry => {
+        Object.keys(categories).forEach(key => {
+            if (Array.isArray(entry[key])) {
+                entry[key].forEach(value => {
+                    categories[key][value] = (categories[key][value] || 0) + 1;
+                });
+            } else if (entry[key]) {
+                categories[key][entry[key]] = (categories[key][entry[key]] || 0) + 1;
+            }
+        });
+    });
+
+    return categories;
+}
+
 
 function heuristic_counter_score(){
     // Hard-coded rules for now
@@ -106,3 +132,5 @@ function getSynergies(){
 function compareTwoComps(){
 
 }
+
+heuristic_synergy_score([rawTraitData[0], rawTraitData[2]]);
