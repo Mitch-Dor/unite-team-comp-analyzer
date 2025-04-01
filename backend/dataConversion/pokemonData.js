@@ -24,7 +24,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "High",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -39,7 +39,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "High",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "None",
     "PlayStyle": "SplitMap",
     "Classification": "Assassin"
@@ -54,10 +54,10 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
-    "Classification": "Utility Mage"
+    "Classification": "UtilityMage"
   },
   {
     "Name": "Alolan-Ninetales",
@@ -69,10 +69,10 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
-    "Classification": "Utility Mage"
+    "Classification": "UtilityMage"
   },
   {
     "Name": "Wigglytuff",
@@ -84,7 +84,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Low",
     "DamageType": "N/A",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Buffer",
@@ -100,7 +100,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Medium",
     "PlayStyle": "SplitMap",
     "Classification": "Engage",
@@ -131,10 +131,10 @@ const pokemonData = [
     "Bulk": "High",
     "Damage": "Low",
     "DamageType": "N/A",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
-    "Classification": "Drain Tank",
+    "Classification": "DrainTank",
     "OtherAttr": "Lockdown"
   },
   {
@@ -147,7 +147,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Low",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Engage",
@@ -163,7 +163,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Large-AOE",
+    "DamageAffect": "LargeAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage"
@@ -178,7 +178,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Large-AOE",
+    "DamageAffect": "LargeAOE",
     "CC": "None",
     "PlayStyle": "SplitMap",
     "Classification": ""
@@ -193,7 +193,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Low",
     "PlayStyle": "SplitMap",
     "Classification": "Assassin"
@@ -223,7 +223,7 @@ const pokemonData = [
     "Bulk": "None",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "None",
     "PlayStyle": "Dive",
     "Classification": "ADC"
@@ -238,7 +238,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Low",
     "DamageType": "N/A",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Engage"
@@ -253,7 +253,7 @@ const pokemonData = [
     "Bulk": "High",
     "Damage": "Low",
     "DamageType": "N/A",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Engage"
@@ -268,7 +268,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Low",
     "DamageType": "Consistent",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Low",
     "PlayStyle": "Dive",
     "Classification": "Engage"
@@ -283,10 +283,10 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
-    "Classification": "Utility Mage"
+    "Classification": "UtilityMage"
   },
   {
     "Name": "Zeraora",
@@ -298,7 +298,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Medium",
     "PlayStyle": "Dive",
     "Classification": "Assassin"
@@ -313,7 +313,7 @@ const pokemonData = [
     "Bulk": "None",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage"
@@ -328,7 +328,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Low",
     "DamageType": "N/A",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Healer"
@@ -343,7 +343,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Large-AOE",
+    "DamageAffect": "LargeAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Engage"
@@ -358,7 +358,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -373,10 +373,10 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Low",
     "DamageType": "Consistent",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "None",
     "PlayStyle": "Teamfight",
-    "Classification": "Utility Mage"
+    "Classification": "UtilityMage"
   },
   {
     "Name": "Greedent",
@@ -388,7 +388,7 @@ const pokemonData = [
     "Bulk": "High",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "High",
     "PlayStyle": "SplitMap",
     "Classification": "Bruiser"
@@ -403,7 +403,7 @@ const pokemonData = [
     "Bulk": "None",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Low",
     "PlayStyle": "Poke",
     "Classification": "BurstMage"
@@ -418,7 +418,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Medium",
     "PlayStyle": "Dive",
     "Classification": "Bruiser"
@@ -448,7 +448,7 @@ const pokemonData = [
     "Bulk": "High",
     "Damage": "Low",
     "DamageType": "N/A",
-    "DamageAffect": "Large-AOE",
+    "DamageAffect": "LargeAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -463,7 +463,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -478,7 +478,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Low",
     "DamageType": "Burst",
-    "DamageAffect": "Large-AOE",
+    "DamageAffect": "LargeAOE",
     "CC": "Medium",
     "PlayStyle": "Assist",
     "Classification": "Healer"
@@ -523,10 +523,10 @@ const pokemonData = [
     "Bulk": "None",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
-    "Classification": "Utility Mage"
+    "Classification": "UtilityMage"
   },
   {
     "Name": "Delphox",
@@ -538,10 +538,10 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Large-AOE",
+    "DamageAffect": "LargeAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
-    "Classification": "Utility Mage"
+    "Classification": "UtilityMage"
   },
   {
     "Name": "Glaceon",
@@ -583,7 +583,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
@@ -599,10 +599,10 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Low",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Low",
     "PlayStyle": "Assist",
-    "Classification": "Utility Mage"
+    "Classification": "UtilityMage"
   },
   {
     "Name": "Dodrio",
@@ -629,7 +629,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Low",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -644,7 +644,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "None",
     "PlayStyle": "Dive",
     "Classification": "Assassin"
@@ -659,7 +659,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Low",
     "DamageType": "N/A",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Healer"
@@ -674,7 +674,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Medium",
     "PlayStyle": "Dive",
     "Classification": "Assassin"
@@ -689,7 +689,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Low",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "SplitMap",
     "Classification": "Engage"
@@ -704,7 +704,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Engage"
@@ -719,7 +719,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Low",
     "PlayStyle": "Dive",
     "Classification": "Assassin"
@@ -734,7 +734,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "High",
     "DamageType": "Consistent",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "None",
     "PlayStyle": "Poke",
     "Classification": "ADC"
@@ -749,7 +749,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Low",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "High",
     "PlayStyle": "Dive",
     "Classification": "Healer"
@@ -764,7 +764,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Engage"
@@ -779,7 +779,7 @@ const pokemonData = [
     "Bulk": "High",
     "Damage": "Low",
     "DamageType": "Consistent",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -794,10 +794,10 @@ const pokemonData = [
     "Bulk": "High",
     "Damage": "Low",
     "DamageType": "Consistent",
-    "DamageAffect": "Large-AOE",
+    "DamageAffect": "LargeAOE",
     "CC": "Medium",
     "PlayStyle": "SplitMap",
-    "Classification": "Drain Tank"
+    "Classification": "DrainTank"
   },
   {
     "Name": "Chandelure",
@@ -809,7 +809,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage"
@@ -824,7 +824,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Low",
     "DamageType": "Consistent",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Engage"
@@ -839,7 +839,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "None",
     "PlayStyle": "Dive",
     "Classification": "Assassin"
@@ -869,7 +869,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Low",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "ADC"
@@ -899,7 +899,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -929,7 +929,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Low",
     "PlayStyle": "Dive",
     "Classification": "Assassin"
@@ -944,7 +944,7 @@ const pokemonData = [
     "Bulk": "High",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -959,7 +959,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "High",
     "DamageType": "N/A",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Medium",
     "PlayStyle": "Dive",
     "Classification": "Engage"
@@ -974,7 +974,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage"
@@ -989,7 +989,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -1004,7 +1004,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "High",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Medium",
     "PlayStyle": "Dive",
     "Classification": "Assassin"
@@ -1019,10 +1019,10 @@ const pokemonData = [
     "Bulk": "High",
     "Damage": "Medium",
     "DamageType": "Consistent",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
-    "Classification": "Drain Tank"
+    "Classification": "DrainTank"
   },
   {
     "Name": "Armarouge",
@@ -1034,10 +1034,10 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Low",
     "PlayStyle": "Teamfight",
-    "Classification": "Utility Mage"
+    "Classification": "UtilityMage"
   },
   {
     "Name": "Darkrai",
@@ -1049,7 +1049,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "High",
     "PlayStyle": "SplitMap",
     "Classification": "Assassin"
@@ -1064,7 +1064,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Low",
     "DamageType": "Consistent",
-    "DamageAffect": "Large-AOE",
+    "DamageAffect": "LargeAOE",
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Engage"
@@ -1079,7 +1079,7 @@ const pokemonData = [
     "Bulk": "Medium",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Medium-AOE",
+    "DamageAffect": "MediumAOE",
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser"
@@ -1094,7 +1094,7 @@ const pokemonData = [
     "Bulk": "Low",
     "Damage": "Medium",
     "DamageType": "Burst",
-    "DamageAffect": "Small-AOE",
+    "DamageAffect": "SmallAOE",
     "CC": "Low",
     "PlayStyle": "SplitMap",
     "Classification": "Assassin"

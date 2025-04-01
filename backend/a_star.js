@@ -174,31 +174,37 @@ class Pokemon {
 
 // Heuristic function that takes in a team and returns a score
 function heuristic(yourTeam, enemyTeam){
+    const tierScore = heuristic_tier_score(yourTeam);
     const synergyScore = heuristic_synergy_score(yourTeam);
     const counterScore = heuristic_counter_score(yourTeam, enemyTeam);
-    return synergyScore + counterScore;
+    const totalScore = tierScore + synergyScore + counterScore;
+    return totalScore;
 }
 
 // Heuristic function that takes in a team and returns a score based on the tier of the pokemon in the team
 function heuristic_tier_score(providedTeam){
     // Hard-coded rules always
     // Larger score means WORSE tier
-    const sTier = [];
-    const aTier = [];
-    const bTier = [];
-    const cTier = [];
-    const dTier = [];
-    const eTier = [];
-    const fTier = [];
+    const sTier = ["Absol", "Zeraora", "Inteleon", "Suicune", "Umbreon", "Snorlax", "Psyduck"];
+    const aTier = ["Urshifu-SS", "Talonflame", "Leafeon", "Meowscarada", "Garchomp", "Pikachu",
+                 "Zacian", "Mimikyu", "Hoopa", "Comfey", "Blissey", "Slowbro", "Mamoswine", "Metagross"];
+    const bTier = ["Gengar", "Aegislash", "Dodrio", "Zoroark", "Blaziken", "Ceruledge", "Mew", "Scyther", "Espeon",
+                    "Buzzwole", "MewtwoY", "Trevenant", "HoOh", "Greedent", "Wigglytuff", "Lucario", "Miraidon", "Gyarados", "Eldegoss"];
+    const cTier = ["Galarian-Rapidash", "Charizard", "Cinderace", "Alolan-Ninetales", "Glaceon", "Urshifu-RS", 
+                    "Venusaur", "Darkrai", "Goodra", "Sabeleye", "Blastoise", "Dragonite"];
+    const dTier = ["Cramorant", "Sylveon", "Crustle", "Clefable", "MrMime", "Machamp", "Greninja", "Tyranitar"];
+    const eTier = ["Chandelure", "Delphox", "Dragapult", "Gardevoir", "Decidueye", "Armarouge", "MewtwoX", "Tsareena"];
+    const fTier = ["Tinkaton", "Duraludon", "Lapras", "Falinks", "Azumarill", "Scizor"];
     
     const tierPoints = {
         sTier: 1,
-        aTier: 2,
-        bTier: 3,
-        cTier: 4,
-        dTier: 5,
-        eTier: 6,
-        fTier: 7
+        aTier: 3,
+        bTier: 5,
+        // Anything below bTier is a lot worse unless it has a perfect matchup
+        cTier: 9,
+        dTier: 11,
+        eTier: 13,
+        fTier: 15
     }
 
     let totalPoints = 0;
@@ -266,9 +272,16 @@ function heuristic_synergy_score(yourTeam){
         totalPoints += 6;
     }
 
-    attrCounts.playStyle.forEach(playStyle => {
-        // Having different play styles is not good
-        totalPoints += 15 - playStyle*3;
+    if (attrCounts.damage.High > 2) {
+        // Having too many high damage pokemon is bad
+        totalPoints += attrCounts.damage.High * 5 - 10;
+    }
+
+    // Having different play styles is bad
+    Object.entries(attrCounts.playStyle).forEach(([style, count]) => {
+        if (count > 0 && count < 2){
+            totalPoints += 5
+        }
     });
 
     return totalPoints;
@@ -277,24 +290,34 @@ function heuristic_synergy_score(yourTeam){
 // Helper function that counts the number of times each attribute appears in a team
 function countAttributes(data) {
     const categories = {
-        earlyGame: {}, midGame: {}, lateGame: {},
-        mobility: {}, range: {}, bulk: {}, damage: {},
-        damageType: {}, damageAffect: {}, cc: {},
-        playStyle: {}, classification: {}, otherAttr: {}
+        earlyGame: { Strong: 0, Medium: 0, Weak: 0 },
+        midGame: { Strong: 0, Medium: 0, Weak: 0 },
+        lateGame: { Strong: 0, Medium: 0, Weak: 0 },
+        mobility: { High: 0, Medium: 0, Low: 0 },
+        range: { High: 0, Medium: 0, Low: 0 },
+        bulk: { High: 0, Medium: 0, Low: 0 },
+        damage: { High: 0, Medium: 0, Low: 0 },
+        damageType: { Burst: 0, Consistent: 0, "N/A": 0 },
+        damageAffect: { SingleTarget: 0, SmallAOE: 0, MediumAOE: 0, LargeAOE: 0 },
+        cc: { High: 0, Medium: 0, Low: 0, None: 0 },
+        playStyle: { Dive: 0, Teamfight: 0, SplitMap: 0, Poke: 0, Assist: 0 },
+        classification: { ADC: 0, Bruiser: 0, Assassin: 0, DrainTank: 0, UtilityMage: 0, BurstMage: 0, Healer: 0, Buffer: 0, Engage: 0 },
+        OtherAttr: { AntiCC: 0, Peel: 0, Heals: 0, Lockdown: 0, SpaceControl: 0 },
     };
+    
     data.forEach(entry => {
         Object.keys(categories).forEach(key => {
-            // Adjusted to access attributes within the 'attributes' object of each entry
             if (Array.isArray(entry.attributes[key])) {
                 entry.attributes[key].forEach(value => {
-                    categories[key][value] = (categories[key][value] || 0) + 1;
+                    if (categories[key].hasOwnProperty(value)) {
+                        categories[key][value]++;
+                    }
                 });
-            } else if (entry.attributes[key]) {
-                categories[key][entry.attributes[key]] = (categories[key][entry.attributes[key]] || 0) + 1;
+            } else if (entry.attributes[key] && categories[key].hasOwnProperty(entry.attributes[key])) {
+                categories[key][entry.attributes[key]]++;
             }
         });
     });
-
     return categories;
 }
 
@@ -337,6 +360,48 @@ function heuristic_counter_score(yourTeam, enemyTeam){
         totalPoints -= 10;
     }
 
+    // High safety damage dealer is good into high mobility
+    if (enemyAttrCounts.mobility.High > 1) {
+        yourTeam.forEach(pokemon => {
+            if (pokemon.attributes.damage === "High") {
+                let safetyScore = 0;
+                switch (pokemon.attributes.cc) {
+                    case "High":
+                        safetyScore += 10;
+                        break;
+                    case "Medium":
+                        safetyScore += 5;
+                        break;
+                }
+                switch (pokemon.attributes.range) {
+                    case "High":
+                        safetyScore += 10;
+                        break;
+                    case "Medium":
+                        safetyScore += 5;
+                        break;
+                        
+                }
+                switch (pokemon.attributes.Mobility) {
+                    case "High":
+                        safetyScore += 10;
+                        break;
+                    case "Medium":
+                        safetyScore += 5;
+                        break;
+                }
+                switch (pokemon.attributes.damageType) {
+                    case "Burst":
+                        safetyScore += 5;
+                        break;
+                }
+                if (safetyScore >= 20) {
+                    totalPoints -= 10;
+                }
+            }
+        });
+    }
+
     return totalPoints;
 }
 
@@ -362,4 +427,5 @@ function compareTwoComps(){
 
 }
 
-a_star_search(["Cinderace"], ["Gengar"], [], rawTraitData);
+const algorithmicPerfectAnswer = a_star_search([], [], [], rawTraitData);
+console.log(algorithmicPerfectAnswer);
