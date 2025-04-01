@@ -30,7 +30,7 @@ fs.createReadStream(inputFilePath)
   .on('end', () => {
     const jsContent = `const pokemonData = ${JSON.stringify(results, null, 2)};
 
-export default pokemonData;`;
+module.exports = pokemonData;`;
     
     fs.writeFileSync(outputFilePath, jsContent, 'utf8');
     console.log('Conversion complete! Check pokemonData.js');
