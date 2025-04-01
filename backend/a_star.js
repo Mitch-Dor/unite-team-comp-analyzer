@@ -179,12 +179,99 @@ function heuristic(yourTeam, enemyTeam){
     return synergyScore + counterScore;
 }
 
+// Heuristic function that takes in a team and returns a score based on the tier of the pokemon in the team
+function heuristic_tier_score(providedTeam){
+    // Hard-coded rules always
+    // Larger score means WORSE tier
+    const sTier = [];
+    const aTier = [];
+    const bTier = [];
+    const cTier = [];
+    const dTier = [];
+    const eTier = [];
+    const fTier = [];
+    
+    const tierPoints = {
+        sTier: 1,
+        aTier: 2,
+        bTier: 3,
+        cTier: 4,
+        dTier: 5,
+        eTier: 6,
+        fTier: 7
+    }
+
+    let totalPoints = 0;
+    // For each pokemon on the team, add points based on which tier it's in
+    providedTeam.forEach(pokemon => {
+        if (sTier.includes(pokemon)) {
+            totalPoints += tierPoints.sTier;
+        } else if (aTier.includes(pokemon)) {
+            totalPoints += tierPoints.aTier;
+        } else if (bTier.includes(pokemon)) {
+            totalPoints += tierPoints.bTier;
+        } else if (cTier.includes(pokemon)) {
+            totalPoints += tierPoints.cTier;
+        } else if (dTier.includes(pokemon)) {
+            totalPoints += tierPoints.dTier;
+        } else if (eTier.includes(pokemon)) {
+            totalPoints += tierPoints.eTier;
+        } else if (fTier.includes(pokemon)) {
+            totalPoints += tierPoints.fTier;
+        }
+    });
+
+    return totalPoints;
+}
+
 // Heuristic function that takes in a team and returns a score based on that team's synergy
 function heuristic_synergy_score(yourTeam){
     // Hard-coded rules for now
     // Larger score means WORSE synergy
     const attrCounts = countAttributes(yourTeam);
-    
+    let totalPoints = 0;
+
+    if (attrCounts.earlyGame.Weak > 1) {
+        // Having too many weak early game pokemon is very punishing
+        totalPoints += attrCounts.earlyGame.Weak * 10 - 10;
+    }
+    totalPoints += attrCounts.earlyGame.Strong * 1;
+    totalPoints += attrCounts.earlyGame.Medium * 3;
+    totalPoints += attrCounts.earlyGame.Weak * 5;
+
+    totalPoints += attrCounts.midGame.Strong * 1;
+    totalPoints += attrCounts.midGame.Medium * 3;
+    totalPoints += attrCounts.midGame.Weak * 5;
+
+    totalPoints += attrCounts.lateGame.Strong * 1;
+    totalPoints += attrCounts.lateGame.Medium * 3;
+    totalPoints += attrCounts.lateGame.Weak * 5;
+
+    totalPoints += attrCounts.mobility.High * 1;
+    totalPoints += attrCounts.mobility.Medium * 3;
+    totalPoints += attrCounts.mobility.Low * 5;
+
+    if (attrCounts.range.low > 3) {
+        // Too many low range pokemon 
+        totalPoints += attrCounts.range.Low * 5 - 5;
+    }
+
+    if (attrCounts.bulk.High < 1) {
+        // Need more bulky pokemon
+        totalPoints += 6;
+    }
+
+    if (attrCounts.damage.High < 2) {
+        // Can't kill tanks without high damage
+        totalPoints += 6;
+    }
+
+    attrCounts.playStyle.forEach(playStyle => {
+        // Having different play styles is not good
+        totalPoints += 15 - playStyle*3;
+    });
+
+    return totalPoints;
 }
 
 // Helper function that counts the number of times each attribute appears in a team
@@ -212,9 +299,45 @@ function countAttributes(data) {
 }
 
 // Heuristic function that takes in a team and returns a score based on that team's counterpicks
-function heuristic_counter_score(){
+function heuristic_counter_score(yourTeam, enemyTeam){
     // Hard-coded rules for now
+    const allyAttrCounts = countAttributes(yourTeam);
+    const enemyAttrCounts = countAttributes(enemyTeam);
+    let totalPoints = 70;
 
+    // CC counters low mobility and low range
+    if (enemyAttrCounts.mobility.Low > 2 || enemyAttrCounts.range.Low > 2) {
+        if (allyAttrCounts.cc.High > 0) {
+            totalPoints -= 10 * allyAttrCounts.cc.High;
+        }
+    }
+
+    // Having a range advantage is good
+    if (enemyAttrCounts.range.High == 0 && allyAttrCounts.range.High > 0) {
+        totalPoints -= 10;
+    }
+
+    // Having a lot of bulk when the enemy has low damage is good
+    if (enemyAttrCounts.damage.High == 0 && allyAttrCounts.bulk.High > 0) {
+        totalPoints -= 10;
+    }
+
+    // Having a lot of burst damage when the enemy has low bulk is good
+    if (enemyAttrCounts.bulk.High == 0 && allyAttrCounts.damageType.Burst > 0) {
+        totalPoints -= 10;
+    }
+
+    // Having consistent damage when the enemy has high bulk is good
+    if (enemyAttrCounts.bulk.High > 1 && allyAttrCounts.damageType.Consistent > 1) {
+        totalPoints -= 10;
+    }
+
+    // Having a lot of mobility when the enemy has low mobility is good
+    if (enemyAttrCounts.mobility.Low > 2 && allyAttrCounts.mobility.High > 0) {
+        totalPoints -= 10;
+    }
+
+    return totalPoints;
 }
 
 // Helper function that takes in a team and returns a list of traits
