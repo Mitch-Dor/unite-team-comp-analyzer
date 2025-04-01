@@ -55,15 +55,43 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
         }
     }
 
-    // Convert existing teams to Pokemon objects
-    const yourTeamObjects = yourTeam.map(name => 
-        pokemonObjects.find(p => p.id === name) || new Pokemon({Name: name})
-    );
+    // Convert string names in yourTeam to full Pokemon objects
+    const yourTeamObjects = [];
 
-    // Convert existing teams to Pokemon objects
-    const enemyTeamObjects = enemyTeam.map(name => 
-        pokemonObjects.find(p => p.id === name) || new Pokemon({Name: name})
-    );
+    // Loop through all team member names
+    for (const name of yourTeam) {
+        // Find the matching Pokemon in the full data set
+        const matchingPokemon = pokemonObjects.find(p => 
+            p.name === name || p.id === name
+        );
+        
+        if (matchingPokemon) {
+            yourTeamObjects.push(matchingPokemon);
+        } else {
+            console.warn(`Pokemon "${name}" not found in available data`);
+            // Create a basic Pokemon object with just the name
+            yourTeamObjects.push(new Pokemon({Name: name}));
+        }
+    }
+
+    // Convert string names in yourTeam to full Pokemon objects
+    const enemyTeamObjects = [];
+
+    // Loop through all team member names
+    for (const name of enemyTeam) {
+        // Find the matching Pokemon in the full data set
+        const matchingPokemon = pokemonObjects.find(p => 
+            p.name === name || p.id === name
+        );
+        
+        if (matchingPokemon) {
+            yourTeamObjects.push(matchingPokemon);
+        } else {
+            console.warn(`Pokemon "${name}" not found in available data`);
+            // Create a basic Pokemon object with just the name
+            yourTeamObjects.push(new Pokemon({Name: name}));
+        }
+    }
 
     // Initialize the search with whatever is currently in your team
     const startNode = new TeamNode(yourTeamObjects); // yourTeam is an array of pokemon names
@@ -101,7 +129,7 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
             // Can't add a pokemon that is already in the team
             if (!currNode.hasPokemon(pokemon)){
                 // Create the array with added pokemon
-                const newTeam = [...currentNode.picks, pokemon];
+                const newTeam = [...currNode.picks, pokemon];
                 const teamKey = newTeam.map(p => p.id).sort().join('|'); // Create team key in same way TeamNode would
                 if (!closed.has(teamKey)) { // Convert set to string for uniqueness
                     const score = heuristic(newTeam, enemyTeamObjects); // Heuristic needs to be on the teams list of Pokemon. Not a TeamNode object.
@@ -154,27 +182,28 @@ function heuristic(yourTeam, enemyTeam){
 // Heuristic function that takes in a team and returns a score based on that team's synergy
 function heuristic_synergy_score(yourTeam){
     // Hard-coded rules for now
+    // Larger score means WORSE synergy
     const attrCounts = countAttributes(yourTeam);
-    console.log(attrCounts);
+    
 }
 
 // Helper function that counts the number of times each attribute appears in a team
 function countAttributes(data) {
     const categories = {
-        EarlyGame: {}, MidGame: {}, LateGame: {},
-        Mobility: {}, Range: {}, Bulk: {}, Damage: {},
-        DamageType: {}, DamageAffect: {}, CC: {},
-        PlayStyle: {}, Classification: {}, OtherAttr: {}
+        earlyGame: {}, midGame: {}, lateGame: {},
+        mobility: {}, range: {}, bulk: {}, damage: {},
+        damageType: {}, damageAffect: {}, cc: {},
+        playStyle: {}, classification: {}, otherAttr: {}
     };
-    
     data.forEach(entry => {
         Object.keys(categories).forEach(key => {
-            if (Array.isArray(entry[key])) {
-                entry[key].forEach(value => {
+            // Adjusted to access attributes within the 'attributes' object of each entry
+            if (Array.isArray(entry.attributes[key])) {
+                entry.attributes[key].forEach(value => {
                     categories[key][value] = (categories[key][value] || 0) + 1;
                 });
-            } else if (entry[key]) {
-                categories[key][entry[key]] = (categories[key][entry[key]] || 0) + 1;
+            } else if (entry.attributes[key]) {
+                categories[key][entry.attributes[key]] = (categories[key][entry.attributes[key]] || 0) + 1;
             }
         });
     });
@@ -209,3 +238,5 @@ function getSynergies(){
 function compareTwoComps(){
 
 }
+
+a_star_search(["Cinderace"], ["Gengar"], [], rawTraitData);
