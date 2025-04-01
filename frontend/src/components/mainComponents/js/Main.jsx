@@ -79,11 +79,11 @@ function Main() {
                 <button id="AIvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/ai-vs-ai', {state: {numUsers: 0, settings: settings}})}>AI VS AI</button>
             </div>
             <div id="settingContainer">
-                <button className="dummyAlignmentBTN"></button>
+                <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list')}>Tier List</button>
                 <button id="compScore" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
                 <button id="settings" className="settingBTN bigBTNs" onClick={(e) => openCloseSettings(e)}>Draft Settings</button>
                 <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
-                <button className="dummyAlignmentBTN"></button>
+                <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits')}>Traits</button>
             </div>  
         </div>
         <div id="nametag">Created by Mitchell Dorward</div>

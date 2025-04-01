@@ -6,6 +6,8 @@ import MainPage from '../mainComponents/js/Main';
 import Draft from '../mainComponents/js/Draft';
 import ScoreComp from '../mainComponents/js/Score';
 import Stats from '../mainComponents/js/Stats';
+import TierList from '../mainComponents/js/TierList';
+import Traits from '../mainComponents/js/Traits';
 
 
 function RouteControl() {
@@ -17,6 +19,8 @@ function RouteControl() {
         <Route exact path='/person-vs-person' element={<Draft />} />
         <Route exact path='/score-a-comp' element={<ScoreComp />} />
         <Route exact path='/stats' element={<Stats />} />
+        <Route exact path='/tier-list' element={<TierList />} />
+        <Route exact path='/traits' element={<Traits />} />
       </Routes>
   );
 }
