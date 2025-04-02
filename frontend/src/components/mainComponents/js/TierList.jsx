@@ -28,7 +28,7 @@ function TierList() {
 
     fetchCharacterListing();
     setBackground();
-}, []); 
+  }, []); 
 
   useEffect(() => {
     if (pokemonList.length > 0) {

@@ -15,6 +15,7 @@
     overflow-y: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
+    min-height: 0; /* Important for Firefox */
 }
 
 .tier-list-section::-webkit-scrollbar {
@@ -29,6 +30,7 @@
     overflow-y: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
+    min-height: 0; /* Important for Firefox */
 }
 
 .unassigned-section::-webkit-scrollbar {
@@ -57,6 +59,7 @@
     background-color: #2a2a2a;
     border-radius: 8px;
     padding: 10px;
+    flex-shrink: 0; /* Prevent tier rows from shrinking */
 }
 
 .tier-label {
@@ -79,6 +82,7 @@
     gap: 10px;
     padding: 10px;
     min-height: 100px;
+    align-content: flex-start; /* Align items to the top */
 }
 
 .draggable-item {

@@ -1333,4 +1333,4 @@ const pokemonData = [
   }
 ];
 
-module.exports = pokemonData;
+export default pokemonData;

@@ -24,7 +24,9 @@ fs.createReadStream(inputFilePath)
       CC: row["CC"],
       PlayStyle: row["Play Style"],
       Classification: row["Classification"],
-      OtherAttr: row["Other Attr"] || undefined,
+      OtherAttr: row["Other Attr"] || "None",
+      AssumedMove1: row["Assumed Move 1"] || "None",
+      AssumedMove2: row["Assumed Move 2"] || "None"
     });
   })
   .on('end', () => {
