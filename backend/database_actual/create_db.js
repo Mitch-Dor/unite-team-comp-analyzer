@@ -2,6 +2,8 @@
 
 //https://www.linode.com/docs/guides/getting-started-with-nodejs-sqlite/
 
+// NOTE: CREATES DATABASE WHERE FILE IS RUN FROM
+
 const constants = require('../../common/naming_constants.js');
 const pokemonData = require('./databaseData/pokemonData');
 
@@ -12,7 +14,7 @@ createDB();
 
 function createDB() {
     // Connect to or create the database
-    db = new sqlite3.Database('./unite_information.db', sqlite3.OPEN_READWRITE, (err) => {
+    db = new sqlite3.Database('unite_information.db', sqlite3.OPEN_READWRITE, (err) => {
         if (err && err.code == "SQLITE_CANTOPEN") {
             createDatabase();
             return;
@@ -82,7 +84,7 @@ function createDB() {
             } else {
                 console.log("Successfully created tables.");
                 populateCharacters(newdb);
-                //populateAttributes(newdb);
+                populateAttributes(newdb);
                 runQueries(newdb);
             }
         });
@@ -153,7 +155,7 @@ function createDB() {
                 return;
             }
             rows.forEach(row => {
-                console.log(row.pokemon_id, row.pokemon_name, row.pokemon_class);
+                console.log(row.pokemon_name, row.pokemon_class);
             });
         });
     }
