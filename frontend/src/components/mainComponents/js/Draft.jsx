@@ -11,6 +11,7 @@ function Draft() {
     const { numUsers, settings } = location.state || {};
     const [pokemonList, updatePokemonList] = useState([]);
     const [filteredList, updateFilteredList] = useState([]);
+    const [targetPokemon, setTargetPokemon] = useState(null);
     const [team1Bans, updateTeam1Bans] = useState([]);
     const [team2Bans, updateTeam2Bans] = useState([]);
     const [team1Picks, updateTeam1Picks] = useState([]);
@@ -18,6 +19,12 @@ function Draft() {
     const [draftState, updateDraftState] = useState("team1Ban1");
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
     const stateRef = useRef(null); // Ref to track the latest state
+    const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
+
+    // Update the ref whenever targetPokemon changes
+    useEffect(() => {
+        targetPokemonRef.current = targetPokemon;
+    }, [targetPokemon]);
 
     const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
 
@@ -81,37 +88,75 @@ function Draft() {
             // Update the draft state
             updateDraftState(nextState);
             const none = {pokemon_name: 'none', pokemon_class: 'none'};
+
+            let actionPokemon = none;
+            if (targetPokemonRef.current !== null){
+                actionPokemon = targetPokemonRef.current;
+            } else if (draftState.startsWith('team1Pick') || draftState.startsWith('team2Pick')){
+                actionPokemon = genRandomPokemon();
+            } else if (draftState.startsWith('team1Ban') || draftState.startsWith('team2Ban')){
+                actionPokemon = none;
+            }
             // Perform the action based on the current state
             switch (draftState) {
                 case 'team1Ban1':
                 case 'team1Ban2':
-                    updatePokemonStatus(none, 'ban1');
+                    updatePokemonStatus(actionPokemon, 'ban1');
                     break;
                 case 'team2Ban1':
                 case 'team2Ban2':
-                    updatePokemonStatus(none, 'ban2');
+                    updatePokemonStatus(actionPokemon, 'ban2');
                     break;
                 case 'team1Pick1':
                 case 'team1Pick2':
                 case 'team1Pick3':
                 case 'team1Pick4':
                 case 'team1Pick5':
-                    const randomPokemon1 = genRandomPokemon();
-                    updatePokemonStatus(randomPokemon1, 'team1');
+                    updatePokemonStatus(actionPokemon, 'team1');
                     break;
                 case 'team2Pick1':
                 case 'team2Pick2':
                 case 'team2Pick3':
                 case 'team2Pick4':
                 case 'team2Pick5':
-                    const randomPokemon2 = genRandomPokemon();
-                    updatePokemonStatus(randomPokemon2, 'team2');
+                    updatePokemonStatus(actionPokemon, 'team2');
                     break;
                 default:
                     console.error('Unhandled draft state:', draftState);
             }
         } else {
             console.warn('Draft is already at the final state or invalid state.');
+        }
+    }
+
+    function lockIn(){
+        if(targetPokemon !== null){
+            switch (draftState) {
+                case 'team1Ban1':
+                case 'team1Ban2':
+                    updatePokemonStatus(targetPokemon, 'ban1');
+                    break;
+                case 'team2Ban1':
+                case 'team2Ban2':
+                    updatePokemonStatus(targetPokemon, 'ban2');
+                    break;
+                case 'team1Pick1':
+                case 'team1Pick2':
+                case 'team1Pick3':
+                case 'team1Pick4':
+                case 'team1Pick5':
+                    updatePokemonStatus(targetPokemon, 'team1');
+                    break;
+                case 'team2Pick1':
+                case 'team2Pick2':
+                case 'team2Pick3':
+                case 'team2Pick4':
+                case 'team2Pick5':
+                    updatePokemonStatus(targetPokemon, 'team2');
+                    break;
+                default:
+                    console.error('Unhandled draft state:', draftState);
+            }
         }
     }
 
@@ -139,6 +184,14 @@ function Draft() {
                 updateTeam2Picks(prevPicks => [...prevPicks, pokemon]);
                 break;
         }
+        // Move the draft to the next state
+        const currentIndex = draftProgression.indexOf(draftState);
+        if (currentIndex >= 0 && currentIndex < draftProgression.length - 1) {
+            const nextState = draftProgression[currentIndex + 1];
+            updateDraftState(nextState);
+        }
+        // Reset the targetPokemon
+        setTargetPokemon(null);
     };
 
     function setBackground(){
@@ -167,11 +220,11 @@ function Draft() {
             <div id="draftBoardContainer">
                 < Filtering pokemonList={pokemonList} updateFilteredList={updateFilteredList} ></Filtering>
                 <div className="characterSelect">
-                    < DraftListing pokemonList={filteredList} team1Bans={team1Bans}  team2Bans={team2Bans}  team1Picks={team1Picks}  team2Picks={team2Picks} draftState={draftState} updateDraftState={updateDraftState} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} />
+                    < DraftListing pokemonList={filteredList} team1Bans={team1Bans}  team2Bans={team2Bans}  team1Picks={team1Picks}  team2Picks={team2Picks} draftState={draftState} updateDraftState={updateDraftState} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} />
                 </div>
             </div>
             <div id="lockInContainer">
-                <button id="lockInBTN"></button>
+                <button id="lockInBTN" className={targetPokemon !== null ? 'active' : ''} onClick={() => {lockIn()}}>Lock In</button>
             </div>
         </div>
         <div id="orangeDraftContainer" className="draftContainer">

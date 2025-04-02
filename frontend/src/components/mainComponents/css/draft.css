@@ -287,6 +287,26 @@ html::-webkit-scrollbar {
     border-top-right-radius: 5vh;
     border-bottom-right-radius: 5vh;
     border-bottom-left-radius: 5vh;
+    background-color: #cccccc;
+    color: #666666;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 2px solid #999999;
+    cursor: default;
+    transition: all 0.3s ease;
+}
+
+#lockInBTN.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 2px solid #45a049;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+#lockInBTN.active:hover {
+    background-color: #45a049;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
 }
 
 #hoverDiv {
@@ -299,6 +319,22 @@ html::-webkit-scrollbar {
     border: 1px solid black;
     background-color: white;
     padding: 10px;
+}
+
+
+.targeted {
+    border: 3px solid gold;
+    box-shadow: 0 0 10px gold;
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        box-shadow: 0 0 5px gold;
+    }
+    to {
+        box-shadow: 0 0 15px gold;
+    }
 }
 
 .All-Rounder .characterPortrait,

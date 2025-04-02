@@ -18,8 +18,6 @@ const TeamDisplay = ({ team, bans, picks }) => {
         setHoveredIndex(null);
     };
 
-    console.log(team, bans, picks);
-
     return (
         <>
             <div id={`${team}Bans`}>
