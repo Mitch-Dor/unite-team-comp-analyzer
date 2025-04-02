@@ -13,6 +13,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Teamfight",
     "Classification": "ADC",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "BlazeKick",
     "AssumedMove2": "FlameCharge"
@@ -31,6 +32,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "DragonRush",
     "AssumedMove2": "DragonClaw"
@@ -49,6 +51,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Poke",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "None",
     "AssumedMove1": "DreamEater",
     "AssumedMove2": "ShadowBall"
@@ -67,6 +70,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "UtilityMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "Hurricane",
     "AssumedMove2": "Dive"
@@ -85,6 +89,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "UtilityMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "Avalanche",
     "AssumedMove2": "Blizzard"
@@ -103,6 +108,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Buffer",
+    "Class": "Supporter",
     "OtherAttr": "AntiCC",
     "AssumedMove1": "Sing",
     "AssumedMove2": "DazzlingGleam"
@@ -121,6 +127,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "SplitMap",
     "Classification": "Engage",
+    "Class": "AllRounder",
     "OtherAttr": "AntiCC",
     "AssumedMove1": "Submission",
     "AssumedMove2": "CloseCombat"
@@ -139,6 +146,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "SplitMap",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "None",
     "AssumedMove1": "Pursuit",
     "AssumedMove2": "PsychoCut"
@@ -157,6 +165,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "CCTank",
+    "Class": "Defender",
     "OtherAttr": "Lockdown",
     "AssumedMove1": "Surf",
     "AssumedMove2": "Amnesia"
@@ -175,6 +184,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Engage",
+    "Class": "Supporter",
     "OtherAttr": "SpaceControl",
     "AssumedMove1": "Confusion",
     "AssumedMove2": "Barrier"
@@ -193,6 +203,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "GigaDrain",
     "AssumedMove2": "Solarbeam"
@@ -211,6 +222,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "SplitMap",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "AntiCC",
     "AssumedMove1": "PowerUpPunch",
     "AssumedMove2": "CloseCombat"
@@ -229,6 +241,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "SplitMap",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "None",
     "AssumedMove1": "AerialAce",
     "AssumedMove2": "BraveBird"
@@ -247,6 +260,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Healer",
+    "Class": "Supporter",
     "OtherAttr": "Heals",
     "AssumedMove1": "PollenPuff",
     "AssumedMove2": "CottonGuard"
@@ -265,6 +279,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Dive",
     "Classification": "Assassin",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "Smokescreen",
     "AssumedMove2": "Surf"
@@ -283,6 +298,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Engage",
+    "Class": "Defender",
     "OtherAttr": "SpaceControl",
     "AssumedMove1": "RockTomb",
     "AssumedMove2": "XScissor"
@@ -301,6 +317,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Engage",
+    "Class": "Defender",
     "OtherAttr": "Peel",
     "AssumedMove1": "HeavySlam",
     "AssumedMove2": "Block"
@@ -319,6 +336,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Dive",
     "Classification": "Engage",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "Flamethrower",
     "AssumedMove2": "FireBlast"
@@ -337,6 +355,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "UtilityMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "ElectroBall",
     "AssumedMove2": "VoltTackle"
@@ -355,6 +374,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Dive",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "None",
     "AssumedMove1": "VoltSwitch",
     "AssumedMove2": "Discharge"
@@ -373,6 +393,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "Psyshock",
     "AssumedMove2": "Psychic"
@@ -391,6 +412,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Buffer",
+    "Class": "Supporter",
     "OtherAttr": "Heals",
     "AssumedMove1": "SoftBoiled",
     "AssumedMove2": "EggBomb"
@@ -409,6 +431,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Engage",
+    "Class": "Defender",
     "OtherAttr": "Peel",
     "AssumedMove1": "HydroPump",
     "AssumedMove2": "Surf"
@@ -427,6 +450,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "CCTank",
+    "Class": "Defender",
     "OtherAttr": "Lockdown",
     "AssumedMove1": "IceFang",
     "AssumedMove2": "Earthquake"
@@ -445,6 +469,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Teamfight",
     "Classification": "DrainTank",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "MyticalFire",
     "AssumedMove2": "DrainingKiss"
@@ -463,6 +488,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "SplitMap",
     "Classification": "Engage",
+    "Class": "Defender",
     "OtherAttr": "AntiCC",
     "AssumedMove1": "Covet",
     "AssumedMove2": "Belch"
@@ -481,6 +507,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Poke",
     "Classification": "ADC",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "SpiritShackle",
     "AssumedMove2": "ShadowSneak"
@@ -499,6 +526,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Dive",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "Lockdown",
     "AssumedMove1": "TripleAxel",
     "AssumedMove2": "TropKick"
@@ -517,6 +545,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "ADC",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "DragonDance",
     "AssumedMove2": "HyperBeam"
@@ -535,6 +564,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "CCTank",
+    "Class": "Defender",
     "OtherAttr": "None",
     "AssumedMove1": "WoodHammer",
     "AssumedMove2": "HornLeech"
@@ -553,6 +583,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "SacredSword",
     "AssumedMove2": "WideGuard"
@@ -571,6 +602,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Assist",
     "Classification": "Healer",
+    "Class": "Supporter",
     "OtherAttr": "Peel",
     "AssumedMove1": "HyperspaceHole",
     "AssumedMove2": "PhantomForce"
@@ -589,6 +621,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Teamfight",
     "Classification": "ADC",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "FlashCannon",
     "AssumedMove2": "StealthRocks"
@@ -607,6 +640,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "SplitMap",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "PickFinding",
     "AssumedMove1": "Whirlpool",
     "AssumedMove2": "Playrough"
@@ -625,6 +659,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "Psyshock",
     "AssumedMove2": "Psybeam"
@@ -643,6 +678,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "UtilityMage",
+    "Class": "Attacker",
     "OtherAttr": "SpaceControl",
     "AssumedMove1": "FireBlast",
     "AssumedMove2": "FireSpin"
@@ -661,6 +697,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Teamfight",
     "Classification": "ADC",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "IcicleSpear",
     "AssumedMove2": "IceShard"
@@ -679,6 +716,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "PickFinding",
     "AssumedMove1": "Superpower",
     "AssumedMove2": "SmackDown"
@@ -697,6 +735,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "StoneEdge",
     "AssumedMove2": "SandTomb"
@@ -715,6 +754,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Assist",
     "Classification": "UtilityMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "None",
     "AssumedMove2": "None"
@@ -733,6 +773,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "SplitMap",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "PickFinding",
     "AssumedMove1": "TriAttack",
     "AssumedMove2": "Agility"
@@ -751,6 +792,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "BulletPunch",
     "AssumedMove2": "SwordsDance"
@@ -769,6 +811,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Dive",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "None",
     "AssumedMove1": "DualWingbeat",
     "AssumedMove2": "SwordsDance"
@@ -787,6 +830,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Healer",
+    "Class": "Supporter",
     "OtherAttr": "SpaceControl",
     "AssumedMove1": "Moonlight",
     "AssumedMove2": "Gravity"
@@ -805,6 +849,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Dive",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "None",
     "AssumedMove1": "FeintAttack",
     "AssumedMove2": "ShadowClaw"
@@ -823,6 +868,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "SplitMap",
     "Classification": "Engage",
+    "Class": "Supporter",
     "OtherAttr": "PickFinding",
     "AssumedMove1": "KnockOff",
     "AssumedMove2": "ConfuseRay"
@@ -841,6 +887,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Engage",
+    "Class": "AllRounder",
     "OtherAttr": "PickFinding",
     "AssumedMove1": "WickedBlow",
     "AssumedMove2": "ThroatChop"
@@ -859,6 +906,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Dive",
     "Classification": "Assassin",
+    "Class": "AllRounder",
     "OtherAttr": "PickFinding",
     "AssumedMove1": "SurgingStrikes",
     "AssumedMove2": "Liquidation"
@@ -877,6 +925,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Teamfight",
     "Classification": "ADC",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "PhantomForce",
     "AssumedMove2": "ShadowBall"
@@ -895,6 +944,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Dive",
     "Classification": "Healer",
+    "Class": "Supporter",
     "OtherAttr": "None",
     "AssumedMove1": "SweetKiss",
     "AssumedMove2": "GrassKnot"
@@ -913,6 +963,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Engage",
+    "Class": "AllRounder",
     "OtherAttr": "Peel",
     "AssumedMove1": "SacredSword",
     "AssumedMove2": "Agility"
@@ -931,6 +982,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "Defender",
     "OtherAttr": "None",
     "AssumedMove1": "MuddyWater",
     "AssumedMove2": "AcidSpray"
@@ -949,6 +1001,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "SplitMap",
     "Classification": "DrainTank",
+    "Class": "Defender",
     "OtherAttr": "None",
     "AssumedMove1": "WaterPulse",
     "AssumedMove2": "BubbleBeam"
@@ -967,6 +1020,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage",
+    "Class": "Attacker",
     "OtherAttr": "SpaceControl",
     "AssumedMove1": "Flamethrower",
     "AssumedMove2": "Imprison"
@@ -985,6 +1039,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Buffer",
+    "Class": "Defender",
     "OtherAttr": "Lockdown",
     "AssumedMove1": "MeanLook",
     "AssumedMove2": "Wish"
@@ -1003,6 +1058,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Dive",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "PickFinding",
     "AssumedMove1": "RazorLeaf",
     "AssumedMove2": "AerialAce"
@@ -1021,6 +1077,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Poke",
     "Classification": "BurstMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "FellStinger",
     "AssumedMove2": "SnipeShot"
@@ -1039,6 +1096,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "ADC",
+    "Class": "Attacker",
     "OtherAttr": "Peel",
     "AssumedMove1": "FutureSight",
     "AssumedMove2": "Teleport"
@@ -1057,6 +1115,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "SplitMap",
     "Classification": "Engage",
+    "Class": "AllRounder",
     "OtherAttr": "PickFinding",
     "AssumedMove1": "FutureSight",
     "AssumedMove2": "Recover"
@@ -1075,6 +1134,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "None",
     "AssumedMove2": "None"
@@ -1093,6 +1153,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Dive",
     "Classification": "Assassin",
+    "Class": "AllRounder",
     "OtherAttr": "Lockdown",
     "AssumedMove1": "ShadowClaw",
     "AssumedMove2": "ShadowSneak"
@@ -1111,6 +1172,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Dive",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "None",
     "AssumedMove1": "FlowerTrick",
     "AssumedMove2": "DoubleTeam"
@@ -1129,6 +1191,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "GyroBall",
     "AssumedMove2": "ZenHeadbutt"
@@ -1147,6 +1210,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Dive",
     "Classification": "Engage",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "DragonBreath",
     "AssumedMove2": "Waterfall"
@@ -1165,6 +1229,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "ChargeBeam",
     "AssumedMove2": "Thunder"
@@ -1183,6 +1248,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "IronHead",
     "AssumedMove2": "BeatUp"
@@ -1201,6 +1267,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "Dive",
     "Classification": "Assassin",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "PsychoCut",
     "AssumedMove2": "PhantomForce"
@@ -1219,6 +1286,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "DrainTank",
+    "Class": "Defender",
     "OtherAttr": "None",
     "AssumedMove1": "SacredFire",
     "AssumedMove2": "FireSpin"
@@ -1237,6 +1305,7 @@ const pokemonData = [
     "CC": "Low",
     "PlayStyle": "Teamfight",
     "Classification": "BurstMage",
+    "Class": "Attacker",
     "OtherAttr": "None",
     "AssumedMove1": "ArmorCannon",
     "AssumedMove2": "Psyshock"
@@ -1255,6 +1324,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "SplitMap",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "Lockdown",
     "AssumedMove1": "DarkVoid",
     "AssumedMove2": "NastyPlot"
@@ -1273,6 +1343,7 @@ const pokemonData = [
     "CC": "High",
     "PlayStyle": "Teamfight",
     "Classification": "Engage",
+    "Class": "Supporter",
     "OtherAttr": "None",
     "AssumedMove1": "Surf",
     "AssumedMove2": "Psychic"
@@ -1291,6 +1362,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "Bruiser",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "GigatonHammer",
     "AssumedMove2": "Thief"
@@ -1309,6 +1381,7 @@ const pokemonData = [
     "CC": "None",
     "PlayStyle": "SplitMap",
     "Classification": "Assassin",
+    "Class": "Speedster",
     "OtherAttr": "PickFinding",
     "AssumedMove1": "DazzlingGleam",
     "AssumedMove2": "Agility"
@@ -1327,6 +1400,7 @@ const pokemonData = [
     "CC": "Medium",
     "PlayStyle": "Teamfight",
     "Classification": "UtilityMage",
+    "Class": "AllRounder",
     "OtherAttr": "None",
     "AssumedMove1": "Whirlpool",
     "AssumedMove2": "IceBeam"

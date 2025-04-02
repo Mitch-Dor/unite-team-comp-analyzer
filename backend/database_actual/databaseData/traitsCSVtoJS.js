@@ -24,6 +24,7 @@ fs.createReadStream(inputFilePath)
       CC: row["CC"],
       PlayStyle: row["Play Style"],
       Classification: row["Classification"],
+      Class: row["Class"],
       OtherAttr: row["Other Attr"] || "None",
       AssumedMove1: row["Assumed Move 1"] || "None",
       AssumedMove2: row["Assumed Move 2"] || "None"

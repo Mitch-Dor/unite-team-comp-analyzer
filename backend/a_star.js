@@ -1,5 +1,5 @@
 const MinHeap = require('./MinHeap');
-const rawTraitData = require('./dataConversion/pokemonData');
+const rawTraitData = require('./database_actual/databaseData/pokemonData');
 
 // When it is the AI's turn, it will run its A* function to determine what Pokemon to pick.
 // The Pokemon will have 2 scores: a counter pick score and a synergies score.
