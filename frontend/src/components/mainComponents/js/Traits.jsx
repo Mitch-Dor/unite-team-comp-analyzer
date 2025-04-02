@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/traits.css';
-import pokemonData from './pokemonData';
+import pokemonData from './pokemonData.js';
 
 function Traits() {
   const [traitsData, setTraitsData] = useState([]);
