@@ -119,7 +119,7 @@
     padding: 5px;
 }
 
-.All-Rounder {
+.draggable-item.All-Rounder {
     background-image: linear-gradient(
         45deg,
         purple 0%,
@@ -159,7 +159,7 @@
     );
 }
 
-.Attacker {
+.draggable-item.Attacker {
     background-image: linear-gradient(
         45deg,
         fireBrick 0%,
@@ -199,7 +199,7 @@
     );
 }
 
-.Speedster {
+.draggable-item.Speedster {
     background-image: linear-gradient(
         45deg,
         dodgerBlue 0%,
@@ -239,7 +239,7 @@
     );
 }
 
-.Defender {
+.draggable-item.Defender {
     background-image: linear-gradient(
         45deg,
         SeaGreen 0%,
@@ -279,7 +279,7 @@
     );
 }
 
-.Supporter {
+.draggable-item.Supporter {
     background-image: linear-gradient(
         45deg,
         gold 0%,

@@ -100,6 +100,9 @@ html::-webkit-scrollbar {
     height: 8vh;
     margin-left: auto;
     margin-right: 2vw;
+    object-fit: cover;
+    box-sizing: border-box;
+    aspect-ratio: 1/1;
 }
 
 .orangeSelection .characterPortrait {
@@ -107,17 +110,21 @@ html::-webkit-scrollbar {
     height: 8vh;
     margin-right: auto;
     margin-left: 2vw;
+    object-fit: cover;
+    box-sizing: border-box;
+    aspect-ratio: 1/1;
 }
 
 .characterSelection {
     flex: 1;
-    height: 10vh;
+    height: 15vh;
     width: 18vw;
     margin-top: 2vh;
     border: solid 3px black;
     display: flex;
     align-items: center;
     background-color: white;
+    overflow: hidden;
 }
 
 .purpleSelection {
@@ -170,47 +177,47 @@ html::-webkit-scrollbar {
 }
 
 #searchBar {
-    margin-left: 1vw;
-    margin-right: 1vw;
-    margin-top: 1vh;
-    margin-bottom: 1vh;
-    height: 2vh;
-    width: 28vw;
+    margin: 1vh 1vw;
+    height: clamp(20px, 2vh, 30px);
+    width: clamp(200px, 28vw, 500px);
     border: 2px solid black;
+    font-size: clamp(0.8rem, 1vw, 1.2rem);
+    padding: 0 0.5em;
+    box-sizing: border-box;
 }
 
 .laneFilters {
-    margin-left: 1vw;
-    margin-top: 1vh;
-    margin-bottom: 1vh;
-    height: 2vh;
-    width: 7vw;
+    margin: 1vh 0.5vw;
+    height: clamp(20px, 2vh, 30px);
+    width: clamp(100px, 7vw, 150px);
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
 .laneFilters img {
-    width: 20px;
-    height: 20px;
+    width: clamp(16px, 1.5vw, 24px);
+    height: clamp(16px, 1.5vw, 24px);
     cursor: pointer;
+    padding: 2px;
+    box-sizing: border-box;
 }
 
 .classFilters {
-    margin-right: 1vw;
-    margin-top: 1vh;
-    margin-bottom: 1vh;
-    height: 2vh;
-    width: 7vw;
+    margin: 1vh 0.5vw;
+    height: clamp(20px, 2vh, 30px);
+    width: clamp(100px, 7vw, 150px);
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
 .classFilters img {
-    width: 20px;
-    height: 20px;
+    width: clamp(16px, 1.5vw, 24px);
+    height: clamp(16px, 1.5vw, 24px);
     cursor: pointer;
+    padding: 2px;
+    box-sizing: border-box;
 }
 
 .filterIcon.active {
@@ -235,34 +242,63 @@ html::-webkit-scrollbar {
 }
 
 .draftCharacter {
-    margin-left: 1.8vw;
-    margin-right: 1.8vw;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
-    width: 5.8vw;
-    height: 8vw;
+    margin: 1vh 0.8vw;
+    width: 70px;
+    height: auto;
     display: flex;
-    flex-flow: row wrap;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    position: relative;
+    box-sizing: border-box;
 }
 
 .available {
-    cursor: pointer
+    cursor: pointer;
 }
 
 .unavailable {
     filter: grayscale(1);
 }
 
-.draftCharacter .characterPortrait {
-    width: 6vw;
-    height: 6vw;
-    border-color: rgb(255, 255, 255)
+/* The img tag itself has the characterPortrait class */
+.draftCharacter img.characterPortrait {
+    width: 70px;
+    height: 70px;
+    border: 1px solid rgb(255, 255, 255);
+    position: relative;
+    z-index: 1;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background-size: 100% 100% !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    object-fit: cover;
+    display: block;
+    box-sizing: border-box;
 }
 
 .draftCharacter h4 {
-    margin-top: 0.2vw;
+    margin: 0;
+    padding: 0.2em 0;
+    background-color: #333;
+    color: white;
+    width: 70px;
+    text-align: center;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    font-size: clamp(0.6rem, 0.7vw, 0.8rem);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+    border: 1px solid rgb(255, 255, 255);
+    border-top: 1px solid #555;
+    display: block;
 }
 
 .ban {
@@ -271,6 +307,147 @@ html::-webkit-scrollbar {
 
 .selected {
     filter: grayscale(1);
+}
+
+/* Team display styles */
+.characterSelection {
+    flex: 1;
+    height: 15vh;
+    width: 18vw;
+    margin-top: 2vh;
+    border: solid 3px black;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    max-height: 15vh;
+    overflow: hidden;
+}
+
+.characterSelection h3 {
+    width: auto;
+    font-size: min(1.2rem, 2.5vh);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50%;
+}
+
+.purpleSelection .characterPortrait {
+    width: 8vh;
+    height: 8vh;
+    margin-left: auto;
+    margin-right: 2vw;
+    object-fit: cover;
+    box-sizing: border-box;
+    aspect-ratio: 1/1;
+}
+
+.orangeSelection .characterPortrait {
+    width: 8vh;
+    height: 8vh;
+    margin-right: auto;
+    margin-left: 2vw;
+    object-fit: cover;
+    box-sizing: border-box;
+    aspect-ratio: 1/1;
+}
+
+.purpleSelection {
+    background-color: rgb(194, 161, 228);
+}
+
+.orangeSelection {
+    background-color: rgb(225, 165, 106);
+}
+
+/* All the portrait background patterns need to be contained within the portrait itself */
+.All-Rounder .characterPortrait,
+.Attacker .characterPortrait,
+.Speedster .characterPortrait,
+.Defender .characterPortrait,
+.Supporter .characterPortrait {
+    background-size: 100% 100% !important;
+    background-position: center !important;
+}
+
+/* Specific styling for the targeted state */
+.targeted {
+    border: 3px solid gold;
+    box-shadow: 0 0 10px gold;
+    animation: pulse 1s infinite alternate;
+}
+
+.targeted .characterPortrait {
+    border-color: gold;
+}
+
+@keyframes pulse {
+    from {
+        box-shadow: 0 0 5px gold;
+    }
+    to {
+        box-shadow: 0 0 15px gold;
+    }
+}
+
+/* Media queries for better responsiveness */
+@media (max-width: 1600px) {
+    .draftCharacter {
+        margin: 1vh 0.7vw;
+    }
+}
+
+@media (max-width: 1400px) {
+    .draftCharacter {
+        margin: 1vh 0.6vw;
+    }
+}
+
+@media (max-width: 1200px) {
+    .draftCharacter {
+        margin: 1vh 0.5vw;
+    }
+    .laneFilters img, .classFilters img {
+        width: clamp(14px, 1.3vw, 20px);
+        height: clamp(14px, 1.3vw, 20px);
+    }
+    
+    #searchBar {
+        font-size: clamp(0.7rem, 0.9vw, 1rem);
+    }
+}
+
+@media (max-width: 900px) {
+    .draftCharacter {
+        margin: 1vh 0.4vw;
+    }
+    .laneFilters img, .classFilters img {
+        width: clamp(12px, 1.2vw, 18px);
+        height: clamp(12px, 1.2vw, 18px);
+    }
+    
+    #searchBar {
+        font-size: clamp(0.6rem, 0.8vw, 0.9rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .draftCharacter {
+        margin: 1vh 0.3vw;
+    }
+}
+
+/* Ensure proper zoom behavior by using min-width */
+@media (min-width: 1800px) {
+    .draftCharacter img.characterPortrait,
+    .draftCharacter h4,
+    .draftCharacter {
+        width: 80px;
+    }
+    
+    .draftCharacter img.characterPortrait {
+        height: 80px;
+    }
 }
 
 #lockInContainer {
@@ -320,23 +497,7 @@ html::-webkit-scrollbar {
     background-color: white;
     padding: 10px;
 }
-
-
-.targeted {
-    border: 3px solid gold;
-    box-shadow: 0 0 10px gold;
-    animation: pulse 1s infinite alternate;
-}
-
-@keyframes pulse {
-    from {
-        box-shadow: 0 0 5px gold;
-    }
-    to {
-        box-shadow: 0 0 15px gold;
-    }
-}
-
+/* Character class background patterns */
 .All-Rounder .characterPortrait,
 .All-Rounder.characterPortrait {
     background-image: linear-gradient(
@@ -376,7 +537,6 @@ html::-webkit-scrollbar {
         purple 88%,
         purple 100%
     );
-    background-size: 6vw 6vw;
 }
 
 .Attacker .characterPortrait,
@@ -418,7 +578,6 @@ html::-webkit-scrollbar {
         fireBrick 88%,
         fireBrick 100%
     );
-    background-size: 6vw 6vw;
 }
 
 .Speedster .characterPortrait,
@@ -460,7 +619,6 @@ html::-webkit-scrollbar {
         dodgerBlue 88%,
         dodgerBlue 100%
     );
-    background-size: 6vw 6vw;
 }
 
 .Defender .characterPortrait,
@@ -502,7 +660,6 @@ html::-webkit-scrollbar {
         SeaGreen 88%,
         SeaGreen 100%
     );
-    background-size: 6vw 6vw;
 }
 
 .Supporter .characterPortrait,
@@ -544,5 +701,4 @@ html::-webkit-scrollbar {
         gold 88%,
         gold 100%
     );
-    background-size: 6vw 6vw;
 }
