@@ -24,6 +24,11 @@ function Traits() {
     CC: { width: '100px' },
     PlayStyle: { width: '120px' },
     OtherAttr: { width: '120px' },
+    CanEXPShare: { width: '130px' },
+    CanTopLaneCarry: { width: '130px' },
+    CanJungleCarry: { width: '130px' },
+    CanBottomLaneCarry: { width: '130px' },
+    BestLane: { width: '130px' },
     AssumedMove1: { width: '150px' },
     AssumedMove2: { width: '150px' }
   };

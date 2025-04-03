@@ -26,6 +26,11 @@ fs.createReadStream(inputFilePath)
       Classification: row["Classification"],
       Class: row["Class"],
       OtherAttr: row["Other Attr"] || "None",
+      CanEXPShare: row["CanEXPShare"] || "None",
+      CanTopLaneCarry: row["CanTopLaneCarry"] || "None",
+      CanJungleCarry: row["CanJungleCarry"] || "None",
+      CanBottomLaneCarry: row["CanBottomLaneCarry"] || "None",
+      BestLane: row["BestLane"] || "None",
       AssumedMove1: row["Assumed Move 1"] || "None",
       AssumedMove2: row["Assumed Move 2"] || "None"
     });
