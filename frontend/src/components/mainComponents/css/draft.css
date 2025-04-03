@@ -372,7 +372,6 @@ html::-webkit-scrollbar {
 
 /* Specific styling for the targeted state */
 .targeted {
-    border: 3px solid gold;
     box-shadow: 0 0 10px gold;
     animation: pulse 1s infinite alternate;
 }
