@@ -57,11 +57,19 @@ button {
 #modesContainer {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+#featuresContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
 }
 
 #settingContainer {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 #modesContainer .bigBTNs {

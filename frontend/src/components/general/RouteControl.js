@@ -8,7 +8,7 @@ import ScoreComp from '../mainComponents/js/Score';
 import Stats from '../mainComponents/js/Stats';
 import TierList from '../mainComponents/js/TierList';
 import Traits from '../mainComponents/js/Traits';
-
+import Comps from '../mainComponents/js/Comps';
 
 function RouteControl() {
   return (
@@ -21,6 +21,7 @@ function RouteControl() {
         <Route exact path='/stats' element={<Stats />} />
         <Route exact path='/tier-list' element={<TierList />} />
         <Route exact path='/traits' element={<Traits />} />
+        <Route exact path='/comps' element={<Comps />} />
       </Routes>
   );
 }
