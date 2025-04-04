@@ -11,6 +11,7 @@ function Traits() {
   // Define column order and widths
   const columnConfig = {
     pokemon_name: { width: '150px' },
+    pokemon_class: {width: '120px'},
     classification: { width: '120px' },
     early_game: { width: '100px' },
     mid_game: { width: '100px' },
@@ -31,6 +32,84 @@ function Traits() {
     best_lane: { width: '130px' },
     assumed_move_1: { width: '150px' },
     assumed_move_2: { width: '150px' }
+  };
+
+  // Function to get class for pokemon_name based on pokemon_class
+  const getPokemonNameClass = (row) => {
+    const pokemonClass = row.pokemon_class;
+    if (!pokemonClass) return 'text-none';
+
+    if (pokemonClass === "Attacker") return 'text-attacker';
+    if (pokemonClass === "Defender") return 'text-defender';
+    if (pokemonClass === "Supporter") return 'text-supporter';
+    if (pokemonClass === "All-Rounder") return 'text-all-rounder';
+    if (pokemonClass === "Speedster") return 'text-speedster';
+    
+    return 'text-none';
+  };
+
+  // Function to determine text class based on cell content and column
+  const getTextClass = (column, value, row) => {
+    // Special case for pokemon_name - use class based on pokemon_class
+    if (column === 'pokemon_name') {
+      return getPokemonNameClass(row);
+    }
+
+    if (!value || value === 'None') return 'text-none';
+    
+    // 3 version ratings
+    const ratingColumns = ['early_game', 'mid_game', 'late_game', 'mobility', 'range', 'bulk', 'damage', 'cc'];
+    if (ratingColumns.includes(column)) {
+      if (value === 'Low' || value === 'Weak') return 'text-low';
+      if (value === 'Medium') return 'text-medium';
+      if (value === 'High' || value === 'Strong') return 'text-high';
+    }
+    
+    // Special coloring for damage_type
+    if (column === 'damage_type') {
+      if (value === 'Consistent') return 'text-consistent';
+      if (value === 'Burst') return 'text-burst';
+    }
+    
+    // Boolean columns
+    const booleanColumns = ['can_exp_share', 'can_top_lane_carry', 'can_jungle_carry', 'can_bottom_lane_carry'];
+    if (booleanColumns.includes(column)) {
+      if (value === 'Yes' || value === 'True' || value === 'true') return 'text-high';
+      if (value === 'No' || value === 'False' || value === 'false') return 'text-low';
+    }
+
+    // Lane / Role / Classification columns
+    if (column === 'best_lane' || column === 'pokemon_class' || column === 'classification') {
+      if (value === "Attacker" || value === "BottomCarry" || value === "ADC" || value === "UtilityMage" || value === "BurstMage") return 'text-attacker';
+      if (value === "Defender" || value === "EXPShareBot" || value === "CCTank" || value === "Engage") return 'text-defender';
+      if (value === "Supporter" || value === "EXPShareTop" || value ==="Buffer" || value === "Healer") return 'text-supporter';
+      if (value === "All-Rounder" || value === "TopCarry" || value ==="Bruiser" || value === "DrainTank") return 'text-all-rounder';
+      if (value === "Speedster" || value === "JungleCarry" || value === "Assassin") return 'text-speedster';
+    }
+    
+    // Target / Damage Affect columns
+    if (column === 'damage_affect') {
+      if (value === "SingleTarget") return 'text-single-target';
+      if (value === "SmallAOE") return 'text-high';
+      if (value === "MediumAOE") return 'text-medium';
+      if (value === "LargeAOE") return 'text-low';
+    }
+
+    // Other Attributes
+    if (column === 'other_attr') {
+      return value === "None" ? 'text-none' : 'text-rare';
+    }
+
+    // Play Style
+    if (column === 'play_style') {
+      if (value === "Teamfight") return 'text-defender';
+      if (value === "Poke") return 'text-speedster';
+      if (value === "SplitMap") return 'text-all-rounder';
+      if (value === "Dive") return 'text-attacker';
+      if (value === "Assist") return 'text-supporter';
+    }
+
+    return 'text-none';
   };
 
   useEffect(() => {
@@ -124,16 +203,20 @@ function Traits() {
                 <tr key={rowIndex}>
                   {columns.map(column => (
                     <td key={column}>
-                      <select
-                        value={row[column] || ''}
-                        onChange={(e) => handleCellChange(rowIndex, column, e.target.value)}
-                      >
-                        {columnOptions[column]?.map(option => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="select-wrapper">
+                        <select
+                          value={row[column] || ''}
+                          onChange={(e) => handleCellChange(rowIndex, column, e.target.value)}
+                          className={getTextClass(column, row[column], row)}
+                        >
+                          <option value=""></option>
+                          {columnOptions[column]?.map(option => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </td>
                   ))}
                 </tr>

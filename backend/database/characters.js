@@ -38,7 +38,7 @@ class Characters {
     // pokemon_name, early_game, mid_game, late_game, mobility, range, bulk, damage, damage_type, damage_affect, cc, play_style, classification, other_attr, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry, best_lane, assumed_move_1, assumed_move_2
     async getAllCharacterAttributes(){
       return new Promise((resolve, reject) => {
-        this.db.all('select * from pokemon_attributes', (err, rows) => {
+        this.db.all('select * from pokemon_attributes natural join playable_characters', (err, rows) => {
           if (err) {
             console.error(err.message);
             reject(err);
