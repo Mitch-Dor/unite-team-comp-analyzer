@@ -158,3 +158,15 @@
 .traits-table th:nth-child(1) {
     z-index: 3;
 }
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    font-size: 24px;
+    color: white;
+    background-color: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(5px);
+}

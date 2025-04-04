@@ -1,10 +1,8 @@
 module.exports = function (app, database) {
     // App is of course the server so that is how we send data
     // Database we can get to the database SQL functions using database.characters.XXX()
-    app.get('/allCharactersIdsAndNames', (req, res) => {
-        console.log("In backend");
-        database.characters.getAllCharacterDisplayInformation().then(data => {
-            console.log(data);
+    app.get('/GETallCharactersIdsAndNames', (req, res) => {
+        database.characters.getAllCharacterBaseInformation().then(data => {
             res.json(data);
         })
         .catch(error => {
@@ -12,16 +10,36 @@ module.exports = function (app, database) {
             res.sendStatus(401);
         });
     });
-    
 
-    app.get('/api/singleCharacter/:name', (req, res) => {
-        database.characters.getCharacterTraits(req.params.name).then(data => {
+    app.get('/GETallCharacterAttributes', (req, res) => {
+        database.characters.getAllCharacterAttributes().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching character attributes:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.put('/GETsingleCharacterAttributes', (req, res) => {
+        database.characters.getIndividualCharacterTraits(req.body.name).then(data => {
             // Send success response
             res.json(data);
         }) 
         .catch(error => {
             // Send fail response
+            console.error('Error fetching character attributes:', error);
             res.sendStatus(401);
         });
     });
+
+    app.put('/PUTCharacterAttributes', (req, res) => {
+        database.characters.updateCharacterAttributes(req.body.name, req.body.traits).then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error updating character Attributes:', error);
+            res.sendStatus(401);
+        });
+    })
 };

@@ -7,6 +7,10 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors());
+// Add middleware to parse JSON bodies
+app.use(express.json());
+// Add middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
 
 const proxy = {
   target: 'http://localhost:3001', //chatGPT told me to do :3000 LIES

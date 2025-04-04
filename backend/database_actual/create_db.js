@@ -59,7 +59,13 @@ function createDB() {
             cc text not null,
             play_style text not null,
             classification text not null,
+            class text not null,
             other_attr text not null,
+            can_exp_share text not null,
+            can_top_lane_carry text not null,
+            can_jungle_carry text not null,
+            can_bottom_lane_carry text not null,
+            best_lane text not null,
             assumed_move_1 text not null,
             assumed_move_2 text not null,
             FOREIGN KEY (pokemon_name) REFERENCES playable_characters (pokemon_name)
@@ -93,9 +99,9 @@ function createDB() {
     function populateCharacters(db) {
         const values = pokemonData.map(pokemon => {
             // Convert pokemon name to match your constants format
-            const pokemonName = pokemon.Name.toUpperCase().replace('-', '_');
+            const pokemonName = pokemon.name.toUpperCase().replace('-', '_');
             // Map the Classification to your class constants
-            const pokemonClass = mapClassToProperClass(pokemon.Class);
+            const pokemonClass = mapClassToProperClass(pokemon.class);
             return `('${pokemonName}', '${pokemonClass}')`;
         }).join(',\n            ');
     
@@ -127,13 +133,13 @@ function createDB() {
 
     function populateAttributes(db) {
         const values = pokemonData.map(pokemon => {
-            const pokemonName = pokemon.Name.toUpperCase().replace('-', '_');
+            const pokemonName = pokemon.name.toUpperCase().replace('-', '_');
 
-            return `('${pokemonName}', '${pokemon.EarlyGame}', '${pokemon.MidGame}', '${pokemon.LateGame}', '${pokemon.Mobility}', '${pokemon.Range}', '${pokemon.Bulk}', '${pokemon.Damage}', '${pokemon.DamageType}', '${pokemon.DamageAffect}', '${pokemon.CC}', '${pokemon.PlayStyle}', '${pokemon.Classification}', '${pokemon.OtherAttr}', '${pokemon.AssumedMove1}', '${pokemon.AssumedMove2}')`;
+            return `('${pokemonName}', '${pokemon.early_game}', '${pokemon.mid_game}', '${pokemon.late_game}', '${pokemon.mobility}', '${pokemon.range}', '${pokemon.bulk}', '${pokemon.damage}', '${pokemon.damage_type}', '${pokemon.damage_affect}', '${pokemon.cc}', '${pokemon.play_style}', '${pokemon.classification}', '${pokemon.other_attr}', '${pokemon.can_exp_share}', '${pokemon.can_top_lane_carry}', '${pokemon.can_jungle_carry}', '${pokemon.can_bottom_lane_carry}', '${pokemon.best_lane}', '${pokemon.assumed_move_1}', '${pokemon.assumed_move_2}')`;
         }).join(',\n            ');
 
         db.exec(`
-        insert into pokemon_attributes (pokemon_name, early_game, mid_game, late_game, mobility, range, bulk, damage, damage_type, damage_affect, cc, play_style, classification, other_attr, assumed_move_1, assumed_move_2)
+        insert into pokemon_attributes (pokemon_name, early_game, mid_game, late_game, mobility, range, bulk, damage, damage_type, damage_affect, cc, play_style, classification, other_attr, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry, best_lane, assumed_move_1, assumed_move_2)
         values
             ${values}
         `, (err) => {   

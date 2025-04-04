@@ -1,5 +1,4 @@
 const MinHeap = require('./MinHeap');
-const rawTraitData = require('./database_actual/databaseData/pokemonData');
 
 // When it is the AI's turn, it will run its A* function to determine what Pokemon to pick.
 // The Pokemon will have 2 scores: a counter pick score and a synergies score.
@@ -9,17 +8,33 @@ const rawTraitData = require('./database_actual/databaseData/pokemonData');
 
 
 function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
-    // First, get a list of all remaining pokemon
-    const remainingPokemon = allPokemon.filter(pokemon => 
-        !yourTeam.includes(pokemon) && 
-        !enemyTeam.includes(pokemon) && 
-        !bans.includes(pokemon)
-    );
-
     // Convert raw pokemon data to Pokemon objects if needed
-    const pokemonObjects = remainingPokemon.map(p => 
+    const pokemonObjects = allPokemon.map(p => 
         p instanceof Pokemon ? p : new Pokemon(p)
     );
+    
+    // Get a list of all remaining pokemon (Not picked or banned)
+    const remainingPokemon = pokemonObjects.filter(pokemon => {
+        const pokemonNameLower = pokemon.name.toLowerCase();
+        
+        // Check if this pokemon is already in your team
+        const inYourTeam = yourTeam.some(teamPokemon => 
+            teamPokemon.pokemon_name && teamPokemon.pokemon_name.toLowerCase() === pokemonNameLower
+        );
+        
+        // Check if this pokemon is already in enemy team
+        const inEnemyTeam = enemyTeam.some(teamPokemon => 
+            teamPokemon.pokemon_name && teamPokemon.pokemon_name.toLowerCase() === pokemonNameLower
+        );
+        
+        // Check if this pokemon is banned
+        const isBanned = bans.some(bannedPokemon => 
+            bannedPokemon.pokemon_name && bannedPokemon.pokemon_name.toLowerCase() === pokemonNameLower
+        );
+        
+        // Return true if the pokemon is not in any of these collections
+        return !inYourTeam && !inEnemyTeam && !isBanned;
+    });
 
     // Initialize open and closed sets
     let open = new MinHeap();
@@ -61,16 +76,16 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
     // Loop through all team member names
     for (const name of yourTeam) {
         // Find the matching Pokemon in the full data set
-        const matchingPokemon = pokemonObjects.find(p => 
-            p.name === name || p.id === name
+        const matchingPokemon = pokemonObjects.find(pokemon => 
+            pokemon.name === name.pokemon_name || pokemon.id === name.pokemon_name
         );
         
         if (matchingPokemon) {
             yourTeamObjects.push(matchingPokemon);
         } else {
-            console.warn(`Pokemon "${name}" not found in available data`);
+            console.warn(`Pokemon "${name.pokemon_name}" not found in available data`);
             // Create a basic Pokemon object with just the name
-            yourTeamObjects.push(new Pokemon({Name: name}));
+            yourTeamObjects.push(new Pokemon({pokemon_name: name.pokemon_name}));
         }
     }
 
@@ -80,16 +95,16 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
     // Loop through all team member names
     for (const name of enemyTeam) {
         // Find the matching Pokemon in the full data set
-        const matchingPokemon = pokemonObjects.find(p => 
-            p.name === name || p.id === name
+        const matchingPokemon = pokemonObjects.find(pokemon => 
+            pokemon.name === name.pokemon_name || pokemon.id === name.pokemon_name
         );
         
         if (matchingPokemon) {
-            yourTeamObjects.push(matchingPokemon);
+            enemyTeamObjects.push(matchingPokemon);
         } else {
-            console.warn(`Pokemon "${name}" not found in available data`);
+            console.warn(`Pokemon "${name.pokemon_name}" not found in available data`);
             // Create a basic Pokemon object with just the name
-            yourTeamObjects.push(new Pokemon({Name: name}));
+            enemyTeamObjects.push(new Pokemon({pokemon_name: name.pokemon_name}));
         }
     }
 
@@ -151,24 +166,33 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
 // Define a Pokemon class to store attributes more efficiently
 class Pokemon {
     constructor(data) {
-        this.name = data.Name;
+        this.name = data.pokemon_name;
         this.attributes = {
-            earlyGame: data.EarlyGame,
-            midGame: data.MidGame,
-            lateGame: data.LateGame,
-            mobility: data.Mobility,
-            range: data.Range,
-            bulk: data.Bulk,
-            damage: data.Damage,
-            damageType: data.DamageType,
-            damageAffect: data.DamageAffect,
-            cc: data.CC,
-            playStyle: data.PlayStyle,
-            classification: data.Classification
+            earlyGame: data.early_game,
+            midGame: data.mid_game,
+            lateGame: data.late_game,
+            mobility: data.mobility,
+            range: data.range,
+            bulk: data.bulk,
+            damage: data.damage,
+            damageType: data.damage_type,
+            damageAffect: data.damage_affect,
+            cc: data.cc,
+            playStyle: data.play_style,
+            classification: data.classification,
+            otherAttr: data.other_attr,
+            canExpShare: data.can_exp_share,
+            canTopLaneCarry: data.can_top_lane_carry,
+            canJungleCarry: data.can_jungle_carry,
+            canBottomLaneCarry: data.can_bottom_lane_carry,
+            bestLane: data.best_lane,
+            assumedMove1: data.assumed_move_1,
+            assumedMove2: data.assumed_move_2,
+            class: data.pokemon_class,
         };
         
         // Add a unique ID property for easier comparison
-        this.id = data.Name; // Assuming Name is unique
+        this.id = data.pokemon_name; // Assuming pokemon_name is unique
     }
 }
 
@@ -302,7 +326,13 @@ function countAttributes(data) {
         cc: { High: 0, Medium: 0, Low: 0, None: 0 },
         playStyle: { Dive: 0, Teamfight: 0, SplitMap: 0, Poke: 0, Assist: 0 },
         classification: { ADC: 0, Bruiser: 0, Assassin: 0, DrainTank: 0, UtilityMage: 0, BurstMage: 0, Healer: 0, Buffer: 0, Engage: 0 },
-        OtherAttr: { AntiCC: 0, Peel: 0, Heals: 0, Lockdown: 0, SpaceControl: 0 },
+        class: { Attacker: 0, Defender: 0, Supporter: 0, Speedster: 0, AllRounder: 0 },
+        otherAttr: { AntiCC: 0, Peel: 0, Heals: 0, Lockdown: 0, SpaceControl: 0 },
+        canExpShare: { Yes: 0, No: 0 },
+        canTopLaneCarry: { Yes: 0, No: 0 },
+        canJungleCarry: { Yes: 0, No: 0 },
+        canBottomLaneCarry: { Yes: 0, No: 0 },
+        bestLane: { TopLane: 0, JungleCarry: 0, BottomCarry: 0, BottomSupport: 0 },
     };
     
     data.forEach(entry => {
@@ -382,7 +412,7 @@ function heuristic_counter_score(yourTeam, enemyTeam){
                         break;
                         
                 }
-                switch (pokemon.attributes.Mobility) {
+                switch (pokemon.attributes.mobility) {
                     case "High":
                         safetyScore += 10;
                         break;
@@ -427,5 +457,7 @@ function compareTwoComps(){
 
 }
 
-const algorithmicPerfectAnswer = a_star_search([], [], [], rawTraitData);
-console.log(algorithmicPerfectAnswer);
+// const algorithmicPerfectAnswer = a_star_search([], [], [], rawTraitData);
+// console.log(algorithmicPerfectAnswer);
+
+module.exports = { a_star_search };
