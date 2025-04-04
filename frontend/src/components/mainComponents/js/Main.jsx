@@ -78,10 +78,9 @@ function Main() {
                 <button id="PERSONvsPERSON" className="modeBTN bigBTNs" onClick={() => navigate('/person-vs-person', {state: {numUsers: 2, settings: settings}})}>Person VS Person</button>
                 <button id="AIvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/ai-vs-ai', {state: {numUsers: 0, settings: settings}})}>AI VS AI</button>
             </div>
-            <div id="settingContainer">
+            <div id="AdditionalFeaturesContainer">
                 <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list')}>Tier List</button>
                 <button id="compScore" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
-                <button id="settings" className="settingBTN bigBTNs" onClick={(e) => openCloseSettings(e)}>Draft Settings</button>
                 <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
                 <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits')}>Traits</button>
                 <button id="comps" className="modeBTN bigBTNs" onClick={() => navigate('/comps')}>Team Comps</button>
