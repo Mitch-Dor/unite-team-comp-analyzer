@@ -330,7 +330,7 @@ const constants = {
     CERULEDGE_MOVE_1B_PHANTOMFORCE: 'Phantom Force',
     CERULEDGE_MOVE_2B_FLAMECHARGE: 'Flame Charge',
     HOOH_MOVE_1A_FLY: 'Fly',
-    HOOH_MOVE_1B_FIRESPIN: 'Fire Spine',
+    HOOH_MOVE_1B_FIRESPIN: 'Fire Spin',
     HOOH_MOVE_2A_FLAMETHROWER: 'Flamethrower',
     HOOH_MOVE_2B_SKYATTACK: 'Sky Attack',
 
