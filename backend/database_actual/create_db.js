@@ -6,6 +6,7 @@
 
 const constants = require('../../common/naming_constants.js');
 const pokemonData = require('./databaseData/pokemonData');
+const populate_db = require('./populate_db');
 
 var sqlite3 = require('sqlite3');
 var db;
@@ -41,11 +42,13 @@ function createDB() {
     // Function to create the tables themselves
     function createTables(newdb) {
         newdb.exec(`
+        -- Table symbolizing the characters themselves
         create table playable_characters (
             pokemon_id integer primary key AUTOINCREMENT not null,
             pokemon_name text not null,
             pokemon_class text not null
         );
+        -- Table symbolizing character traits for AI
         create table pokemon_attributes (
             pokemon_id integer primary key AUTOINCREMENT not null,
             early_game text not null,
@@ -71,12 +74,14 @@ function createDB() {
             assumed_move_2 text not null,
             FOREIGN KEY (pokemon_id) REFERENCES playable_characters (pokemon_id)
         );
+        -- Table symbolizing moves that a pokemon can use
         create table pokemon_moves (
             move_id integer primary key AUTOINCREMENT not null,
             move_name text not null,
             pokemon_id int not null,
             FOREIGN KEY (pokemon_id) REFERENCES playable_characters (pokemon_id)
         );
+        -- Table symbolizing a comp a team drafted
         create table professional_comps (
             comp_id integer primary key AUTOINCREMENT not null,
             pokemon_1 int not null,
@@ -94,6 +99,8 @@ function createDB() {
             pokemon_4_move_2 int not null,
             pokemon_5_move_1 int not null,
             pokemon_5_move_2 int not null,
+            -- 1 if this team picked first, 0 if this team picked second
+            first_pick int not null,
             FOREIGN KEY (pokemon_1) REFERENCES playable_characters(pokemon_id),
             FOREIGN KEY (pokemon_2) REFERENCES playable_characters(pokemon_id),
             FOREIGN KEY (pokemon_3) REFERENCES playable_characters(pokemon_id),
@@ -110,9 +117,10 @@ function createDB() {
             FOREIGN KEY (pokemon_5_move_1) REFERENCES pokemon_moves(move_id),
             FOREIGN KEY (pokemon_5_move_2) REFERENCES pokemon_moves(move_id)
         );
+        -- A table symbolizing a match between two teams in a given set
         create table professional_matches (
             match_id integer primary key AUTOINCREMENT not null,
-            event_id int not null,
+            set_id int not null,
             team_1_comp_id int not null,
             team_2_comp_id int not null,
             team_1_player_1 int not null,
@@ -128,8 +136,7 @@ function createDB() {
             team_1_id int not null,
             team_2_id int not null,
             winning_team_id int not null, 
-            first_pick_team_id int not null,
-            FOREIGN KEY (event_id) REFERENCES events (event_id),
+            FOREIGN KEY (set_id) REFERENCES professional_sets (set_id),
             FOREIGN KEY (team_1_comp_id) REFERENCES professional_comps (comp_id),
             FOREIGN KEY (team_2_comp_id) REFERENCES professional_comps (comp_id),
             FOREIGN KEY (team_1_player_1) REFERENCES professional_players (player_id),
@@ -143,28 +150,24 @@ function createDB() {
             FOREIGN KEY (team_2_player_4) REFERENCES professional_players (player_id),
             FOREIGN KEY (team_2_player_5) REFERENCES professional_players (player_id)
         );
+        -- A table symbolizing professional players
         create table professional_players (
             player_id integer primary key AUTOINCREMENT not null,
             player_name text not null
         );
+        -- A table symbolizing a professional team 
         create table professional_teams (
             team_id integer primary key AUTOINCREMENT not null,
             team_name text not null,
             team_region text not null
         );
+        -- A table symbolizing a set of matches at a given event
         create table professional_sets (
             set_id integer primary key AUTOINCREMENT not null,
-            match_1_id int not null,
-            match_2_id int not null,
-            match_3_id int not null,
-            match_4_id int not null,
-            match_5_id int not null,
-            FOREIGN KEY (match_1_id) REFERENCES professional_matches (match_id),
-            FOREIGN KEY (match_2_id) REFERENCES professional_matches (match_id),
-            FOREIGN KEY (match_3_id) REFERENCES professional_matches (match_id),
-            FOREIGN KEY (match_4_id) REFERENCES professional_matches (match_id),
-            FOREIGN KEY (match_5_id) REFERENCES professional_matches (match_id)
+            event_id int not null,
+            FOREIGN KEY (event_id) REFERENCES events (event_id)
         );
+        -- A table symbolizing an event
         create table events (
             event_id integer primary key AUTOINCREMENT not null,
             event_name text not null,
@@ -177,66 +180,9 @@ function createDB() {
                 process.exit(1);
             } else {
                 console.log("Successfully created tables.");
-                populateCharacters(newdb);
-                populateAttributes(newdb);
+                populate_db(newdb);
                 runQueries(newdb);
             }
-        });
-    }
-
-    function populateCharacters(db) {
-        const values = pokemonData.map(pokemon => {
-            // Convert pokemon name to match your constants format
-            const pokemonName = pokemon.name.toUpperCase().replace('-', '_');
-            // Map the Classification to your class constants
-            const pokemonClass = mapClassToProperClass(pokemon.class);
-            return `('${pokemonName}', '${pokemonClass}')`;
-        }).join(',\n            ');
-    
-        db.exec(`
-        insert into playable_characters (pokemon_name, pokemon_class) 
-        values 
-            ${values}
-        `, (err) => {
-            if (err) {
-                console.log("Error inserting into playable_characters: " + err.message);
-                process.exit(1);
-            } else {
-                console.log("Successfully inserted characters.");
-            }
-        });
-    }
-
-    // Helper function to map Classifications to your class constants
-    function mapClassToProperClass(givenClass) {
-        const classMap = {
-            'Attacker': constants.ATTACKER,
-            'Defender': constants.DEFENDER,
-            'Speedster': constants.SPEEDSTER,
-            'Supporter': constants.SUPPORTER,
-            'AllRounder': constants.ALL_ROUNDER,
-        };
-        return classMap[givenClass];
-    }
-
-    function populateAttributes(db) {
-        const values = pokemonData.map(pokemon => {
-            const pokemonName = pokemon.name.toUpperCase().replace('-', '_');
-
-            return `('${pokemonName}', '${pokemon.early_game}', '${pokemon.mid_game}', '${pokemon.late_game}', '${pokemon.mobility}', '${pokemon.range}', '${pokemon.bulk}', '${pokemon.damage}', '${pokemon.damage_type}', '${pokemon.damage_affect}', '${pokemon.cc}', '${pokemon.play_style}', '${pokemon.classification}', '${pokemon.other_attr}', '${pokemon.can_exp_share}', '${pokemon.can_top_lane_carry}', '${pokemon.can_jungle_carry}', '${pokemon.can_bottom_lane_carry}', '${pokemon.best_lane}', '${pokemon.assumed_move_1}', '${pokemon.assumed_move_2}')`;
-        }).join(',\n            ');
-
-        db.exec(`
-        insert into pokemon_attributes (pokemon_name, early_game, mid_game, late_game, mobility, range, bulk, damage, damage_type, damage_affect, cc, play_style, classification, other_attr, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry, best_lane, assumed_move_1, assumed_move_2)
-        values
-            ${values}
-        `, (err) => {   
-            if (err) {
-                console.log("Error inserting into pokemon_attributes: " + err.message);
-                process.exit(1);
-            } else {
-                console.log("Successfully inserted attributes.");
-            }       
         });
     }
 
@@ -257,9 +203,15 @@ function createDB() {
     // Drops all existing tables to clear the database
     function clearDatabase(db, callback) {
         db.exec(`
+        DROP TABLE IF EXISTS professional_matches;
+        DROP TABLE IF EXISTS professional_sets;
+        DROP TABLE IF EXISTS professional_comps;
+        DROP TABLE IF EXISTS pokemon_moves;
         DROP TABLE IF EXISTS pokemon_attributes;
         DROP TABLE IF EXISTS playable_characters;
-        DROP TABLE IF EXISTS comps;
+        DROP TABLE IF EXISTS professional_players;
+        DROP TABLE IF EXISTS professional_teams;
+        DROP TABLE IF EXISTS events;
         `, (err) => {
             if (err) {
                 console.log("Getting error " + err);
