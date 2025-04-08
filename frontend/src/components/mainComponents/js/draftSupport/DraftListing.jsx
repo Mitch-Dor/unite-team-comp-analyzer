@@ -24,6 +24,7 @@ const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Pick
         <>
             {pokemonList && pokemonList.length > 0 ? (
                 pokemonList.map(pokemon => {
+                    const isUnavailable = team1Bans.includes(pokemon) || team2Bans.includes(pokemon) || team1Picks.includes(pokemon) || team2Picks.includes(pokemon);
                     return (
                         <div className={`draftCharacter ${pokemon.pokemon_class} ${isUnavailable ? 'unavailable' : 'available'} ${targetPokemon === pokemon ? 'targeted' : ''}`} key={pokemon.pokemon_id} onClick={() => {targetPokemon(pokemon)}}>
                             <img className="characterPortrait" src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />

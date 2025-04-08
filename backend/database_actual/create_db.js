@@ -42,11 +42,12 @@ function createDB() {
     function createTables(newdb) {
         newdb.exec(`
         create table playable_characters (
-            pokemon_name text primary key not null,
+            pokemon_id integer primary key AUTOINCREMENT not null,
+            pokemon_name text not null,
             pokemon_class text not null
         );
         create table pokemon_attributes (
-            pokemon_name text not null,
+            pokemon_id integer primary key AUTOINCREMENT not null,
             early_game text not null,
             mid_game text not null,
             late_game text not null,
@@ -68,21 +69,108 @@ function createDB() {
             best_lane text not null,
             assumed_move_1 text not null,
             assumed_move_2 text not null,
-            FOREIGN KEY (pokemon_name) REFERENCES playable_characters (pokemon_name)
+            FOREIGN KEY (pokemon_id) REFERENCES playable_characters (pokemon_id)
         );
-        create table comps (
+        create table pokemon_moves (
+            move_id integer primary key AUTOINCREMENT not null,
+            move_name text not null,
+            pokemon_id int not null,
+            FOREIGN KEY (pokemon_id) REFERENCES playable_characters (pokemon_id)
+        );
+        create table professional_comps (
             comp_id integer primary key AUTOINCREMENT not null,
             pokemon_1 int not null,
             pokemon_2 int not null,
             pokemon_3 int not null,
             pokemon_4 int not null,
             pokemon_5 int not null,
-            FOREIGN KEY (pokemon_1) REFERENCES playable_characters(pokemon_name),
-            FOREIGN KEY (pokemon_2) REFERENCES playable_characters(pokemon_name),
-            FOREIGN KEY (pokemon_3) REFERENCES playable_characters(pokemon_name),
-            FOREIGN KEY (pokemon_4) REFERENCES playable_characters(pokemon_name),
-            FOREIGN KEY (pokemon_5) REFERENCES playable_characters(pokemon_name)
+            pokemon_1_move_1 int not null,
+            pokemon_1_move_2 int not null,
+            pokemon_2_move_1 int not null,
+            pokemon_2_move_2 int not null,
+            pokemon_3_move_1 int not null,
+            pokemon_3_move_2 int not null,
+            pokemon_4_move_1 int not null,
+            pokemon_4_move_2 int not null,
+            pokemon_5_move_1 int not null,
+            pokemon_5_move_2 int not null,
+            FOREIGN KEY (pokemon_1) REFERENCES playable_characters(pokemon_id),
+            FOREIGN KEY (pokemon_2) REFERENCES playable_characters(pokemon_id),
+            FOREIGN KEY (pokemon_3) REFERENCES playable_characters(pokemon_id),
+            FOREIGN KEY (pokemon_4) REFERENCES playable_characters(pokemon_id),
+            FOREIGN KEY (pokemon_5) REFERENCES playable_characters(pokemon_id),
+            FOREIGN KEY (pokemon_1_move_1) REFERENCES pokemon_moves(move_id),
+            FOREIGN KEY (pokemon_1_move_2) REFERENCES pokemon_moves(move_id),
+            FOREIGN KEY (pokemon_2_move_1) REFERENCES pokemon_moves(move_id),
+            FOREIGN KEY (pokemon_2_move_2) REFERENCES pokemon_moves(move_id),
+            FOREIGN KEY (pokemon_3_move_1) REFERENCES pokemon_moves(move_id),
+            FOREIGN KEY (pokemon_3_move_2) REFERENCES pokemon_moves(move_id),
+            FOREIGN KEY (pokemon_4_move_1) REFERENCES pokemon_moves(move_id),
+            FOREIGN KEY (pokemon_4_move_2) REFERENCES pokemon_moves(move_id),
+            FOREIGN KEY (pokemon_5_move_1) REFERENCES pokemon_moves(move_id),
+            FOREIGN KEY (pokemon_5_move_2) REFERENCES pokemon_moves(move_id)
         );
+        create table professional_matches (
+            match_id integer primary key AUTOINCREMENT not null,
+            event_id int not null,
+            team_1_comp_id int not null,
+            team_2_comp_id int not null,
+            team_1_player_1 int not null,
+            team_1_player_2 int not null,
+            team_1_player_3 int not null,
+            team_1_player_4 int not null,
+            team_1_player_5 int not null,
+            team_2_player_1 int not null,
+            team_2_player_2 int not null,
+            team_2_player_3 int not null,
+            team_2_player_4 int not null,
+            team_2_player_5 int not null,
+            team_1_id int not null,
+            team_2_id int not null,
+            winning_team_id int not null, 
+            first_pick_team_id int not null,
+            FOREIGN KEY (event_id) REFERENCES events (event_id),
+            FOREIGN KEY (team_1_comp_id) REFERENCES professional_comps (comp_id),
+            FOREIGN KEY (team_2_comp_id) REFERENCES professional_comps (comp_id),
+            FOREIGN KEY (team_1_player_1) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_1_player_2) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_1_player_3) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_1_player_4) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_1_player_5) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_2_player_1) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_2_player_2) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_2_player_3) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_2_player_4) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_2_player_5) REFERENCES professional_players (player_id)
+        );
+        create table professional_players (
+            player_id integer primary key AUTOINCREMENT not null,
+            player_name text not null
+        );
+        create table professional_teams (
+            team_id integer primary key AUTOINCREMENT not null,
+            team_name text not null,
+            team_region text not null
+        );
+        create table professional_sets (
+            set_id integer primary key AUTOINCREMENT not null,
+            match_1_id int not null,
+            match_2_id int not null,
+            match_3_id int not null,
+            match_4_id int not null,
+            match_5_id int not null,
+            FOREIGN KEY (match_1_id) REFERENCES professional_matches (match_id),
+            FOREIGN KEY (match_2_id) REFERENCES professional_matches (match_id),
+            FOREIGN KEY (match_3_id) REFERENCES professional_matches (match_id),
+            FOREIGN KEY (match_4_id) REFERENCES professional_matches (match_id),
+            FOREIGN KEY (match_5_id) REFERENCES professional_matches (match_id)
+        );
+        create table events (
+            event_id integer primary key AUTOINCREMENT not null,
+            event_name text not null,
+            event_date text not null,
+            vod_url text not null
+        )
         `, (err) => {
             if (err) {
                 console.log("Error creating tables: " + err.message);
