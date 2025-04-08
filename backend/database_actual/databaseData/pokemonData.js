@@ -96,7 +96,7 @@ const pokemonData = [
     "assumed_move_2": "Dive"
   },
   {
-    "name": "Alolan-Ninetales",
+    "name": "Alolan_Ninetales",
     "early_game": "Strong",
     "mid_game": "Medium",
     "late_game": "Medium",
@@ -216,7 +216,7 @@ const pokemonData = [
     "assumed_move_2": "Amnesia"
   },
   {
-    "name": "Mr-Mime",
+    "name": "Mr_Mime",
     "early_game": "Strong",
     "mid_game": "Medium",
     "late_game": "Medium",
@@ -1104,7 +1104,7 @@ const pokemonData = [
     "assumed_move_2": "ConfuseRay"
   },
   {
-    "name": "Urshifu-SS",
+    "name": "Urshifu_SS",
     "early_game": "Weak",
     "mid_game": "Strong",
     "late_game": "Strong",
@@ -1128,7 +1128,7 @@ const pokemonData = [
     "assumed_move_2": "ThroatChop"
   },
   {
-    "name": "Urshifu-RS",
+    "name": "Urshifu_RS",
     "early_game": "Weak",
     "mid_game": "Strong",
     "late_game": "Medium",
@@ -1368,7 +1368,7 @@ const pokemonData = [
     "assumed_move_2": "SnipeShot"
   },
   {
-    "name": "Mewtwo-Y",
+    "name": "Mewtwo_Y",
     "early_game": "Medium",
     "mid_game": "Medium",
     "late_game": "Strong",
@@ -1392,7 +1392,7 @@ const pokemonData = [
     "assumed_move_2": "Teleport"
   },
   {
-    "name": "Mewtwo-X",
+    "name": "Mewtwo_X",
     "early_game": "Medium",
     "mid_game": "Strong",
     "late_game": "Medium",
@@ -1608,7 +1608,7 @@ const pokemonData = [
     "assumed_move_2": "PhantomForce"
   },
   {
-    "name": "Ho-Oh",
+    "name": "Ho_Oh",
     "early_game": "Medium",
     "mid_game": "Weak",
     "late_game": "Strong",
@@ -1728,7 +1728,7 @@ const pokemonData = [
     "assumed_move_2": "Thief"
   },
   {
-    "name": "Galarian-Rapidash",
+    "name": "Galarian_Rapidash",
     "early_game": "Medium",
     "mid_game": "Medium",
     "late_game": "Medium",

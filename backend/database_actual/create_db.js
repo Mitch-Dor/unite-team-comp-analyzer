@@ -50,7 +50,7 @@ function createDB() {
         );
         -- Table symbolizing character traits for AI
         create table pokemon_attributes (
-            pokemon_id integer primary key AUTOINCREMENT not null,
+            pokemon_id integer primary key not null,
             early_game text not null,
             mid_game text not null,
             late_game text not null,
@@ -63,7 +63,6 @@ function createDB() {
             cc text not null,
             play_style text not null,
             classification text not null,
-            class text not null,
             other_attr text not null,
             can_exp_share text not null,
             can_top_lane_carry text not null,
@@ -180,8 +179,12 @@ function createDB() {
                 process.exit(1);
             } else {
                 console.log("Successfully created tables.");
-                populate_db(newdb);
-                runQueries(newdb);
+                populate_db(newdb).then(() => {
+                    runQueries(newdb);
+                }).catch(err => {
+                    console.log("Error populating database: " + err);
+                    process.exit(1);
+                });
             }
         });
     }
@@ -195,7 +198,7 @@ function createDB() {
                 return;
             }
             rows.forEach(row => {
-                console.log(row.pokemon_name, row.pokemon_class);
+                console.log(row.pokemon_name, row.pokemon_class, row.early_game);
             });
         });
     }
