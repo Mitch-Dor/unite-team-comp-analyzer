@@ -1,5 +1,7 @@
-const constants = require('../../common/naming_constants.js');
+const { constants, NAME_CONSTANTS, MOVE_CONSTANTS } = require('../../frontend/src/common/naming_constants.js');
 const pokemonData = require('./databaseData/pokemonData');
+
+let pokemonNameToIdMap = {};
 
 // A function that populates the database with logged data
 function populate_db(db) {
@@ -7,6 +9,7 @@ function populate_db(db) {
         try {
             await populateCharacters(db);
             await populateAttributes(db);
+            await populateMoves(db);
             resolve();
         } catch (error) {
             reject(error);
@@ -87,6 +90,8 @@ function populate_db(db) {
         try {
             const values = await Promise.all(pokemonData.map(async (pokemon) => {
                 const pokemon_id = await getPokemonIdByName(db, pokemon.name);
+                // Populate the pokemonNameToIdMap while we're doing this
+                pokemonNameToIdMap[pokemon.name] = pokemon_id;
 
                 if (pokemon_id === null) {
                     throw new Error(`Pokemon ID not found for ${pokemon.name}`);
@@ -135,8 +140,69 @@ function populate_db(db) {
         pokemon_id int not null,
         FOREIGN KEY (pokemon_id) REFERENCES playable_characters (pokemon_id)
     */
-    function populateMoves(db) {
-        
+    async function populateMoves(db) {
+        try {
+            // Helper function to know how many moves to create for a given pokemon
+            function getNumMoves(pokemon) {
+                switch (pokemon) {
+                    case NAME_CONSTANTS.BLAZIKEN_NAME: return 1;
+                    case NAME_CONSTANTS.MEW_NAME: return 1;
+                    case NAME_CONSTANTS.URSHIFUSS_NAME: return 2;
+                    case NAME_CONSTANTS.URSHIFURS_NAME: return 2;
+                    case NAME_CONSTANTS.SCIZOR_NAME: return 3;
+                    case NAME_CONSTANTS.SCYTHER_NAME: return 3;
+                    default: return 4;
+                }
+            }
+
+            // Collect all move values
+            const moveValues = [];
+            let index = 0;
+            
+            // Process each pokemon
+            for (const pokemon of pokemonData) {
+                const pokemon_id = pokemonNameToIdMap[pokemon.name];
+                
+                if (pokemon_id === null) {
+                    throw new Error(`Pokemon ID not found for ${pokemon.name}`);
+                }
+                
+                const numMoves = getNumMoves(pokemon.name);
+                
+                // Add each move for this pokemon
+                for (let i = 0; i < numMoves; i++) {
+                    if (index < Object.values(MOVE_CONSTANTS).length) {
+                        const move = Object.values(MOVE_CONSTANTS)[index];
+                        moveValues.push(`('${move}', ${pokemon_id})`);
+                        index++;
+                    }
+                }
+            }
+            
+            // If we have moves to insert
+            if (moveValues.length > 0) {
+                await new Promise((resolve, reject) => {
+                    db.exec(`
+                    INSERT INTO pokemon_moves (move_name, pokemon_id)
+                    VALUES
+                        ${moveValues.join(',\n                    ')}
+                    `, (err) => {
+                        if (err) {
+                            console.log("Error inserting into pokemon_moves: " + err.message);
+                            reject(err);
+                        } else {
+                            console.log(`Successfully inserted ${moveValues.length} moves.`);
+                            resolve();
+                        }
+                    });
+                });
+            } else {
+                console.log("No moves to insert.");
+            }
+        } catch (error) {
+            console.log("Error inserting into pokemon_moves: " + error.message);
+            throw error; // Rethrow so it can be caught by the promise chain
+        }
     }
 
     /*

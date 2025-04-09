@@ -2,45 +2,45 @@
 // Also just makes it easier to prevent typos and just change stuff as needed.
 
 // Pokemon
-const constants = {
+const NAME_CONSTANTS = {
     CINDERACE_NAME: 'Cinderace',
     GARCHOMP_NAME: 'Garchomp',
     GENGAR_NAME: 'Gengar',
-    CRAMORANT_NAME: 'Cramorant',
+    CRAMORANT_NAME: 'Cramorant', 
     ALOLANNINETALES_NAME: 'Alolan_Ninetales',
     WIGGLYTUFF_NAME: 'Wigglytuff',
-    MACHAMP_NAME: 'Machamp',
+    MACHAMP_NAME: 'Machamp', 
     ABSOL_NAME: 'Absol',
     SLOWBRO_NAME: 'Slowbro',
-    MRMIME_NAME: 'Mr_Mime',
-    VENUSAUR_NAME: 'Venusaur',
+    MRMIME_NAME: 'Mr_Mime', 
+    VENUSAUR_NAME: 'Venusaur', 
     LUCARIO_NAME: 'Lucario',
     TALONFLAME_NAME: 'Talonflame',
-    ELDEGOSS_NAME: 'Eldegoss',
-    GRENINJA_NAME: 'Greninja',
+    ELDEGOSS_NAME: 'Eldegoss', 
+    GRENINJA_NAME: 'Greninja', 
     CRUSTLE_NAME: 'Crustle',
-    SNORLAX_NAME: 'Snorlax',
-    CHARIZARD_NAME: 'Charizard',
-    PIKACHU_NAME: 'Pikachu',
-    ZERAORA_NAME: 'Zeraora',
+    SNORLAX_NAME: 'Snorlax', 
+    CHARIZARD_NAME: 'Charizard', 
+    PIKACHU_NAME: 'Pikachu', 
+    ZERAORA_NAME: 'Zeraora', 
     GARDEVOIR_NAME: 'Gardevoir',
-    BLISSEY_NAME: 'Blissey',
-    BLASTOISE_NAME: 'Blastoise',
-    MAMOSWINE_NAME: 'Mamoswine',
-    SYLVEON_NAME: 'Sylveon',
-    GREEDENT_NAME: 'Greedent',
-    DECIDUEYE_NAME: 'Decidueye',
-    TSAREENA_NAME: 'Tsareena',
-    DRAGONITE_NAME: 'Dragonite',
+    BLISSEY_NAME: 'Blissey', 
+    BLASTOISE_NAME: 'Blastoise', 
+    MAMOSWINE_NAME: 'Mamoswine', 
+    SYLVEON_NAME: 'Sylveon', 
+    GREEDENT_NAME: 'Greedent', 
+    DECIDUEYE_NAME: 'Decidueye', 
+    TSAREENA_NAME: 'Tsareena', 
+    DRAGONITE_NAME: 'Dragonite', 
     TREVENANT_NAME: 'Trevenant',
-    AEGISLASH_NAME: 'Aegislash',
-    HOOPA_NAME: 'Hoopa',
+    AEGISLASH_NAME: 'Aegislash', 
+    HOOPA_NAME: 'Hoopa', 
     DURALUDON_NAME: 'Duraludon',
     AZUMARILL_NAME: 'Azumarill',
     ESPEON_NAME: 'Espeon',
-    DELPHOX_NAME: 'Delphox',
-    GLACEON_NAME: 'Glaceon',
-    BUZZWOLE_NAME: 'Buzzwole',
+    DELPHOX_NAME: 'Delphox', 
+    GLACEON_NAME: 'Glaceon', 
+    BUZZWOLE_NAME: 'Buzzwole', 
     TYRANITAR_NAME: 'Tyranitar',
     MEW_NAME: 'Mew',
     DODRIO_NAME: 'Dodrio',
@@ -69,7 +69,17 @@ const constants = {
     GYARADOS_NAME: 'Gyarados',
     MIRAIDON_NAME: 'Miraidon',
     FALINKS_NAME: 'Falinks',
+    CERULEDGE_NAME: 'Ceruledge',
+    HOOH_NAME: 'Ho_Oh',
+    ARMAROUGE_NAME: 'Armarouge',
+    DARKRAI_NAME: 'Darkrai',
+    PSYDUCK_NAME: 'Psyduck',
+    TINKATON_NAME: 'Tinkaton',
+    GALARIANRAPIDASH_NAME: 'Galarian_Rapidash',
+    SUICUNE_NAME: 'Suicune',
+}
 
+const MOVE_CONSTANTS = {
     // Moves
     CINDERACE_MOVE_1A_PYROBALL: 'Pyro Ball',
     CINDERACE_MOVE_1B_BLAZEKICK: 'Blaze Kick',
@@ -355,14 +365,18 @@ const constants = {
     SUICUNE_MOVE_1A_SURF: 'Surf',
     SUICUNE_MOVE_1A_ICEBEAM: 'Ice Beam',
     SUICUNE_MOVE_1A_ICYWIND: 'Icy Wind',
+}
 
+const CLASS_CONSTANTS = {
     // Roles
     ATTACKER: 'Attacker',
     DEFENDER: 'Defender',
     ALL_ROUNDER: 'All_Rounder',
     SPEEDSTER: 'Speedster',
     SUPPORTER: 'Supporter',
+}
 
+const ATTRIBUTE_CONSTANTS = {
     //// Attributes
     //// Split into good and bad attributes. Try to mimic the good attributes of known comps and minimize the bad attributes or cancel out the bad attributes.
     // General Attributes
@@ -399,6 +413,19 @@ const constants = {
     FINDS_PICKS: 'Forces Picks',
     GOOD_BACKCAP: 'Good Backcapper',
     FAST_RIP: 'Fast Rip',
-}
+}   
 
-module.exports = constants;
+const constants = {
+    ...NAME_CONSTANTS,
+    ...MOVE_CONSTANTS,
+    ...CLASS_CONSTANTS,
+    ...ATTRIBUTE_CONSTANTS
+};
+
+module.exports = {
+    constants,
+    NAME_CONSTANTS,
+    MOVE_CONSTANTS,
+    CLASS_CONSTANTS,
+    ATTRIBUTE_CONSTANTS
+};

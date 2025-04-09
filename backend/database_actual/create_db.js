@@ -4,7 +4,7 @@
 
 // NOTE: CREATES DATABASE WHERE FILE IS RUN FROM
 
-const constants = require('../../common/naming_constants.js');
+const constants = require('../../frontend/src/common/naming_constants.js');
 const pokemonData = require('./databaseData/pokemonData');
 const populate_db = require('./populate_db');
 
@@ -192,13 +192,13 @@ function createDB() {
     // Testing to make sure the database populated correctly
     function runQueries(db) {
         db.all(`
-        select * from playable_characters natural join pokemon_attributes`, (err, rows) => {
+        select * from playable_characters natural join pokemon_moves`, (err, rows) => {
             if (err) {
                 console.log("Getting error " + err);
                 return;
             }
             rows.forEach(row => {
-                console.log(row.pokemon_name, row.pokemon_class, row.early_game);
+                console.log(row.pokemon_name, row.pokemon_class, row.move_name);
             });
         });
     }
