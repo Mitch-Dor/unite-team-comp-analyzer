@@ -109,7 +109,21 @@ function Comps() {
                           alt={pokemon} 
                           className="pokemon-icon"
                         />
-                        <div className="pokemon-name">{pokemon}</div>
+                        <div className="pokemon-name">
+                          {pokemon}
+                          <div className="move-icons">
+                            <img 
+                              src={`/assets/Draft/moves/${pokemon}_${match.team1.pokemon_moves[i * 2].replace(/ /g, '_')}.png`}
+                              alt={match.team1.pokemon_moves[i * 2]}
+                              className="move-icon"
+                            />
+                            <img 
+                              src={`/assets/Draft/moves/${pokemon}_${match.team1.pokemon_moves[i * 2 + 1].replace(/ /g, '_')}.png`}
+                              alt={match.team1.pokemon_moves[i * 2 + 1]}
+                              className="move-icon"
+                            />
+                          </div>
+                        </div>
                         <div className="player-name">{match.team1.players[i] || '—'}</div>
                       </div>
                     ))}
@@ -146,7 +160,21 @@ function Comps() {
                           alt={pokemon} 
                           className="pokemon-icon"
                         />
-                        <div className="pokemon-name">{pokemon}</div>
+                        <div className="pokemon-name">
+                          {pokemon}
+                          <div className="move-icons">
+                            <img 
+                              src={`/assets/Draft/moves/${pokemon}_${match.team2.pokemon_moves[i * 2].replace(/ /g, '_')}.png`}
+                              alt={match.team2.pokemon_moves[i * 2]}
+                              className="move-icon"
+                            />
+                            <img 
+                              src={`/assets/Draft/moves/${pokemon}_${match.team2.pokemon_moves[i * 2 + 1].replace(/ /g, '_')}.png`}
+                              alt={match.team2.pokemon_moves[i * 2 + 1]}
+                              className="move-icon"
+                            />
+                          </div>
+                        </div>
                         <div className="player-name">{match.team2.players[i] || '—'}</div>
                       </div>
                     ))}

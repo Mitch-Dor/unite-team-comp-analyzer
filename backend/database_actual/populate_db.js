@@ -152,8 +152,8 @@ function populate_db(db) {
             // Helper function to know how many moves to create for a given pokemon
             function getNumMoves(pokemon) {
                 switch (pokemon) {
-                    case NAME_CONSTANTS.BLAZIKEN_NAME: return 1;
-                    case NAME_CONSTANTS.MEW_NAME: return 1;
+                    case NAME_CONSTANTS.BLAZIKEN_NAME: return 2;
+                    case NAME_CONSTANTS.MEW_NAME: return 2;
                     case NAME_CONSTANTS.URSHIFUSS_NAME: return 2;
                     case NAME_CONSTANTS.URSHIFURS_NAME: return 2;
                     case NAME_CONSTANTS.SCIZOR_NAME: return 3;
