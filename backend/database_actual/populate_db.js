@@ -1,5 +1,6 @@
 const { constants, NAME_CONSTANTS, MOVE_CONSTANTS } = require('../../frontend/src/common/naming_constants.js');
 const pokemonData = require('./databaseData/pokemonData');
+const compsData = require('./databaseData/compsData');
 
 let pokemonNameToIdMap = {};
 
@@ -10,6 +11,7 @@ function populate_db(db) {
             await populateCharacters(db);
             await populateAttributes(db);
             await populateMoves(db);
+            await populateComps(db);
             resolve();
         } catch (error) {
             reject(error);
@@ -241,8 +243,135 @@ function populate_db(db) {
             FOREIGN KEY (pokemon_5_move_1) REFERENCES pokemon_moves(move_id),
             FOREIGN KEY (pokemon_5_move_2) REFERENCES pokemon_moves(move_id)
     */
-    function populateComps(db) {
+    async function populateComps(db) {
 
+        // Function to get the Move ID by name and pokemon ID
+        function getMoveIdByName(db, moveName, pokemonId) {
+            return new Promise((resolve, reject) => {
+                // Check for special cases first
+                if (!moveName || pokemonId === null) {
+                    return resolve(null); // Or handle as appropriate for your app
+                }
+
+                if (moveName === "MEW_ALL_MOVES") {
+                    moveName = "'Mew_All_Moves'";
+                } else if (moveName === "BLAZIKEN_ALL_MOVES") {
+                    moveName = "'Blaziken_All_Moves'";
+                }
+
+                // Pull move name out from between '' (including the quotes)
+                const match = moveName.match(/'(.*)'/);
+                if (!match) {
+                    console.log(`Could not extract move name from: ${moveName}`);
+                    return resolve(null); // Or handle differently
+                }
+                
+                const refinedMoveName = match[1];
+                db.get(`SELECT move_id FROM pokemon_moves WHERE move_name = ? AND pokemon_id = ?`, 
+                    [refinedMoveName, pokemonId], 
+                    (err, row) => {
+                        if (err) {
+                            console.log(`Error getting move ID: ${err.message}`);
+                        }
+                        resolve(row ? row.move_id : null);
+                    }
+                );
+            });
+        }
+
+        try {
+            let compValues = [];
+            for (const comp of compsData) {
+                // Comp 1
+                const pokemon1_id = pokemonNameToIdMap[comp.t1poke1];
+                const pokemon2_id = pokemonNameToIdMap[comp.t1poke2];
+                const pokemon3_id = pokemonNameToIdMap[comp.t1poke3];
+                const pokemon4_id = pokemonNameToIdMap[comp.t1poke4];
+                const pokemon5_id = pokemonNameToIdMap[comp.t1poke5];
+
+                const p1m1_id = await getMoveIdByName(db, comp.t1poke1move1, pokemon1_id);
+                const p1m2_id = await getMoveIdByName(db, comp.t1poke1move2, pokemon1_id);
+                const p2m1_id = await getMoveIdByName(db, comp.t1poke2move1, pokemon2_id);
+                const p2m2_id = await getMoveIdByName(db, comp.t1poke2move2, pokemon2_id);
+                const p3m1_id = await getMoveIdByName(db, comp.t1poke3move1, pokemon3_id);
+                const p3m2_id = await getMoveIdByName(db, comp.t1poke3move2, pokemon3_id);
+                const p4m1_id = await getMoveIdByName(db, comp.t1poke4move1, pokemon4_id);
+                const p4m2_id = await getMoveIdByName(db, comp.t1poke4move2, pokemon4_id);
+                const p5m1_id = await getMoveIdByName(db, comp.t1poke5move1, pokemon5_id);
+                const p5m2_id = await getMoveIdByName(db, comp.t1poke5move2, pokemon5_id);
+
+                const isFirstPick = comp.firstPick === "Team1";
+                let firstPickNumber = 0;
+                if (isFirstPick) {
+                    firstPickNumber = 1;
+                }
+
+                if (pokemon1_id === null || pokemon2_id === null || pokemon3_id === null || pokemon4_id === null || pokemon5_id === null) {
+                    throw new Error(`Pokemon ID not found for ${pokemon.name}`);
+                }
+            
+                if (p1m1_id === null || p1m2_id === null || p2m1_id === null || p2m2_id === null || p3m1_id === null || p3m2_id === null || p4m1_id === null || p4m2_id === null || p5m1_id === null || p5m2_id === null) {
+                    throw new Error(`Move ID not found for ${comp.t1poke1move1}`);
+                }
+
+                compValues.push(`('${pokemon1_id}', '${pokemon2_id}', '${pokemon3_id}', '${pokemon4_id}', '${pokemon5_id}', '${p1m1_id}', '${p1m2_id}', '${p2m1_id}', '${p2m2_id}', '${p3m1_id}', '${p3m2_id}', '${p4m1_id}', '${p4m2_id}', '${p5m1_id}', '${p5m2_id}', '${firstPickNumber}')`);
+
+                // Comp 2
+                const pokemon6_id = pokemonNameToIdMap[comp.t2poke1];
+                const pokemon7_id = pokemonNameToIdMap[comp.t2poke2];
+                const pokemon8_id = pokemonNameToIdMap[comp.t2poke3];
+                const pokemon9_id = pokemonNameToIdMap[comp.t2poke4];
+                const pokemon10_id = pokemonNameToIdMap[comp.t2poke5];
+
+                const p6m1_id = await getMoveIdByName(db, comp.t2poke1move1, pokemon6_id);
+                const p6m2_id = await getMoveIdByName(db, comp.t2poke1move2, pokemon6_id);
+                const p7m1_id = await getMoveIdByName(db, comp.t2poke2move1, pokemon7_id);
+                const p7m2_id = await getMoveIdByName(db, comp.t2poke2move2, pokemon7_id);
+                const p8m1_id = await getMoveIdByName(db, comp.t2poke3move1, pokemon8_id);
+                const p8m2_id = await getMoveIdByName(db, comp.t2poke3move2, pokemon8_id);
+                const p9m1_id = await getMoveIdByName(db, comp.t2poke4move1, pokemon9_id);
+                const p9m2_id = await getMoveIdByName(db, comp.t2poke4move2, pokemon9_id);
+                const p10m1_id = await getMoveIdByName(db, comp.t2poke5move1, pokemon10_id);
+                const p10m2_id = await getMoveIdByName(db, comp.t2poke5move2, pokemon10_id);
+
+                if (pokemon6_id === null || pokemon7_id === null || pokemon8_id === null || pokemon9_id === null || pokemon10_id === null) {
+                    throw new Error(`Pokemon ID not found for ${pokemon.name}`);
+                }
+            
+                if (p6m1_id === null || p6m2_id === null || p7m1_id === null || p7m2_id === null || p8m1_id === null || p8m2_id === null || p9m1_id === null || p9m2_id === null || p10m1_id === null || p10m2_id === null) {
+                    throw new Error(`Move ID not found for ${comp.t2poke1move1}`);
+                }
+
+                let secondPickNumber = 0;
+                if (firstPickNumber === 0) {
+                    secondPickNumber = 1;
+                } else {
+                    secondPickNumber = 0;
+                }
+
+                compValues.push(`('${pokemon6_id}', '${pokemon7_id}', '${pokemon8_id}', '${pokemon9_id}', '${pokemon10_id}', '${p6m1_id}', '${p6m2_id}', '${p7m1_id}', '${p7m2_id}', '${p8m1_id}', '${p8m2_id}', '${p9m1_id}', '${p9m2_id}', '${p10m1_id}', '${p10m2_id}', '${secondPickNumber}')`);
+            }
+
+            console.log(compValues);
+
+            await new Promise((resolve, reject) => {
+                db.exec(`
+                INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick)
+                VALUES
+                    ${compValues.join(',\n            ')}
+                `, (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        console.log("Successfully inserted comps.");
+                        resolve();
+                    }
+                });
+            });
+        } catch (error) {
+            console.log("Error inserting into professional_comps: " + error.message);
+            process.exit(1);
+        }
     }
 
     /*
@@ -260,6 +389,10 @@ function populate_db(db) {
             set_id int not null,
             team_1_comp_id int not null,
             team_2_comp_id int not null,
+            team_1_ban_1 int not null,
+            team_2_ban_1 int not null,
+            team_1_ban_2 int not null,
+            team_2_ban_2 int not null,
             team_1_player_1 int not null,
             team_1_player_2 int not null,
             team_1_player_3 int not null,

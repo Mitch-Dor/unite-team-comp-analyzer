@@ -122,6 +122,10 @@ function createDB() {
             set_id int not null,
             team_1_comp_id int not null,
             team_2_comp_id int not null,
+            team_1_ban_1 int not null,
+            team_2_ban_1 int not null,
+            team_1_ban_2 int not null,
+            team_2_ban_2 int not null,
             team_1_player_1 int not null,
             team_1_player_2 int not null,
             team_1_player_3 int not null,
@@ -191,14 +195,15 @@ function createDB() {
 
     // Testing to make sure the database populated correctly
     function runQueries(db) {
+        console.log("Running queries");
         db.all(`
-        select * from playable_characters natural join pokemon_moves`, (err, rows) => {
+        select * from playable_characters natural join professional_comps`, (err, rows) => {
             if (err) {
                 console.log("Getting error " + err);
                 return;
             }
             rows.forEach(row => {
-                console.log(row.pokemon_name, row.pokemon_class, row.move_name);
+                console.log(row.pokemon_1, row.pokemon_2, row.pokemon_3, row.pokemon_4, row.pokemon_5);
             });
         });
     }
