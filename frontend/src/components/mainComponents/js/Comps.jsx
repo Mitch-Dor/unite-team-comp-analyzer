@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/comps.css';
+import { fetchAllComps } from './backendCalls/http';
 
 function Comps() {
   const [compsData, setCompsData] = useState([]);
@@ -97,6 +98,11 @@ function Comps() {
 
     setCompsData(sampleData);
     setLoading(false);
+    fetchAllComps().then(data => {
+      console.log(data);
+      //setCompsData(data);
+      //setLoading(false);
+    });
   }, []);
 
   useEffect(() => {

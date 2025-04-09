@@ -79,3 +79,13 @@ export async function runAStarAlgorithm(targetTeam, opposingTeam, bans) {
     const characterDataJson = await characterData.json();
     return characterDataJson;
 }
+
+// Function to fetch all comps
+export async function fetchAllComps() {
+    const characterData = await fetch(routes.GET_ALL_COMPS, {
+        method: 'GET',
+        credentials: 'include',
+    });
+    const characterDataJson = await characterData.json();
+    return characterDataJson;
+}

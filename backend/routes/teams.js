@@ -14,4 +14,15 @@ module.exports = function (app, database) {
             res.sendStatus(401);
         });
     });
+
+    // Function to get all comps
+    app.get('/GETallComps', (req, res) => {
+        database.teams.getAllComps().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching comps:', error); // Added logging for better debugging
+            res.sendStatus(401);
+        });
+    });
 };

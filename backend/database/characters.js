@@ -109,7 +109,6 @@ class Characters {
         });
       });
     }
-
 }
 
 module.exports = Characters;
