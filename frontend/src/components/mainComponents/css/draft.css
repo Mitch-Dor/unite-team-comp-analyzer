@@ -361,7 +361,7 @@ html::-webkit-scrollbar {
 }
 
 /* All the portrait background patterns need to be contained within the portrait itself */
-.All-Rounder .characterPortrait,
+.All_Rounder .characterPortrait,
 .Attacker .characterPortrait,
 .Speedster .characterPortrait,
 .Defender .characterPortrait,
@@ -497,8 +497,8 @@ html::-webkit-scrollbar {
     padding: 10px;
 }
 /* Character class background patterns */
-.All-Rounder .characterPortrait,
-.All-Rounder.characterPortrait {
+.All_Rounder .characterPortrait,
+.All_Rounder.characterPortrait {
     background-image: linear-gradient(
         45deg,
         purple 0%,

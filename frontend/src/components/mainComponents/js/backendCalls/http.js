@@ -2,8 +2,8 @@ const constants = require('../../../../common/naming_constants.js');
 const routes = require('../../../../common/route_constants.js');
 
 // Function to fetch all character names and classes
-export async function fetchCharacterDisplayInfo() {
-    const characterData = await fetch(routes.GET_ALL_ID_NAME, {
+export async function fetchCharacterDraftInfo() {
+    const characterData = await fetch(routes.GET_ALL_DRAFT_INFO, {
         method: 'GET',
         credentials: 'include',
         headers: {

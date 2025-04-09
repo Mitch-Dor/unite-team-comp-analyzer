@@ -6,7 +6,7 @@ const Filtering = ({ pokemonList, updateFilteredList }) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const possibleLanes = ["top", "jungle", "bot", "EXPShare"];
-    const possibleClasses = ["all-rounder", "supporter", "speedster", "attacker", "defender"];
+    const possibleClasses = ["all_rounder", "supporter", "speedster", "attacker", "defender"];
 
     useEffect(() => {
         applyFilters();
@@ -20,7 +20,27 @@ const Filtering = ({ pokemonList, updateFilteredList }) => {
             searchMatches = searchMatches.filter(pokemon => pokemon.pokemon_class.toLowerCase() === classFilter.toLowerCase());
         }
         // Filter by lane
-        searchMatches = searchMatches.filter(pokemon => laneFilters.every(filter => pokemon.attributes.includes(filter))); // Checks that all the pokemon left in searchMatches have attributes that show they can go to EVERY selected lane 
+        // Multiple lanes can be selected at once
+        if (laneFilters.length > 0){
+            searchMatches = searchMatches.filter(filterByLane);
+        }
+
+        function filterByLane(pokemon){
+            if (laneFilters.includes("top") && pokemon.can_top_lane_carry==="No"){
+                return false;
+            }
+            if (laneFilters.includes("jungle") && pokemon.can_jungle_carry==="No"){
+                return false;
+            }
+            if (laneFilters.includes("bot") && pokemon.can_bottom_lane_carry==="No"){
+                return false;
+            }
+            if (laneFilters.includes("EXPShare") && pokemon.can_exp_share==="No"){
+                return false;
+            }
+            return true;
+        }
+
         updateFilteredList(searchMatches);
     }
 

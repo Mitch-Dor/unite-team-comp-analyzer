@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import DraftListing from './draftSupport/DraftListing';
 import TeamDisplay from './draftSupport/TeamDisplay.jsx';
 import Filtering from './draftSupport/Filtering.jsx';
-import { fetchCharacterDisplayInfo, runAStarAlgorithm } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo, runAStarAlgorithm } from './backendCalls/http.js';
 import '../css/draft.css';
 
 function Draft() {
@@ -30,11 +30,11 @@ function Draft() {
 
     const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
 
-    // Populates pokemonList with the return data from getListOfPokemonDisplayInfo() like name, class, id (status is initialized to none but will be changed to team1, team2, ban1, or ban2 to know where to place it and to gray it out) when the component first mounts.
+    // Populates pokemonList with the return data from fetchCharacterDraftInfo() like name, class, id (status is initialized to none but will be changed to team1, team2, ban1, or ban2 to know where to place it and to gray it out) when the component first mounts.
     useEffect(() => {
         async function fetchCharacterListing() {
             try {
-                const listing = await fetchCharacterDisplayInfo();
+                const listing = await fetchCharacterDraftInfo();
                 updatePokemonList(listing);
                 updateFilteredList(listing);
                 setLoading(false);

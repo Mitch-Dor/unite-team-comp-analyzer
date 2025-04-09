@@ -1,5 +1,5 @@
 const routes = {
-    GET_ALL_ID_NAME: '/GETallCharactersIdsAndNames',
+    GET_ALL_DRAFT_INFO: '/GETallDraftInfo',
     GET_ALL_ATTRIBUTES: '/GETallCharacterAttributes',
     GET_SINGLE_ATTRIBUTES: '/GETsingleCharacterAttributes',
     PUT_CHARACTER_ATTRIBUTES: '/PUTCharacterAttributes',

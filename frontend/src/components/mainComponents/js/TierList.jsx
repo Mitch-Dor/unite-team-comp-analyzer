@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/tierList.css';
-import { fetchCharacterDisplayInfo } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo } from './backendCalls/http.js';
 
 function TierList() {
   const [pokemonList, updatePokemonList] = useState([]);
@@ -18,7 +18,7 @@ function TierList() {
   useEffect(() => {
     async function fetchCharacterListing() {
         try {
-            const listing = await fetchCharacterDisplayInfo();
+            const listing = await fetchCharacterDraftInfo();
             updatePokemonList(listing);
             console.log(listing);
         } catch (error) {

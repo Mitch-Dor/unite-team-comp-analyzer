@@ -40,7 +40,6 @@ function Comps() {
         }
         finalFormattedData.push(finalData);
       }
-      console.log(finalFormattedData);
       setCompsData(finalFormattedData);
       setLoading(false);
     });
