@@ -13,6 +13,7 @@ function populate_db(db) {
             await populateMoves(db);
             await populateComps(db);
             await populatePlayers(db);
+            await populateEvents(db);
             resolve();
         } catch (error) {
             reject(error);
@@ -417,41 +418,79 @@ function populate_db(db) {
     }
 
     /*
+    Table of events
+        event_id integer primary key AUTOINCREMENT not null,
+        event_name text not null,
+        event_date text not null,
+        vod_url text not null
+    */
+    async function populateEvents(db) {
+        try {
+            await new Promise((resolve, reject) => {
+                db.exec(`
+                INSERT INTO events (event_name, event_date, vod_url)
+                VALUES ('NAIC 2024 Day 1', '06/07/2024', 'https://www.youtube.com/watch?v=aSzFHSZWpu4')
+                `, (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        console.log("Successfully inserted events.");
+                        resolve();
+                    }
+                });
+            });
+        } catch (error) {
+            console.log("Error inserting into events: " + error.message);
+            process.exit(1);
+        }
+    }
+
+    /*
+    Table of professional sets of matches
+        set_id integer primary key AUTOINCREMENT not null,
+        event_id int not null,
+        FOREIGN KEY (event_id) REFERENCES events (event_id)
+    */
+    function populateSets(db) {
+
+    }
+
+    /*
     Table of professional matches
         match_id integer primary key AUTOINCREMENT not null,
-            set_id int not null,
-            team_1_comp_id int not null,
-            team_2_comp_id int not null,
-            team_1_ban_1 int not null,
-            team_2_ban_1 int not null,
-            team_1_ban_2 int not null,
-            team_2_ban_2 int not null,
-            team_1_player_1 int not null,
-            team_1_player_2 int not null,
-            team_1_player_3 int not null,
-            team_1_player_4 int not null,
-            team_1_player_5 int not null,
-            team_2_player_1 int not null,
-            team_2_player_2 int not null,
-            team_2_player_3 int not null,
-            team_2_player_4 int not null,
-            team_2_player_5 int not null,
-            team_1_id int not null,
-            team_2_id int not null,
-            winning_team_id int not null, 
-            FOREIGN KEY (set_id) REFERENCES professional_sets (set_id),
-            FOREIGN KEY (team_1_comp_id) REFERENCES professional_comps (comp_id),
-            FOREIGN KEY (team_2_comp_id) REFERENCES professional_comps (comp_id),
-            FOREIGN KEY (team_1_player_1) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_1_player_2) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_1_player_3) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_1_player_4) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_1_player_5) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_2_player_1) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_2_player_2) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_2_player_3) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_2_player_4) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_2_player_5) REFERENCES professional_players (player_id)
+        set_id int not null,
+        team_1_comp_id int not null,
+        team_2_comp_id int not null,
+        team_1_ban_1 int not null,
+        team_2_ban_1 int not null,
+        team_1_ban_2 int not null,
+        team_2_ban_2 int not null,
+        team_1_player_1 int not null,
+        team_1_player_2 int not null,
+        team_1_player_3 int not null,
+        team_1_player_4 int not null,
+        team_1_player_5 int not null,
+        team_2_player_1 int not null,
+        team_2_player_2 int not null,
+        team_2_player_3 int not null,
+        team_2_player_4 int not null,
+        team_2_player_5 int not null,
+        team_1_id int not null,
+        team_2_id int not null,
+        winning_team_id int not null, 
+        FOREIGN KEY (set_id) REFERENCES professional_sets (set_id),
+        FOREIGN KEY (team_1_comp_id) REFERENCES professional_comps (comp_id),
+        FOREIGN KEY (team_2_comp_id) REFERENCES professional_comps (comp_id),
+        FOREIGN KEY (team_1_player_1) REFERENCES professional_players (player_id),
+        FOREIGN KEY (team_1_player_2) REFERENCES professional_players (player_id),
+        FOREIGN KEY (team_1_player_3) REFERENCES professional_players (player_id),
+        FOREIGN KEY (team_1_player_4) REFERENCES professional_players (player_id),
+        FOREIGN KEY (team_1_player_5) REFERENCES professional_players (player_id),
+        FOREIGN KEY (team_2_player_1) REFERENCES professional_players (player_id),
+        FOREIGN KEY (team_2_player_2) REFERENCES professional_players (player_id),
+        FOREIGN KEY (team_2_player_3) REFERENCES professional_players (player_id),
+        FOREIGN KEY (team_2_player_4) REFERENCES professional_players (player_id),
+        FOREIGN KEY (team_2_player_5) REFERENCES professional_players (player_id)
     */
    function populateMatches(db) {
 
@@ -464,27 +503,6 @@ function populate_db(db) {
         team_region text not null
    */
    function populateTeams(db) {
-
-   }
-
-   /*
-   Table of professional sets of matches
-        set_id integer primary key AUTOINCREMENT not null,
-        event_id int not null,
-        FOREIGN KEY (event_id) REFERENCES events (event_id)
-   */
-   function populateSets(db) {
-
-   }
-
-   /*
-   Table of events
-        event_id integer primary key AUTOINCREMENT not null,
-        event_name text not null,
-        event_date text not null,
-        vod_url text not null
-   */
-   function populateEvents(db) {
 
    }
 }

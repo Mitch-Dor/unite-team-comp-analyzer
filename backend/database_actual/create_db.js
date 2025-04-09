@@ -197,13 +197,13 @@ function createDB() {
     function runQueries(db) {
         console.log("Running queries");
         db.all(`
-        select * from professional_players`, (err, rows) => {
+        select * from events`, (err, rows) => {
             if (err) {
                 console.log("Getting error " + err);
                 return;
             }
             rows.forEach(row => {
-                console.log(row.player_name);
+                console.log(row.event_name, row.event_date, row.vod_url);
             });
         });
     }
