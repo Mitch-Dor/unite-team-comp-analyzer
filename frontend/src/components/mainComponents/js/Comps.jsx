@@ -8,100 +8,41 @@ function Comps() {
 
   // Sample data - In a real app, this would come from an API
   useEffect(() => {
-    // For demo, using the sample data provided
-    const sampleData = [
-      {
-        team1: {
-          pokemon: ['Sylveon', 'Metagross', 'Mr-Mime', 'Blaziken', 'Eldegoss'],
-          bans: ['Gyarados', 'Falinks'],
-          name: 'Exile',
-          region: 'NA',
-          players: ['', '', '', '', ''],
-          firstPick: true
-        },
-        team2: {
-          pokemon: ['Crustle', 'Leafeon', 'Espeon', 'Hoopa', 'Garchomp'],
-          bans: ['Trevenant', 'Tyranitar'],
-          name: 'Ignorance',
-          region: 'NA',
-          players: ['', '', '', '', ''],
-          firstPick: false
-        },
-        winningTeam: 1,
-        event: 'NAIC 2024',
-        matchDate: '06/07/2024'
-      },
-      {
-        team1: {
-          pokemon: ['Sylveon', 'Mr-Mime', 'Crustle', 'Falinks', 'Blaziken'],
-          bans: ['Trevenant', 'Comfey'],
-          name: 'Ignorance',
-          region: 'NA',
-          players: ['', '', '', '', ''],
-          firstPick: true
-        },
-        team2: {
-          pokemon: ['Metagross', 'Eldegoss', 'Cramorant', 'Umbreon', 'Scizor'],
-          bans: ['Gyarados', 'Tyranitar'],
-          name: 'Exile',
-          region: 'NA',
-          players: ['', '', '', '', ''],
-          firstPick: false
-        },
-        winningTeam: 1,
-        event: 'NAIC 2024',
-        matchDate: '06/07/2024'
-      },
-      {
-        team1: {
-          pokemon: ['Tyranitar', 'Blaziken', 'Mr-Mime', 'Cramorant', 'Eldegoss'],
-          bans: ['Gyarados', 'Falinks'],
-          name: 'Exile',
-          region: 'NA',
-          players: ['', '', '', '', ''],
-          firstPick: true
-        },
-        team2: {
-          pokemon: ['Crustle', 'Leafeon', 'Machamp', 'Hoopa', 'Delphox'],
-          bans: ['Trevenant', 'Sylveon'],
-          name: 'Ignorance',
-          region: 'NA',
-          players: ['', '', '', '', ''],
-          firstPick: false
-        },
-        winningTeam: 2,
-        event: 'NAIC 2024',
-        matchDate: '06/07/2024'
-      },
-      {
-        team1: {
-          pokemon: ['Leafeon', 'Mr-Mime', 'Cramorant', 'Blissey', 'Falinks'],
-          bans: ['Umbreon', 'Sylveon'],
-          name: 'Luminosity Gaming',
-          region: 'NA',
-          players: ['', '', '', '', ''],
-          firstPick: true
-        },
-        team2: {
-          pokemon: ['Snorlax', 'Hoopa', 'Inteleon', 'Meowscarada', 'Talonflame'],
-          bans: ['Tyranitar', 'Trevenant'],
-          name: 'Brave Birders',
-          region: 'NA',
-          players: ['', '', '', '', ''],
-          firstPick: false
-        },
-        winningTeam: 1,
-        event: 'NAIC 2024',
-        matchDate: '06/07/2024'
-      }
-    ];
-
-    setCompsData(sampleData);
-    setLoading(false);
     fetchAllComps().then(data => {
-      console.log(data);
-      //setCompsData(data);
-      //setLoading(false);
+      let finalFormattedData = [];
+      for (const comp of data) {
+        const team1Data = {
+          pokemon: [comp.team1_pokemon1, comp.team1_pokemon2, comp.team1_pokemon3, comp.team1_pokemon4, comp.team1_pokemon5],
+          pokemon_moves: [comp.team1_pokemon1_move1, comp.team1_pokemon1_move2, comp.team1_pokemon2_move1, comp.team1_pokemon2_move2, comp.team1_pokemon3_move1, comp.team1_pokemon3_move2, comp.team1_pokemon4_move1, comp.team1_pokemon4_move2, comp.team1_pokemon5_move1, comp.team1_pokemon5_move2],
+          bans: [comp.team1_ban1, comp.team1_ban2],
+          name: comp.team1_name,
+          region: comp.team1_region,
+          players: [comp.team1_player1, comp.team1_player2, comp.team1_player3, comp.team1_player4, comp.team1_player5],
+          firstPick: comp.team1_first_pick === 1
+        }
+        const team2Data = {
+          pokemon: [comp.team2_pokemon1, comp.team2_pokemon2, comp.team2_pokemon3, comp.team2_pokemon4, comp.team2_pokemon5],
+          pokemon_moves: [comp.team2_pokemon1_move1, comp.team2_pokemon1_move2, comp.team2_pokemon2_move1, comp.team2_pokemon2_move2, comp.team2_pokemon3_move1, comp.team2_pokemon3_move2, comp.team2_pokemon4_move1, comp.team2_pokemon4_move2, comp.team2_pokemon5_move1, comp.team2_pokemon5_move2],
+          bans: [comp.team2_ban1, comp.team2_ban2],
+          name: comp.team2_name,
+          region: comp.team2_region,
+          players: [comp.team2_player1, comp.team2_player2, comp.team2_player3, comp.team2_player4, comp.team2_player5],
+          firstPick: comp.team2_first_pick === 1
+        }
+        const finalData = {
+          team1: team1Data,
+          team2: team2Data,
+          winningTeam: comp.team1_win === 1 ? 1 : 2,
+          event: comp.event_name,
+          matchDate: comp.event_date,
+          set_description: comp.set_descriptor,
+          vod: comp.vod_url
+        }
+        finalFormattedData.push(finalData);
+      }
+      console.log(finalFormattedData);
+      setCompsData(finalFormattedData);
+      setLoading(false);
     });
   }, []);
 
@@ -119,15 +60,6 @@ function Comps() {
       }
     }, 0);
   }, [loading]);
-
-  // Helper function to format Pokémon name for image paths
-  const formatPokemonName = (name) => {
-    if (!name) return 'none';
-    // Handle special cases
-    if (name === 'Mr-Mime') return 'Mr_Mime';
-    // Other potential special cases can be added here
-    return name;
-  };
 
   if (loading) {
     return <div className="loading-container">Loading...</div>;
@@ -160,7 +92,7 @@ function Comps() {
                     {match.team1.bans.map((ban, i) => (
                       <div key={i} className="ban-pokemon">
                         <img 
-                          src={`/assets/Draft/headshots/${formatPokemonName(ban)}.png`} 
+                          src={`/assets/Draft/headshots/${ban}.png`} 
                           alt={ban} 
                           className="pokemon-icon ban"
                         />
@@ -173,7 +105,7 @@ function Comps() {
                       <div key={i} className="draft-row">
                         <div className="draft-number">{i + 1}</div>
                         <img 
-                          src={`/assets/Draft/headshots/${formatPokemonName(pokemon)}.png`} 
+                          src={`/assets/Draft/headshots/${pokemon}.png`} 
                           alt={pokemon} 
                           className="pokemon-icon"
                         />
@@ -197,7 +129,7 @@ function Comps() {
                     {match.team2.bans.map((ban, i) => (
                       <div key={i} className="ban-pokemon">
                         <img 
-                          src={`/assets/Draft/headshots/${formatPokemonName(ban)}.png`} 
+                          src={`/assets/Draft/headshots/${ban}.png`} 
                           alt={ban} 
                           className="pokemon-icon ban"
                         />
@@ -210,7 +142,7 @@ function Comps() {
                       <div key={i} className="draft-row">
                         <div className="draft-number">{i + 1}</div>
                         <img 
-                          src={`/assets/Draft/headshots/${formatPokemonName(pokemon)}.png`} 
+                          src={`/assets/Draft/headshots/${pokemon}.png`} 
                           alt={pokemon} 
                           className="pokemon-icon"
                         />

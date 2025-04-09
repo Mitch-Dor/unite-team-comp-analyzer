@@ -529,7 +529,7 @@ function populate_db(db) {
    async function populateMatches(db) {
         try {
             let matchValues = [];
-            let compId = 0;
+            let compId = 1;
             for (const comp of compsData) {
                 // Bans
                 const ban1_id = pokemonNameToIdMap[comp.t1ban1];
