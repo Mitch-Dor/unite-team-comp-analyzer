@@ -52,7 +52,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "1"
   },
   {
     "t1poke1": "Sylveon",
@@ -107,7 +108,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "1"
   },
   {
     "t1poke1": "Tyranitar",
@@ -162,7 +164,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "1"
   },
   {
     "t1poke1": "Leafeon",
@@ -217,7 +220,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "2"
   },
   {
     "t1poke1": "Leafeon",
@@ -272,7 +276,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "2"
   },
   {
     "t1poke1": "Blissey",
@@ -327,7 +332,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "3"
   },
   {
     "t1poke1": "Umbreon",
@@ -382,7 +388,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "3"
   },
   {
     "t1poke1": "Crustle",
@@ -437,7 +444,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "4"
   },
   {
     "t1poke1": "Umbreon",
@@ -492,7 +500,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "4"
   },
   {
     "t1poke1": "Leafeon",
@@ -547,7 +556,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "5"
   },
   {
     "t1poke1": "Tyranitar",
@@ -602,7 +612,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "5"
   },
   {
     "t1poke1": "Tyranitar",
@@ -657,7 +668,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "5"
   },
   {
     "t1poke1": "Trevenant",
@@ -712,7 +724,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "6"
   },
   {
     "t1poke1": "Trevenant",
@@ -767,7 +780,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "6"
   },
   {
     "t1poke1": "Trevenant",
@@ -822,7 +836,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "6"
   },
   {
     "t1poke1": "Leafeon",
@@ -877,7 +892,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "7"
   },
   {
     "t1poke1": "Leafeon",
@@ -932,7 +948,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "7"
   },
   {
     "t1poke1": "Tyranitar",
@@ -987,7 +1004,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "7"
   },
   {
     "t1poke1": "Umbreon",
@@ -1042,7 +1060,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "8"
   },
   {
     "t1poke1": "Leafeon",
@@ -1097,7 +1116,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "8"
   },
   {
     "t1poke1": "Trevenant",
@@ -1152,7 +1172,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "9"
   },
   {
     "t1poke1": "Trevenant",
@@ -1207,7 +1228,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "9"
   },
   {
     "t1poke1": "Leafeon",
@@ -1262,7 +1284,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "9"
   },
   {
     "t1poke1": "Trevenant",
@@ -1317,7 +1340,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "9"
   },
   {
     "t1poke1": "Sylveon",
@@ -1372,7 +1396,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "10"
   },
   {
     "t1poke1": "Falinks",
@@ -1427,7 +1452,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "10"
   },
   {
     "t1poke1": "Falinks",
@@ -1482,7 +1508,8 @@ const compsData = [
     "winningTeam": 1,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "10"
   },
   {
     "t1poke1": "Falinks",
@@ -1537,7 +1564,8 @@ const compsData = [
     "winningTeam": 2,
     "event": "NAIC 2024 Day 1",
     "matchDate": "06/07/2024",
-    "vodUrl": ""
+    "vodUrl": "",
+    "set": "10"
   }
 ];
 

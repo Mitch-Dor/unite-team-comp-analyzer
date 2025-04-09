@@ -199,13 +199,13 @@ function createDB() {
     function runQueries(db) {
         console.log("Running queries");
         db.all(`
-        select * from professional_teams`, (err, rows) => {
+        select * from professional_matches`, (err, rows) => {
             if (err) {
                 console.log("Getting error " + err);
                 return;
             }
             rows.forEach(row => {
-                console.log(row.team_id, row.team_name, row.team_region);
+                console.log(row.match_id, row.set_id, row.team_1_comp_id, row.team_2_comp_id, row.team_1_ban_1, row.team_2_ban_1, row.team_1_ban_2, row.team_2_ban_2, row.team_1_player_1, row.team_1_player_2, row.team_1_player_3, row.team_1_player_4, row.team_1_player_5, row.team_2_player_1, row.team_2_player_2, row.team_2_player_3, row.team_2_player_4, row.team_2_player_5, row.team_1_id, row.team_2_id);
             });
         });
     }

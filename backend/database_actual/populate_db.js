@@ -16,6 +16,7 @@ function populate_db(db) {
             await populateEvents(db);
             await populateSets(db);
             await populateTeams(db);
+            await populateMatches(db);
             resolve();
         } catch (error) {
             reject(error);
@@ -250,41 +251,6 @@ function populate_db(db) {
             FOREIGN KEY (pokemon_5_move_2) REFERENCES pokemon_moves(move_id)
     */
     async function populateComps(db) {
-
-        // Function to get the Move ID by name and pokemon ID
-        function getMoveIdByName(db, moveName, pokemonId) {
-            return new Promise((resolve, reject) => {
-                // Check for special cases first
-                if (!moveName || pokemonId === null) {
-                    return resolve(null); // Or handle as appropriate for your app
-                }
-
-                if (moveName === "MEW_ALL_MOVES") {
-                    moveName = "'Mew_All_Moves'";
-                } else if (moveName === "BLAZIKEN_ALL_MOVES") {
-                    moveName = "'Blaziken_All_Moves'";
-                }
-
-                // Pull move name out from between '' (including the quotes)
-                const match = moveName.match(/'(.*)'/);
-                if (!match) {
-                    console.log(`Could not extract move name from: ${moveName}`);
-                    return resolve(null); // Or handle differently
-                }
-                
-                const refinedMoveName = match[1];
-                db.get(`SELECT move_id FROM pokemon_moves WHERE move_name = ? AND pokemon_id = ?`, 
-                    [refinedMoveName, pokemonId], 
-                    (err, row) => {
-                        if (err) {
-                            console.log(`Error getting move ID: ${err.message}`);
-                        }
-                        resolve(row ? row.move_id : null);
-                    }
-                );
-            });
-        }
-
         try {
             let compValues = [];
             for (const comp of compsData) {
@@ -389,6 +355,40 @@ function populate_db(db) {
             console.log("Error inserting into professional_comps: " + error.message);
             process.exit(1);
         }
+    }
+
+    // Function to get the Move ID by name and pokemon ID
+    function getMoveIdByName(db, moveName, pokemonId) {
+        return new Promise((resolve, reject) => {
+            // Check for special cases first
+            if (!moveName || pokemonId === null) {
+                return resolve(null); // Or handle as appropriate for your app
+            }
+
+            if (moveName === "MEW_ALL_MOVES") {
+                moveName = "'Mew_All_Moves'";
+            } else if (moveName === "BLAZIKEN_ALL_MOVES") {
+                moveName = "'Blaziken_All_Moves'";
+            }
+
+            // Pull move name out from between '' (including the quotes)
+            const match = moveName.match(/'(.*)'/);
+            if (!match) {
+                console.log(`Could not extract move name from: ${moveName}`);
+                return resolve(null); // Or handle differently
+            }
+            
+            const refinedMoveName = match[1];
+            db.get(`SELECT move_id FROM pokemon_moves WHERE move_name = ? AND pokemon_id = ?`, 
+                [refinedMoveName, pokemonId], 
+                (err, row) => {
+                    if (err) {
+                        console.log(`Error getting move ID: ${err.message}`);
+                    }
+                    resolve(row ? row.move_id : null);
+                }
+            );
+        });
     }
 
     /*
@@ -526,9 +526,95 @@ function populate_db(db) {
         FOREIGN KEY (team_2_player_4) REFERENCES professional_players (player_id),
         FOREIGN KEY (team_2_player_5) REFERENCES professional_players (player_id)
     */
-   function populateMatches(db) {
+   async function populateMatches(db) {
+        try {
+            let matchValues = [];
+            let compId = 0;
+            for (const comp of compsData) {
+                // Bans
+                const ban1_id = pokemonNameToIdMap[comp.t1ban1];
+                const ban2_id = pokemonNameToIdMap[comp.t2ban1];
+                const ban3_id = pokemonNameToIdMap[comp.t1ban2];
+                const ban4_id = pokemonNameToIdMap[comp.t2ban2];
 
+                // Comp IDs
+                const comp1_id = compId;
+                const comp2_id = compId + 1;
+                compId += 2;
+
+                // Set ID
+                const setId = parseInt(comp.set);
+
+                // Player IDs
+                const player1_id = await getPlayerIdByName(db, comp.t1player1);
+                const player2_id = await getPlayerIdByName(db, comp.t1player2);
+                const player3_id = await getPlayerIdByName(db, comp.t1player3);
+                const player4_id = await getPlayerIdByName(db, comp.t1player4);
+                const player5_id = await getPlayerIdByName(db, comp.t1player5);
+
+                const player6_id = await getPlayerIdByName(db, comp.t2player1);
+                const player7_id = await getPlayerIdByName(db, comp.t2player2);
+                const player8_id = await getPlayerIdByName(db, comp.t2player3);
+                const player9_id = await getPlayerIdByName(db, comp.t2player4);
+                const player10_id = await getPlayerIdByName(db, comp.t2player5);
+                
+                // Team IDs
+                const team1_id = await getTeamIdByName(db, comp.t1name);
+                const team2_id = await getTeamIdByName(db, comp.t2name);
+
+                matchValues.push(`('${setId}', '${comp1_id}', '${comp2_id}', '${ban1_id}', '${ban2_id}', '${ban3_id}', '${ban4_id}', '${player1_id}', '${player2_id}', '${player3_id}', '${player4_id}', '${player5_id}', '${player6_id}', '${player7_id}', '${player8_id}', '${player9_id}', '${player10_id}', '${team1_id}', '${team2_id}')`);
+            }
+
+            await new Promise((resolve, reject) => {
+                db.exec(`
+                INSERT INTO professional_matches (set_id, team_1_comp_id, team_2_comp_id, team_1_ban_1, team_2_ban_1, team_1_ban_2, team_2_ban_2, team_1_player_1, team_1_player_2, team_1_player_3, team_1_player_4, team_1_player_5, team_2_player_1, team_2_player_2, team_2_player_3, team_2_player_4, team_2_player_5, team_1_id, team_2_id)
+                VALUES
+                    ${matchValues.join(',\n            ')}
+                `, (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        console.log("Successfully inserted events.");
+                        resolve();
+                    }
+                });
+            });
+
+        } catch (error) {
+            console.log("Error inserting into professional_matches: " + error.message);
+            process.exit(1);
+        }
    }
+
+    // Function to get the Move ID by name and pokemon ID
+    function getPlayerIdByName(db, playerName) {
+        return new Promise((resolve, reject) => {
+            db.get(`SELECT player_id FROM professional_players WHERE player_name = ?`, 
+                [playerName], 
+                (err, row) => {
+                    if (err) {
+                        console.log(`Error getting player ID: ${err.message}`);
+                    }
+                    resolve(row ? row.player_id : null);
+                }
+            );
+        });
+    }
+
+    // Function to get the Move ID by name and pokemon ID
+    function getTeamIdByName(db, teamName) {
+        return new Promise((resolve, reject) => {
+            db.get(`SELECT team_id FROM professional_teams WHERE team_name = ?`, 
+                [teamName], 
+                (err, row) => {
+                    if (err) {
+                        console.log(`Error getting team ID: ${err.message}`);
+                    }
+                    resolve(row ? row.team_id : null);
+                }
+            );
+        });
+    }
 
     /*
     Table of professional teams
