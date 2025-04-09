@@ -12,6 +12,7 @@ function populate_db(db) {
             await populateAttributes(db);
             await populateMoves(db);
             await populateComps(db);
+            await populatePlayers(db);
             resolve();
         } catch (error) {
             reject(error);
@@ -352,8 +353,6 @@ function populate_db(db) {
                 compValues.push(`('${pokemon6_id}', '${pokemon7_id}', '${pokemon8_id}', '${pokemon9_id}', '${pokemon10_id}', '${p6m1_id}', '${p6m2_id}', '${p7m1_id}', '${p7m2_id}', '${p8m1_id}', '${p8m2_id}', '${p9m1_id}', '${p9m2_id}', '${p10m1_id}', '${p10m2_id}', '${secondPickNumber}')`);
             }
 
-            console.log(compValues);
-
             await new Promise((resolve, reject) => {
                 db.exec(`
                 INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick)
@@ -379,9 +378,43 @@ function populate_db(db) {
         player_id integer primary key AUTOINCREMENT not null,
         player_name text not null
     */
-   function populatePlayers(db) {
-
-   }
+    async function populatePlayers(db) {
+        try {
+            // Track unique player names
+            const uniquePlayers = new Set();
+            let playerValues = [];
+            
+            for (const comp of compsData) {
+                // Team 1 players
+                [comp.t1player1, comp.t1player2, comp.t1player3, comp.t1player4, comp.t1player5,
+                 comp.t2player1, comp.t2player2, comp.t2player3, comp.t2player4, comp.t2player5].forEach(player => {
+                    // Only add if not already in the set
+                    if (player && !uniquePlayers.has(player)) {
+                        uniquePlayers.add(player);
+                        playerValues.push(`('${player}')`);
+                    }
+                });
+            }
+            
+            await new Promise((resolve, reject) => {
+                db.exec(`
+                INSERT INTO professional_players (player_name)
+                VALUES
+                    ${playerValues.join(',\n            ')}
+                `, (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        console.log("Successfully inserted players.");
+                        resolve();
+                    }
+                });
+            });
+        } catch (error) {
+            console.log("Error inserting into professional_players: " + error.message);
+            process.exit(1);
+        }
+    }
 
     /*
     Table of professional matches

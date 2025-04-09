@@ -197,13 +197,13 @@ function createDB() {
     function runQueries(db) {
         console.log("Running queries");
         db.all(`
-        select * from playable_characters natural join professional_comps`, (err, rows) => {
+        select * from professional_players`, (err, rows) => {
             if (err) {
                 console.log("Getting error " + err);
                 return;
             }
             rows.forEach(row => {
-                console.log(row.pokemon_1, row.pokemon_2, row.pokemon_3, row.pokemon_4, row.pokemon_5);
+                console.log(row.player_name);
             });
         });
     }
