@@ -229,6 +229,8 @@ function populate_db(db) {
             pokemon_5_move_2 int not null,
             -- 1 if this team picked first, 0 if this team picked second
             first_pick int not null,
+            -- 1 if this team won, 0 if this team lost
+            did_win int not null,
             FOREIGN KEY (pokemon_1) REFERENCES playable_characters(pokemon_id),
             FOREIGN KEY (pokemon_2) REFERENCES playable_characters(pokemon_id),
             FOREIGN KEY (pokemon_3) REFERENCES playable_characters(pokemon_id),
@@ -308,6 +310,12 @@ function populate_db(db) {
                     firstPickNumber = 1;
                 }
 
+                const didWin = comp.WinngingTeam === "1";
+                let didWinNumber = 0;
+                if (didWin) {
+                    didWinNumber = 1;
+                }
+
                 if (pokemon1_id === null || pokemon2_id === null || pokemon3_id === null || pokemon4_id === null || pokemon5_id === null) {
                     throw new Error(`Pokemon ID not found for ${pokemon.name}`);
                 }
@@ -316,7 +324,7 @@ function populate_db(db) {
                     throw new Error(`Move ID not found for ${comp.t1poke1move1}`);
                 }
 
-                compValues.push(`('${pokemon1_id}', '${pokemon2_id}', '${pokemon3_id}', '${pokemon4_id}', '${pokemon5_id}', '${p1m1_id}', '${p1m2_id}', '${p2m1_id}', '${p2m2_id}', '${p3m1_id}', '${p3m2_id}', '${p4m1_id}', '${p4m2_id}', '${p5m1_id}', '${p5m2_id}', '${firstPickNumber}')`);
+                compValues.push(`('${pokemon1_id}', '${pokemon2_id}', '${pokemon3_id}', '${pokemon4_id}', '${pokemon5_id}', '${p1m1_id}', '${p1m2_id}', '${p2m1_id}', '${p2m2_id}', '${p3m1_id}', '${p3m2_id}', '${p4m1_id}', '${p4m2_id}', '${p5m1_id}', '${p5m2_id}', '${firstPickNumber}', '${didWinNumber}')`);
 
                 // Comp 2
                 const pokemon6_id = pokemonNameToIdMap[comp.t2poke1];
@@ -336,6 +344,13 @@ function populate_db(db) {
                 const p10m1_id = await getMoveIdByName(db, comp.t2poke5move1, pokemon10_id);
                 const p10m2_id = await getMoveIdByName(db, comp.t2poke5move2, pokemon10_id);
 
+                
+                if (didWinNumber === 0) {
+                    didWinNumber = 1;
+                } else {
+                    didWinNumber = 0;
+                }
+
                 if (pokemon6_id === null || pokemon7_id === null || pokemon8_id === null || pokemon9_id === null || pokemon10_id === null) {
                     throw new Error(`Pokemon ID not found for ${pokemon.name}`);
                 }
@@ -351,12 +366,12 @@ function populate_db(db) {
                     secondPickNumber = 0;
                 }
 
-                compValues.push(`('${pokemon6_id}', '${pokemon7_id}', '${pokemon8_id}', '${pokemon9_id}', '${pokemon10_id}', '${p6m1_id}', '${p6m2_id}', '${p7m1_id}', '${p7m2_id}', '${p8m1_id}', '${p8m2_id}', '${p9m1_id}', '${p9m2_id}', '${p10m1_id}', '${p10m2_id}', '${secondPickNumber}')`);
+                compValues.push(`('${pokemon6_id}', '${pokemon7_id}', '${pokemon8_id}', '${pokemon9_id}', '${pokemon10_id}', '${p6m1_id}', '${p6m2_id}', '${p7m1_id}', '${p7m2_id}', '${p8m1_id}', '${p8m2_id}', '${p9m1_id}', '${p9m2_id}', '${p10m1_id}', '${p10m2_id}', '${secondPickNumber}', '${didWinNumber}')`);
             }
 
             await new Promise((resolve, reject) => {
                 db.exec(`
-                INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick)
+                INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick, did_win)
                 VALUES
                     ${compValues.join(',\n            ')}
                 `, (err) => {
@@ -451,8 +466,25 @@ function populate_db(db) {
         event_id int not null,
         FOREIGN KEY (event_id) REFERENCES events (event_id)
     */
-    function populateSets(db) {
-
+    async function populateSets(db) {
+        try {
+            await new Promise((resolve, reject) => {
+                db.exec(`
+                INSERT INTO professional_sets (event_id)
+                VALUES (1)
+                `, (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        console.log("Successfully inserted events.");
+                        resolve();
+                    }
+                });
+            });
+        } catch (error) {
+            console.log("Error inserting into events: " + error.message);
+            process.exit(1);
+        }
     }
 
     /*
@@ -477,7 +509,6 @@ function populate_db(db) {
         team_2_player_5 int not null,
         team_1_id int not null,
         team_2_id int not null,
-        winning_team_id int not null, 
         FOREIGN KEY (set_id) REFERENCES professional_sets (set_id),
         FOREIGN KEY (team_1_comp_id) REFERENCES professional_comps (comp_id),
         FOREIGN KEY (team_2_comp_id) REFERENCES professional_comps (comp_id),

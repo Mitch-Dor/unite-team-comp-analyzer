@@ -100,6 +100,8 @@ function createDB() {
             pokemon_5_move_2 int not null,
             -- 1 if this team picked first, 0 if this team picked second
             first_pick int not null,
+            -- 1 if this team won, 0 if this team lost
+            did_win int not null,
             FOREIGN KEY (pokemon_1) REFERENCES playable_characters(pokemon_id),
             FOREIGN KEY (pokemon_2) REFERENCES playable_characters(pokemon_id),
             FOREIGN KEY (pokemon_3) REFERENCES playable_characters(pokemon_id),
@@ -138,7 +140,6 @@ function createDB() {
             team_2_player_5 int not null,
             team_1_id int not null,
             team_2_id int not null,
-            winning_team_id int not null, 
             FOREIGN KEY (set_id) REFERENCES professional_sets (set_id),
             FOREIGN KEY (team_1_comp_id) REFERENCES professional_comps (comp_id),
             FOREIGN KEY (team_2_comp_id) REFERENCES professional_comps (comp_id),
