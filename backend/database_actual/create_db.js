@@ -169,6 +169,7 @@ function createDB() {
         create table professional_sets (
             set_id integer primary key AUTOINCREMENT not null,
             event_id int not null,
+            set_descriptor text not null,
             FOREIGN KEY (event_id) REFERENCES events (event_id)
         );
         -- A table symbolizing an event
@@ -198,13 +199,13 @@ function createDB() {
     function runQueries(db) {
         console.log("Running queries");
         db.all(`
-        select * from events`, (err, rows) => {
+        select * from professional_teams`, (err, rows) => {
             if (err) {
                 console.log("Getting error " + err);
                 return;
             }
             rows.forEach(row => {
-                console.log(row.event_name, row.event_date, row.vod_url);
+                console.log(row.team_id, row.team_name, row.team_region);
             });
         });
     }

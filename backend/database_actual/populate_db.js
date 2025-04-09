@@ -14,6 +14,8 @@ function populate_db(db) {
             await populateComps(db);
             await populatePlayers(db);
             await populateEvents(db);
+            await populateSets(db);
+            await populateTeams(db);
             resolve();
         } catch (error) {
             reject(error);
@@ -464,14 +466,15 @@ function populate_db(db) {
     Table of professional sets of matches
         set_id integer primary key AUTOINCREMENT not null,
         event_id int not null,
+        set_descriptor text not null,
         FOREIGN KEY (event_id) REFERENCES events (event_id)
     */
     async function populateSets(db) {
         try {
             await new Promise((resolve, reject) => {
                 db.exec(`
-                INSERT INTO professional_sets (event_id)
-                VALUES (1)
+                INSERT INTO professional_sets (event_id, set_descriptor)
+                VALUES (1, 'Losers Round 1'), (1, 'Losers Round 1'), (1, 'Winners Semis'), (1, 'Losers Round 2'), (1, 'Losers Round 2'), (1, 'Winners Finals'), (1, 'Losers Semis'), (1, 'Losers Finals'), (1, 'Grand Finals'), (1, 'Grand Finals Reset')
                 `, (err) => {
                     if (err) {
                         reject(err);
@@ -527,15 +530,48 @@ function populate_db(db) {
 
    }
 
-   /*
-   Table of professional teams
+    /*
+    Table of professional teams
         team_id integer primary key AUTOINCREMENT not null,
         team_name text not null,
         team_region text not null
    */
-   function populateTeams(db) {
-
-   }
+    async function populateTeams(db) {
+        try {
+            // Track unique player names
+            const uniqueTeams = new Set();
+            let teamValues = [];
+            
+            for (const comp of compsData) {
+                // Team 1 players
+                [comp.t1name, comp.t2name].forEach(team => {
+                    // Only add if not already in the set
+                    if (team && !uniqueTeams.has(team)) {
+                        uniqueTeams.add(team);
+                        teamValues.push(`('${team}', '${comp.t1region}')`);
+                    }
+                });
+            }
+            
+            await new Promise((resolve, reject) => {
+                db.exec(`
+                INSERT INTO professional_teams (team_name, team_region)
+                VALUES
+                    ${teamValues.join(',\n            ')}
+                `, (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        console.log("Successfully inserted teams.");
+                        resolve();
+                    }
+                });
+            });
+        } catch (error) {
+            console.log("Error inserting into professional_teams: " + error.message);
+            process.exit(1);
+        }
+    }
 }
 
 // Export the populate_db function
