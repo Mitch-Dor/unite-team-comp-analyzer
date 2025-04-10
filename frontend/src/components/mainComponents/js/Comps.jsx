@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import '../css/comps.css';
 import { fetchAllComps } from './backendCalls/http';
+import SubmitSetModal from './compSupport/SubmitSetModal';
 
 function Comps() {
   const [compsData, setCompsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showSubmitForm, setShowSubmitForm] = useState(false);
+  const [submitData, setSubmitData] = useState([]);
 
   // Sample data - In a real app, this would come from an API
   useEffect(() => {
@@ -60,12 +63,18 @@ function Comps() {
     }, 0);
   }, [loading]);
 
+  useEffect(() => {
+    console.log(submitData);
+    setShowSubmitForm(false);
+  }, [submitData]);
+
   if (loading) {
     return <div className="loading-container">Loading...</div>;
   }
 
   return (
     <div id="mainContainer" className="main-container">
+      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setSubmitData={setSubmitData} />}
       <div id="compsContainer">
         <div className="comps-list">
           <h1 className="page-title">Team Compositions</h1>
@@ -190,6 +199,7 @@ function Comps() {
           ))}
         </div>
       </div>
+      <div id="open-set-submit-form" className="open-set-submit-form" onClick={() => setShowSubmitForm(true)}>+</div>
     </div>
   );
 }
