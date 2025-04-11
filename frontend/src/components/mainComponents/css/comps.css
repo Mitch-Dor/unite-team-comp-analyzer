@@ -291,37 +291,107 @@
     height: 50px;
 }
 
-#set-submit-form {
-    position: fixed;
-    top: 5%;
-    left: 10%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 80%;
-    height: 80%;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: rgba(26, 26, 26, 0.9);
-    z-index: 10;
-    overflow-y: scroll;
-    overflow-x: scroll;
+/* Set submission form categories */
+.set-submission-category {
+    flex: 1;
+    background-color: #2a2a2a;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    font-weight: bold;
 }
 
+.set-submission-category:hover {
+    background-color: #3a3a3a;
+}
+
+.set-submission-category.active {
+    background-color: #3a3a3a;
+    border-bottom: 3px solid #7fb3ff;
+}
+
+/* Update set submit button styling */
 #set-submit-button {
-    position: fixed;
-    top: 90%;
-    left: 10%;
-    background-color: rgba(26, 26, 26, 0.9);
+    margin: 20px auto;
+    padding: 12px 30px;
+    background-color: #4e8cff;
     color: white;
-    padding: 10px 10px;
-    border-radius: 5px;
-    width: 80%;
-    height: 40px;
-    font-size: 1.2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
+    display: block;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#set-submit-button:hover {
+    background-color: #3a78e7;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+#set-submit-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Set submit form styling */
+#set-submit-form {
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    overflow-y: auto;
+    background-color: rgba(42, 42, 42, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Update comp-header for set submission form */
+#set-submit-form .comp-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    margin: 0;
+    position: sticky;
+    top: 0;
+    z-index: 11;
+    width: 100%;
+}
+
+/* Creation forms styling */
+#event-creation, #team-creation, #player-creation {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 60px; /* Make space for the submit button */
+}
+
+#event-creation input, #team-creation input, #player-creation input {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: white;
+    font-size: 14px;
+}
+
+/* Submit button container to ensure it stays at the bottom */
+#set-submit-form #set-submit-button {
+    margin: 20px;
+    margin-top: auto;
+    position: sticky;
+    bottom: 20px;
+    align-self: center;
     z-index: 11;
 }

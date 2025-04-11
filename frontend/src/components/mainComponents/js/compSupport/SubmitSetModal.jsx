@@ -2,11 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves } from '../backendCalls/http';
 
 function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
-    const [set, setSet] = useState(null);
+    const [setInsertion, setSetInsertion] = useState(false);
     const [events, setEvents] = useState([]);
     const [teams, setTeams] = useState([]);
     const [players, setPlayers] = useState([]);
     const [charactersAndMoves, setCharactersAndMoves] = useState([]);
+    const [eventInsertion, setEventInsertion] = useState(false);
+    const [teamInsertion, setTeamInsertion] = useState(false);
+    const [playerInsertion, setPlayerInsertion] = useState(false);
+    const [creationState, setCreationState] = useState(0);
 
     useEffect(() => {
         // Set an event listener for if the user clicks outside of the modal to close it
@@ -73,14 +77,14 @@ function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
 
         // Pull out the data
         let eventData = {
-            eventName: checkNull(set[5], "eventName", 0),
-            eventDate: checkNull(set[6], "eventDate", 0),
-            eventVodUrl: checkNull(set[7], "eventVodUrl", 0),
-            setDescriptor: checkNull(set[8], "setDescriptor", 0)
+            eventName: checkNull(setInsertion[5], "eventName", 0),
+            eventDate: checkNull(setInsertion[6], "eventDate", 0),
+            eventVodUrl: checkNull(setInsertion[7], "eventVodUrl", 0),
+            setDescriptor: checkNull(setInsertion[8], "setDescriptor", 0)
         }
         formattedData.push({event: eventData});
         for (let j = 0; j < 5; j++) {
-            const match = set[j];
+            const match = setInsertion[j];
             if (match !== null) {
                 let matchData = {
                     team1: match[0],
@@ -159,14 +163,44 @@ function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
     
     return (
         <div id="set-submit-form">
-            <SetInsertion setSet={setSet} />
+            <div className="comp-header">
+                <div 
+                  className={`set-submission-category ${creationState === 0 ? 'active' : ''}`}
+                  onClick={() => setCreationState(0)}
+                >Set</div>
+                <div 
+                  className={`set-submission-category ${creationState === 1 ? 'active' : ''}`}
+                  onClick={() => setCreationState(1)}
+                >Event</div>
+                <div 
+                  className={`set-submission-category ${creationState === 2 ? 'active' : ''}`}
+                  onClick={() => setCreationState(2)}
+                >Team</div>
+                <div 
+                  className={`set-submission-category ${creationState === 3 ? 'active' : ''}`}
+                  onClick={() => setCreationState(3)}
+                >Player</div>
+            </div>
+            {creationState === 0 && (
+                <SetInsertion setSetInsertion={setSetInsertion} />
+            )}
+            {creationState === 1 && (
+                <EventCreation setEventInsertion={setEventInsertion} />
+            )}
+            {creationState === 2 && (
+                <TeamCreation setTeamInsertion={setTeamInsertion} />
+            )}
+            {creationState === 3 && (
+                <PlayerCreation setPlayerInsertion={setPlayerInsertion} />
+            )}
             {/* Submit Button */}
             <button id="set-submit-button" onClick={submitComp}>Submit</button>
         </div>
     );
 }
 
-function SetInsertion({ setSet }) {
+// The full insertion form for a set
+function SetInsertion({ setSetInsertion }) {
     const [match1, setMatch1] = useState(null);
     const [match2, setMatch2] = useState(null);
     const [match3, setMatch3] = useState(null);
@@ -178,21 +212,19 @@ function SetInsertion({ setSet }) {
     const [setDescriptor, setSetDescriptor] = useState(null);
 
     useEffect(() => {
-        setSet([match1, match2, match3, match4, match5, eventName, eventDate, eventVodUrl]);
+        setSetInsertion([match1, match2, match3, match4, match5, eventName, eventDate, eventVodUrl]);
     }, [match1, match2, match3, match4, match5, eventName, eventDate, eventVodUrl]);
 
     return (
         <div id="set-submit-form" className="comp-card">
-            <div className="comp-header">
-                {/* Event Name */}
-                <input type="text" value={eventName} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
-                {/* Event Date */}
-                <input type="text" value={eventDate} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
-                {/* Event VOD URL */}
-                <input type="text" value={eventVodUrl} placeholder="Event VOD URL" onChange={(e) => setEventVodUrl(e.target.value)} />
-                {/* Set Descriptor */}
-                <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
-            </div>  
+            {/* Event Name */}
+            <input type="text" value={eventName} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
+            {/* Event Date */}
+            <input type="text" value={eventDate} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
+            {/* Event VOD URL */}
+            <input type="text" value={eventVodUrl} placeholder="Event VOD URL" onChange={(e) => setEventVodUrl(e.target.value)} />
+            {/* Set Descriptor */}
+            <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
             <div className="comp-card">
                 <MatchInsertion setMatch={setMatch1}/>
             </div>
@@ -212,6 +244,7 @@ function SetInsertion({ setSet }) {
     );
 }
 
+// Match insertion form for a set (Used in SetInsertion)
 function MatchInsertion({ setMatch }) {
     const [comp1, setComp1] = useState(null);
     const [comp2, setComp2] = useState(null);
@@ -233,6 +266,7 @@ function MatchInsertion({ setMatch }) {
     )
 }
 
+// Comp insertion form for a match (Used in SetInsertion)
 function CompInsertion({ setComp }) {
     const [teamName, setTeamName] = useState(null);
     const [teamRegion, setTeamRegion] = useState(null);
@@ -295,6 +329,7 @@ function CompInsertion({ setComp }) {
     )
 }
 
+// Character and player insertion form for a comp (Used in SetInsertion)
 function CharacterPlayer({ character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer }) {
 
     return (
@@ -309,6 +344,62 @@ function CharacterPlayer({ character, move1, move2, player, setCharacter, setMov
             <input type="text" value={player} placeholder="Player Name" onChange={(e) => setPlayer(e.target.value)} />
         </div>
     )
+}
+
+// Creation form for JUST event
+function EventCreation({ setEventInsertion }) {
+    const [eventName, setEventName] = useState(null);
+    const [eventDate, setEventDate] = useState(null);
+    const [eventVodUrl, setEventVodUrl] = useState(null);
+
+    useEffect(() => {
+        setEventInsertion([eventName, eventDate, eventVodUrl]);
+    }, [eventName, eventDate, eventVodUrl]);
+    return (
+        <div id="event-creation">
+            {/* Event Name */}
+            <input type="text" value={eventName} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
+            {/* Event Date */}
+            <input type="text" value={eventDate} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
+            {/* Event VOD URL */}
+            <input type="text" value={eventVodUrl} placeholder="Event VOD URL" onChange={(e) => setEventVodUrl(e.target.value)} />
+        </div>
+    )
+}
+
+// Creation form for JUST a team
+function TeamCreation({ setTeamInsertion }) {
+    const [teamName, setTeamName] = useState(null);
+    const [teamRegion, setTeamRegion] = useState(null);
+
+    useEffect(() => {
+        setTeamInsertion([teamName, teamRegion]);
+    }, [teamName, teamRegion]);
+
+    return (
+        <div id="team-creation">
+            {/* Team Name */}
+            <input type="text" value={teamName} placeholder="Team Name" onChange={(e) => setTeamName(e.target.value)} />
+            {/* Team Region */}
+            <input type="text" value={teamRegion} placeholder="Team Region" onChange={(e) => setTeamRegion(e.target.value)} />
+        </div>
+    );
+}
+
+// Creation form for JUST a player
+function PlayerCreation({ setPlayerInsertion }) {
+    const [playerName, setPlayerName] = useState(null);
+
+    useEffect(() => {
+        setPlayerInsertion([playerName]);
+    }, [playerName]);
+
+    return (
+        <div id="player-creation">
+            {/* Player Name */}
+            <input type="text" value={playerName} placeholder="Player Name" onChange={(e) => setPlayerName(e.target.value)} />
+        </div>
+    );
 }
 
 export default SubmitSetModal;
