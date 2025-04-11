@@ -216,7 +216,7 @@ function SetInsertion({ setSetInsertion }) {
     }, [match1, match2, match3, match4, match5, eventName, eventDate, eventVodUrl]);
 
     return (
-        <div id="set-submit-form" className="comp-card">
+        <div id="set-creation" className="comp-card">
             {/* Event Name */}
             <input type="text" value={eventName} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
             {/* Event Date */}

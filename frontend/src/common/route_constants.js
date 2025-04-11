@@ -9,6 +9,9 @@ const routes = {
     GET_ALL_TEAMS: '/GETallTeams',
     GET_ALL_PLAYERS: '/GETallPlayers',
     GET_ALL_CHARACTERS_AND_MOVES: '/GETallCharactersAndMoves',
+    POST_EVENT: '/POSTevent',
+    POST_TEAM: '/POSTteam',
+    POST_PLAYER: '/POSTplayer',
 };
 
 module.exports = routes;

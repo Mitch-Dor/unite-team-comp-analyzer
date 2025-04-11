@@ -69,4 +69,34 @@ module.exports = function (app, database) {
             res.sendStatus(401);
         }); 
     });
+
+    app.post('/POSTEVENT', (req, res) => {
+        database.teams.insertEvent(req.body.name, req.body.date, req.body.vodUrl).then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error inserting event:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.post('/POSTTEAM', (req, res) => {
+        database.teams.insertTeam(req.body.name, req.body.region).then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error inserting team:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.post('/POSTPLAYER', (req, res) => {
+        database.teams.insertPlayer(req.body.name).then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error inserting player:', error);
+            res.sendStatus(401);
+        });
+    });
 };

@@ -271,6 +271,51 @@ class Teams {
         });
       });
     }
+
+    // Insert an event
+    async insertEvent(name, date, vodUrl) {
+      return new Promise((resolve, reject) => { 
+        const sql = 'INSERT INTO events (event_name, event_date, vod_url) VALUES (?, ?, ?)';
+        this.db.run(sql, [name, date, vodUrl], function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            // this.lastID contains the ID of the last inserted row
+            resolve({ id: this.lastID });
+          }
+        });
+      });
+    }
+
+    // Insert a team
+    async insertTeam(name, region) {
+      return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO professional_teams (team_name, team_region) VALUES (?, ?)';  
+        this.db.run(sql, [name, region], function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            // this.lastID contains the ID of the last inserted row
+            resolve({ id: this.lastID });
+          }
+        });
+      });
+    }
+
+    // Insert a player
+    async insertPlayer(name) {
+      return new Promise((resolve, reject) => { 
+        const sql = 'INSERT INTO professional_players (player_name) VALUES (?)';
+        this.db.run(sql, [name], function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            // this.lastID contains the ID of the last inserted row
+            resolve({ id: this.lastID });
+          }
+        });
+      });
+    }
 }
 
 module.exports = Teams;
