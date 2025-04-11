@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves } from '../backendCalls/http';
 
 function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
     const [set, setSet] = useState(null);
+    const [events, setEvents] = useState([]);
+    const [teams, setTeams] = useState([]);
+    const [players, setPlayers] = useState([]);
+    const [charactersAndMoves, setCharactersAndMoves] = useState([]);
+
     useEffect(() => {
         // Set an event listener for if the user clicks outside of the modal to close it
         window.addEventListener('click', (e) => {
@@ -13,6 +19,30 @@ function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
             }
             setShowSubmitForm(false);
         });
+
+        async function fetchAllData() {
+            try {
+                // Fetch all data to prepopulate dropdowns
+                const events = await fetchAllEvents();
+                const teams = await fetchAllTeams();
+                const players = await fetchAllPlayers();
+                const charactersAndMoves = await fetchAllCharactersAndMoves();  
+                console.log(events);
+                console.log(teams);
+                console.log(players);
+                console.log(charactersAndMoves);
+                setEvents(events);
+                setTeams(teams);
+                setPlayers(players);
+                setCharactersAndMoves(charactersAndMoves);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        // Fetch all data to prepopulate dropdowns
+        fetchAllData();
+
     }, []);
   
     // Function to submit the comp
@@ -45,7 +75,8 @@ function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
         let eventData = {
             eventName: checkNull(set[5], "eventName", 0),
             eventDate: checkNull(set[6], "eventDate", 0),
-            eventVodUrl: checkNull(set[7], "eventVodUrl", 0)
+            eventVodUrl: checkNull(set[7], "eventVodUrl", 0),
+            setDescriptor: checkNull(set[8], "setDescriptor", 0)
         }
         formattedData.push({event: eventData});
         for (let j = 0; j < 5; j++) {
@@ -144,6 +175,7 @@ function SetInsertion({ setSet }) {
     const [eventName, setEventName] = useState(null);
     const [eventDate, setEventDate] = useState(null);
     const [eventVodUrl, setEventVodUrl] = useState(null);
+    const [setDescriptor, setSetDescriptor] = useState(null);
 
     useEffect(() => {
         setSet([match1, match2, match3, match4, match5, eventName, eventDate, eventVodUrl]);
@@ -158,6 +190,8 @@ function SetInsertion({ setSet }) {
                 <input type="text" value={eventDate} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
                 {/* Event VOD URL */}
                 <input type="text" value={eventVodUrl} placeholder="Event VOD URL" onChange={(e) => setEventVodUrl(e.target.value)} />
+                {/* Set Descriptor */}
+                <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
             </div>  
             <div className="comp-card">
                 <MatchInsertion setMatch={setMatch1}/>

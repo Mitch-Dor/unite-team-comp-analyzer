@@ -212,6 +212,65 @@ class Teams {
       });
     }
 
+    // Get all events
+    async getAllEvents() {
+      return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM events';
+        this.db.all(sql, (err, rows) => { 
+          if (err) {
+            console.error("SQL Error:", err.message);
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        });
+      });
+    }
+    
+    // Get all teams
+    async getAllTeams() {
+      return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM professional_teams';
+        this.db.all(sql, (err, rows) => {
+          if (err) {
+            console.error("SQL Error:", err.message);
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        });
+      });
+    }
+
+    // Get all players
+    async getAllPlayers() {
+      return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM professional_players';
+        this.db.all(sql, (err, rows) => {
+          if (err) {
+            console.error("SQL Error:", err.message);
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        });
+      });
+    }
+    
+    // Get all characters and moves
+    async getAllCharactersAndMoves() {
+      return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM playable_characters natural join pokemon_moves';
+        this.db.all(sql, (err, rows) => {
+          if (err) {
+            console.error("SQL Error:", err.message);
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        });
+      });
+    }
 }
 
 module.exports = Teams;

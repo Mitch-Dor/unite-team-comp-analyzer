@@ -25,4 +25,48 @@ module.exports = function (app, database) {
             res.sendStatus(401);
         });
     });
+
+    // Function to get all events
+    app.get('/GETallEvents', (req, res) => {
+        database.teams.getAllEvents().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching events:', error); // Added logging for better debugging
+            res.sendStatus(401);
+        }); 
+    });
+
+    // Function to get all teams
+    app.get('/GETallTeams', (req, res) => {
+        database.teams.getAllTeams().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching teams:', error); // Added logging for better debugging
+            res.sendStatus(401);
+        }); 
+    });
+
+    // Function to get all players
+    app.get('/GETallPlayers', (req, res) => {
+        database.teams.getAllPlayers().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching players:', error); // Added logging for better debugging
+            res.sendStatus(401);
+        }); 
+    });
+    
+    // Function to get all characters and moves
+    app.get('/GETallCharactersAndMoves', (req, res) => {
+        database.teams.getAllCharactersAndMoves().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching characters and moves:', error); // Added logging for better debugging
+            res.sendStatus(401);
+        }); 
+    });
 };

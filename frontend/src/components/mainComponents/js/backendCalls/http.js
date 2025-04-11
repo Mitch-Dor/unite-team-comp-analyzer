@@ -89,3 +89,43 @@ export async function fetchAllComps() {
     const characterDataJson = await characterData.json();
     return characterDataJson;
 }
+
+// Function to fetch all events
+export async function fetchAllEvents() {
+    const characterData = await fetch(routes.GET_ALL_EVENTS, {
+        method: 'GET',
+        credentials: 'include',
+    });
+    const characterDataJson = await characterData.json();
+    return characterDataJson;
+}
+
+// Function to fetch all teams
+export async function fetchAllTeams() {
+    const characterData = await fetch(routes.GET_ALL_TEAMS, {
+        method: 'GET',
+        credentials: 'include',
+    });
+    const characterDataJson = await characterData.json();
+    return characterDataJson;
+}
+
+// Function to fetch all players
+export async function fetchAllPlayers() {
+    const characterData = await fetch(routes.GET_ALL_PLAYERS, {
+        method: 'GET',
+        credentials: 'include',
+    });
+    const characterDataJson = await characterData.json();
+    return characterDataJson;
+}
+
+// Function to fetch all characters and moves
+export async function fetchAllCharactersAndMoves() {
+    const characterData = await fetch(routes.GET_ALL_CHARACTERS_AND_MOVES, {
+        method: 'GET',
+        credentials: 'include',
+    });
+    const characterDataJson = await characterData.json();
+    return characterDataJson;
+}
