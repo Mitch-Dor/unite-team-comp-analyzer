@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves } from '../backendCalls/http';
+import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, insertEvent, insertTeam, insertPlayer } from '../backendCalls/http';
 
-function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
+function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
     const [setInsertion, setSetInsertion] = useState(false);
     const [events, setEvents] = useState([]);
     const [teams, setTeams] = useState([]);
@@ -11,6 +11,7 @@ function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
     const [teamInsertion, setTeamInsertion] = useState(false);
     const [playerInsertion, setPlayerInsertion] = useState(false);
     const [creationState, setCreationState] = useState(0);
+    const [resetKey, setResetKey] = useState(0);
 
     useEffect(() => {
         // Set an event listener for if the user clicks outside of the modal to close it
@@ -51,11 +52,175 @@ function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
   
     // Function to submit the comp
     function submitComp() {
+
         // Format the data and do error checking
         let formattedData = [];
         let error = "Missing Fields:";
         let errorCount = 0;
         let i = 1;
+
+        // Check which data is trying to be inserted
+        switch (creationState) {
+            case 0:
+                setCheck();
+                break;
+            case 1:
+                eventCheck();
+                break;
+            case 2:
+                teamCheck();
+                break;
+            case 3:
+                playerCheck();
+                break;
+        }
+
+        function setCheck() {
+            // Pull out the data
+            let eventData = {
+                eventName: checkNull(setInsertion[5], "eventName", 0),
+                eventDate: checkNull(setInsertion[6], "eventDate", 0),
+                eventVodUrl: checkNull(setInsertion[7], "eventVodUrl", 0),
+                setDescriptor: checkNull(setInsertion[8], "setDescriptor", 0)
+            }
+            // Format it in a way that's easy to insert into the comps page
+            formattedData.push({event: eventData.event_name, matchDate: eventData.event_date, vod: eventData.vod_url, set_description: eventData.setDescriptor});
+            for (let j = 0; j < 5; j++) {
+                const match = setInsertion[j];
+                if (match !== null) {
+                    let matchData = {
+                        team1: match[0],
+                        team2: match[1],
+                        winner: match[2]
+                    }
+                    let team1Data = {
+                        name: checkNull(matchData.team1[0], "team1TeamName", i),
+                        region: checkNull(matchData.team1[1], "team1TeamRegion", i),
+                        firstPick: checkNull(matchData.team1[2], "team1FirstPick", i),
+                        bans: [checkNull(matchData.team1[3], "team1Ban1", i), checkNull(matchData.team1[4], "team1Ban2", i)],
+                        pokemon: [checkNull(matchData.team1[5], "team1Pokemon1", i), checkNull(matchData.team1[6], "team1Pokemon2", i), checkNull(matchData.team1[7], "team1Pokemon3", i), checkNull(matchData.team1[8], "team1Pokemon4", i), checkNull(matchData.team1[9], "team1Pokemon5", i)],
+                        pokemon_moves: [checkNull(matchData.team1[10], "team1Pokemon1Move1", i), checkNull(matchData.team1[11], "team1Pokemon1Move2", i), checkNull(matchData.team1[12], "team1Pokemon2Move1", i), checkNull(matchData.team1[13], "team1Pokemon2Move2", i), checkNull(matchData.team1[14], "team1Pokemon3Move1", i), checkNull(matchData.team1[15], "team1Pokemon3Move2", i), checkNull(matchData.team1[16], "team1Pokemon4Move1", i), checkNull(matchData.team1[17], "team1Pokemon4Move2", i), checkNull(matchData.team1[18], "team1Pokemon5Move1", i), checkNull(matchData.team1[19], "team1Pokemon5Move2", i)],
+                        players: [checkNull(matchData.team1[20], "team1Player1", i), checkNull(matchData.team1[21], "team1Player2", i), checkNull(matchData.team1[22], "team1Player3", i), checkNull(matchData.team1[23], "team1Player4", i), checkNull(matchData.team1[24], "team1Player5", i)]
+                    }
+                    let team2Data = {
+                        name: checkNull(matchData.team2[0], "team2TeamName", i),
+                        region: checkNull(matchData.team2[1], "team2TeamRegion", i),
+                        firstPick: checkNull(matchData.team2[2], "team2FirstPick", i),
+                        bans: [checkNull(matchData.team2[3], "team2Ban1", i), checkNull(matchData.team2[4], "team2Ban2", i)],
+                        pokemon: [checkNull(matchData.team2[5], "team2Pokemon1", i), checkNull(matchData.team2[6], "team2Pokemon2", i), checkNull(matchData.team2[7], "team2Pokemon3", i), checkNull(matchData.team2[8], "team2Pokemon4", i), checkNull(matchData.team2[9], "team2Pokemon5", i)],
+                        pokemon_moves: [checkNull(matchData.team2[10], "team2Pokemon1Move1", i), checkNull(matchData.team2[11], "team2Pokemon1Move2", i), checkNull(matchData.team2[12], "team2Pokemon2Move1", i), checkNull(matchData.team2[13], "team2Pokemon2Move2", i), checkNull(matchData.team2[14], "team2Pokemon3Move1", i), checkNull(matchData.team2[15], "team2Pokemon3Move2", i), checkNull(matchData.team2[16], "team2Pokemon4Move1", i), checkNull(matchData.team2[17], "team2Pokemon4Move2", i), checkNull(matchData.team2[18], "team2Pokemon5Move1", i), checkNull(matchData.team2[19], "team2Pokemon5Move2", i)],
+                        players: [checkNull(matchData.team2[20], "team2Player1", i), checkNull(matchData.team2[21], "team2Player2", i), checkNull(matchData.team2[22], "team2Player3", i), checkNull(matchData.team2[23], "team2Player4", i), checkNull(matchData.team2[24], "team2Player5", i)]
+                    }
+                    checkNull(matchData.winner, "winner", i);
+                    // Put it all in one match object
+                    formattedData.push({team1: team1Data, team2: team2Data, winningTeam: matchData.winner});
+                    i++;
+                }
+            }
+            // If something is missing, don't submit
+            if (errorCount > 0) {
+                alert(error);
+                return;
+            }
+            // Submit the data
+            insertSet(formattedData).then(data => {
+                // Update the comp data on the comp display page with the new comps
+                // Missing some of the data that the comps page has but it has everything needed to display
+                for (let k=1; k < formattedData.length; k++) {
+                    const newMatch = {
+                        team1: formattedData[k].team1,
+                        team2: formattedData[k].team2,
+                        winningTeam: formattedData[k].winningTeam,
+                        event: formattedData[0].event,
+                        matchDate: formattedData[0].matchDate,
+                        set_description: formattedData[0].set_description,
+                        vod: formattedData[0].vod
+                    }
+                    setCompsData([...setCompsData, newMatch]);
+                }
+                // Clear the set insertion data and the input fields
+                setSetInsertion(null);
+                resetAllForms();
+            });
+        }
+
+        function eventCheck() {
+            // Check for null values
+            // Make sure the fields are consistent with the database
+            checkNull(eventInsertion.event_name, "Event Name");
+            checkNull(eventInsertion.event_date, "Event Date");
+            checkNull(eventInsertion.vod_url, "Event VOD URL");
+            // If there are no errors, submit the data
+            if (errorCount === 0) {
+                insertEvent(eventInsertion).then(data => {
+                    // Update the event data with the ID
+                    const newEvent = {
+                        event_id: data.id,
+                        event_name: eventInsertion.event_name,
+                        event_date: eventInsertion.event_date,
+                        vod_url: eventInsertion.vod_url
+                    }
+                    // Put this new event in the events array
+                    setEvents([...events, newEvent]);
+                    // Clear the event insertion data and the input fields
+                    setEventInsertion(null);
+                    resetAllForms();
+                });
+            } else {
+                alert(error);
+                return;
+            }
+        }
+
+        function teamCheck() {
+            // Check for null values
+            // Make sure the fields are consistent with the database
+            checkNull(teamInsertion.team_name, "Team Name");
+            checkNull(teamInsertion.team_region, "Team Region");
+            // If there are no errors, submit the data
+            if (errorCount === 0) {
+                insertTeam(teamInsertion).then(data => {
+                    // Update the team data with the ID
+                    const newTeam = {
+                        team_id: data.id,
+                        team_name: teamInsertion.team_name,
+                        team_region: teamInsertion.team_region
+                    }
+                    // Put this new team in the teams array
+                    setTeams([...teams, newTeam]);
+                    // Clear the team insertion data and the input fields
+                    setTeamInsertion(null);
+                    resetAllForms();
+                });
+            } else {
+                alert(error);
+                return;
+            }
+        }
+
+        function playerCheck() {
+            // Check for null values
+            // Make sure the fields are consistent with the database
+            checkNull(playerInsertion.player_name, "Player Name");
+            // If there are no errors, submit the data
+            if (errorCount === 0) {
+                insertPlayer(playerInsertion).then(data => {
+                    // Update the player data with the ID
+                    const newPlayer = {
+                        player_id: data.id,
+                        player_name: playerInsertion.player_name
+                    }
+                    // Put this new player in the players array
+                    setPlayers([...players, newPlayer]);
+                    // Clear the player insertion data and the input fields
+                    setPlayerInsertion(null);
+                    resetAllForms();
+                });
+            } else {
+                alert(error);
+                return;
+            }
+        }
 
         function checkNull(data, field, i) {
             if (data === null) {
@@ -74,93 +239,22 @@ function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
             }
             return data;
         }
-
-        // Pull out the data
-        let eventData = {
-            eventName: checkNull(setInsertion[5], "eventName", 0),
-            eventDate: checkNull(setInsertion[6], "eventDate", 0),
-            eventVodUrl: checkNull(setInsertion[7], "eventVodUrl", 0),
-            setDescriptor: checkNull(setInsertion[8], "setDescriptor", 0)
-        }
-        formattedData.push({event: eventData});
-        for (let j = 0; j < 5; j++) {
-            const match = setInsertion[j];
-            if (match !== null) {
-                let matchData = {
-                    team1: match[0],
-                    team2: match[1],
-                    winner: match[2]
-                }
-                let team1Data = {
-                    teamName: checkNull(matchData.team1[0], "team1TeamName", i),
-                    teamRegion: checkNull(matchData.team1[1], "team1TeamRegion", i),
-                    firstPick: checkNull(matchData.team1[2], "team1FirstPick", i),
-                    ban1: checkNull(matchData.team1[3], "team1Ban1", i),
-                    ban2: checkNull(matchData.team1[4], "team1Ban2", i),
-                    pokemon1: checkNull(matchData.team1[5], "team1Pokemon1", i),
-                    pokemon2: checkNull(matchData.team1[6], "team1Pokemon2", i),
-                    pokemon3: checkNull(matchData.team1[7], "team1Pokemon3", i),
-                    pokemon4: checkNull(matchData.team1[8], "team1Pokemon4", i),
-                    pokemon5: checkNull(matchData.team1[9], "team1Pokemon5", i),
-                    pokemon1move1: checkNull(matchData.team1[10], "team1Pokemon1Move1", i),
-                    pokemon1move2: checkNull(matchData.team1[11], "team1Pokemon1Move2", i),
-                    pokemon2move1: checkNull(matchData.team1[12], "team1Pokemon2Move1", i),
-                    pokemon2move2: checkNull(matchData.team1[13], "team1Pokemon2Move2", i),
-                    pokemon3move1: checkNull(matchData.team1[14], "team1Pokemon3Move1", i),
-                    pokemon3move2: checkNull(matchData.team1[15], "team1Pokemon3Move2"  ),
-                    pokemon4move1: checkNull(matchData.team1[16], "team1Pokemon4Move1", i), 
-                    pokemon4move2: checkNull(matchData.team1[17], "team1Pokemon4Move2", i), 
-                    pokemon5move1: checkNull(matchData.team1[18], "team1Pokemon5Move1", i),
-                    pokemon5move2: checkNull(matchData.team1[19], "team1Pokemon5Move2", i),
-                    player1: checkNull(matchData.team1[20], "team1Player1", i),
-                    player2: checkNull(matchData.team1[21], "team1Player2", i),
-                    player3: checkNull(matchData.team1[22], "team1Player3", i),
-                    player4: checkNull(matchData.team1[23], "team1Player4", i),
-                    player5: checkNull(matchData.team1[24], "team1Player5")
-                }
-                let team2Data = {
-                    teamName: checkNull(matchData.team2[0], "team2TeamName", i),
-                    teamRegion: checkNull(matchData.team2[1], "team2TeamRegion", i),
-                    firstPick: checkNull(matchData.team2[2], "team2FirstPick", i),
-                    ban1: checkNull(matchData.team2[3], "team2Ban1", i),
-                    ban2: checkNull(matchData.team2[4], "team2Ban2", i),
-                    pokemon1: checkNull(matchData.team2[5], "team2Pokemon1", i),
-                    pokemon2: checkNull(matchData.team2[6], "team2Pokemon2", i),
-                    pokemon3: checkNull(matchData.team2[7], "team2Pokemon3", i),
-                    pokemon4: checkNull(matchData.team2[8], "team2Pokemon4", i),
-                    pokemon5: checkNull(matchData.team2[9], "team2Pokemon5", i),
-                    pokemon1move1: checkNull(matchData.team2[10], "team2Pokemon1Move1", i),
-                    pokemon1move2: checkNull(matchData.team2[11], "team2Pokemon1Move2", i),
-                    pokemon2move1: checkNull(matchData.team2[12], "team2Pokemon2Move1", i),
-                    pokemon2move2: checkNull(matchData.team2[13], "team2Pokemon2Move2", i),
-                    pokemon3move1: checkNull(matchData.team2[14], "team2Pokemon3Move1", i),
-                    pokemon3move2: checkNull(matchData.team2[15], "team2Pokemon3Move2", i),
-                    pokemon4move1: checkNull(matchData.team2[16], "team2Pokemon4Move1", i), 
-                    pokemon4move2: checkNull(matchData.team2[17], "team2Pokemon4Move2", i), 
-                    pokemon5move1: checkNull(matchData.team2[18], "team2Pokemon5Move1", i),
-                    pokemon5move2: checkNull(matchData.team2[19], "team2Pokemon5Move2", i),
-                    player1: checkNull(matchData.team2[20], "team2Player1", i),
-                    player2: checkNull(matchData.team2[21], "team2Player2", i),
-                    player3: checkNull(matchData.team2[22], "team2Player3", i),
-                    player4: checkNull(matchData.team2[23], "team2Player4", i),
-                    player5: checkNull(matchData.team2[24], "team2Player5")
-                }
-                checkNull(matchData.winner, "winner", i);
-                // Put it all in one match object
-                formattedData.push({match: {team1: team1Data, team2: team2Data, winner: matchData.winner}});
-                i++;
+        function checkNull(data, field) {
+            if (data === null) {
+                // Add the field to the error message
+                error += "\n" + field;
+                errorCount++;
+                return "null";
             }
+            return data;
         }
-        // If something is missing, don't submit
-        if (errorCount > 0) {
-            alert(error);
-            return;
-        }
-        // Submit the data
-        setSubmitData(formattedData);
-        setShowSubmitForm(false);
+
     }
     
+    const resetAllForms = () => {
+        setResetKey(prev => prev + 1);
+    };
+
     return (
         <div id="set-submit-form">
             <div className="comp-header">
@@ -182,25 +276,27 @@ function SubmitSetModal({ setShowSubmitForm, setSubmitData }) {
                 >Player</div>
             </div>
             {creationState === 0 && (
-                <SetInsertion setSetInsertion={setSetInsertion} />
+                <SetInsertion key={resetKey} setSetInsertion={setSetInsertion} />
             )}
             {creationState === 1 && (
-                <EventCreation setEventInsertion={setEventInsertion} />
+                <EventCreation key={resetKey} setEventInsertion={setEventInsertion} />
             )}
             {creationState === 2 && (
-                <TeamCreation setTeamInsertion={setTeamInsertion} />
+                <TeamCreation key={resetKey} setTeamInsertion={setTeamInsertion} />
             )}
             {creationState === 3 && (
-                <PlayerCreation setPlayerInsertion={setPlayerInsertion} />
+                <PlayerCreation key={resetKey} setPlayerInsertion={setPlayerInsertion} />
             )}
             {/* Submit Button */}
             <button id="set-submit-button" onClick={submitComp}>Submit</button>
+            {/* Add Reset Button */}
+            <button id="set-reset-button" onClick={resetAllForms}>Reset</button>
         </div>
     );
 }
 
 // The full insertion form for a set
-function SetInsertion({ setSetInsertion }) {
+function SetInsertion({ key, setSetInsertion }) {
     const [match1, setMatch1] = useState(null);
     const [match2, setMatch2] = useState(null);
     const [match3, setMatch3] = useState(null);
@@ -211,9 +307,29 @@ function SetInsertion({ setSetInsertion }) {
     const [eventVodUrl, setEventVodUrl] = useState(null);
     const [setDescriptor, setSetDescriptor] = useState(null);
 
+    const resetForm = () => {
+        setMatch1(null);
+        setMatch2(null);
+        setMatch3(null);
+        setMatch4(null);
+        setMatch5(null);
+        setEventName(null);
+        setEventDate(null);
+        setEventVodUrl(null);
+        setSetDescriptor(null);
+    };
+
     useEffect(() => {
         setSetInsertion([match1, match2, match3, match4, match5, eventName, eventDate, eventVodUrl]);
     }, [match1, match2, match3, match4, match5, eventName, eventDate, eventVodUrl]);
+
+    useEffect(() => {
+        resetForm();
+    }, []);
+
+    useEffect(() => {
+        resetForm();
+    }, [key]);
 
     return (
         <div id="set-creation" className="comp-card">
@@ -250,9 +366,19 @@ function MatchInsertion({ setMatch }) {
     const [comp2, setComp2] = useState(null);
     const [matchWinner, setMatchWinner] = useState(null);
 
+    const resetForm = () => {
+        setComp1(null);
+        setComp2(null);
+        setMatchWinner(null);
+    };
+
     useEffect(() => {
         setMatch([comp1, comp2, matchWinner]);
     }, [comp1, comp2, matchWinner]);
+
+    useEffect(() => {
+        resetForm();
+    }, []);
 
     return (
         <div id="match-insertion">
@@ -294,9 +420,41 @@ function CompInsertion({ setComp }) {
     const [player4, setPlayer4] = useState(null);
     const [player5, setPlayer5] = useState(null);
 
+    const resetForm = () => {
+        setTeamName(null);
+        setTeamRegion(null);
+        setFirstPick(null);
+        setBan1(null);
+        setBan2(null);
+        setPokemon1(null);
+        setPokemon2(null);
+        setPokemon3(null);
+        setPokemon4(null);
+        setPokemon5(null);
+        setPokemon1Move1(null);
+        setPokemon1Move2(null);
+        setPokemon2Move1(null);
+        setPokemon2Move2(null);
+        setPokemon3Move1(null);
+        setPokemon3Move2(null);
+        setPokemon4Move1(null);
+        setPokemon4Move2(null);
+        setPokemon5Move1(null);
+        setPokemon5Move2(null);
+        setPlayer1(null);
+        setPlayer2(null);
+        setPlayer3(null);
+        setPlayer4(null);
+        setPlayer5(null);
+    };
+
     useEffect(() => {
         setComp([teamName, teamRegion, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
     }, [teamName, teamRegion, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+
+    useEffect(() => {
+        resetForm();
+    }, []);
 
     return (
         <div id="comp-insertion">
@@ -347,14 +505,29 @@ function CharacterPlayer({ character, move1, move2, player, setCharacter, setMov
 }
 
 // Creation form for JUST event
-function EventCreation({ setEventInsertion }) {
+function EventCreation({ key, setEventInsertion }) {
     const [eventName, setEventName] = useState(null);
     const [eventDate, setEventDate] = useState(null);
     const [eventVodUrl, setEventVodUrl] = useState(null);
 
+    const resetForm = () => {
+        setEventName(null);
+        setEventDate(null);
+        setEventVodUrl(null);
+    };
+
     useEffect(() => {
-        setEventInsertion([eventName, eventDate, eventVodUrl]);
+        setEventInsertion({event_name: eventName, event_date: eventDate, vod_url: eventVodUrl});
     }, [eventName, eventDate, eventVodUrl]);
+
+    useEffect(() => {
+        resetForm();
+    }, []);
+
+    useEffect(() => {
+        resetForm();
+    }, [key]);
+
     return (
         <div id="event-creation">
             {/* Event Name */}
@@ -368,13 +541,26 @@ function EventCreation({ setEventInsertion }) {
 }
 
 // Creation form for JUST a team
-function TeamCreation({ setTeamInsertion }) {
+function TeamCreation({ key, setTeamInsertion }) {
     const [teamName, setTeamName] = useState(null);
     const [teamRegion, setTeamRegion] = useState(null);
 
+    const resetForm = () => {
+        setTeamName(null);
+        setTeamRegion(null);
+    };
+
     useEffect(() => {
-        setTeamInsertion([teamName, teamRegion]);
+        setTeamInsertion({team_name: teamName, team_region: teamRegion});
     }, [teamName, teamRegion]);
+
+    useEffect(() => {
+        resetForm();
+    }, []);
+
+    useEffect(() => {
+        resetForm();
+    }, [key]);
 
     return (
         <div id="team-creation">
@@ -387,12 +573,24 @@ function TeamCreation({ setTeamInsertion }) {
 }
 
 // Creation form for JUST a player
-function PlayerCreation({ setPlayerInsertion }) {
+function PlayerCreation({ key, setPlayerInsertion }) {
     const [playerName, setPlayerName] = useState(null);
 
+    const resetForm = () => {
+        setPlayerName(null);
+    };
+
     useEffect(() => {
-        setPlayerInsertion([playerName]);
+        setPlayerInsertion({player_name: playerName});
     }, [playerName]);
+
+    useEffect(() => {
+        resetForm();
+    }, []);
+
+    useEffect(() => {
+        resetForm();
+    }, [key]);
 
     return (
         <div id="player-creation">
