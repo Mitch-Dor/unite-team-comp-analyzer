@@ -276,7 +276,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
                 >Player</div>
             </div>
             {creationState === 0 && (
-                <SetInsertion key={resetKey} setSetInsertion={setSetInsertion} />
+                <SetInsertion key={resetKey} setSetInsertion={setSetInsertion} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} />
             )}
             {creationState === 1 && (
                 <EventCreation key={resetKey} setEventInsertion={setEventInsertion} />
@@ -296,15 +296,13 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
 }
 
 // The full insertion form for a set
-function SetInsertion({ key, setSetInsertion }) {
+function SetInsertion({ key, setSetInsertion, events, teams, players, charactersAndMoves }) {
     const [match1, setMatch1] = useState(null);
     const [match2, setMatch2] = useState(null);
     const [match3, setMatch3] = useState(null);
     const [match4, setMatch4] = useState(null);
     const [match5, setMatch5] = useState(null);
-    const [eventName, setEventName] = useState(null);
-    const [eventDate, setEventDate] = useState(null);
-    const [eventVodUrl, setEventVodUrl] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState(null);
     const [setDescriptor, setSetDescriptor] = useState(null);
 
     const resetForm = () => {
@@ -313,15 +311,17 @@ function SetInsertion({ key, setSetInsertion }) {
         setMatch3(null);
         setMatch4(null);
         setMatch5(null);
-        setEventName(null);
-        setEventDate(null);
-        setEventVodUrl(null);
+        setSelectedEvent(null);
         setSetDescriptor(null);
     };
 
     useEffect(() => {
-        setSetInsertion([match1, match2, match3, match4, match5, eventName, eventDate, eventVodUrl]);
-    }, [match1, match2, match3, match4, match5, eventName, eventDate, eventVodUrl]);
+        if (selectedEvent) {
+            setSetInsertion([match1, match2, match3, match4, match5, selectedEvent.event_name, selectedEvent.event_date, selectedEvent.vod_url]);
+        } else {
+            setSetInsertion([match1, match2, match3, match4, match5, null, null, null]);
+        }
+    }, [match1, match2, match3, match4, match5, selectedEvent]);
 
     useEffect(() => {
         resetForm();
@@ -333,43 +333,109 @@ function SetInsertion({ key, setSetInsertion }) {
 
     return (
         <div id="set-creation" className="comp-card">
-            {/* Event Name */}
-            <input type="text" value={eventName} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
-            {/* Event Date */}
-            <input type="text" value={eventDate} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
-            {/* Event VOD URL */}
-            <input type="text" value={eventVodUrl} placeholder="Event VOD URL" onChange={(e) => setEventVodUrl(e.target.value)} />
-            {/* Set Descriptor */}
+            {/* Event Name Dropdown */}
+            <select value={selectedEvent ? selectedEvent.event_name : ""} onChange={(e) => {
+                const eventName = e.target.value;
+                const event = events.find(ev => ev.event_name === eventName);
+                setSelectedEvent(event);
+            }}>
+                <option value="">Select Event</option>
+                {events.map(event => (
+                    <option key={event.event_id} value={event.event_name}>
+                        {event.event_name}
+                    </option>
+                ))}
+            </select>
+            {/* Event Date (Read-only) */}
+            <input 
+                type="text" 
+                value={selectedEvent ? selectedEvent.event_date : ""} 
+                readOnly 
+                placeholder="Event Date"
+                style={{ display: selectedEvent ? 'block' : 'none' }}
+            />
+            {/* Event VOD URL (Read-only) */}
+            <input 
+                type="text" 
+                value={selectedEvent ? selectedEvent.vod_url : ""} 
+                readOnly 
+                placeholder="Event VOD URL"
+                style={{ display: selectedEvent ? 'block' : 'none' }}
+            />
+            {/* Set Descriptor (Text Input) */}
             <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
             <div className="comp-card">
-                <MatchInsertion setMatch={setMatch1}/>
+                <MatchInsertion key={key} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion setMatch={setMatch2}/>
+                <MatchInsertion key={key} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion setMatch={setMatch3}/>
+                <MatchInsertion key={key} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion setMatch={setMatch4}/>
+                <MatchInsertion key={key} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion setMatch={setMatch5}/>
+                <MatchInsertion key={key} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
             </div>
         </div>
     );
 }
 
 // Match insertion form for a set (Used in SetInsertion)
-function MatchInsertion({ setMatch }) {
+function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves }) {
     const [comp1, setComp1] = useState(null);
     const [comp2, setComp2] = useState(null);
     const [matchWinner, setMatchWinner] = useState(null);
+    const [firstPickError, setFirstPickError] = useState(false);
 
     const resetForm = () => {
         setComp1(null);
         setComp2(null);
         setMatchWinner(null);
+        setFirstPickError(false);
+    };
+
+    // Function to handle firstPick changes
+    const handleFirstPickChange = (compIndex, newValue) => {
+        if (compIndex === 1) {
+            setComp1(prev => {
+                if (prev) {
+                    const newComp = [...prev];
+                    newComp[2] = newValue; // firstPick is at index 2
+                    return newComp;
+                }
+                return prev;
+            });
+            // Set the other team's firstPick to the opposite
+            setComp2(prev => {
+                if (prev) {
+                    const newComp = [...prev];
+                    newComp[2] = !newValue;
+                    return newComp;
+                }
+                return prev;
+            });
+        } else {
+            setComp2(prev => {
+                if (prev) {
+                    const newComp = [...prev];
+                    newComp[2] = newValue;
+                    return newComp;
+                }
+                return prev;
+            });
+            // Set the other team's firstPick to the opposite
+            setComp1(prev => {
+                if (prev) {
+                    const newComp = [...prev];
+                    newComp[2] = !newValue;
+                    return newComp;
+                }
+                return prev;
+            });
+        }
     };
 
     useEffect(() => {
@@ -380,23 +446,46 @@ function MatchInsertion({ setMatch }) {
         resetForm();
     }, []);
 
+    useEffect(() => {
+        resetForm();
+    }, [key]);
+
     return (
         <div id="match-insertion">
             <div className="comp-content">
-                <CompInsertion setComp={setComp1}/>
-                <CompInsertion setComp={setComp2}/>
+                <CompInsertion 
+                    key={key} 
+                    setComp={setComp1} 
+                    teams={teams} 
+                    players={players} 
+                    charactersAndMoves={charactersAndMoves}
+                    onFirstPickChange={(value) => handleFirstPickChange(1, value)}
+                    firstPick={comp1 ? comp1[2] : false}
+                />
+                <CompInsertion 
+                    key={key} 
+                    setComp={setComp2} 
+                    teams={teams} 
+                    players={players} 
+                    charactersAndMoves={charactersAndMoves}
+                    onFirstPickChange={(value) => handleFirstPickChange(2, value)}
+                    firstPick={comp2 ? comp2[2] : false}
+                />
             </div>
-            {/* Match Winner */}
-            <input type="text" value={matchWinner} placeholder="Who Won?" onChange={(e) => setMatchWinner(e.target.value)} />
+            {/* Match Winner Dropdown */}
+            <select value={matchWinner} onChange={(e) => setMatchWinner(e.target.value)}>
+                <option value="">Select Winner</option>
+                <option value="1">Team 1</option>
+                <option value="2">Team 2</option>
+            </select>
+            {firstPickError && <div className="error">One team must be first pick and the other must not be first pick</div>}
         </div>
     )
 }
 
 // Comp insertion form for a match (Used in SetInsertion)
-function CompInsertion({ setComp }) {
-    const [teamName, setTeamName] = useState(null);
-    const [teamRegion, setTeamRegion] = useState(null);
-    const [firstPick, setFirstPick] = useState(null);
+function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFirstPickChange, firstPick }) {
+    const [selectedTeam, setSelectedTeam] = useState(null);
     const [ban1, setBan1] = useState(null);
     const [ban2, setBan2] = useState(null);
     const [pokemon1, setPokemon1] = useState(null);
@@ -421,9 +510,8 @@ function CompInsertion({ setComp }) {
     const [player5, setPlayer5] = useState(null);
 
     const resetForm = () => {
-        setTeamName(null);
-        setTeamRegion(null);
-        setFirstPick(null);
+        setSelectedTeam(null);
+        onFirstPickChange(false);
         setBan1(null);
         setBan2(null);
         setPokemon1(null);
@@ -449,57 +537,203 @@ function CompInsertion({ setComp }) {
     };
 
     useEffect(() => {
-        setComp([teamName, teamRegion, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
-    }, [teamName, teamRegion, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+        if (selectedTeam) {
+            setComp([selectedTeam.team_name, selectedTeam.team_region, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+        } else {
+            setComp([null, null, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+        }
+    }, [selectedTeam, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
 
     useEffect(() => {
         resetForm();
     }, []);
 
+    useEffect(() => {
+        resetForm();
+    }, [key]);
+
     return (
         <div id="comp-insertion">
             <div className="team-header">
-                {/* Team Name */}
-                <input type="text" value={teamName} placeholder="Team Name" onChange={(e) => setTeamName(e.target.value)} />
-                {/* Team Region */}
-                <input type="text" value={teamRegion} placeholder="Team Region" onChange={(e) => setTeamRegion(e.target.value)} />
-                {/* First Pick? */}
-                <label htmlFor="first-pick">First Pick?</label>
-                <select name="first-pick" id="first-pick" onChange={(e) => setFirstPick(e.target.value)}>
-                    <option value="true">Yes</option>
-                    <option value="false">No</option>
+                {/* Team Name Dropdown */}
+                <select value={selectedTeam ? selectedTeam.team_name : ""} onChange={(e) => {
+                    const teamName = e.target.value;
+                    const team = teams.find(t => t.team_name === teamName);
+                    setSelectedTeam(team);
+                }}>
+                    <option value="">Select Team</option>
+                    {teams.map(team => (
+                        <option key={team.team_id} value={team.team_name}>
+                            {team.team_name}
+                        </option>
+                    ))}
                 </select>
+                {/* Team Region (Read-only) */}
+                {selectedTeam && (
+                    <div className="team-region-display">
+                        <span>Region: {selectedTeam.team_region}</span>
+                    </div>
+                )}
+                {/* First Pick Checkbox */}
+                <label>
+                    First Pick:
+                    <input 
+                        type="checkbox" 
+                        checked={firstPick} 
+                        onChange={(e) => onFirstPickChange(e.target.checked)} 
+                    />
+                </label>
             </div>
             <div className="team-bans">
-                {/* Bans */}
-                <input type="text" value={ban1} placeholder="Ban 1" onChange={(e) => setBan1(e.target.value)} />
-                <input type="text" value={ban2} placeholder="Ban 2" onChange={(e) => setBan2(e.target.value)} />
+                {/* Bans Dropdowns */}
+                <select value={ban1} onChange={(e) => setBan1(e.target.value)}>
+                    <option value="">Select Ban 1</option>
+                    {[...new Set(charactersAndMoves.map(char => char.pokemon_name))].map(pokemonName => (
+                        <option key={pokemonName} value={pokemonName}>
+                            {pokemonName}
+                        </option>
+                    ))}
+                </select>
+                <select value={ban2} onChange={(e) => setBan2(e.target.value)}>
+                    <option value="">Select Ban 2</option>
+                    {[...new Set(charactersAndMoves.map(char => char.pokemon_name))].map(pokemonName => (
+                        <option key={pokemonName} value={pokemonName}>
+                            {pokemonName}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div className="team-comp">
                 {/* Pokemon / Players */}
-                <CharacterPlayer character={pokemon1} move1={pokemon1move1} move2={pokemon1move2} player={player1} setCharacter={setPokemon1} setMove1={setPokemon1Move1} setMove2={setPokemon1Move2} setPlayer={setPlayer1} />
-                <CharacterPlayer character={pokemon2} move1={pokemon2move1} move2={pokemon2move2} player={player2} setCharacter={setPokemon2} setMove1={setPokemon2Move1} setMove2={setPokemon2Move2} setPlayer={setPlayer2} />
-                <CharacterPlayer character={pokemon3} move1={pokemon3move1} move2={pokemon3move2} player={player3} setCharacter={setPokemon3} setMove1={setPokemon3Move1} setMove2={setPokemon3Move2} setPlayer={setPlayer3} />
-                <CharacterPlayer character={pokemon4} move1={pokemon4move1} move2={pokemon4move2} player={player4} setCharacter={setPokemon4} setMove1={setPokemon4Move1} setMove2={setPokemon4Move2} setPlayer={setPlayer4} />
-                <CharacterPlayer character={pokemon5} move1={pokemon5move1} move2={pokemon5move2} player={player5} setCharacter={setPokemon5} setMove1={setPokemon5Move1} setMove2={setPokemon5Move2} setPlayer={setPlayer5} />
+                <CharacterPlayer 
+                    key={key}
+                    character={pokemon1} 
+                    move1={pokemon1move1} 
+                    move2={pokemon1move2} 
+                    player={player1} 
+                    setCharacter={setPokemon1} 
+                    setMove1={setPokemon1Move1} 
+                    setMove2={setPokemon1Move2} 
+                    setPlayer={setPlayer1}
+                    charactersAndMoves={charactersAndMoves}
+                    players={players}
+                />
+                <CharacterPlayer 
+                    key={key}
+                    character={pokemon2} 
+                    move1={pokemon2move1} 
+                    move2={pokemon2move2} 
+                    player={player2} 
+                    setCharacter={setPokemon2} 
+                    setMove1={setPokemon2Move1} 
+                    setMove2={setPokemon2Move2} 
+                    setPlayer={setPlayer2}
+                    charactersAndMoves={charactersAndMoves}
+                    players={players}
+                />
+                <CharacterPlayer 
+                    key={key}
+                    character={pokemon3} 
+                    move1={pokemon3move1} 
+                    move2={pokemon3move2} 
+                    player={player3} 
+                    setCharacter={setPokemon3} 
+                    setMove1={setPokemon3Move1} 
+                    setMove2={setPokemon3Move2} 
+                    setPlayer={setPlayer3}
+                    charactersAndMoves={charactersAndMoves}
+                    players={players}
+                />
+                <CharacterPlayer 
+                    key={key}
+                    character={pokemon4} 
+                    move1={pokemon4move1} 
+                    move2={pokemon4move2} 
+                    player={player4} 
+                    setCharacter={setPokemon4} 
+                    setMove1={setPokemon4Move1} 
+                    setMove2={setPokemon4Move2} 
+                    setPlayer={setPlayer4}
+                    charactersAndMoves={charactersAndMoves}
+                    players={players}
+                />
+                <CharacterPlayer 
+                    key={key}
+                    character={pokemon5} 
+                    move1={pokemon5move1} 
+                    move2={pokemon5move2} 
+                    player={player5} 
+                    setCharacter={setPokemon5} 
+                    setMove1={setPokemon5Move1} 
+                    setMove2={setPokemon5Move2} 
+                    setPlayer={setPlayer5}
+                    charactersAndMoves={charactersAndMoves}
+                    players={players}
+                />
             </div>
         </div>
     )
 }
 
 // Character and player insertion form for a comp (Used in SetInsertion)
-function CharacterPlayer({ character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer }) {
+function CharacterPlayer({ key, character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer, charactersAndMoves, players }) {
+    // Get available moves for the selected character
+    const getPokemonMoves = (pokemonName) => {
+        if (!pokemonName) return [];
+        // Find all instances of the Pokémon and collect their moves
+        const pokemonInstances = charactersAndMoves.filter(char => char.pokemon_name === pokemonName);
+        // Push all of their moves to an array
+        let moves = [];
+        for (const pokemon of pokemonInstances) {
+            moves.push({move_name: pokemon.move_name, move_id: pokemon.move_id});
+        }
+        return moves;
+    };
+
+    const availableMoves = character ? getPokemonMoves(character) : [];
 
     return (
         <div id="character-player">
-            {/* Character */}
-            <input type="text" value={character} placeholder="Character" onChange={(e) => setCharacter(e.target.value)} />
-            {/* Move 1 */}
-            <input type="text" value={move1} placeholder="Move 1" onChange={(e) => setMove1(e.target.value)} />
-            {/* Move 2 */}
-            <input type="text" value={move2} placeholder="Move 2" onChange={(e) => setMove2(e.target.value)} />
-            {/* Player Name */}
-            <input type="text" value={player} placeholder="Player Name" onChange={(e) => setPlayer(e.target.value)} />
+            {/* Character Dropdown */}
+            <select value={character} onChange={(e) => {
+                setCharacter(e.target.value);
+                setMove1(null);
+                setMove2(null);
+            }}>
+                <option value="">Select Character</option>
+                {[...new Set(charactersAndMoves.map(char => char.pokemon_name))].map(pokemonName => (
+                    <option key={pokemonName} value={pokemonName}>
+                        {pokemonName}
+                    </option>
+                ))}
+            </select>
+            {/* Move 1 Dropdown */}
+            <select value={move1} onChange={(e) => setMove1(e.target.value)} disabled={!character}>
+                <option value="">Select Move 1</option>
+                {availableMoves.map((move, index) => (
+                    <option key={`move1-${index}`} value={move.move_name}>
+                        {move.move_name}
+                    </option>
+                ))}
+            </select>
+            {/* Move 2 Dropdown */}
+            <select value={move2} onChange={(e) => setMove2(e.target.value)} disabled={!character}>
+                <option value="">Select Move 2</option>
+                {availableMoves.map((move, index) => (
+                    <option key={`move2-${index}`} value={move.move_name}>
+                        {move.move_name}
+                    </option>
+                ))}
+            </select>
+            {/* Player Dropdown */}
+            <select value={player} onChange={(e) => setPlayer(e.target.value)}>
+                <option value="">Select Player</option>
+                {players.map(player => (
+                    <option key={player.player_id} value={player.player_name}>
+                        {player.player_name}
+                    </option>
+                ))}
+            </select>
         </div>
     )
 }
