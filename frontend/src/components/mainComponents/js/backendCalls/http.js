@@ -160,6 +160,7 @@ export async function insertEvent(name, date, vodUrl) {
         })
     });
     const eventDataJson = await eventData.json();
+    console.log("Event ID: ", eventDataJson.id);
     return eventDataJson;
 }
 

@@ -49,6 +49,13 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
         fetchAllData();
 
     }, []);
+
+    useEffect(() => {
+        console.log("Events: ", events);
+        console.log("Teams: ", teams);
+        console.log("Players: ", players);
+        console.log("Characters and Moves: ", charactersAndMoves);
+    }, [events, teams, players, charactersAndMoves]);
   
     // Function to submit the comp
     function submitComp() {
@@ -159,7 +166,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
             checkNull(eventInsertion.vod_url, "Event VOD URL");
             // If there are no errors, submit the data
             if (errorCount === 0) {
-                insertEvent(eventInsertion).then(data => {
+                insertEvent(eventInsertion.event_name, eventInsertion.event_date, eventInsertion.vod_url).then(data => {
                     // Update the event data with the ID
                     const newEvent = {
                         event_id: data.id,
@@ -167,6 +174,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
                         event_date: eventInsertion.event_date,
                         vod_url: eventInsertion.vod_url
                     }
+                    console.log("New Event: ", newEvent);
                     // Put this new event in the events array
                     setEvents([...events, newEvent]);
                     // Clear the event insertion data and the input fields
@@ -186,7 +194,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
             checkNull(teamInsertion.team_region, "Team Region");
             // If there are no errors, submit the data
             if (errorCount === 0) {
-                insertTeam(teamInsertion).then(data => {
+                insertTeam(teamInsertion.team_name, teamInsertion.team_region).then(data => {
                     // Update the team data with the ID
                     const newTeam = {
                         team_id: data.id,
@@ -211,7 +219,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
             checkNull(playerInsertion.player_name, "Player Name");
             // If there are no errors, submit the data
             if (errorCount === 0) {
-                insertPlayer(playerInsertion).then(data => {
+                insertPlayer(playerInsertion.player_name).then(data => {
                     // Update the player data with the ID
                     const newPlayer = {
                         player_id: data.id,
