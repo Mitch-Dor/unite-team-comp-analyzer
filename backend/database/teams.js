@@ -321,8 +321,17 @@ class Teams {
     async insertSet(setMatches) {
       return new Promise((resolve, reject) => {
         // Insert the set and its descriptor first
-        // Then insert the matches with the set id
-        const sql = '';
+        const eventSetInfo = setMatches[0];
+        const eventName = eventSetInfo.event;
+        const eventDate = eventSetInfo.matchDate;
+        const eventVodUrl = eventSetInfo.vod;
+        const setDescriptor = eventSetInfo.setDescription;
+        let sql = '';
+        // Then insert into comps
+        sql = '';
+
+        // Then insert the matches
+        sql = '';
         this.db.run(sql, [setMatches], function(err) {
           if (err) {
             reject(err);

@@ -32,10 +32,6 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
                 const teams = await fetchAllTeams();
                 const players = await fetchAllPlayers();
                 const charactersAndMoves = await fetchAllCharactersAndMoves();  
-                console.log(events);
-                console.log(teams);
-                console.log(players);
-                console.log(charactersAndMoves);
                 setEvents(events);
                 setTeams(teams);
                 setPlayers(players);
@@ -84,6 +80,8 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
 
         function setCheck() {
             // Pull out the data
+            console.log("Set Insertion: ", setInsertion);
+            return;
             let eventData = {
                 eventName: checkNull(setInsertion[5], "eventName", 0),
                 eventDate: checkNull(setInsertion[6], "eventDate", 0),
@@ -91,7 +89,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
                 setDescriptor: checkNull(setInsertion[8], "setDescriptor", 0)
             }
             // Format it in a way that's easy to insert into the comps page
-            formattedData.push({event: eventData.event_name, matchDate: eventData.event_date, vod: eventData.vod_url, set_description: eventData.setDescriptor});
+            formattedData.push({event: eventData.event_name, matchDate: eventData.eventDate, vod: eventData.vod_url, setDescription: eventData.setDescriptor});
             for (let j = 0; j < 5; j++) {
                 const match = setInsertion[j];
                 if (match !== null) {
@@ -131,6 +129,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
                     i++;
                 }
             }
+            console.log("Formatted Data: ", formattedData);
             // If something is missing, don't submit
             if (errorCount > 0) {
                 alert(error);
@@ -332,11 +331,11 @@ function SetInsertion({ key, setSetInsertion, events, teams, players, characters
 
     useEffect(() => {
         if (selectedEvent) {
-            setSetInsertion([match1, match2, match3, match4, match5, selectedEvent.event_name, selectedEvent.event_date, selectedEvent.vod_url]);
+            setSetInsertion([match1, match2, match3, match4, match5, selectedEvent, setDescriptor]);
         } else {
-            setSetInsertion([match1, match2, match3, match4, match5, null, null, null]);
+            setSetInsertion([match1, match2, match3, match4, match5, null, null, null, null]);
         }
-    }, [match1, match2, match3, match4, match5, selectedEvent]);
+    }, [match1, match2, match3, match4, match5, selectedEvent, setDescriptor]);
 
     useEffect(() => {
         resetForm();
@@ -566,7 +565,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
                 <CustomDropdown
                     value={ban1}
                     onChange={setBan1}
-                    options={[...new Set(charactersAndMoves.map(char => char.pokemon_name))]}
+                    options={[...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str))}
                     placeholder="Ban 1 Select"
                     disabled={false}
                     path="/assets/Draft/headshots"
@@ -574,7 +573,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
                 <CustomDropdown
                     value={ban2}
                     onChange={setBan2}
-                    options={[...new Set(charactersAndMoves.map(char => char.pokemon_name))]}
+                    options={[...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str))}
                     placeholder="Ban 2 Select"
                     disabled={false}
                     path="/assets/Draft/headshots"
@@ -686,11 +685,11 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                 {value ? (
                     <div className="selected-option">
                         <img 
-                            src={getImagePath(value)} 
-                            alt={value}
+                            src={getImagePath(value.pokemon_name ? value.pokemon_name : value.move_name)} 
+                            alt={value.pokemon_name ? value.pokemon_name : value.move_name}
                             className="dropdown-icon"
                         />
-                        <span>{value}</span>
+                        <span>{value.pokemon_name ? value.pokemon_name : value.move_name}</span>
                     </div>
                 ) : (
                     <span>{placeholder}</span>
@@ -708,11 +707,11 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                             }}
                         >
                             <img 
-                                src={getImagePath(option)} 
-                                alt={option}
+                                src={getImagePath(option.pokemon_name ? option.pokemon_name : option.move_name)} 
+                                alt={option.pokemon_name ? option.pokemon_name : option.move_name}
                                 className="dropdown-icon"
                             />
-                            <span>{option}</span>
+                            <span>{option.pokemon_name ? option.pokemon_name : option.move_name}</span>
                         </div>
                     ))}
                 </div>
@@ -735,9 +734,9 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
         }
         return moves;
     };
-
-    const availableMoves = character ? getPokemonMoves(character) : [];
-    const uniquePokemon = [...new Set(charactersAndMoves.map(char => char.pokemon_name))];
+    const availableMoves = character ? getPokemonMoves(character.pokemon_name) : [];
+    // Get unique pokemon_name and pokemon_id combinations
+    const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
 
     return (
         <div className="set-character-player">
@@ -757,21 +756,21 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
             <CustomDropdown
                 value={move1}
                 onChange={setMove1}
-                options={availableMoves.map(move => move.move_name)}
+                options={availableMoves}
                 placeholder="Move 1 Select"
                 disabled={!character}   
                 path="/assets/Draft/moves"
-                character_name={character}  
+                character_name={character ? character.pokemon_name : character}  
             />
             {/* Move 2 Dropdown */}
             <CustomDropdown
                 value={move2}
                 onChange={setMove2}
-                options={availableMoves.map(move => move.move_name)}
+                options={availableMoves}
                 placeholder="Move 2 Select"
                 disabled={!character}   
                 path="/assets/Draft/moves"
-                character_name={character}  
+                character_name={character ? character.pokemon_name : character}  
             />
             {/* Player Dropdown */}
             <select value={player} onChange={(e) => setPlayer(e.target.value)}>
