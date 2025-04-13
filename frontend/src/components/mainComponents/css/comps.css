@@ -377,13 +377,14 @@
     margin-bottom: 60px; /* Make space for the submit button */
 }
 
-#event-creation input, #team-creation input, #player-creation input, #set-creation input, #set-creation select {
+#event-creation input, #team-creation input, #player-creation input, #set-creation input, #set-creation select, #set-creation .dropdown-button {
     padding: 10px 15px;
     border-radius: 5px;
     border: 1px solid #555;
     background-color: #333;
     color: white;
     font-size: 14px;
+    max-height: 40px;
 }
 
 /* Submit button container to ensure it stays at the bottom */
@@ -494,15 +495,15 @@
     width: 98%;
 }
 
-.set-character-player select:nth-child(1) {
+.set-character-player .custom-dropdown:nth-child(1) {
     width: 40%;
 }
 
-.set-character-player select:nth-child(2) {
+.set-character-player .custom-dropdown:nth-child(2) {
     width: 15%;
 }
 
-.set-character-player select:nth-child(3) {
+.set-character-player .custom-dropdown:nth-child(3) {
     width: 15%;
 }
 
@@ -516,6 +517,7 @@
     flex-direction: row;
     justify-content: space-around;
     padding-bottom: 10px;
+    padding-top: 30px;
 }
 
 .set-comp-content {
@@ -536,6 +538,80 @@
     color: white;
 }
 
+#set-reset-button {
+    width: 100%;
+    background-color: #4e8cff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 40%;
+}
+
+.dropdown-button {
+    padding: 8px;
+    width: 100%;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    font-size: 10px;
+}
+
+.dropdown-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 100%;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 2000;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+.dropdown-option {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: white;
+    min-width: fit-content;
+}
+
+.dropdown-option:hover {
+    background-color: #444;
+}
+
+.selected-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
 
 
 

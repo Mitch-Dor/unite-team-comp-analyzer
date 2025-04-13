@@ -19,7 +19,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
             // Check if the clicked element is the open button or is inside the modal
             if (e.target.id === 'open-set-submit-form' || 
                 e.target.closest('#set-submit-form') || 
-                e.target.closest('#set-submit-form')) {
+                e.target.closest('.dropdown-options')) {
                 return;
             }
             setShowSubmitForm(false);
@@ -595,22 +595,22 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFir
             </div>
             <div className="set-team-bans">
                 {/* Bans Dropdowns */}
-                <select value={ban1} onChange={(e) => setBan1(e.target.value)}>
-                    <option value="">Ban 1 Select</option>
-                    {[...new Set(charactersAndMoves.map(char => char.pokemon_name))].map(pokemonName => (
-                        <option key={pokemonName} value={pokemonName}>
-                            {pokemonName}
-                        </option>
-                    ))}
-                </select>
-                <select value={ban2} onChange={(e) => setBan2(e.target.value)}>
-                    <option value="">Ban 2 Select</option>
-                    {[...new Set(charactersAndMoves.map(char => char.pokemon_name))].map(pokemonName => (
-                        <option key={pokemonName} value={pokemonName}>
-                            {pokemonName}
-                        </option>
-                    ))}
-                </select>
+                <CustomDropdown
+                    value={ban1}
+                    onChange={setBan1}
+                    options={[...new Set(charactersAndMoves.map(char => char.pokemon_name))]}
+                    placeholder="Ban 1 Select"
+                    disabled={false}
+                    path="/assets/Draft/headshots"
+                />
+                <CustomDropdown
+                    value={ban2}
+                    onChange={setBan2}
+                    options={[...new Set(charactersAndMoves.map(char => char.pokemon_name))]}
+                    placeholder="Ban 2 Select"
+                    disabled={false}
+                    path="/assets/Draft/headshots"
+                />
             </div>
             <div className="team-comp">
                 {/* Pokemon / Players */}
@@ -684,6 +684,75 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFir
     )
 }
 
+// Custom dropdown component
+function CustomDropdown({ value, onChange, options, placeholder, disabled, path, character_name }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    function getImagePath(name) {
+        if (character_name) {
+            const formattedName = name.replace(/\s+/g, '_');
+            return `${path}/${character_name}_${formattedName}.png`;
+        }
+        return `${path}/${name}.png`;
+    }
+
+    return (
+        <div className="custom-dropdown" ref={dropdownRef}>
+            <button 
+                className="dropdown-button"
+                onClick={() => !disabled && setIsOpen(!isOpen)}
+                disabled={disabled}
+            >
+                {value ? (
+                    <div className="selected-option">
+                        <img 
+                            src={getImagePath(value)} 
+                            alt={value}
+                            className="dropdown-icon"
+                        />
+                        <span>{value}</span>
+                    </div>
+                ) : (
+                    <span>{placeholder}</span>
+                )}
+            </button>
+            {isOpen && (
+                <div className="dropdown-options">
+                    {options.map((option) => (
+                        <div
+                            key={option}
+                            className="dropdown-option"
+                            onClick={() => {
+                                onChange(option);
+                                setIsOpen(false);
+                            }}
+                        >
+                            <img 
+                                src={getImagePath(option)} 
+                                alt={option}
+                                className="dropdown-icon"
+                            />
+                            <span>{option}</span>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
 // Character and player insertion form for a comp (Used in SetInsertion)
 function CharacterPlayer({ key, character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer, charactersAndMoves, players }) {
     // Get available moves for the selected character
@@ -700,40 +769,42 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
     };
 
     const availableMoves = character ? getPokemonMoves(character) : [];
+    const uniquePokemon = [...new Set(charactersAndMoves.map(char => char.pokemon_name))];
 
     return (
         <div className="set-character-player">
             {/* Character Dropdown */}
-            <select value={character} onChange={(e) => {
-                setCharacter(e.target.value);
-                setMove1(null);
-                setMove2(null);
-            }}>
-                <option value="">Character Select</option>
-                {[...new Set(charactersAndMoves.map(char => char.pokemon_name))].map(pokemonName => (
-                    <option key={pokemonName} value={pokemonName}>
-                        {pokemonName}
-                    </option>
-                ))}
-            </select>
+            <CustomDropdown
+                value={character}
+                onChange={(value) => {
+                    setCharacter(value);
+                    setMove1(null);
+                    setMove2(null);
+                }}
+                options={uniquePokemon}
+                placeholder="Character Select"
+                path="/assets/Draft/headshots"
+            />
             {/* Move 1 Dropdown */}
-            <select value={move1} onChange={(e) => setMove1(e.target.value)} disabled={!character}>
-                <option value="">Move 1 Select</option>
-                {availableMoves.map((move, index) => (
-                    <option key={`move1-${index}`} value={move.move_name}>
-                        {move.move_name}
-                    </option>
-                ))}
-            </select>
+            <CustomDropdown
+                value={move1}
+                onChange={setMove1}
+                options={availableMoves.map(move => move.move_name)}
+                placeholder="Move 1 Select"
+                disabled={!character}   
+                path="/assets/Draft/moves"
+                character_name={character}  
+            />
             {/* Move 2 Dropdown */}
-            <select value={move2} onChange={(e) => setMove2(e.target.value)} disabled={!character}>
-                <option value="">Move 2 Select</option>
-                {availableMoves.map((move, index) => (
-                    <option key={`move2-${index}`} value={move.move_name}>
-                        {move.move_name}
-                    </option>
-                ))}
-            </select>
+            <CustomDropdown
+                value={move2}
+                onChange={setMove2}
+                options={availableMoves.map(move => move.move_name)}
+                placeholder="Move 2 Select"
+                disabled={!character}   
+                path="/assets/Draft/moves"
+                character_name={character}  
+            />
             {/* Player Dropdown */}
             <select value={player} onChange={(e) => setPlayer(e.target.value)}>
                 <option value="">Player Select</option>
