@@ -6,16 +6,6 @@
     flex-direction: row;
 }
 
-select {
-    width: 20vw;
-    margin: 2%;
-}
-
-input {
-    width: 20vw;
-    margin: 1%;
-}
-
 h3 {
     width: 100%;
     text-align: center;

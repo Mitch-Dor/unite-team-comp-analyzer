@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, insertEvent, insertTeam, insertPlayer } from '../backendCalls/http';
+import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
 
 function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
     const [setInsertion, setSetInsertion] = useState(false);
@@ -333,58 +333,58 @@ function SetInsertion({ key, setSetInsertion, events, teams, players, characters
 
     return (
         <div id="set-creation" className="comp-card">
-            {/* Event Name Dropdown */}
-            <select value={selectedEvent ? selectedEvent.event_name : ""} onChange={(e) => {
-                const eventName = e.target.value;
-                const event = events.find(ev => ev.event_name === eventName);
-                setSelectedEvent(event);
-            }}>
-                <option value="">Select Event</option>
-                {events.map(event => (
-                    <option key={event.event_id} value={event.event_name}>
-                        {event.event_name}
-                    </option>
-                ))}
-            </select>
-            {/* Event Date (Read-only) */}
-            <input 
-                type="text" 
-                value={selectedEvent ? selectedEvent.event_date : ""} 
-                readOnly 
-                placeholder="Event Date"
-                style={{ display: selectedEvent ? 'block' : 'none' }}
-            />
-            {/* Event VOD URL (Read-only) */}
-            <input 
-                type="text" 
-                value={selectedEvent ? selectedEvent.vod_url : ""} 
-                readOnly 
-                placeholder="Event VOD URL"
-                style={{ display: selectedEvent ? 'block' : 'none' }}
-            />
+            <div className="set-creation-event-data">
+                {/* Event Name Dropdown */}
+                <select value={selectedEvent ? selectedEvent.event_name : ""} onChange={(e) => {
+                    const eventName = e.target.value;
+                    const event = events.find(ev => ev.event_name === eventName);
+                    setSelectedEvent(event);
+                }}>
+                    <option value="">Select Event</option>
+                    {events.map(event => (
+                        <option key={event.event_id} value={event.event_name}>
+                            {event.event_name}
+                        </option>
+                    ))}
+                </select>
+                {/* Event Date (Read-only) */}
+                <input 
+                    type="text" 
+                    value={selectedEvent ? selectedEvent.event_date : ""} 
+                    readOnly 
+                    placeholder="Event Date (Choose Event)"
+                />
+                {/* Event VOD URL (Read-only) */}
+                <input 
+                    type="text" 
+                    value={selectedEvent ? selectedEvent.vod_url : ""} 
+                    readOnly 
+                    placeholder="Event VOD URL (Choose Event)"
+                />
+            </div>
             {/* Set Descriptor (Text Input) */}
             <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
+                <MatchInsertion key={key} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={1}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
+                <MatchInsertion key={key} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={2}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
+                <MatchInsertion key={key} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={3}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
+                <MatchInsertion key={key} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={4}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves}/>
+                <MatchInsertion key={key} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={5}/>
             </div>
         </div>
     );
 }
 
 // Match insertion form for a set (Used in SetInsertion)
-function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves }) {
+function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, matchNumber }) {
     const [comp1, setComp1] = useState(null);
     const [comp2, setComp2] = useState(null);
     const [matchWinner, setMatchWinner] = useState(null);
@@ -452,7 +452,8 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves }) {
 
     return (
         <div id="match-insertion">
-            <div className="comp-content">
+            <h3>Match {matchNumber}</h3>
+            <div className="set-comp-content">
                 <CompInsertion 
                     key={key} 
                     setComp={setComp1} 
@@ -473,11 +474,13 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves }) {
                 />
             </div>
             {/* Match Winner Dropdown */}
-            <select value={matchWinner} onChange={(e) => setMatchWinner(e.target.value)}>
-                <option value="">Select Winner</option>
-                <option value="1">Team 1</option>
-                <option value="2">Team 2</option>
-            </select>
+            <div className="match-winner-dropdown">
+                <select value={matchWinner} onChange={(e) => setMatchWinner(e.target.value)}>
+                    <option value="">Winner Select</option>
+                    <option value="1">Team 1</option>
+                    <option value="2">Team 2</option>
+                </select>
+            </div>
             {firstPickError && <div className="error">One team must be first pick and the other must not be first pick</div>}
         </div>
     )
@@ -554,7 +557,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFir
 
     return (
         <div id="comp-insertion">
-            <div className="team-header">
+            <div className="set-team-header">
                 {/* Team Name Dropdown */}
                 <select value={selectedTeam ? selectedTeam.team_name : ""} onChange={(e) => {
                     const teamName = e.target.value;
@@ -569,25 +572,31 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFir
                     ))}
                 </select>
                 {/* Team Region (Read-only) */}
-                {selectedTeam && (
-                    <div className="team-region-display">
-                        <span>Region: {selectedTeam.team_region}</span>
-                    </div>
-                )}
+                <div className="team-region-display">
+                    <input 
+                    type="text" 
+                    value={selectedTeam ? selectedTeam.team_region : ""} 
+                    readOnly 
+                    placeholder="Team Region (Choose Team)"
+                    />
+                </div>
+                
                 {/* First Pick Checkbox */}
-                <label>
-                    First Pick:
+                <div className="first-pick-checkbox">   
+                    <label>
+                        First Pick:
+                    </label>
                     <input 
                         type="checkbox" 
-                        checked={firstPick} 
-                        onChange={(e) => onFirstPickChange(e.target.checked)} 
+                    checked={firstPick} 
+                    onChange={(e) => onFirstPickChange(e.target.checked)} 
                     />
-                </label>
+                </div>
             </div>
-            <div className="team-bans">
+            <div className="set-team-bans">
                 {/* Bans Dropdowns */}
                 <select value={ban1} onChange={(e) => setBan1(e.target.value)}>
-                    <option value="">Select Ban 1</option>
+                    <option value="">Ban 1 Select</option>
                     {[...new Set(charactersAndMoves.map(char => char.pokemon_name))].map(pokemonName => (
                         <option key={pokemonName} value={pokemonName}>
                             {pokemonName}
@@ -595,7 +604,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFir
                     ))}
                 </select>
                 <select value={ban2} onChange={(e) => setBan2(e.target.value)}>
-                    <option value="">Select Ban 2</option>
+                    <option value="">Ban 2 Select</option>
                     {[...new Set(charactersAndMoves.map(char => char.pokemon_name))].map(pokemonName => (
                         <option key={pokemonName} value={pokemonName}>
                             {pokemonName}
@@ -693,14 +702,14 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
     const availableMoves = character ? getPokemonMoves(character) : [];
 
     return (
-        <div id="character-player">
+        <div className="set-character-player">
             {/* Character Dropdown */}
             <select value={character} onChange={(e) => {
                 setCharacter(e.target.value);
                 setMove1(null);
                 setMove2(null);
             }}>
-                <option value="">Select Character</option>
+                <option value="">Character Select</option>
                 {[...new Set(charactersAndMoves.map(char => char.pokemon_name))].map(pokemonName => (
                     <option key={pokemonName} value={pokemonName}>
                         {pokemonName}
@@ -709,7 +718,7 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
             </select>
             {/* Move 1 Dropdown */}
             <select value={move1} onChange={(e) => setMove1(e.target.value)} disabled={!character}>
-                <option value="">Select Move 1</option>
+                <option value="">Move 1 Select</option>
                 {availableMoves.map((move, index) => (
                     <option key={`move1-${index}`} value={move.move_name}>
                         {move.move_name}
@@ -718,7 +727,7 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
             </select>
             {/* Move 2 Dropdown */}
             <select value={move2} onChange={(e) => setMove2(e.target.value)} disabled={!character}>
-                <option value="">Select Move 2</option>
+                <option value="">Move 2 Select</option>
                 {availableMoves.map((move, index) => (
                     <option key={`move2-${index}`} value={move.move_name}>
                         {move.move_name}
@@ -727,7 +736,7 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
             </select>
             {/* Player Dropdown */}
             <select value={player} onChange={(e) => setPlayer(e.target.value)}>
-                <option value="">Select Player</option>
+                <option value="">Player Select</option>
                 {players.map(player => (
                     <option key={player.player_id} value={player.player_name}>
                         {player.player_name}

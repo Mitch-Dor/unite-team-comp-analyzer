@@ -195,3 +195,17 @@ export async function insertPlayer(name) {
     const playerDataJson = await playerData.json();
     return playerDataJson;
 }
+
+// Function to insert a set
+export async function insertSet(setMatches) {
+    const setData = await fetch(routes.POST_SET, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(setMatches)
+    });
+    const setDataJson = await setData.json();
+    return setDataJson;
+}

@@ -316,6 +316,22 @@ class Teams {
         });
       });
     }
+
+    // Insert a set
+    async insertSet(setMatches) {
+      return new Promise((resolve, reject) => {
+        // Insert the set and its descriptor first
+        // Then insert the matches with the set id
+        const sql = '';
+        this.db.run(sql, [setMatches], function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve({ id: this.lastID });
+          }
+        });
+      });
+    }
 }
 
 module.exports = Teams;

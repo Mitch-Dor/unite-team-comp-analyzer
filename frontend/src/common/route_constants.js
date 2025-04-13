@@ -12,6 +12,7 @@ const routes = {
     POST_EVENT: '/POSTevent',
     POST_TEAM: '/POSTteam',
     POST_PLAYER: '/POSTplayer',
+    POST_SET: '/POSTset'
 };
 
 module.exports = routes;

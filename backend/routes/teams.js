@@ -70,7 +70,7 @@ module.exports = function (app, database) {
         }); 
     });
 
-    app.post('/POSTEVENT', (req, res) => {
+    app.post('/POSTevent', (req, res) => {
         database.teams.insertEvent(req.body.name, req.body.date, req.body.vodUrl).then(data => {
             res.json(data);
         })
@@ -80,7 +80,7 @@ module.exports = function (app, database) {
         });
     });
 
-    app.post('/POSTTEAM', (req, res) => {
+    app.post('/POSTteam', (req, res) => {
         database.teams.insertTeam(req.body.name, req.body.region).then(data => {
             res.json(data);
         })
@@ -90,12 +90,22 @@ module.exports = function (app, database) {
         });
     });
 
-    app.post('/POSTPLAYER', (req, res) => {
+    app.post('/POSTplayer', (req, res) => {
         database.teams.insertPlayer(req.body.name).then(data => {
             res.json(data);
         })
         .catch(error => {
             console.error('Error inserting player:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.post('/POSTset', (req, res) => {
+        database.teams.insertSet(req.body).then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error inserting set:', error);
             res.sendStatus(401);
         });
     });
