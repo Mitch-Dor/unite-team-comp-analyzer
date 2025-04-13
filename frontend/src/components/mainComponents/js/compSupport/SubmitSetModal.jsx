@@ -112,6 +112,13 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
                         players: [checkNull(matchData.team2[20], "team2Player1", i), checkNull(matchData.team2[21], "team2Player2", i), checkNull(matchData.team2[22], "team2Player3", i), checkNull(matchData.team2[23], "team2Player4", i), checkNull(matchData.team2[24], "team2Player5", i)]
                     }
                     checkNull(matchData.winner, "winner", i);
+
+                    // Check first pick validation
+                    if (team1Data.firstPick === team2Data.firstPick) {
+                        error += "\n" + "Match " + i + " must have exactly one team as first pick";
+                        errorCount++;
+                    }
+
                     // Put it all in one match object
                     formattedData.push({team1: team1Data, team2: team2Data, winningTeam: matchData.winner});
                     i++;
@@ -388,54 +395,11 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
     const [comp1, setComp1] = useState(null);
     const [comp2, setComp2] = useState(null);
     const [matchWinner, setMatchWinner] = useState(null);
-    const [firstPickError, setFirstPickError] = useState(false);
 
     const resetForm = () => {
         setComp1(null);
         setComp2(null);
         setMatchWinner(null);
-        setFirstPickError(false);
-    };
-
-    // Function to handle firstPick changes
-    const handleFirstPickChange = (compIndex, newValue) => {
-        if (compIndex === 1) {
-            setComp1(prev => {
-                if (prev) {
-                    const newComp = [...prev];
-                    newComp[2] = newValue; // firstPick is at index 2
-                    return newComp;
-                }
-                return prev;
-            });
-            // Set the other team's firstPick to the opposite
-            setComp2(prev => {
-                if (prev) {
-                    const newComp = [...prev];
-                    newComp[2] = !newValue;
-                    return newComp;
-                }
-                return prev;
-            });
-        } else {
-            setComp2(prev => {
-                if (prev) {
-                    const newComp = [...prev];
-                    newComp[2] = newValue;
-                    return newComp;
-                }
-                return prev;
-            });
-            // Set the other team's firstPick to the opposite
-            setComp1(prev => {
-                if (prev) {
-                    const newComp = [...prev];
-                    newComp[2] = !newValue;
-                    return newComp;
-                }
-                return prev;
-            });
-        }
     };
 
     useEffect(() => {
@@ -460,8 +424,6 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
                     teams={teams} 
                     players={players} 
                     charactersAndMoves={charactersAndMoves}
-                    onFirstPickChange={(value) => handleFirstPickChange(1, value)}
-                    firstPick={comp1 ? comp1[2] : false}
                 />
                 <CompInsertion 
                     key={key} 
@@ -469,8 +431,6 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
                     teams={teams} 
                     players={players} 
                     charactersAndMoves={charactersAndMoves}
-                    onFirstPickChange={(value) => handleFirstPickChange(2, value)}
-                    firstPick={comp2 ? comp2[2] : false}
                 />
             </div>
             {/* Match Winner Dropdown */}
@@ -481,14 +441,14 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
                     <option value="2">Team 2</option>
                 </select>
             </div>
-            {firstPickError && <div className="error">One team must be first pick and the other must not be first pick</div>}
         </div>
     )
 }
 
 // Comp insertion form for a match (Used in SetInsertion)
-function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFirstPickChange, firstPick }) {
+function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
     const [selectedTeam, setSelectedTeam] = useState(null);
+    const [teamIsFirstPick, setTeamIsFirstPick] = useState(false);
     const [ban1, setBan1] = useState(null);
     const [ban2, setBan2] = useState(null);
     const [pokemon1, setPokemon1] = useState(null);
@@ -514,7 +474,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFir
 
     const resetForm = () => {
         setSelectedTeam(null);
-        onFirstPickChange(false);
+        setTeamIsFirstPick(false);
         setBan1(null);
         setBan2(null);
         setPokemon1(null);
@@ -541,11 +501,11 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFir
 
     useEffect(() => {
         if (selectedTeam) {
-            setComp([selectedTeam.team_name, selectedTeam.team_region, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+            setComp([selectedTeam.team_name, selectedTeam.team_region, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
         } else {
-            setComp([null, null, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+            setComp([null, null, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
         }
-    }, [selectedTeam, firstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+    }, [selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
 
     useEffect(() => {
         resetForm();
@@ -588,8 +548,8 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, onFir
                     </label>
                     <input 
                         type="checkbox" 
-                    checked={firstPick} 
-                    onChange={(e) => onFirstPickChange(e.target.checked)} 
+                        checked={teamIsFirstPick} 
+                        onChange={(e) => setTeamIsFirstPick(e.target.checked)} 
                     />
                 </div>
             </div>
