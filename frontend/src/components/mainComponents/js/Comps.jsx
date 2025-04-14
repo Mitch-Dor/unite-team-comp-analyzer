@@ -68,7 +68,7 @@ function Comps() {
 
   return (
     <div id="mainContainer" className="main-container">
-      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCompsData={setCompsData} />}
+      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCompsData={setCompsData} compsData={compsData} />}
       <div id="compsContainer">
         <div className="comps-list">
           <h1 className="page-title">Team Compositions</h1>

@@ -143,6 +143,10 @@ function createDB() {
             FOREIGN KEY (set_id) REFERENCES professional_sets (set_id),
             FOREIGN KEY (team_1_comp_id) REFERENCES professional_comps (comp_id),
             FOREIGN KEY (team_2_comp_id) REFERENCES professional_comps (comp_id),
+            FOREIGN KEY (team_1_ban_1) REFERENCES playable_characters (pokemon_id),
+            FOREIGN KEY (team_1_ban_2) REFERENCES playable_characters (pokemon_id),
+            FOREIGN KEY (team_2_ban_1) REFERENCES playable_characters (pokemon_id),
+            FOREIGN KEY (team_2_ban_2) REFERENCES playable_characters (pokemon_id),
             FOREIGN KEY (team_1_player_1) REFERENCES professional_players (player_id),
             FOREIGN KEY (team_1_player_2) REFERENCES professional_players (player_id),
             FOREIGN KEY (team_1_player_3) REFERENCES professional_players (player_id),
@@ -152,7 +156,9 @@ function createDB() {
             FOREIGN KEY (team_2_player_2) REFERENCES professional_players (player_id),
             FOREIGN KEY (team_2_player_3) REFERENCES professional_players (player_id),
             FOREIGN KEY (team_2_player_4) REFERENCES professional_players (player_id),
-            FOREIGN KEY (team_2_player_5) REFERENCES professional_players (player_id)
+            FOREIGN KEY (team_2_player_5) REFERENCES professional_players (player_id),
+            FOREIGN KEY (team_1_id) REFERENCES professional_teams (team_id),
+            FOREIGN KEY (team_2_id) REFERENCES professional_teams (team_id)
         );
         -- A table symbolizing professional players
         create table professional_players (

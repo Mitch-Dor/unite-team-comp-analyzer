@@ -278,7 +278,7 @@ function populate_db(db) {
                     firstPickNumber = 1;
                 }
 
-                const didWin = comp.WinngingTeam === "1";
+                const didWin = comp.winningTeam === 1;
                 let didWinNumber = 0;
                 if (didWin) {
                     didWinNumber = 1;

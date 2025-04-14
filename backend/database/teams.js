@@ -320,24 +320,81 @@ class Teams {
     // Insert a set
     async insertSet(setMatches) {
       return new Promise((resolve, reject) => {
+        const db = this.db; // Store db reference
         // Insert the set and its descriptor first
-        const eventSetInfo = setMatches[0];
-        const eventName = eventSetInfo.event;
-        const eventDate = eventSetInfo.matchDate;
-        const eventVodUrl = eventSetInfo.vod;
-        const setDescriptor = eventSetInfo.setDescription;
-        let sql = '';
-        // Then insert into comps
-        sql = '';
-
-        // Then insert the matches
-        sql = '';
-        this.db.run(sql, [setMatches], function(err) {
+        const event_id = setMatches.event_id;
+        const set_descriptor = setMatches.set_descriptor;
+        let sql = 'INSERT INTO professional_sets (event_id, set_descriptor) VALUES (?, ?)';
+        db.run(sql, [event_id, set_descriptor], function(err) {
           if (err) {
             reject(err);
-          } else {
-            resolve({ id: this.lastID });
+            return;
           }
+          
+          const set_id = this.lastID;
+          const compPromises = [];
+          
+          // Create promises for all comp insertions
+          for (let i = 0; i < setMatches.matches.length; i++) {
+            const draft = setMatches.matches[i];
+            const team1 = draft.team1;
+            const team2 = draft.team2;
+            
+            // Create promises for team1 and team2 comps
+            const team1Promise = new Promise((resolve, reject) => {
+              const firstPick = team1.isFirstPick === true ? 1 : 0;
+              const didWin = draft.winningTeam === 1 ? 1 : 0;
+              sql = 'INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick, did_win) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+              db.run(sql, [team1.pokemon[0], team1.pokemon[1], team1.pokemon[2], team1.pokemon[3], team1.pokemon[4], team1.pokemon_moves[0], team1.pokemon_moves[1], team1.pokemon_moves[2], team1.pokemon_moves[3], team1.pokemon_moves[4], team1.pokemon_moves[5], team1.pokemon_moves[6], team1.pokemon_moves[7], team1.pokemon_moves[8], team1.pokemon_moves[9], firstPick, didWin], function(err) {
+                if (err) reject(err);
+                else resolve(this.lastID);
+              });
+            });
+            
+            const team2Promise = new Promise((resolve, reject) => {
+              const firstPick2 = team2.isFirstPick === true ? 1 : 0;
+              const didWin2 = draft.winningTeam === 2 ? 1 : 0;
+              sql = 'INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick, did_win) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+              db.run(sql, [team2.pokemon[0], team2.pokemon[1], team2.pokemon[2], team2.pokemon[3], team2.pokemon[4], team2.pokemon_moves[0], team2.pokemon_moves[1], team2.pokemon_moves[2], team2.pokemon_moves[3], team2.pokemon_moves[4], team2.pokemon_moves[5], team2.pokemon_moves[6], team2.pokemon_moves[7], team2.pokemon_moves[8], team2.pokemon_moves[9], firstPick2, didWin2], function(err) {
+                if (err) reject(err);
+                else resolve(this.lastID);
+              });
+            });
+            
+            compPromises.push(Promise.all([team1Promise, team2Promise]));
+          }
+          
+          // Wait for all comps to be inserted
+          Promise.all(compPromises)
+            .then(compIds => {
+              // Now insert all matches
+              const matchPromises = [];
+              for (let i = 0; i < setMatches.matches.length; i++) {
+                const [comp1ID, comp2ID] = compIds[i];
+                const team1 = setMatches.matches[i].team1;
+                const team2 = setMatches.matches[i].team2;
+                
+                const matchPromise = new Promise((resolve, reject) => {
+                  sql = 'INSERT INTO professional_matches (set_id, team_1_comp_id, team_2_comp_id, team_1_ban_1, team_1_ban_2, team_2_ban_1, team_2_ban_2, team_1_player_1, team_1_player_2, team_1_player_3, team_1_player_4, team_1_player_5, team_2_player_1, team_2_player_2, team_2_player_3, team_2_player_4, team_2_player_5, team_1_id, team_2_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                  db.run(sql, [set_id, comp1ID, comp2ID, team1.bans[0], team1.bans[1], team2.bans[0], team2.bans[1], team1.players[0], team1.players[1], team1.players[2], team1.players[3], team1.players[4], team2.players[0], team2.players[1], team2.players[2], team2.players[3], team2.players[4], team1.team_id, team2.team_id], function(err) {
+                    if (err) reject(err);
+                    else resolve();
+                  });
+                });
+                
+                matchPromises.push(matchPromise);
+              }
+              
+              // Wait for all matches to be inserted
+              return Promise.all(matchPromises);
+            })
+            .then(() => {
+              // All operations completed successfully
+              resolve({ id: set_id });
+            })
+            .catch(err => {
+              reject(err);
+            });
         });
       });
     }

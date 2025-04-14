@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
 
-function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
+function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData }) {
     const [setInsertion, setSetInsertion] = useState(false);
     const [events, setEvents] = useState([]);
     const [teams, setTeams] = useState([]);
@@ -45,13 +45,6 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
         fetchAllData();
 
     }, []);
-
-    useEffect(() => {
-        console.log("Events: ", events);
-        console.log("Teams: ", teams);
-        console.log("Players: ", players);
-        console.log("Characters and Moves: ", charactersAndMoves);
-    }, [events, teams, players, charactersAndMoves]);
   
     // Function to submit the comp
     function submitComp() {
@@ -80,16 +73,32 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
 
         function setCheck() {
             // Pull out the data
-            console.log("Set Insertion: ", setInsertion);
-            return;
-            let eventData = {
-                eventName: checkNull(setInsertion[5], "eventName", 0),
-                eventDate: checkNull(setInsertion[6], "eventDate", 0),
-                eventVodUrl: checkNull(setInsertion[7], "eventVodUrl", 0),
-                setDescriptor: checkNull(setInsertion[8], "setDescriptor", 0)
+            // setInsertion[0] = match1 (match1[0] = team1, match1[1] = team2, match1[2] = winner)
+                // match1[X][0] = team data, match1[X][1] = team is first pick (boolean), match1[X][2-3] = bans, match1[X][4-8] = pokemon, match1[X][9-18] = pokemon moves, match1[X][19-23] = players
+                // team data contains team_name, team_region, team_id
+                // pokemon contain pokemon_name and pokemon_id
+                // moves contains move_name and move_id
+                // players contain player_id and player_name
+            // setInsertion[1] = match2 (match2[0] = team1, match2[1] = team2, match2[2] = winner)
+            // setInsertion[2] = match3 (match3[0] = team1, match3[1] = team2, match3[2] = winner)
+            // setInsertion[3] = match4 (match4[0] = team1, match4[1] = team2, match4[2] = winner)
+            // setInsertion[4] = match5 (match5[0] = team1, match5[1] = team2, match5[2] = winner)
+            // setInsertion[5] = event (event_id, event_name, event_date, vod_url)
+            // setInsertion[6] = setDescriptor
+
+            // Check if setInsertion exists and has the required length
+            if (!setInsertion || setInsertion.length < 7) {
+                error += "\n" + "Invalid set data structure";
+                errorCount++;
             }
-            // Format it in a way that's easy to insert into the comps page
-            formattedData.push({event: eventData.event_name, matchDate: eventData.eventDate, vod: eventData.vod_url, setDescription: eventData.setDescriptor});
+
+            // Check if event data exists
+            if (!setInsertion[5] || setInsertion[5] === null) {
+                error += "\n" + "Event data is missing";
+                errorCount++;
+            }
+
+            // Format the data in a way that's easy to insert into the comps page and do null checks
             for (let j = 0; j < 5; j++) {
                 const match = setInsertion[j];
                 if (match !== null) {
@@ -98,23 +107,32 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
                         team2: match[1],
                         winner: match[2]
                     }
+
+                    // Check if team data exists
+                    if (!matchData.team1 || !matchData.team2) {
+                        error += "\n" + "Match " + (j + 1) + " is missing team data";
+                        errorCount++;
+                        continue;
+                    }
+
                     let team1Data = {
-                        name: checkNull(matchData.team1[0], "team1TeamName", i),
-                        region: checkNull(matchData.team1[1], "team1TeamRegion", i),
-                        firstPick: checkNull(matchData.team1[2], "team1FirstPick", i),
-                        bans: [checkNull(matchData.team1[3], "team1Ban1", i), checkNull(matchData.team1[4], "team1Ban2", i)],
-                        pokemon: [checkNull(matchData.team1[5], "team1Pokemon1", i), checkNull(matchData.team1[6], "team1Pokemon2", i), checkNull(matchData.team1[7], "team1Pokemon3", i), checkNull(matchData.team1[8], "team1Pokemon4", i), checkNull(matchData.team1[9], "team1Pokemon5", i)],
-                        pokemon_moves: [checkNull(matchData.team1[10], "team1Pokemon1Move1", i), checkNull(matchData.team1[11], "team1Pokemon1Move2", i), checkNull(matchData.team1[12], "team1Pokemon2Move1", i), checkNull(matchData.team1[13], "team1Pokemon2Move2", i), checkNull(matchData.team1[14], "team1Pokemon3Move1", i), checkNull(matchData.team1[15], "team1Pokemon3Move2", i), checkNull(matchData.team1[16], "team1Pokemon4Move1", i), checkNull(matchData.team1[17], "team1Pokemon4Move2", i), checkNull(matchData.team1[18], "team1Pokemon5Move1", i), checkNull(matchData.team1[19], "team1Pokemon5Move2", i)],
-                        players: [checkNull(matchData.team1[20], "team1Player1", i), checkNull(matchData.team1[21], "team1Player2", i), checkNull(matchData.team1[22], "team1Player3", i), checkNull(matchData.team1[23], "team1Player4", i), checkNull(matchData.team1[24], "team1Player5", i)]
+                        name: checkNull(matchData.team1[0]?.team_name, "team1TeamName", i),
+                        region: checkNull(matchData.team1[0]?.team_region, "team1TeamRegion", i),
+                        firstPick: checkNull(matchData.team1[1], "team1FirstPick", i),
+                        // One attribute like pokemon_name being present implies the other attributes are present
+                        bans: [checkNull(matchData.team1[2]?.pokemon_name, "team1Ban1", i), checkNull(matchData.team1[3]?.pokemon_name, "team1Ban2", i)],
+                        pokemon: [checkNull(matchData.team1[4]?.pokemon_name, "team1Pokemon1", i), checkNull(matchData.team1[5]?.pokemon_name, "team1Pokemon2", i), checkNull(matchData.team1[6]?.pokemon_name, "team1Pokemon3", i), checkNull(matchData.team1[7]?.pokemon_name, "team1Pokemon4", i), checkNull(matchData.team1[8]?.pokemon_name, "team1Pokemon5", i)],
+                        pokemon_moves: [checkNull(matchData.team1[9]?.move_name, "team1Pokemon1Move1", i), checkNull(matchData.team1[10]?.move_name, "team1Pokemon1Move2", i), checkNull(matchData.team1[11]?.move_name, "team1Pokemon2Move1", i), checkNull(matchData.team1[12]?.move_name, "team1Pokemon2Move2", i), checkNull(matchData.team1[13]?.move_name, "team1Pokemon3Move1", i), checkNull(matchData.team1[14]?.move_name, "team1Pokemon3Move2", i), checkNull(matchData.team1[15]?.move_name, "team1Pokemon4Move1", i), checkNull(matchData.team1[16]?.move_name, "team1Pokemon4Move2", i), checkNull(matchData.team1[17]?.move_name, "team1Pokemon5Move1", i), checkNull(matchData.team1[18]?.move_name, "team1Pokemon5Move2", i)],
+                        players: [checkNull(matchData.team1[19]?.player_name, "team1Player1", i), checkNull(matchData.team1[20]?.player_name, "team1Player2", i), checkNull(matchData.team1[21]?.player_name, "team1Player3", i), checkNull(matchData.team1[22]?.player_name, "team1Player4", i), checkNull(matchData.team1[23]?.player_name, "team1Player5", i)]
                     }
                     let team2Data = {
-                        name: checkNull(matchData.team2[0], "team2TeamName", i),
-                        region: checkNull(matchData.team2[1], "team2TeamRegion", i),
-                        firstPick: checkNull(matchData.team2[2], "team2FirstPick", i),
-                        bans: [checkNull(matchData.team2[3], "team2Ban1", i), checkNull(matchData.team2[4], "team2Ban2", i)],
-                        pokemon: [checkNull(matchData.team2[5], "team2Pokemon1", i), checkNull(matchData.team2[6], "team2Pokemon2", i), checkNull(matchData.team2[7], "team2Pokemon3", i), checkNull(matchData.team2[8], "team2Pokemon4", i), checkNull(matchData.team2[9], "team2Pokemon5", i)],
-                        pokemon_moves: [checkNull(matchData.team2[10], "team2Pokemon1Move1", i), checkNull(matchData.team2[11], "team2Pokemon1Move2", i), checkNull(matchData.team2[12], "team2Pokemon2Move1", i), checkNull(matchData.team2[13], "team2Pokemon2Move2", i), checkNull(matchData.team2[14], "team2Pokemon3Move1", i), checkNull(matchData.team2[15], "team2Pokemon3Move2", i), checkNull(matchData.team2[16], "team2Pokemon4Move1", i), checkNull(matchData.team2[17], "team2Pokemon4Move2", i), checkNull(matchData.team2[18], "team2Pokemon5Move1", i), checkNull(matchData.team2[19], "team2Pokemon5Move2", i)],
-                        players: [checkNull(matchData.team2[20], "team2Player1", i), checkNull(matchData.team2[21], "team2Player2", i), checkNull(matchData.team2[22], "team2Player3", i), checkNull(matchData.team2[23], "team2Player4", i), checkNull(matchData.team2[24], "team2Player5", i)]
+                        name: checkNull(matchData.team2[0]?.team_name, "team2TeamName", i),
+                        region: checkNull(matchData.team2[0]?.team_region, "team2TeamRegion", i),
+                        firstPick: checkNull(matchData.team2[1], "team2FirstPick", i),
+                        bans: [checkNull(matchData.team2[2]?.pokemon_name, "team2Ban1", i), checkNull(matchData.team2[3]?.pokemon_name, "team2Ban2", i)],
+                        pokemon: [checkNull(matchData.team2[4]?.pokemon_name, "team2Pokemon1", i), checkNull(matchData.team2[5]?.pokemon_name, "team2Pokemon2", i), checkNull(matchData.team2[6]?.pokemon_name, "team2Pokemon3", i), checkNull(matchData.team2[7]?.pokemon_name, "team2Pokemon4", i), checkNull(matchData.team2[8]?.pokemon_name, "team2Pokemon5", i)],
+                        pokemon_moves: [checkNull(matchData.team2[9]?.move_name, "team2Pokemon1Move1", i), checkNull(matchData.team2[10]?.move_name, "team2Pokemon1Move2", i), checkNull(matchData.team2[11]?.move_name, "team2Pokemon2Move1", i), checkNull(matchData.team2[12]?.move_name, "team2Pokemon2Move2", i), checkNull(matchData.team2[13]?.move_name, "team2Pokemon3Move1", i), checkNull(matchData.team2[14]?.move_name, "team2Pokemon3Move2", i), checkNull(matchData.team2[15]?.move_name, "team2Pokemon4Move1", i), checkNull(matchData.team2[16]?.move_name, "team2Pokemon4Move2", i), checkNull(matchData.team2[17]?.move_name, "team2Pokemon5Move1", i), checkNull(matchData.team2[18]?.move_name, "team2Pokemon5Move2", i)],
+                        players: [checkNull(matchData.team2[19]?.player_name, "team2Player1", i), checkNull(matchData.team2[20]?.player_name, "team2Player2", i), checkNull(matchData.team2[21]?.player_name, "team2Player3", i), checkNull(matchData.team2[22]?.player_name, "team2Player4", i), checkNull(matchData.team2[23]?.player_name, "team2Player5", i)]
                     }
                     checkNull(matchData.winner, "winner", i);
 
@@ -124,32 +142,68 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
                         errorCount++;
                     }
 
-                    // Put it all in one match object
-                    formattedData.push({team1: team1Data, team2: team2Data, winningTeam: matchData.winner});
+                    // Put it all in one match object with the event data added too
+                    // comps page wants first picks as booleans (like they are now), database does not
+                    formattedData.push({
+                        team1: team1Data, 
+                        team2: team2Data, 
+                        winningTeam: parseInt(matchData.winner), 
+                        event: checkNull(setInsertion[5]?.event_name, "eventName", 0), 
+                        matchDate: checkNull(setInsertion[5]?.event_date, "eventDate", 0), 
+                        set_description: checkNull(setInsertion[6], "setDescriptor", 0), 
+                        vod: checkNull(setInsertion[5]?.vod_url, "vodUrl", 0)
+                    });
                     i++;
                 }
             }
-            console.log("Formatted Data: ", formattedData);
             // If something is missing, don't submit
             if (errorCount > 0) {
                 alert(error);
                 return;
             }
-            // Submit the data
-            insertSet(formattedData).then(data => {
-                // Update the comp data on the comp display page with the new comps
-                // Missing some of the data that the comps page has but it has everything needed to display
-                for (let k=1; k < formattedData.length; k++) {
-                    const newMatch = {
-                        team1: formattedData[k].team1,
-                        team2: formattedData[k].team2,
-                        winningTeam: formattedData[k].winningTeam,
-                        event: formattedData[0].event,
-                        matchDate: formattedData[0].matchDate,
-                        set_description: formattedData[0].set_description,
-                        vod: formattedData[0].vod
+
+            // If previous checks determined that the data contained the fields it needed, the IDs are present too.
+            // Also format the data in a way that's easy to insert into the database
+            // Database needs the IDs
+            // Pull out match data first
+            let matchData = [];
+            for (let j = 0; j < 5; j++) {
+                const match = setInsertion[j];
+                if (match !== null) {
+                    const thisMatch = {
+                        team1: {
+                            team_id: match[0][0].team_id,
+                            isFirstPick: match[0][1],
+                            bans: [match[0][2]?.pokemon_id, match[0][3]?.pokemon_id],
+                            pokemon: [match[0][4]?.pokemon_id, match[0][5]?.pokemon_id, match[0][6]?.pokemon_id, match[0][7]?.pokemon_id, match[0][8]?.pokemon_id],
+                            pokemon_moves: [match[0][9]?.move_id, match[0][10]?.move_id, match[0][11]?.move_id, match[0][12]?.move_id, match[0][13]?.move_id, match[0][14]?.move_id, match[0][15]?.move_id, match[0][16]?.move_id, match[0][17]?.move_id, match[0][18]?.move_id],
+                            players: [match[0][19]?.player_id, match[0][20]?.player_id, match[0][21]?.player_id, match[0][22]?.player_id, match[0][23]?.player_id]
+                        },
+                        team2: {
+                            team_id: match[1][0].team_id,
+                            isFirstPick: match[1][1],
+                            bans: [match[1][2]?.pokemon_id, match[1][3]?.pokemon_id],
+                            pokemon: [match[1][4]?.pokemon_id, match[1][5]?.pokemon_id, match[1][6]?.pokemon_id, match[1][7]?.pokemon_id, match[1][8]?.pokemon_id],
+                            pokemon_moves: [match[1][9]?.move_id, match[1][10]?.move_id, match[1][11]?.move_id, match[1][12]?.move_id, match[1][13]?.move_id, match[1][14]?.move_id, match[1][15]?.move_id, match[1][16]?.move_id, match[1][17]?.move_id, match[1][18]?.move_id],
+                            players: [match[1][19]?.player_id, match[1][20]?.player_id, match[1][21]?.player_id, match[1][22]?.player_id, match[1][23]?.player_id]
+                        },
+                        winningTeam: match[2]
                     }
-                    setCompsData([...setCompsData, newMatch]);
+                    matchData.push(thisMatch);
+                }
+            }
+            const databaseData = {
+                event_id: setInsertion[5]?.event_id,
+                set_descriptor: setInsertion[6],
+                matches: matchData
+            }
+
+            // Submit the data
+            insertSet(databaseData).then(data => {
+                // Update the comp data on the comp display page with the new comps
+                // Do after sending to database to only show data that was successfully inserted
+                for (let k=0; k < formattedData.length; k++) {
+                    setCompsData([...compsData, formattedData[k]]);
                 }
                 // Clear the set insertion data and the input fields
                 setSetInsertion(null);
@@ -237,7 +291,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
         }
 
         function checkNull(data, field, i) {
-            if (data === null) {
+            if (data === null || data === undefined) {
                 // Add the field to the error message
                 if (i === 0) {
                     // Error in event data
@@ -254,7 +308,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData }) {
             return data;
         }
         function checkNull(data, field) {
-            if (data === null) {
+            if (data === null || data === undefined) {
                 // Add the field to the error message
                 error += "\n" + field;
                 errorCount++;
@@ -333,7 +387,7 @@ function SetInsertion({ key, setSetInsertion, events, teams, players, characters
         if (selectedEvent) {
             setSetInsertion([match1, match2, match3, match4, match5, selectedEvent, setDescriptor]);
         } else {
-            setSetInsertion([match1, match2, match3, match4, match5, null, null, null, null]);
+            setSetInsertion([match1, match2, match3, match4, match5, null, null]);
         }
     }, [match1, match2, match3, match4, match5, selectedEvent, setDescriptor]);
 
@@ -508,7 +562,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
 
     useEffect(() => {
         if (selectedTeam) {
-            setComp([selectedTeam.team_name, selectedTeam.team_region, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+            setComp([selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
         } else {
             setComp([null, null, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
         }
@@ -773,10 +827,10 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
                 character_name={character ? character.pokemon_name : character}  
             />
             {/* Player Dropdown */}
-            <select value={player} onChange={(e) => setPlayer(e.target.value)}>
+            <select value={player ? JSON.stringify(player) : ""} onChange={(e) => setPlayer(JSON.parse(e.target.value))}>
                 <option value="">Player Select</option>
                 {players.map(player => (
-                    <option key={player.player_id} value={player.player_name}>
+                    <option key={player.player_id} value={JSON.stringify({player_id: player.player_id, player_name: player.player_name})}>
                         {player.player_name}
                     </option>
                 ))}
