@@ -413,7 +413,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    width: 98%;
+    width: 100%;
 }
 
 .set-creation-event-data select, 
@@ -441,7 +441,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 98%;
+    width: 100%;
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -479,7 +479,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 98%;
+    width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -492,7 +492,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 98%;
+    width: 100%;
 }
 
 .set-character-player .custom-dropdown:nth-child(1) {
@@ -512,12 +512,12 @@
 }
 
 .match-winner-dropdown {
-    width: 98%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    padding-bottom: 10px;
-    padding-top: 30px;
+    padding-bottom: 90px;
+    padding-top: 90px;
 }
 
 .set-comp-content {
