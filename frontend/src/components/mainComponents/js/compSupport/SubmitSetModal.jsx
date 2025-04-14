@@ -187,7 +187,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData }) {
                             pokemon_moves: [match[1][9]?.move_id, match[1][10]?.move_id, match[1][11]?.move_id, match[1][12]?.move_id, match[1][13]?.move_id, match[1][14]?.move_id, match[1][15]?.move_id, match[1][16]?.move_id, match[1][17]?.move_id, match[1][18]?.move_id],
                             players: [match[1][19]?.player_id, match[1][20]?.player_id, match[1][21]?.player_id, match[1][22]?.player_id, match[1][23]?.player_id]
                         },
-                        winningTeam: match[2]
+                        winningTeam: parseInt(match[2])
                     }
                     matchData.push(thisMatch);
                 }
@@ -708,18 +708,97 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
 // Custom dropdown component
 function CustomDropdown({ value, onChange, options, placeholder, disabled, path, character_name }) {
     const [isOpen, setIsOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [currentTarget, setCurrentTarget] = useState(-1);
     const dropdownRef = useRef(null);
+    const isFocusedRef = useRef(false);
+    const optionsRef = useRef(null);
 
-    // Close dropdown when clicking outside
+    // Scroll to current target when it changes
     useEffect(() => {
+        if (isOpen && currentTarget !== -1 && optionsRef.current) {
+            const options = optionsRef.current.children;
+            if (options[currentTarget]) {
+                options[currentTarget].scrollIntoView({ 
+                    block: 'nearest',
+                    behavior: 'smooth'
+                });
+            }
+        }
+    }, [currentTarget, isOpen]);
+
+    // Set up event listeners once on mount
+    useEffect(() => {
+        // Close dropdown when clicking outside
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsOpen(false);
+                setSearchTerm('');
+                isFocusedRef.current = false;
             }
         }
+
+        // Handle keyboard navigation and use this to track input
+        const handleKeyDown = (e) => {
+            // Only handle keyboard events if this dropdown is focused
+            if (!isFocusedRef.current) return;
+
+            if (e.key === 'Enter') { // Submit the targeted option
+                if (currentTarget !== -1) {
+                    const selectedOption = options[currentTarget];
+                    onChange(selectedOption);
+                    setSearchTerm('');
+                    e.preventDefault();
+                    setIsOpen(false);
+                } else {
+                    setSearchTerm('');
+                    setIsOpen(false);
+                }
+            } else if (e.key === 'Escape') { // Close the dropdown
+                setIsOpen(false);
+                setSearchTerm('');
+            } else if (e.key === 'Backspace') { // Clear the input
+                setSearchTerm('');
+            } else if (e.key === 'ArrowDown') { // Move down the list
+                // Prevent moving the page up
+                e.preventDefault();
+                setCurrentTarget(prev => Math.min(prev + 1, options.length - 1));
+            } else if (e.key === 'ArrowUp') { // Move up the list
+                // Prevent moving the page down
+                e.preventDefault();
+                setCurrentTarget(prev => Math.max(prev - 1, 0));
+            } else if (/^[a-zA-Z]$/.test(e.key)) { // If the user enters any letter update searchTerm
+                setSearchTerm(prev => prev + e.key);
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
         document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [options, onChange, currentTarget]);
+
+    // Update current target based on search term
+    useEffect(() => {
+        if (searchTerm) {
+            let target = -1;
+            let earliestAppearance = -1;
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                const name = option.pokemon_name ? option.pokemon_name : option.move_name;
+                const index = name.toLowerCase().indexOf(searchTerm.toLowerCase());
+                if (index !== -1 && (target === -1 || index < earliestAppearance)) {
+                    target = i;
+                    earliestAppearance = index;
+                }
+            }
+            setCurrentTarget(target);
+        } else {
+            setCurrentTarget(-1);
+        }
+    }, [searchTerm, options]);
 
     function getImagePath(name) {
         if (character_name) {
@@ -730,10 +809,22 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
     }
 
     return (
-        <div className="custom-dropdown" ref={dropdownRef}>
+        <div 
+            className="custom-dropdown" 
+            ref={dropdownRef}
+            onFocus={() => {
+                isFocusedRef.current = true;
+            }}
+            onBlur={() => {
+                isFocusedRef.current = false;
+            }}
+        >
             <button 
                 className="dropdown-button"
-                onClick={() => !disabled && setIsOpen(!isOpen)}
+                onClick={() => {
+                    setIsOpen(!isOpen);
+                    isFocusedRef.current = true;
+                }}
                 disabled={disabled}
             >
                 {value ? (
@@ -745,16 +836,18 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                         />
                         <span>{value.pokemon_name ? value.pokemon_name : value.move_name}</span>
                     </div>
+                ) : searchTerm ? (
+                    <span>{searchTerm}</span>
                 ) : (
                     <span>{placeholder}</span>
                 )}
             </button>
             {isOpen && (
-                <div className="dropdown-options">
-                    {options.map((option) => (
+                <div className="dropdown-options" ref={optionsRef}>
+                    {options.map((option, index) => (
                         <div
                             key={option}
-                            className="dropdown-option"
+                            className={`dropdown-option ${index === currentTarget ? 'target' : ''}`}
                             onClick={() => {
                                 onChange(option);
                                 setIsOpen(false);

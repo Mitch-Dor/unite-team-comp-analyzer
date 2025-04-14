@@ -597,6 +597,10 @@
     min-width: fit-content;
 }
 
+.dropdown-option.target {
+    border: 1px solid #7fb3ff;
+}
+
 .dropdown-option:hover {
     background-color: #444;
 }
@@ -612,8 +616,3 @@
     height: 24px;
     object-fit: contain;
 }
-
-
-
-
-
