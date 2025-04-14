@@ -1,0 +1,462 @@
+[33mcommit 3421fd0743d218d39e187e9b8b89d6079f77a007[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Mon Apr 14 14:34:16 2025 -0400
+
+    Updated custom dropdowns to be searchable and usable with keyboard controls
+
+[33mcommit 7e95d9cb477fcf5d9054b39f73ecee970fdeeb98[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Apr 13 21:37:07 2025 -0400
+
+    Small database change. Small css changes to insertions
+
+[33mcommit 80b83758c095fecf709ed655858193d25fb56ac3[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Apr 13 21:27:52 2025 -0400
+
+    Adding sets fully works
+
+[33mcommit b323049e4dcfa6f941c60e467fac7fd6e2aacda1[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Apr 13 17:14:04 2025 -0400
+
+    Set insertion now set up to use IDs to make it easier to insert into DB. Need to update null checks and formatting now though
+
+[33mcommit c7cd3bc8ef4610d17f7ee90af12ee08e3b836ed5[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Apr 13 16:15:09 2025 -0400
+
+    Submitting events, teams, and players all work
+
+[33mcommit 9d43ba173f1db15f1019c4a09f1d5946315ce734[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Apr 13 16:05:41 2025 -0400
+
+    Selecting a first pick team was incorrect
+
+[33mcommit 9c3b3d9479335777b4755dd46ada1a372ddbfbef[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Apr 13 15:43:02 2025 -0400
+
+    Created a custom dropdown component that will show pictures of characters/moves alongside the text value
+
+[33mcommit 5a161916ca12e299e64352b216cc79d85d506edf[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Apr 13 14:42:44 2025 -0400
+
+    Made a not entirely filled in setInsertion route and functions. Updated the styles of set insertion to be how I want
+
+[33mcommit 4cbe2529e7d91a55cb5adde08c97a314c18b3316[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sat Apr 12 00:33:43 2025 -0400
+
+    Updated set insertion to be significantly better. Prepopulated dropdowns and related data populate eachother
+
+[33mcommit 543aa1703cd3001cadeb2527ac9521811b1def46[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Fri Apr 11 23:44:12 2025 -0400
+
+    SubmitSetModal has been updated to have different modes for if the user is inserting sets, players, teams, or events. Inserting any of these should in theory update everything else immediately
+
+[33mcommit 3cf483f8298b03822fa66a243c8197571c781b8f[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Thu Apr 10 22:29:13 2025 -0400
+
+    Created database routes and functions to POST events, teams, and players
+
+[33mcommit 39a4735f0f3ef232c35f48b60355ef6c54cf877d[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Thu Apr 10 22:09:20 2025 -0400
+
+    Altered the submission to create events, players, and teams separately. The set submission is going to become dropdown only everywhere but the set descriptor.
+
+[33mcommit 2b9226be216e1f2f328589443734d0efddea8a7f[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Thu Apr 10 21:20:26 2025 -0400
+
+    Added backend functions and routes to get event, player, team, and charcter/move data. Also applied them to the modal to submit new sets.
+
+[33mcommit 4bfcb6a234bb5c519493ee9eb8d3a1e4a1de807a[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Thu Apr 10 15:17:41 2025 -0400
+
+    Made a very early version of a component designed to allow submitting of new sets
+
+[33mcommit f04ccaea991775f5fb3d031df0c481c36b298c2f[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 9 13:53:10 2025 -0400
+
+    Added lane filtering to draft
+
+[33mcommit 2a0d2e466b2c0fee136c8a300600dda21ecb0a39[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 9 13:37:06 2025 -0400
+
+    Renamed the move files and ironed out everything so that move icons are showing and that blaziken and mew move icons are stored and accessed properly
+
+[33mcommit 6e0affd1379a4de359e865ac52768a9af385de67[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 9 12:47:57 2025 -0400
+
+    There was a slight issue in the database that is now fixed. The comps page now fully gets data from the database and uses it to display information
+
+[33mcommit d61041ae0d0c12197de8bb9979291f3fcf54741a[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 9 01:39:59 2025 -0400
+
+    Frontend is now receiving a list of all comps from the backend. Just have to set up the file to properly handle all the data in its new format
+
+[33mcommit 71219f0ef9ed052da65ed9470e21848145dd5f80[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 9 01:19:43 2025 -0400
+
+    Database setup is complete. Shouldn't need to be used anymore
+
+[33mcommit 50ae607634ea356c65f1c91f83ba5e83ef14e0b4[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 8 23:07:16 2025 -0400
+
+    Finished populateTeams
+
+[33mcommit c0bf1d0c4e436b3a544190a6b234d0456c3b2c02[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 8 22:47:45 2025 -0400
+
+    Updated where did_win column is
+
+[33mcommit 6fdcf21eb941ceac015ec7285a9bccf0c7c7d19c[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 8 22:25:49 2025 -0400
+
+    Implemented events
+
+[33mcommit 0030a159817919a84a09478753549df633b19155[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 8 21:59:38 2025 -0400
+
+    Finished populatePlayers
+
+[33mcommit 9c2a5c947ea1680493588ad43f0386d9244167ff[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 8 21:48:16 2025 -0400
+
+    Put some comp data in and made it so comps can be added to the database
+
+[33mcommit 95a5db94a78b29c9f51f37c922705c933da3820a[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 8 20:32:46 2025 -0400
+
+    There were duplicate files of naming_constants which was messing with a lot. That is now resolved and populateMoves is now implemented
+
+[33mcommit 71e98b3bdecd63724110befd89d97f3c47372502[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 8 17:02:05 2025 -0400
+
+    Populating database started. Stopping for now
+
+[33mcommit 4245c59b7809dbdf619b58d4fd1546d35d006631[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 8 16:06:07 2025 -0400
+
+    Fixed the created tables
+
+[33mcommit b5368dc05dff33d7d29a73a815ec2b7fe1746581[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 8 15:49:13 2025 -0400
+
+    Added move assets and suicune assets. Updated database schema. Now going to update database population
+
+[33mcommit 1a66509372e31b3338a02820a3f689b8a6c28e47[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sat Apr 5 00:35:46 2025 -0400
+
+    changed sheet to JS parser to work
+
+[33mcommit a8da06e9322e23b4c67ec7ab05db45e117fe1f36[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Fri Apr 4 23:55:52 2025 -0400
+
+    Added move name constants back froma an old commit.
+
+[33mcommit 23c56e95a19bc8e96d0b49fe0272fdecb5ef234f[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Fri Apr 4 23:30:16 2025 -0400
+
+    Made it so when it's an AI pick the user cannot target a pokemon
+
+[33mcommit 1ff41773307dfa6f0dfca271321b324a68de9b22[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Fri Apr 4 16:34:23 2025 -0400
+
+    Updated README
+
+[33mcommit 65a17249bd3ce9313b0f591758e35beb3c711f63[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Fri Apr 4 16:27:09 2025 -0400
+
+    Fixed styling messed up on Main
+
+[33mcommit a385dd5b1b67671e0e16fcc2bc8540fd8927f825[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Fri Apr 4 16:21:13 2025 -0400
+
+    Added a team composition page to display team comps from events
+
+[33mcommit 91f6f2e5d1f0b57f8f0d742aa09c6cfb8c99272a[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Fri Apr 4 16:02:03 2025 -0400
+
+    Finished up adding visual improvements to Traits.jsx
+
+[33mcommit d66266528b36dc7379df0e41dc863a6508d544df[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Fri Apr 4 14:43:50 2025 -0400
+
+    Giant commit... oops. Updated everything to get traits from database. Added routes and functions to get and change traits. Added routes and functions to run a_star from frontend. Draft now uses the AI algorithm to make AI picks
+
+[33mcommit af31f4e427772a308e980b9cefa17aa62869ba7e[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 2 21:49:23 2025 -0400
+
+    Added lane traits to the table
+
+[33mcommit ed47fbb13d2e41bdc022c3985af5ce87eada73af[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 2 20:36:16 2025 -0400
+
+    Small style change on targeted draft pokemon
+
+[33mcommit 22e7210f74db085a0f6325fb41a0ff64631434b6[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 2 20:35:04 2025 -0400
+
+    Greatly improved the look of the drafting page
+
+[33mcommit f0da6a91a4abf45aa2cf34fa93a97e01d7c6bb11[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 2 19:55:51 2025 -0400
+
+    Changed some naming conventions for headshots but mostly changed the way picking/banning is moved between components to a way that makes more sense. Improved some UI on the draft page
+
+[33mcommit 780e04eed5bbd27f29118e9960cb7f11e1a20e92[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Apr 2 13:30:34 2025 -0400
+
+    Change database creation a bit to fix it
+
+[33mcommit f6aef63dc3eefbb350403eb6a03d453e90780087[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 1 22:32:28 2025 -0400
+
+    Tried to make it so database gets updated from pokemonData.js
+
+[33mcommit 222496393379ab20bb0d269f6ed139b36ef56860[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 1 20:02:20 2025 -0400
+
+    Changed import export slightly
+
+[33mcommit 90d7e57253be56d9f40c7998fbcac3be5ad7bb27[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 1 20:00:22 2025 -0400
+
+    Primarily just created a basic traits table for users to view.
+
+[33mcommit 9edb8b351d4a2186954f3667bad4e9de398a523d[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 1 19:13:13 2025 -0400
+
+    Created files to Traits. Tier list is functional
+
+[33mcommit 0c6a03bb03fc33ca85a9a884cb5bc7db80e834e5[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 1 15:41:26 2025 -0400
+
+    Updated the trait data cause it was bad
+
+[33mcommit b0891b2c1380b68bf910935c5055ca80de2110ac[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Apr 1 13:05:36 2025 -0400
+
+    A rough version of a heuristic is made
+
+[33mcommit 64468f550c4a5bc25db239a16647c02e80c5b79c[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Mon Mar 31 22:34:27 2025 -0400
+
+    Wrote some of the heuristic
+
+[33mcommit f6c5245076f089dabf9a9dbdf66ee78cbf7437b8[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Mon Mar 31 20:38:59 2025 -0400
+
+    Fully fixed everything about a_star function itself. Implementing the heuristics now
+
+[33mcommit 41f24af4ee7e9cfa7fadf7234c9e0aef19514068[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Mon Mar 31 15:58:03 2025 -0400
+
+    Made a_star.js significatly more efficient
+
+[33mcommit c9e2a519b9de5dea2df3453885d1249924b7f158[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Mar 23 21:45:36 2025 -0400
+
+    a_star just needs heuristic functions made
+
+[33mcommit 502f969eeda1649eac82c7fd1c030deca6c247d1[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Fri Mar 21 20:35:07 2025 -0400
+
+    A* started.
+
+[33mcommit 0707f0085c8e64a5b2ed5a6fb47259cf19e04933[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Jan 28 13:50:22 2025 -0500
+
+    The draft is set up for AI. Right now the AI is just picking randomly
+
+[33mcommit 047e83e22e7c06e7445236ef2dbc35128ae7e16a[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Jan 28 13:07:14 2025 -0500
+
+    Timer now works
+
+[33mcommit 9516090e8a0dc7e533ebf5d9b2a4f5c19aca4351[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Jan 28 12:04:58 2025 -0500
+
+    Added settings
+
+[33mcommit 633e2c250fc354a866c1b702fb9a0e15e4156fe5[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Mon Jan 27 21:36:35 2025 -0500
+
+    Added a little hover box on picks. This will be used later this is just a placeholder essentially
+
+[33mcommit bc7bb7f02230274bd898d827f95576e8b439cfac[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Jan 22 20:40:14 2025 -0500
+
+    Added filtering
+
+[33mcommit effdc5e2717fe512583627f2ecd3cf79b3bebbe2[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Jan 22 16:53:08 2025 -0500
+
+    Draft now works if one person manually clicks through the whole thing.
+
+[33mcommit 6507a9ac0e3ac5f22896adf984a7d864c980c88c[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Jan 22 14:21:06 2025 -0500
+
+    Moved the pictures to public and added all the headshots for character portraits
+
+[33mcommit 2c514878281e3a4c7753aa4074e5a8a7184f405b[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Jan 22 13:09:16 2025 -0500
+
+    Draft styling has been massively improved
+
+[33mcommit e26ac855e9be371d3ab3dec8851257839d3131b4[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Wed Jan 22 12:14:07 2025 -0500
+
+    Massive improvements to the styling of the landing page.
+
+[33mcommit 848e571b36be9603506c9a53e8e02e8586e8e96c[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Jan 21 15:11:21 2025 -0500
+
+    Started to make the title page look good
+
+[33mcommit fa50d2ce06ca3b837333e54c1a0717357fb5a33e[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Sep 10 15:05:28 2024 -0400
+
+    Fixed the convertToCSV to convert how I wanted
+
+[33mcommit fea011765383fa0b6c26f3a4ee681d05ab252464[m
+Author: Mitchell Dorward <mitchdor48@gmail.com>
+Date:   Tue Sep 10 00:34:34 2024 -0400
+
+    Python script to covert to CSV
+
+[33mcommit c452974960e383821ee314255901d275a989f80c[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Sep 8 19:31:18 2024 -0400
+
+    Fixed the way the list of pokemon is held to set up draft to work. Connection to the backend is sucessful. Updated classNames.
+
+[33mcommit f6ad8a61a650243a3e47e1eedb18bdd2b042acc9[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Tue Aug 27 14:47:52 2024 -0400
+
+    Have most of the attributes added
+
+[33mcommit a44c6603be94db3a2a531eb6f5054ba00caa16c7[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Thu Jul 25 15:50:18 2024 -0400
+
+    Got it so that the backend can finally communicate with the frontend through RESTful routes.
+
+[33mcommit 241f35079b94a27dc0ad471cb6a3337deb56113a[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Jul 21 19:06:13 2024 -0400
+
+    Added installations and running instructions
+
+[33mcommit a81cc6d6a9f9f6f201e79cd3ebb67984b1b889e3[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Jul 21 19:05:57 2024 -0400
+
+    Started a little bit on the A* algorithm
+
+[33mcommit d34414f7da34dc6182e8127a8be9babd4f396582[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Jul 21 19:05:20 2024 -0400
+
+    The webpage now builds a blank page correctly and the skeletons just need to be added
+
+[33mcommit b277c6685b0bc4522323b3af79ba101d60e70c55[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Jul 21 19:04:26 2024 -0400
+
+    Created HTML and CSS mock ups of what the skeletons of the web pages should look like
+
+[33mcommit 46801f18402c6dbe5fd0581452b95ccbd094bd72[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Jul 21 19:03:46 2024 -0400
+
+    Created files to do some basic analysis on logged data. Also started logging
+    that data.
+
+[33mcommit d346c42e80e48e98710db6efa50f2d358519be48[m
+Author: Mitchell_Dorward <mgd225@lehigh.edu>
+Date:   Sun Jun 16 22:36:18 2024 -0400
+
+    Set up a lot of backend
+
+[33mcommit aeebb8b3ef8d08da99312ecac061ddceb0cf947c[m
+Author: Mitchell Dorward <mitchdor48@gmail.com>
+Date:   Sun Jun 2 21:52:11 2024 -0400
+
+    Set up backend
+
+[33mcommit 752140c5818b05e4cfdb962915856a30b6c5b48b[m
+Author: Mitchell Dorward <mitchdor48@gmail.com>
+Date:   Tue May 21 23:34:21 2024 -0400
+
+    Split frontend and backend into two processes
+
+[33mcommit e98c09cda7cb1e0c4679e9d0b668f4b1a5468522[m
+Author: Mitchell Dorward <mitchdor48@gmail.com>
+Date:   Tue May 21 22:08:31 2024 -0400
+
+    Set it up to be a react app
+
+[33mcommit ff2fed0ec894cd219c6b7f04f0ee8a9059a80fc9[m
+Author: Mitchell Dorward <mitchdor48@gmail.com>
+Date:   Tue May 21 21:46:01 2024 -0400
+
+  
