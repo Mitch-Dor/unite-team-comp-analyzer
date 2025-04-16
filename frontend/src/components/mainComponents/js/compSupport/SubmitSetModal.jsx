@@ -28,14 +28,16 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData }) {
         async function fetchAllData() {
             try {
                 // Fetch all data to prepopulate dropdowns
-                const events = await fetchAllEvents();
-                const teams = await fetchAllTeams();
-                const players = await fetchAllPlayers();
-                const charactersAndMoves = await fetchAllCharactersAndMoves();  
-                setEvents(events);
-                setTeams(teams);
-                setPlayers(players);
-                setCharactersAndMoves(charactersAndMoves);
+                const fetchedEvents = await fetchAllEvents();
+                const fetchedTeams = await fetchAllTeams();
+                const fetchedPlayers = await fetchAllPlayers();
+                const fetchedCharactersAndMoves = await fetchAllCharactersAndMoves();  
+                // Sort all in alphabetical order
+                setEvents(fetchedEvents.sort((a, b) => a.event_name.localeCompare(b.event_name)));
+                setTeams(fetchedTeams.sort((a, b) => a.team_name.localeCompare(b.team_name)));
+                setPlayers(fetchedPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name)));
+                // Doesn't need to be sorted. Is already in order of creation / proper move order
+                setCharactersAndMoves(fetchedCharactersAndMoves);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -906,7 +908,7 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                 <div className="dropdown-options" ref={optionsRef}>
                     {options.map((option, index) => (
                         <div
-                            key={option}
+                            key={option.pokemon_id || option.move_id || option.pokemon_name || option.move_name || index}
                             className={`dropdown-option ${index === currentTarget ? 'target' : ''}`}
                             onClick={() => {
                                 onChange(option);
