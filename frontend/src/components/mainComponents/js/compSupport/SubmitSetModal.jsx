@@ -288,7 +288,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData }) {
         }
 
         function checkNull(data, field, i) {
-            if (data === null || data === undefined) {
+            if (data === null || data === undefined || data === "") {
                 // Add the field to the error message
                 if (i === 0) {
                     // Error in event data
@@ -305,7 +305,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData }) {
             return data;
         }
         function checkNull(data, field) {
-            if (data === null || data === undefined) {
+            if (data === null || data === undefined || data === "") {
                 // Add the field to the error message
                 error += "\n" + field;
                 errorCount++;
@@ -341,16 +341,16 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData }) {
                 >Player</div>
             </div>
             {creationState === 0 && (
-                <SetInsertion key={resetKey} setSetInsertion={setSetInsertion} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} />
+                <SetInsertion resetKey={resetKey} setSetInsertion={setSetInsertion} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} />
             )}
             {creationState === 1 && (
-                <EventCreation key={resetKey} setEventInsertion={setEventInsertion} />
+                <EventCreation resetKey={resetKey} setEventInsertion={setEventInsertion} />
             )}
             {creationState === 2 && (
-                <TeamCreation key={resetKey} setTeamInsertion={setTeamInsertion} />
+                <TeamCreation resetKey={resetKey} setTeamInsertion={setTeamInsertion} />
             )}
             {creationState === 3 && (
-                <PlayerCreation key={resetKey} setPlayerInsertion={setPlayerInsertion} />
+                <PlayerCreation resetKey={resetKey} setPlayerInsertion={setPlayerInsertion} />
             )}
             {/* Submit Button */}
             <button id="set-submit-button" onClick={submitComp}>Submit</button>
@@ -361,14 +361,14 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData }) {
 }
 
 // The full insertion form for a set
-function SetInsertion({ key, setSetInsertion, events, teams, players, charactersAndMoves }) {
+function SetInsertion({ resetKey, setSetInsertion, events, teams, players, charactersAndMoves }) {
     const [match1, setMatch1] = useState(null);
     const [match2, setMatch2] = useState(null);
     const [match3, setMatch3] = useState(null);
     const [match4, setMatch4] = useState(null);
     const [match5, setMatch5] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
-    const [setDescriptor, setSetDescriptor] = useState(null);
+    const [setDescriptor, setSetDescriptor] = useState("");
 
     const resetForm = () => {
         setMatch1(null);
@@ -377,7 +377,7 @@ function SetInsertion({ key, setSetInsertion, events, teams, players, characters
         setMatch4(null);
         setMatch5(null);
         setSelectedEvent(null);
-        setSetDescriptor(null);
+        setSetDescriptor("");
     };
 
     useEffect(() => {
@@ -394,7 +394,7 @@ function SetInsertion({ key, setSetInsertion, events, teams, players, characters
 
     useEffect(() => {
         resetForm();
-    }, [key]);
+    }, [resetKey]);
 
     return (
         <div id="set-creation" className="comp-card">
@@ -430,26 +430,26 @@ function SetInsertion({ key, setSetInsertion, events, teams, players, characters
             {/* Set Descriptor (Text Input) */}
             <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={1}/>
+                <MatchInsertion resetKey={resetKey} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={1}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={2}/>
+                <MatchInsertion resetKey={resetKey} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={2}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={3}/>
+                <MatchInsertion resetKey={resetKey} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={3}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={4}/>
+                <MatchInsertion resetKey={resetKey} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={4}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion key={key} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={5}/>
+                <MatchInsertion resetKey={resetKey} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={5}/>
             </div>
         </div>
     );
 }
 
 // Match insertion form for a set (Used in SetInsertion)
-function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, matchNumber }) {
+    function MatchInsertion({ resetKey, setMatch, teams, players, charactersAndMoves, matchNumber }) {
     const [comp1, setComp1] = useState(null);
     const [comp2, setComp2] = useState(null);
     const [matchWinner, setMatchWinner] = useState(null);
@@ -473,7 +473,7 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
 
     useEffect(() => {
         resetForm();
-    }, [key]);
+    }, [resetKey]);
 
     // Filter out characters that are already banned or picked
     useEffect(() => {
@@ -526,7 +526,7 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
             <h3>Match {matchNumber}</h3>
             <div className="set-comp-content">
                 <CompInsertion 
-                    key={key} 
+                    resetKey={resetKey} 
                     setComp={setComp1} 
                     teams={teams} 
                     players={players} 
@@ -534,7 +534,7 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
                     unavailableCharacters={unavailableCharacters}
                 />
                 <CompInsertion 
-                    key={key} 
+                    resetKey={resetKey} 
                     setComp={setComp2} 
                     teams={teams} 
                     players={players} 
@@ -544,7 +544,7 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
             </div>
             {/* Match Winner Dropdown */}
             <div className="match-winner-dropdown">
-                <select value={matchWinner} onChange={(e) => setMatchWinner(e.target.value)}>
+                <select value={matchWinner ? matchWinner : ""} onChange={(e) => setMatchWinner(e.target.value)}>
                     <option value="">Winner Select</option>
                     <option value="1">{pickedTeams.team1}</option>
                     <option value="2">{pickedTeams.team2}</option>
@@ -555,7 +555,7 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
 }
 
 // Comp insertion form for a match (Used in SetInsertion)
-function CompInsertion({ key, setComp, teams, players, charactersAndMoves, unavailableCharacters }) {
+function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, unavailableCharacters }) {
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [teamIsFirstPick, setTeamIsFirstPick] = useState(false);
     const [ban1, setBan1] = useState(null);
@@ -622,7 +622,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, unava
 
     useEffect(() => {
         resetForm();
-    }, [key]);
+    }, [resetKey]);
 
     // Get unique pokemon_name and pokemon_id combinations
     const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
@@ -691,7 +691,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, unava
             <div className="team-comp">
                 {/* Pokemon / Players */}
                 <CharacterPlayer 
-                    key={key}
+                    resetKey={resetKey}
                     character={pokemon1} 
                     move1={pokemon1move1} 
                     move2={pokemon1move2} 
@@ -705,7 +705,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, unava
                     unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
-                    key={key}
+                    resetKey={resetKey}
                     character={pokemon2} 
                     move1={pokemon2move1} 
                     move2={pokemon2move2} 
@@ -719,7 +719,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, unava
                     unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
-                    key={key}
+                    resetKey={resetKey}
                     character={pokemon3} 
                     move1={pokemon3move1} 
                     move2={pokemon3move2} 
@@ -733,7 +733,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, unava
                     unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
-                    key={key}
+                    resetKey={resetKey}
                     character={pokemon4} 
                     move1={pokemon4move1} 
                     move2={pokemon4move2} 
@@ -747,7 +747,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, unava
                     unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
-                    key={key}
+                    resetKey={resetKey}
                     character={pokemon5} 
                     move1={pokemon5move1} 
                     move2={pokemon5move2} 
@@ -928,7 +928,7 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
 }
 
 // Character and player insertion form for a comp (Used in SetInsertion)
-function CharacterPlayer({ key, character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer, charactersAndMoves, players, unavailableCharacters }) {
+function CharacterPlayer({ resetKey, character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer, charactersAndMoves, players, unavailableCharacters }) {
     // Get available moves for the selected character
     const getPokemonMoves = (pokemonName) => {
         if (!pokemonName) return [];
@@ -997,7 +997,7 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
 }
 
 // Creation form for JUST event
-function EventCreation({ key, setEventInsertion }) {
+function EventCreation({ resetKey, setEventInsertion }) {
     const [eventName, setEventName] = useState(null);
     const [eventDate, setEventDate] = useState(null);
     const [eventVodUrl, setEventVodUrl] = useState(null);
@@ -1018,7 +1018,7 @@ function EventCreation({ key, setEventInsertion }) {
 
     useEffect(() => {
         resetForm();
-    }, [key]);
+    }, [resetKey]);
 
     return (
         <div id="event-creation">
@@ -1033,7 +1033,7 @@ function EventCreation({ key, setEventInsertion }) {
 }
 
 // Creation form for JUST a team
-function TeamCreation({ key, setTeamInsertion }) {
+function TeamCreation({ resetKey, setTeamInsertion }) {
     const [teamName, setTeamName] = useState(null);
     const [teamRegion, setTeamRegion] = useState(null);
 
@@ -1052,7 +1052,7 @@ function TeamCreation({ key, setTeamInsertion }) {
 
     useEffect(() => {
         resetForm();
-    }, [key]);
+    }, [resetKey]);
 
     return (
         <div id="team-creation">
@@ -1065,7 +1065,7 @@ function TeamCreation({ key, setTeamInsertion }) {
 }
 
 // Creation form for JUST a player
-function PlayerCreation({ key, setPlayerInsertion }) {
+function PlayerCreation({ resetKey, setPlayerInsertion }) {
     const [playerName, setPlayerName] = useState(null);
 
     const resetForm = () => {
@@ -1082,7 +1082,7 @@ function PlayerCreation({ key, setPlayerInsertion }) {
 
     useEffect(() => {
         resetForm();
-    }, [key]);
+    }, [resetKey]);
 
     return (
         <div id="player-creation">

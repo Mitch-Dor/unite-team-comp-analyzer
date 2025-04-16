@@ -57,7 +57,10 @@ function Comps() {
         mainContainer.style.backgroundPosition = "center";
         mainContainer.style.backgroundAttachment = "fixed";
       } else {
-        console.error("mainContainer not found");
+        if (!loading) {
+          // If the page is still loading mainContainer is expected to not be found
+          console.error("mainContainer not found");
+        }
       }
     }, 0);
   }, [loading]);
