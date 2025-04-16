@@ -456,6 +456,8 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
     const [comp1, setComp1] = useState(null);
     const [comp2, setComp2] = useState(null);
     const [matchWinner, setMatchWinner] = useState(null);
+    // Just used in this and lower components. Not sent up components to database
+    const [unavailableCharacters, setUnavailableCharacters] = useState([]);
 
     const resetForm = () => {
         setComp1(null);
@@ -475,6 +477,45 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
         resetForm();
     }, [key]);
 
+    // Filter out characters that are already banned or picked
+    useEffect(() => {
+        // When comp1 and comp2 are null, use all characters
+        if (!comp1 && !comp2) {
+            setUnavailableCharacters([[]]);
+            return;
+        }
+        
+        // comp#[3-4] are bans. comp#[5-9] are picks
+        // Remove the banned characters from the available characters
+        const bannedCharacters = [];
+        if (comp1) {
+            [comp1[3], comp1[4]].forEach(ban => {
+                if (ban && ban.pokemon_id) bannedCharacters.push(ban.pokemon_id);
+            });
+        }
+        if (comp2) {
+            [comp2[3], comp2[4]].forEach(ban => {
+                if (ban && ban.pokemon_id) bannedCharacters.push(ban.pokemon_id);
+            });
+        }
+        
+        // Remove the picks from the available characters
+        const picks = [];
+        if (comp1) {
+            [comp1[4], comp1[5], comp1[6], comp1[7], comp1[8]].forEach(pick => {
+                if (pick && pick.pokemon_id) picks.push(pick.pokemon_id);
+            });
+        }
+        if (comp2) {
+            [comp2[4], comp2[5], comp2[6], comp2[7], comp2[8]].forEach(pick => {
+                if (pick && pick.pokemon_id) picks.push(pick.pokemon_id);
+            });
+        }
+        
+        // Combine bannedCharacters and picks
+        setUnavailableCharacters([...bannedCharacters, ...picks]);
+    }, [comp1, comp2, charactersAndMoves]);
+
     return (
         <div id="match-insertion">
             <h3>Match {matchNumber}</h3>
@@ -485,6 +526,7 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
                     teams={teams} 
                     players={players} 
                     charactersAndMoves={charactersAndMoves}
+                    unavailableCharacters={unavailableCharacters}
                 />
                 <CompInsertion 
                     key={key} 
@@ -492,6 +534,7 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
                     teams={teams} 
                     players={players} 
                     charactersAndMoves={charactersAndMoves}
+                    unavailableCharacters={unavailableCharacters}
                 />
             </div>
             {/* Match Winner Dropdown */}
@@ -507,7 +550,7 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
 }
 
 // Comp insertion form for a match (Used in SetInsertion)
-function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
+function CompInsertion({ key, setComp, teams, players, charactersAndMoves, unavailableCharacters }) {
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [teamIsFirstPick, setTeamIsFirstPick] = useState(false);
     const [ban1, setBan1] = useState(null);
@@ -576,6 +619,14 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
         resetForm();
     }, [key]);
 
+    // Get unique pokemon_name and pokemon_id combinations
+    const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
+    // Filter out unavailable characters
+    console.log(unavailableCharacters)
+    const filteredUniquePokemon = uniquePokemon.filter(char => 
+        !unavailableCharacters.includes(char.pokemon_id) || !unavailableCharacters.some(id => id !== null && id !== undefined)
+    );
+
     return (
         <div id="comp-insertion">
             <div className="set-team-header">
@@ -619,7 +670,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
                 <CustomDropdown
                     value={ban1}
                     onChange={setBan1}
-                    options={[...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str))}
+                    options={filteredUniquePokemon}
                     placeholder="Ban 1 Select"
                     disabled={false}
                     path="/assets/Draft/headshots"
@@ -627,7 +678,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
                 <CustomDropdown
                     value={ban2}
                     onChange={setBan2}
-                    options={[...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str))}
+                    options={filteredUniquePokemon}
                     placeholder="Ban 2 Select"
                     disabled={false}
                     path="/assets/Draft/headshots"
@@ -647,6 +698,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
                     setPlayer={setPlayer1}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
+                    unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
                     key={key}
@@ -660,6 +712,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
                     setPlayer={setPlayer2}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
+                    unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
                     key={key}
@@ -673,6 +726,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
                     setPlayer={setPlayer3}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
+                    unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
                     key={key}
@@ -686,6 +740,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
                     setPlayer={setPlayer4}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
+                    unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
                     key={key}
@@ -699,6 +754,7 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves }) {
                     setPlayer={setPlayer5}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
+                    unavailableCharacters={unavailableCharacters}
                 />
             </div>
         </div>
@@ -868,7 +924,7 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
 }
 
 // Character and player insertion form for a comp (Used in SetInsertion)
-function CharacterPlayer({ key, character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer, charactersAndMoves, players }) {
+function CharacterPlayer({ key, character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer, charactersAndMoves, players, unavailableCharacters }) {
     // Get available moves for the selected character
     const getPokemonMoves = (pokemonName) => {
         if (!pokemonName) return [];
@@ -884,7 +940,11 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
     const availableMoves = character ? getPokemonMoves(character.pokemon_name) : [];
     // Get unique pokemon_name and pokemon_id combinations
     const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
-
+    // Filter out unavailable characters
+    const filteredUniquePokemon = uniquePokemon.filter(char => 
+        !unavailableCharacters.includes(char.pokemon_id) || !unavailableCharacters.some(id => id !== null && id !== undefined)
+    );
+    
     return (
         <div className="set-character-player">
             {/* Character Dropdown */}
@@ -895,7 +955,7 @@ function CharacterPlayer({ key, character, move1, move2, player, setCharacter, s
                     setMove1(null);
                     setMove2(null);
                 }}
-                options={uniquePokemon}
+                options={filteredUniquePokemon}
                 placeholder="Character Select"
                 path="/assets/Draft/headshots"
             />
