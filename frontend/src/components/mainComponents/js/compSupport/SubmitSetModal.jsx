@@ -458,6 +458,7 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
     const [matchWinner, setMatchWinner] = useState(null);
     // Just used in this and lower components. Not sent up components to database
     const [unavailableCharacters, setUnavailableCharacters] = useState([]);
+    const [pickedTeams, setPickedTeams] = useState({team1: "Team 1", team2: "Team 2"});
 
     const resetForm = () => {
         setComp1(null);
@@ -483,6 +484,13 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
         if (!comp1 && !comp2) {
             setUnavailableCharacters([[]]);
             return;
+        }
+
+        if (comp1 && comp1[0]) {
+            setPickedTeams({team1: comp1[0].team_name, team2: pickedTeams.team2});
+        }
+        if (comp2 && comp2[0]) {
+            setPickedTeams({team1: pickedTeams.team1, team2: comp2[0].team_name});
         }
         
         // comp#[3-4] are bans. comp#[5-9] are picks
@@ -541,8 +549,8 @@ function MatchInsertion({ key, setMatch, teams, players, charactersAndMoves, mat
             <div className="match-winner-dropdown">
                 <select value={matchWinner} onChange={(e) => setMatchWinner(e.target.value)}>
                     <option value="">Winner Select</option>
-                    <option value="1">Team 1</option>
-                    <option value="2">Team 2</option>
+                    <option value="1">{pickedTeams.team1}</option>
+                    <option value="2">{pickedTeams.team2}</option>
                 </select>
             </div>
         </div>
