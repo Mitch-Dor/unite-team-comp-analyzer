@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../css/comps.css';
 import { fetchAllComps } from './backendCalls/http';
 import SubmitSetModal from './compSupport/SubmitSetModal';
+import MatchDisplay from './compSupport/MatchDisplay';
 
 function Comps() {
   const [compsData, setCompsData] = useState([]);
@@ -69,9 +70,6 @@ function Comps() {
     return <div className="loading-container">Loading...</div>;
   }
 
-  const firstPickNumbers = [1, 4, 5, 8, 9];
-  const secondPickNumbers = [2, 3, 6, 7, 10];
-
   return (
     <div id="mainContainer" className="main-container">
       {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCompsData={setCompsData} compsData={compsData} />}
@@ -80,129 +78,7 @@ function Comps() {
           <h1 className="page-title">Team Compositions</h1>
           
           {compsData.map((match, index) => (
-            <div key={index} className="comp-card">
-              <div className="comp-header">
-                <div className="comp-event-name-vod-container">
-                  <div className="comp-event">{match.event}</div>
-                  <div className="event-vod">
-                    <a href={match.vod} target="_blank" rel="noopener noreferrer">
-                      <img src="/assets/icons/youtube.png" alt="VOD" />
-                    </a>
-                  </div>
-                </div>
-                <div className="comp-date">{match.matchDate}</div>
-              </div>
-              
-              <div className="comp-content">
-                {/* Team 1 */}
-                <div className={`team-side ${match.winningTeam === 1 ? 'winning-team' : ''}`}>
-                  <div className="team-header">
-                    <div className="team-name">{match.team1.name}</div>
-                    <div className="team-region">{match.team1.region}</div>
-                    {match.team1.firstPick && <div className="first-pick">First Pick</div>}
-                  </div>
-                  
-                  <div className="team-bans">
-                    <div className="ban-label">Bans:</div>
-                    {match.team1.bans.map((ban, i) => (
-                      <div key={i} className="ban-pokemon">
-                        <img 
-                          src={`/assets/Draft/headshots/${ban}.png`} 
-                          alt={ban} 
-                          className="pokemon-icon ban"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="team-comp">
-                    {match.team1.pokemon.map((pokemon, i) => (
-                      <div key={i} className="draft-row">
-                        <div className="draft-number">{match.team1.firstPick === true ? firstPickNumbers[i] : secondPickNumbers[i]}</div>
-                        <img 
-                          src={`/assets/Draft/headshots/${pokemon}.png`} 
-                          alt={pokemon} 
-                          className="pokemon-icon"
-                        />
-                        <div className="pokemon-name">
-                          {pokemon}
-                          <div className="move-icons">
-                            <img 
-                              src={`/assets/Draft/moves/${pokemon}_${match.team1.pokemon_moves[i * 2].replace(/ /g, '_')}.png`}
-                              alt={match.team1.pokemon_moves[i * 2]}
-                              className="move-icon"
-                            />
-                            <img 
-                              src={`/assets/Draft/moves/${pokemon}_${match.team1.pokemon_moves[i * 2 + 1].replace(/ /g, '_')}.png`}
-                              alt={match.team1.pokemon_moves[i * 2 + 1]}
-                              className="move-icon"
-                            />
-                          </div>
-                        </div>
-                        <div className="player-name">{match.team1.players[i] || '—'}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Team 2 */}
-                <div className={`team-side ${match.winningTeam === 2 ? 'winning-team' : ''}`}>
-                  <div className="team-header">
-                    <div className="team-name">{match.team2.name}</div>
-                    <div className="team-region">{match.team2.region}</div>
-                    {match.team2.firstPick && <div className="first-pick">First Pick</div>}
-                  </div>
-                  
-                  <div className="team-bans">
-                    <div className="ban-label">Bans:</div>
-                    {match.team2.bans.map((ban, i) => (
-                      <div key={i} className="ban-pokemon">
-                        <img 
-                          src={`/assets/Draft/headshots/${ban}.png`} 
-                          alt={ban} 
-                          className="pokemon-icon ban"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="team-comp">
-                    {match.team2.pokemon.map((pokemon, i) => (
-                      <div key={i} className="draft-row">
-                        <div className="draft-number">{match.team2.firstPick === true ? firstPickNumbers[i] : secondPickNumbers[i]}</div>
-                        <img 
-                          src={`/assets/Draft/headshots/${pokemon}.png`} 
-                          alt={pokemon} 
-                          className="pokemon-icon"
-                        />
-                        <div className="pokemon-name">
-                          {pokemon}
-                          <div className="move-icons">
-                            <img 
-                              src={`/assets/Draft/moves/${pokemon}_${match.team2.pokemon_moves[i * 2].replace(/ /g, '_')}.png`}
-                              alt={match.team2.pokemon_moves[i * 2]}
-                              className="move-icon"
-                            />
-                            <img 
-                              src={`/assets/Draft/moves/${pokemon}_${match.team2.pokemon_moves[i * 2 + 1].replace(/ /g, '_')}.png`}
-                              alt={match.team2.pokemon_moves[i * 2 + 1]}
-                              className="move-icon"
-                            />
-                          </div>
-                        </div>
-                        <div className="player-name">{match.team2.players[i] || '—'}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="comp-footer">
-                <div className="winner-label">
-                  Winner: <span className="winner-name">{match[`team${match.winningTeam}`].name}</span>
-                </div>
-              </div>
-            </div>
+            <MatchDisplay key={index} match={match} />
           ))}
         </div>
       </div>
