@@ -69,6 +69,9 @@ function Comps() {
     return <div className="loading-container">Loading...</div>;
   }
 
+  const firstPickNumbers = [1, 4, 5, 8, 9];
+  const secondPickNumbers = [2, 3, 6, 7, 10];
+
   return (
     <div id="mainContainer" className="main-container">
       {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCompsData={setCompsData} compsData={compsData} />}
@@ -115,7 +118,7 @@ function Comps() {
                   <div className="team-comp">
                     {match.team1.pokemon.map((pokemon, i) => (
                       <div key={i} className="draft-row">
-                        <div className="draft-number">{i + 1}</div>
+                        <div className="draft-number">{match.team1.firstPick === true ? firstPickNumbers[i] : secondPickNumbers[i]}</div>
                         <img 
                           src={`/assets/Draft/headshots/${pokemon}.png`} 
                           alt={pokemon} 
@@ -166,7 +169,7 @@ function Comps() {
                   <div className="team-comp">
                     {match.team2.pokemon.map((pokemon, i) => (
                       <div key={i} className="draft-row">
-                        <div className="draft-number">{i + 1}</div>
+                        <div className="draft-number">{match.team2.firstPick === true ? firstPickNumbers[i] : secondPickNumbers[i]}</div>
                         <img 
                           src={`/assets/Draft/headshots/${pokemon}.png`} 
                           alt={pokemon} 
