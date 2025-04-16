@@ -202,9 +202,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData }) {
             insertSet(databaseData).then(data => {
                 // Update the comp data on the comp display page with the new comps
                 // Do after sending to database to only show data that was successfully inserted
-                for (let k=0; k < formattedData.length; k++) {
-                    setCompsData([...compsData, formattedData[k]]);
-                }
+                setCompsData([...compsData, ...formattedData]);
                 // Clear the set insertion data and the input fields
                 setSetInsertion(null);
                 resetAllForms();
@@ -227,7 +225,6 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData }) {
                         event_date: eventInsertion.event_date,
                         vod_url: eventInsertion.vod_url
                     }
-                    console.log("New Event: ", newEvent);
                     // Put this new event in the events array
                     setEvents([...events, newEvent]);
                     // Clear the event insertion data and the input fields
@@ -630,7 +627,6 @@ function CompInsertion({ key, setComp, teams, players, charactersAndMoves, unava
     // Get unique pokemon_name and pokemon_id combinations
     const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
     // Filter out unavailable characters
-    console.log(unavailableCharacters)
     const filteredUniquePokemon = uniquePokemon.filter(char => 
         !unavailableCharacters.includes(char.pokemon_id) || !unavailableCharacters.some(id => id !== null && id !== undefined)
     );

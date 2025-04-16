@@ -76,7 +76,14 @@ function Comps() {
           {compsData.map((match, index) => (
             <div key={index} className="comp-card">
               <div className="comp-header">
-                <div className="comp-event">{match.event}</div>
+                <div className="comp-event-name-vod-container">
+                  <div className="comp-event">{match.event}</div>
+                  <div className="event-vod">
+                    <a href={match.vod} target="_blank" rel="noopener noreferrer">
+                      <img src="/assets/icons/youtube.png" alt="VOD" />
+                    </a>
+                  </div>
+                </div>
                 <div className="comp-date">{match.matchDate}</div>
               </div>
               
