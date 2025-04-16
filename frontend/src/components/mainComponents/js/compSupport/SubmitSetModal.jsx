@@ -492,16 +492,16 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
             setPickedTeams({team1: pickedTeams.team1, team2: comp2[0].team_name});
         }
         
-        // comp#[3-4] are bans. comp#[5-9] are picks
+        // comp#[2-3] are bans. comp#[4-8] are picks
         // Remove the banned characters from the available characters
         const bannedCharacters = [];
         if (comp1) {
-            [comp1[3], comp1[4]].forEach(ban => {
+            [comp1[2], comp1[3]].forEach(ban => {
                 if (ban && ban.pokemon_id) bannedCharacters.push(ban.pokemon_id);
             });
         }
         if (comp2) {
-            [comp2[3], comp2[4]].forEach(ban => {
+            [comp2[2], comp2[3]].forEach(ban => {
                 if (ban && ban.pokemon_id) bannedCharacters.push(ban.pokemon_id);
             });
         }
@@ -614,7 +614,7 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
         if (selectedTeam) {
             setComp([selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
         } else {
-            setComp([null, null, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+            setComp([null, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
         }
     }, [selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
 
