@@ -4,7 +4,7 @@ const routes = require('../../../../common/route_constants.js');
 
 const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, updateDraftState, updatePokemonStatus, draftProgression, numUsers, settings, targetPokemon, setTargetPokemon }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
 
-    function targetPokemon(pokemon){
+    function handleTargetPokemon(pokemon){
         // Check if the pokemon is already picked/banned
         const isUnavailable = team1Bans.includes(pokemon) || team2Bans.includes(pokemon) || team1Picks.includes(pokemon) || team2Picks.includes(pokemon);
         if (draftState !== 'done' && !isUnavailable){
@@ -26,7 +26,7 @@ const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Pick
                 pokemonList.map(pokemon => {
                     const isUnavailable = team1Bans.includes(pokemon) || team2Bans.includes(pokemon) || team1Picks.includes(pokemon) || team2Picks.includes(pokemon);
                     return (
-                        <div className={`draftCharacter ${pokemon.pokemon_class} ${isUnavailable ? 'unavailable' : 'available'} ${targetPokemon === pokemon ? 'targeted' : ''}`} key={pokemon.pokemon_id} onClick={() => {targetPokemon(pokemon)}}>
+                        <div key={pokemon.pokemon_name} className={`draftCharacter ${pokemon.pokemon_class} ${isUnavailable ? 'unavailable' : 'available'} ${targetPokemon === pokemon ? 'targeted' : ''}`} onClick={() => {handleTargetPokemon(pokemon)}}>
                             <img className="characterPortrait" src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
                             <h4>{pokemon.pokemon_name}</h4>
                         </div>

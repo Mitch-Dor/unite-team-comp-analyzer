@@ -21,11 +21,11 @@ function Draft() {
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
     const stateRef = useRef(null); // Ref to track the latest state
     const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
+    const timerRef = useRef(null); // Ref to store the timer timeout ID
 
     // Update the ref whenever targetPokemon changes
     useEffect(() => {
         targetPokemonRef.current = targetPokemon;
-        console.log(team1Bans, team2Bans, team1Picks, team2Picks);
     }, [targetPokemon]);
 
     const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
@@ -51,13 +51,27 @@ function Draft() {
     useEffect(() => {
         if (!loading) {
             if(draftState !== 'done'){
-                document.getElementById("timer").innerHTML = settings.timer;
-                stateRef.current = draftState; // Update the ref to the latest state
-                countdownTimer();
+                const timerElement = document.getElementById("timer");
+                if (timerElement) {
+                    timerElement.innerHTML = settings.timer;
+                    stateRef.current = draftState; // Update the ref to the latest state
+                    countdownTimer();
+                }
             } else {
-                document.getElementById("timer").innerHTML = 'Done';
+                const timerElement = document.getElementById("timer");
+                if (timerElement) {
+                    timerElement.innerHTML = 'Done';
+                }
             }
         }
+        
+        // Cleanup function to clear the timeout when component unmounts or draft state changes
+        return () => {
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+                timerRef.current = null;
+            }
+        };
     }, [draftState, loading]); // reset the timer any time draft state changes
 
     // Handles the AI's turn
@@ -163,10 +177,12 @@ function Draft() {
     function countdownTimer() {
         if(stateRef.current !== 'done'){
             const timer = document.getElementById("timer");
+            if (!timer) return; // Exit if timer element doesn't exist
+            
             const currTime = Number(timer.innerHTML);
             if(currTime > 0){
                 timer.innerHTML = currTime - 1;
-                setTimeout(() => {
+                timerRef.current = setTimeout(() => {
                     if (stateRef.current === draftState) {
                         countdownTimer(); // Continue countdown
                     }
@@ -260,15 +276,6 @@ function Draft() {
                     console.error('Unhandled draft state:', draftState);
             }
         }
-    }
-
-    function genRandomPokemon() {
-        const randIndex = Math.floor(Math.random() * pokemonList.length);
-        const pokemon = pokemonList[randIndex];
-        if (!team1Bans.includes(pokemon) && !team2Bans.includes(pokemon) && !team1Picks.includes(pokemon) && !team2Picks.includes(pokemon)) {
-            return pokemon;
-        } 
-        return genRandomPokemon();
     }
 
     function updatePokemonStatus(pokemon, newStatus) {

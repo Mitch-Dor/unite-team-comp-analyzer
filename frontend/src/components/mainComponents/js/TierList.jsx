@@ -20,7 +20,6 @@ function TierList() {
         try {
             const listing = await fetchCharacterDraftInfo();
             updatePokemonList(listing);
-            console.log(listing);
         } catch (error) {
             console.error("Error fetching Pokemon Data:", error);
         }

@@ -146,7 +146,10 @@ function Traits() {
       if (mainContainer) {
         mainContainer.style.backgroundImage = `url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png")`;
       } else {
-        console.error("mainContainer not found");
+        if (!loading){
+          // If the page is still loading mainContainer is expected to not be found
+          console.error("mainContainer not found");
+        }
       }
     }, 0);
   }, [loading]);
