@@ -1023,11 +1023,11 @@ function EventCreation({ resetKey, setEventInsertion }) {
     return (
         <div id="event-creation">
             {/* Event Name */}
-            <input type="text" value={eventName} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
+            <input type="text" value={eventName ? eventName : ""} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
             {/* Event Date */}
-            <input type="text" value={eventDate} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
+            <input type="text" value={eventDate ? eventDate : ""} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
             {/* Event VOD URL */}
-            <input type="text" value={eventVodUrl} placeholder="Event VOD URL" onChange={(e) => setEventVodUrl(e.target.value)} />
+            <input type="text" value={eventVodUrl ? eventVodUrl : ""} placeholder="Event VOD URL" onChange={(e) => setEventVodUrl(e.target.value)} />
         </div>
     )
 }
@@ -1057,9 +1057,9 @@ function TeamCreation({ resetKey, setTeamInsertion }) {
     return (
         <div id="team-creation">
             {/* Team Name */}
-            <input type="text" value={teamName} placeholder="Team Name" onChange={(e) => setTeamName(e.target.value)} />
+            <input type="text" value={teamName ? teamName : ""} placeholder="Team Name" onChange={(e) => setTeamName(e.target.value)} />
             {/* Team Region */}
-            <input type="text" value={teamRegion} placeholder="Team Region" onChange={(e) => setTeamRegion(e.target.value)} />
+            <input type="text" value={teamRegion ? teamRegion : ""} placeholder="Team Region" onChange={(e) => setTeamRegion(e.target.value)} />
         </div>
     );
 }
@@ -1087,7 +1087,7 @@ function PlayerCreation({ resetKey, setPlayerInsertion }) {
     return (
         <div id="player-creation">
             {/* Player Name */}
-            <input type="text" value={playerName} placeholder="Player Name" onChange={(e) => setPlayerName(e.target.value)} />
+            <input type="text" value={playerName ? playerName : ""} placeholder="Player Name" onChange={(e) => setPlayerName(e.target.value)} />
         </div>
     );
 }
