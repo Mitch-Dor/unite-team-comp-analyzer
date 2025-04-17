@@ -56,7 +56,7 @@ async function processAllSqlFiles() {
     const files = fs.readdirSync(SQL_DIR);
     
     for (const file of files) {
-      if (file.endsWith('.sql') && file !== 'createTables.sql' && file !== 'OGcreateTables.sql') {
+      if (file.endsWith('.sql') && file !== 'createTables.sql') {
         await executeSqlFile(path.join(SQL_DIR, file));
       }
     }
