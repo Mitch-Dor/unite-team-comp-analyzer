@@ -51,4 +51,10 @@ INSERT INTO professional_players (player_name) VALUES
 	 ('BlueberryGM'),
 	 ('Clxsh'),
 	 ('duckyloco'),
-	 ('1');
+	 ('1'),
+	 ('Fwii');
+INSERT INTO professional_players (player_name) VALUES
+	 ('Russ'),
+	 ('Luis7a'),
+	 ('Akeelo'),
+	 ('SoSadSam');

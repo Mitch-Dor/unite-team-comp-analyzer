@@ -9,3 +9,5 @@ INSERT INTO professional_teams (team_name,team_region) VALUES
 	 ('Nemesis','NA'),
 	 ('T3','NA'),
 	 ('TI Gang','NA');
+INSERT INTO professional_teams (team_name,team_region) VALUES
+	 ('YT','NA');

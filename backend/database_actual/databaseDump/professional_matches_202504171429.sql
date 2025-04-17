@@ -31,3 +31,7 @@ INSERT INTO professional_matches (set_id,team_1_comp_id,team_2_comp_id,team_1_ba
 	 (10,55,56,55,4,22,56,40,39,38,37,36,21,25,24,22,23,8,5),
 	 (11,57,58,22,56,8,20,41,42,43,44,45,46,47,48,49,34,9,10),
 	 (11,59,60,56,74,20,8,47,48,46,34,49,3,43,41,42,44,10,9);
+INSERT INTO professional_matches (set_id,team_1_comp_id,team_2_comp_id,team_1_ban_1,team_2_ban_1,team_1_ban_2,team_2_ban_2,team_1_player_1,team_1_player_2,team_1_player_3,team_1_player_4,team_1_player_5,team_2_player_1,team_2_player_2,team_2_player_3,team_2_player_4,team_2_player_5,team_1_id,team_2_id) VALUES
+	 (12,61,62,71,74,22,57,22,30,23,21,24,50,51,52,53,54,5,11),
+	 (12,65,64,71,74,46,55,53,51,52,50,54,22,30,23,21,24,11,5),
+	 (12,66,63,22,71,20,46,24,30,21,22,23,50,53,52,51,54,5,11);

@@ -87,4 +87,15 @@ function Comps() {
   );
 }
 
+function compsSorting() {
+  
+
+  return (
+    <div>
+      <h3>Sorting</h3>
+      
+    </div>
+  )
+}
+
 export default Comps;
