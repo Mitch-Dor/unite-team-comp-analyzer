@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import DraftListing from './draftSupport/DraftListing';
-import TeamDisplay from './draftSupport/TeamDisplay.jsx';
-import Filtering from './draftSupport/Filtering.jsx';
+import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
 import { fetchCharacterDraftInfo, runAStarAlgorithm } from './backendCalls/http.js';
 import '../css/draft.css';
 
-function Draft() {
+function SingleDraft() {
     const location = useLocation();
     const { numUsers, settings } = location.state || {};
     const [pokemonList, updatePokemonList] = useState([]);
@@ -16,10 +14,9 @@ function Draft() {
     const [team2Bans, updateTeam2Bans] = useState([]);
     const [team1Picks, updateTeam1Picks] = useState([]);
     const [team2Picks, updateTeam2Picks] = useState([]);
-    const [draftState, updateDraftState] = useState("team1Ban1");
+    const stateRef = useRef("team1Ban1"); // Initialize stateRef with first state
     const [idealComp, updateIdealComp] = useState(null);
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
-    const stateRef = useRef(null); // Ref to track the latest state
     const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
     const timerRef = useRef(null); // Ref to store the timer timeout ID
 
@@ -50,11 +47,10 @@ function Draft() {
 
     useEffect(() => {
         if (!loading) {
-            if(draftState !== 'done'){
+            if(stateRef.current !== 'done'){
                 const timerElement = document.getElementById("timer");
                 if (timerElement) {
                     timerElement.innerHTML = settings.timer;
-                    stateRef.current = draftState; // Update the ref to the latest state
                     countdownTimer();
                 }
             } else {
@@ -72,11 +68,11 @@ function Draft() {
                 timerRef.current = null;
             }
         };
-    }, [draftState, loading]); // reset the timer any time draft state changes
+    }, [stateRef.current, loading]); // reset the timer any time stateRef.current changes
 
     // Handles the AI's turn
     useEffect(() => {
-        if (draftState !== 'done'){
+        if (stateRef.current !== 'done'){
             if(numUsers == 0) {
                 // It's all AI just let them do their thing
                 const handleAITurn = async () => {
@@ -85,7 +81,7 @@ function Draft() {
                 };
                 handleAITurn();
             } else if (numUsers == 1) {
-                if ((settings.userTurn === "first" && draftState.includes("team2")) || (settings.userTurn === "second" && draftState.includes("team1"))){
+                if ((settings.userTurn === "first" && stateRef.current.includes("team2")) || (settings.userTurn === "second" && stateRef.current.includes("team1"))){
                     // There is a user but it's the AI's turn
                     const handleAITurn = async () => {
                         const choiceAI = await pickAI();
@@ -95,18 +91,18 @@ function Draft() {
                 }
             }
         }
-    }, [draftState]);
+    }, [stateRef.current]);
 
 
     // Lock in the AI pick once it has made it
     useEffect(() => {
         if (targetPokemon !== null){
-            if (draftState !== 'done'){
+            if (stateRef.current !== 'done'){
                 if(numUsers == 0) {
                     // It's all AI just let them do their thing
                     lockIn();
                 } else if (numUsers == 1) {
-                    if ((settings.userTurn === "first" && draftState.includes("team2")) || (settings.userTurn === "second" && draftState.includes("team1"))){
+                    if ((settings.userTurn === "first" && stateRef.current.includes("team2")) || (settings.userTurn === "second" && stateRef.current.includes("team1"))){
                         // There is a user but it's the AI's turn
                         lockIn();
                     }
@@ -124,7 +120,7 @@ function Draft() {
             let targetTeam = [];
             let opposingTeam = [];
             
-            if (draftState.startsWith('team1')) {
+            if (stateRef.current.startsWith('team1')) {
                 targetTeam = team1Picks;
                 opposingTeam = team2Picks;
             } else {
@@ -183,9 +179,7 @@ function Draft() {
             if(currTime > 0){
                 timer.innerHTML = currTime - 1;
                 timerRef.current = setTimeout(() => {
-                    if (stateRef.current === draftState) {
-                        countdownTimer(); // Continue countdown
-                    }
+                    countdownTimer(); // Continue countdown
                 }, 1000);
             } else {
                 if(Number.isNaN(currTime)){
@@ -198,25 +192,25 @@ function Draft() {
 
     function ranOutOfTime() {
         // Can just move to next index in draftProgression to keep track of draft state
-        const currentIndex = draftProgression.indexOf(draftState);
+        const currentIndex = draftProgression.indexOf(stateRef.current);
         // Ensure it's not the last state
         if (currentIndex >= 0 && currentIndex < draftProgression.length - 1) {
             // Get the next state
             const nextState = draftProgression[currentIndex + 1];
             // Update the draft state
-            updateDraftState(nextState);
+            stateRef.current = nextState;
             const none = {pokemon_name: 'none', pokemon_class: 'none'};
 
             let actionPokemon = none;
             if (targetPokemonRef.current !== null){
                 actionPokemon = targetPokemonRef.current;
-            } else if (draftState.startsWith('team1Pick') || draftState.startsWith('team2Pick')){
+            } else if (stateRef.current.startsWith('team1Pick') || stateRef.current.startsWith('team2Pick')){
                 actionPokemon = genRandomPokemon();
-            } else if (draftState.startsWith('team1Ban') || draftState.startsWith('team2Ban')){
+            } else if (stateRef.current.startsWith('team1Ban') || stateRef.current.startsWith('team2Ban')){
                 actionPokemon = none;
             }
             // Perform the action based on the current state
-            switch (draftState) {
+            switch (stateRef.current) {
                 case 'team1Ban1':
                 case 'team1Ban2':
                     updatePokemonStatus(actionPokemon, 'ban1');
@@ -240,7 +234,7 @@ function Draft() {
                     updatePokemonStatus(actionPokemon, 'team2');
                     break;
                 default:
-                    console.error('Unhandled draft state:', draftState);
+                    console.error('Unhandled draft state:', stateRef.current);
             }
         } else {
             console.warn('Draft is already at the final state or invalid state.');
@@ -249,7 +243,7 @@ function Draft() {
 
     function lockIn(){
         if(targetPokemon !== null){
-            switch (draftState) {
+            switch (stateRef.current) {
                 case 'team1Ban1':
                 case 'team1Ban2':
                     updatePokemonStatus(targetPokemon, 'ban1');
@@ -273,7 +267,7 @@ function Draft() {
                     updatePokemonStatus(targetPokemon, 'team2');
                     break;
                 default:
-                    console.error('Unhandled draft state:', draftState);
+                    console.error('Unhandled draft state:', stateRef.current);
             }
         }
     }
@@ -294,10 +288,10 @@ function Draft() {
                 break;
         }
         // Move the draft to the next state
-        const currentIndex = draftProgression.indexOf(draftState);
+        const currentIndex = draftProgression.indexOf(stateRef.current);
         if (currentIndex >= 0 && currentIndex < draftProgression.length - 1) {
             const nextState = draftProgression[currentIndex + 1];
-            updateDraftState(nextState);
+            stateRef.current = nextState;
         }
         // Reset the targetPokemon
         setTargetPokemon(null);
@@ -319,28 +313,9 @@ function Draft() {
 
   return (
     <div id="draftContainer">
-        <div id="purpleDraftContainer" className="draftContainer">
-            < TeamDisplay team={'purple'} bans={team1Bans} picks={team1Picks} ></TeamDisplay>
-        </div>
-        <div id="middlePartsContainer">
-            <div id="timerContainer">
-                <button id="timer"></button> 
-            </div>
-            <div id="draftBoardContainer">
-                < Filtering pokemonList={pokemonList} updateFilteredList={updateFilteredList} ></Filtering>
-                <div className="characterSelect">
-                    < DraftListing pokemonList={filteredList} team1Bans={team1Bans}  team2Bans={team2Bans}  team1Picks={team1Picks}  team2Picks={team2Picks} draftState={draftState} updateDraftState={updateDraftState} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} />
-                </div>
-            </div>
-            <div id="lockInContainer">
-                <button id="lockInBTN" className={targetPokemon !== null ? 'active' : ''} onClick={() => {lockIn()}}>Lock In</button>
-            </div>
-        </div>
-        <div id="orangeDraftContainer" className="draftContainer">
-        < TeamDisplay team={'orange'} bans={team2Bans} picks={team2Picks} ></TeamDisplay>
-        </div>
+        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
     </div>
   );
 }
 
-export default Draft;
+export default SingleDraft;
