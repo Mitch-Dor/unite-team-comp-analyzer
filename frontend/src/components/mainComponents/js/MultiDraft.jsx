@@ -18,10 +18,9 @@ function MultiDraft() {
     const [team2Bans, updateTeam2Bans] = useState([]);
     const [team1Picks, updateTeam1Picks] = useState([]);
     const [team2Picks, updateTeam2Picks] = useState([]);
-    const [draftState, updateDraftState] = useState("team1Ban1");
+    const stateRef = useRef("team1Ban1"); // Initialize with the first state
     const [idealComp, updateIdealComp] = useState(null);
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
-    const stateRef = useRef("team1Ban1"); // Ref to track the latest state
     const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
     const timerRef = useRef(null); // Ref to store the timer timeout ID
     
@@ -45,6 +44,15 @@ function MultiDraft() {
     useEffect(() => {
         targetPokemonRef.current = targetPokemon;
         console.log('targetPokemon changed:', targetPokemon);
+        // Send a message to the peer if it is the current user's turn to pick so we don't go in circles
+        console.log('stateRef.current:', stateRef.current);
+        console.log('isHostRef.current:', isHostRef.current);
+        if ((isHostRef.current && stateRef.current !== null && stateRef.current.includes('team2')) || (!isHostRef.current && stateRef.current !== null && stateRef.current.includes('team1'))){
+            if (targetPokemon !== null && isConnected && connectionRef.current && connectionRef.current.open) {
+                console.log('sending pokemon-selected to peer');
+                sendDraftAction('pokemon-selected', { pokemon: targetPokemon.pokemon_name });
+            }
+        }
     }, [targetPokemon]);
 
     // Initialize isConnectedRef to false
@@ -258,23 +266,7 @@ function MultiDraft() {
             }
         });
         
-        conn.on('data', (data) => {
-            console.log('Received message from peer:', data);
-            
-            // Handle different types of messages
-            if (data.type === 'draftAction') {
-                handleRemoteDraftAction(data.action, data.data);
-            } else if (data.type === 'targetPokemon') {
-                // Only update targetPokemon if it's different to avoid infinite loops
-                if (JSON.stringify(data.pokemon) !== JSON.stringify(targetPokemon)) {
-                    console.log('Received targetPokemon from peer:', data.pokemon);
-                    setTargetPokemon(data.pokemon);
-                }
-            } else if (data.type === 'connectionTest') {
-                console.log('Connection test received:', data.message);
-            }
-        });
-        
+        // Basic close and error handlers that don't depend on Pokemon data
         conn.on('close', () => {
             console.log('Connection to peer closed');
             setIsConnected(false);
@@ -287,9 +279,43 @@ function MultiDraft() {
             console.error('Peer connection error:', err);
             setConnectionStatus('Connection error: ' + err);
         });
+        
+        // Data listener will be set up after Pokemon list is loaded
     };
+    
+    // Set up the data listener once pokemonList is loaded so it has access to the loaded Pokemon list
+    useEffect(() => {
+        if (!loading && pokemonList.length > 0 && connectionRef.current) {
+            console.log('Setting up data listener now that Pokemon list is loaded');
+            
+            // Remove any existing data listener to avoid duplicates
+            connectionRef.current.off('data');
+            
+            // Set up new data listener with access to the loaded Pokemon list
+            connectionRef.current.on('data', (data) => {
+                console.log('Received message from peer:', data);
+                
+                // Handle different types of messages
+                if (data.type === 'draftAction') {
+                    handleRemoteDraftAction(data.action, data.data);
+                } else if (data.type === 'targetPokemon') {
+                    // Only update targetPokemon if it's different to avoid infinite loops
+                    console.log('targetPokemon:', targetPokemon);
+                    console.log('data.pokemon:', data.pokemon);
+                    if (JSON.stringify(data.pokemon) !== JSON.stringify(targetPokemon?.pokemon_name) && data.pokemon !== null) {
+                        console.log('Received targetPokemon from peer:', data.pokemon);
+                        const fullPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === data.pokemon);
+                        console.log('fullPokemon:', fullPokemon);
+                        setTargetPokemon(fullPokemon);
+                    }
+                } else if (data.type === 'connectionTest') {
+                    console.log('Connection test received:', data.message);
+                }
+            });
+        }
+    }, [loading, pokemonList, connection]);
 
-    // Handle draft actions received from peer
+    // Handle draft actions received from peer - modified to use current state
     const handleRemoteDraftAction = (action, data) => {
         console.log('Handling remote draft action:', action, data);
         
@@ -299,9 +325,13 @@ function MultiDraft() {
         switch (action) {
             case 'pokemon-selected':
                 console.log('pokemon-selected');
-                setTargetPokemon(data.pokemon);
+                console.log(pokemonList);
+                const fullPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === data.pokemon);
+                console.log('fullPokemon:', fullPokemon);
+                setTargetPokemon(fullPokemon);
                 break;
             case 'lock-in':
+                console.log('lock-in');
                 lockIn();
                 break;
             default:
@@ -319,10 +349,8 @@ function MultiDraft() {
             };
             connectionRef.current.send(message);
             console.log('Sent draft action:', action, data);
-            return true;
         } else {
             console.warn('Cannot send draft action - connection not open');
-            return false;
         }
     };
 
@@ -344,15 +372,13 @@ function MultiDraft() {
         setBackground();
     }, []); // Empty dependency array ensures this runs once when the component mounts
 
-    /*
     useEffect(() => {
         if (!loading) {
-            if(draftState !== 'done'){
+            if(stateRef.current !== 'done'){
                 const timerElement = document.getElementById("timer");
                 if (timerElement) {
-                    timerElement.innerHTML = settings.timer;
-                    stateRef.current = draftState; // Update the ref to the latest state
-                    countdownTimer();
+                    timerElement.innerHTML = 25; // settings.timer
+                    //countdownTimer();
                 }
             } else {
                 const timerElement = document.getElementById("timer");
@@ -369,25 +395,7 @@ function MultiDraft() {
                 timerRef.current = null;
             }
         };
-    }, [draftState, loading]); // reset the timer any time draft state changes
-    */
-
-    useEffect(() => {
-        // Send selected pokemon to peer if connected
-        console.log("Try to target");
-        console.log(isConnected);
-        console.log(connectionRef.current);
-        // Make sure it is the current user's turn to pick so we don't send messages in circles
-        // Change later to let users pick who is first pick but for now just host is second pick
-        console.log(isHostRef.current);
-        console.log(stateRef.current);
-        if ((isHostRef.current && stateRef.current.includes('team2')) || (!isHostRef.current && stateRef.current.includes('team1'))){
-            if (targetPokemon !== null && isConnected && connectionRef.current && connectionRef.current.open) {
-                console.log('sending pokemon-selected to peer');
-                sendDraftAction('pokemon-selected', { pokemon: targetPokemon });
-            }
-        }
-    }, [targetPokemon]);
+    }, [stateRef.current, loading]); // reset the timer any time stateRef.current changes
 
     function countdownTimer() {
         if(stateRef.current !== 'done'){
@@ -398,9 +406,7 @@ function MultiDraft() {
             if(currTime > 0){
                 timer.innerHTML = currTime - 1;
                 timerRef.current = setTimeout(() => {
-                    if (stateRef.current === draftState) {
-                        countdownTimer(); // Continue countdown
-                    }
+                    countdownTimer(); // Continue countdown
                 }, 1000);
             } else {
                 if(Number.isNaN(currTime)){
@@ -422,25 +428,25 @@ function MultiDraft() {
 
     function ranOutOfTime() {
         // Can just move to next index in draftProgression to keep track of draft state
-        const currentIndex = draftProgression.indexOf(draftState);
+        const currentIndex = draftProgression.indexOf(stateRef.current);
         // Ensure it's not the last state
         if (currentIndex >= 0 && currentIndex < draftProgression.length - 1) {
             // Get the next state
             const nextState = draftProgression[currentIndex + 1];
             // Update the draft state
-            updateDraftState(nextState);
+            stateRef.current = nextState;
             const none = {pokemon_name: 'none', pokemon_class: 'none'};
 
             let actionPokemon = none;
             if (targetPokemonRef.current !== null){
                 actionPokemon = targetPokemonRef.current;
-            } else if (draftState.startsWith('team1Pick') || draftState.startsWith('team2Pick')){
+            } else if (stateRef.current.startsWith('team1Pick') || stateRef.current.startsWith('team2Pick')){
                 actionPokemon = genRandomPokemon();
-            } else if (draftState.startsWith('team1Ban') || draftState.startsWith('team2Ban')){
+            } else if (stateRef.current.startsWith('team1Ban') || stateRef.current.startsWith('team2Ban')){
                 actionPokemon = none;
             }
             // Perform the action based on the current state
-            switch (draftState) {
+            switch (stateRef.current) {
                 case 'team1Ban1':
                 case 'team1Ban2':
                     updatePokemonStatus(actionPokemon, 'ban1');
@@ -464,7 +470,7 @@ function MultiDraft() {
                     updatePokemonStatus(actionPokemon, 'team2');
                     break;
                 default:
-                    console.error('Unhandled draft state:', draftState);
+                    console.error('Unhandled draft state:', stateRef.current);
             }
         } else {
             console.warn('Draft is already at the final state or invalid state.');
@@ -472,44 +478,57 @@ function MultiDraft() {
     }
 
     function lockIn(){
-        if(targetPokemon !== null){
+        console.log('targetPokemonRef:', targetPokemonRef.current);
+        if(targetPokemonRef.current !== null){
             // Send lock-in action to peer if connected
             console.log("try to lock in");
+            
+            // First check if it's appropriate for this user to make a lock-in
+            const isTeam1Turn = stateRef.current.includes('team1');
+            const isTeam2Turn = stateRef.current.includes('team2');
+            const isHostTurn = !isHostRef.current && isTeam1Turn;
+            const isGuestTurn = isHostRef.current && isTeam2Turn;
+            
+            // Send lock-in to peer when it's our turn
             if (isConnected && connectionRef.current && connectionRef.current.open) {
-                console.log("try to lock in 2");
-                sendDraftAction('lock-in', { pokemon: targetPokemon });
+                if (isHostTurn || isGuestTurn) {
+                    console.log('sending lock-in to peer');
+                    sendDraftAction('lock-in', { pokemon: targetPokemon.pokemon_name });
+                }
             }
             
-            switch (draftState) {
+            // Always process the lock-in locally regardless of who's turn it is
+            switch (stateRef.current) {
                 case 'team1Ban1':
                 case 'team1Ban2':
-                    updatePokemonStatus(targetPokemon, 'ban1');
+                    updatePokemonStatus(targetPokemonRef.current, 'ban1');
                     break;
                 case 'team2Ban1':
                 case 'team2Ban2':
-                    updatePokemonStatus(targetPokemon, 'ban2');
+                    updatePokemonStatus(targetPokemonRef.current, 'ban2');
                     break;
                 case 'team1Pick1':
                 case 'team1Pick2':
                 case 'team1Pick3':
                 case 'team1Pick4':
                 case 'team1Pick5':
-                    updatePokemonStatus(targetPokemon, 'team1');
+                    updatePokemonStatus(targetPokemonRef.current, 'team1');
                     break;
                 case 'team2Pick1':
                 case 'team2Pick2':
                 case 'team2Pick3':
                 case 'team2Pick4':
                 case 'team2Pick5':
-                    updatePokemonStatus(targetPokemon, 'team2');
+                    updatePokemonStatus(targetPokemonRef.current, 'team2');
                     break;
                 default:
-                    console.error('Unhandled draft state:', draftState);
+                    console.error('Unhandled draft state:', stateRef.current);
             }
         }
     }
 
     function updatePokemonStatus(pokemon, newStatus) {
+        console.log("updatePokemonStatus:", pokemon, newStatus);
         switch(newStatus) {
             case 'ban1':
                 updateTeam1Bans(prevBans => [...prevBans, pokemon]);
@@ -524,11 +543,15 @@ function MultiDraft() {
                 updateTeam2Picks(prevPicks => [...prevPicks, pokemon]);
                 break;
         }
+        console.log('stateRef.current:', stateRef.current);
         // Move the draft to the next state
-        const currentIndex = draftProgression.indexOf(draftState);
+        const currentIndex = draftProgression.indexOf(stateRef.current);
+        console.log('currentIndex:', currentIndex);
+        console.log('draftProgression:', draftProgression);
         if (currentIndex >= 0 && currentIndex < draftProgression.length - 1) {
             const nextState = draftProgression[currentIndex + 1];
-            updateDraftState(nextState);
+            console.log('nextState:', nextState);
+            stateRef.current = nextState;
         }
         // Reset the targetPokemon
         setTargetPokemon(null);
@@ -627,7 +650,8 @@ function MultiDraft() {
             <div id="draftBoardContainer">
                 <Filtering pokemonList={pokemonList} updateFilteredList={updateFilteredList} ></Filtering>
                 <div className="characterSelect">
-                    <DraftListing pokemonList={filteredList} team1Bans={team1Bans}  team2Bans={team2Bans}  team1Picks={team1Picks}  team2Picks={team2Picks} draftState={draftState} updateDraftState={updateDraftState} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} />
+                    {console.log("Rerendering: ", targetPokemon)}
+                    <DraftListing pokemonList={filteredList} team1Bans={team1Bans} team2Bans={team2Bans} team1Picks={team1Picks} team2Picks={team2Picks} draftState={stateRef.current} updateDraftState={(newState) => { stateRef.current = newState; }} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} />
                 </div>
             </div>
             <div id="lockInContainer">
