@@ -3,8 +3,17 @@ const path = require("path");
 const database = require('./database.js');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require("cors");
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
 app.use(cors());
 // Add middleware to parse JSON bodies
@@ -36,7 +45,13 @@ app.use(express.static(
   path.resolve(__dirname, "public")
 ));
 
-app.listen(3001, () => console.log("Backend Started On Port 3001"));
+// Socket.IO connection handler
+require('./socket/socketManager')(io);
 
+// Start the server
+server.listen(3001, () => console.log("Backend Started On Port 3001"));
+
+// Routes
 require('./routes/characters.js')(app, database);
 require('./routes/teams.js')(app, database);
+require('./routes/draftRoom.js')(app, database, io);

@@ -5,7 +5,7 @@ import TeamDisplay from './draftSupport/TeamDisplay.jsx';
 import Filtering from './draftSupport/Filtering.jsx';
 import { fetchCharacterDraftInfo, runAStarAlgorithm, createRoom as apiCreateRoom, getAllRooms, getRoomInfo } from './backendCalls/http.js';
 import '../css/draft.css';
-import Peer from 'simple-peer';
+import { Peer } from 'peerjs';
 import io from 'socket.io-client';
 
 function MultiDraft() {
@@ -21,30 +21,45 @@ function MultiDraft() {
     const [draftState, updateDraftState] = useState("team1Ban1");
     const [idealComp, updateIdealComp] = useState(null);
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
-    const stateRef = useRef(null); // Ref to track the latest state
+    const stateRef = useRef("team1Ban1"); // Ref to track the latest state
     const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
     const timerRef = useRef(null); // Ref to store the timer timeout ID
     
     // WebRTC and Room states
-    const [socket, setSocket] = useState(null);
-    const [roomId, setRoomId] = useState('');
+    const socketRef = useRef(null);
+    const roomIdRef = useRef('');
     const [isConnected, setIsConnected] = useState(false);
-    const [isHost, setIsHost] = useState(false);
     const [peer, setPeer] = useState(null);
+    const [connection, setConnection] = useState(null);
     const [inputRoomId, setInputRoomId] = useState('');
     const [showRoomIdInput, setShowRoomIdInput] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState('Disconnected');
     const peerRef = useRef(null);
+    const connectionRef = useRef(null);
+    const isHostRef = useRef(false);
+    const isConnectedRef = useRef(false);
+
+    const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
 
     // Update the ref whenever targetPokemon changes
     useEffect(() => {
         targetPokemonRef.current = targetPokemon;
+        console.log('targetPokemon changed:', targetPokemon);
     }, [targetPokemon]);
+
+    // Initialize isConnectedRef to false
+    useEffect(() => {
+        isConnectedRef.current = false;
+    }, []);
+
+    useEffect(() => {
+        console.log('isHost1:', isHostRef.current);
+    }, [isHostRef.current]);
 
     // Initialize socket connection
     useEffect(() => {
         const newSocket = io('http://localhost:3001');
-        setSocket(newSocket);
+        socketRef.current = newSocket;
 
         // Socket event listeners
         newSocket.on('connect', () => {
@@ -53,17 +68,16 @@ function MultiDraft() {
 
         newSocket.on('room-created', (data) => {
             console.log('Room created:', data);
-            setRoomId(data.roomId);
-            setIsHost(true);
-            setIsConnected(true);
+            roomIdRef.current = data.roomId;
+            isHostRef.current = true;
             setConnectionStatus('Waiting for opponent...');
         });
 
         newSocket.on('user-joined', (data) => {
             console.log('User joined:', data);
-            if (isHost) {
+            if (isHostRef.current) {
                 // If we're the host and someone joins, initiate the WebRTC connection
-                initiateWebRTCConnection();
+                initiatePeerConnection();
             }
             setConnectionStatus('User joined: ' + data.userId);
         });
@@ -77,34 +91,19 @@ function MultiDraft() {
             console.log('User left:', data);
             setConnectionStatus('Opponent disconnected');
             // Clean up peer connection if opponent leaves
-            if (peerRef.current) {
-                peerRef.current.destroy();
-                peerRef.current = null;
+            if (connectionRef.current) {
+                connectionRef.current.close();
+                connectionRef.current = null;
             }
-        });
-
-        newSocket.on('signal', (data) => {
-            console.log('Received signal:', data);
-            
-            // Handle WebRTC signaling
-            if (peerRef.current) {
-                peerRef.current.signal(data.signal);
-            } else if (!isHost) {
-                // If we're not the host, and we receive a signal before our peer object is created,
-                // this is likely the offer from the host, so create peer and handle it
-                answerWebRTCConnection(data.signal);
-            }
-        });
-
-        newSocket.on('error', (error) => {
-            console.error('Socket error:', error);
-            setConnectionStatus('Error: ' + error.message);
         });
 
         // Clean up on unmount
         return () => {
             if (peerRef.current) {
                 peerRef.current.destroy();
+            }
+            if (connectionRef.current) {
+                connectionRef.current.close();
             }
             newSocket.disconnect();
         };
@@ -115,75 +114,178 @@ function MultiDraft() {
         peerRef.current = peer;
     }, [peer]);
 
-    // WebRTC connection handlers
-    const initiateWebRTCConnection = () => {
-        // Create a new peer as the initiator (host)
-        const newPeer = new Peer({ initiator: true, trickle: false });
-        
-        // Set up peer event handlers
-        setupPeerEvents(newPeer);
-        
-        setPeer(newPeer);
-        console.log('Initiating WebRTC connection as host');
-    };
+    // Update connection ref when connection state changes
+    useEffect(() => {
+        connectionRef.current = connection;
+    }, [connection]);
 
-    const answerWebRTCConnection = (hostSignal) => {
-        // Create a new peer as the answerer (not initiator)
-        const newPeer = new Peer({ initiator: false, trickle: false });
+    // PeerJS connection handlers
+    const initiatePeerConnection = () => {
+        console.log('Initiating PeerJS connection as host');
+        // Create a new peer with random ID
+        const peerId = 'host-' + Math.random().toString(36).substring(2, 8);
         
-        // Set up peer event handlers
-        setupPeerEvents(newPeer);
-        
-        setPeer(newPeer);
-        console.log('Answering WebRTC connection as guest');
-        
-        // Signal the received offer
-        newPeer.signal(hostSignal);
-    };
-
-    const setupPeerEvents = (newPeer) => {
-        // Handle signal events for WebRTC negotiation
-        newPeer.on('signal', (data) => {
-            console.log('Generated signal:', data);
-            if (socket && roomId) {
-                // Send the signal through the signaling server
-                socket.emit('signal', {
-                    roomId,
-                    to: isHost ? null : socket.id, // If host, server will broadcast to others in room
-                    signal: data
+        try {
+            const newPeer = new Peer(peerId);
+            
+            newPeer.on('open', (id) => {
+                console.log('Host PeerJS connection opened with ID:', id);
+                setIsConnected(true);
+                isConnectedRef.current = true;
+                
+                // Wait for incoming connection
+                newPeer.on('connection', (conn) => {
+                    console.log('Host received connection from peer:', conn);
+                    
+                    setupConnectionEvents(conn);
+                    setConnection(conn);
+                    setConnectionStatus('Connected to peer!');
                 });
+                
+                // Inform guests of the host's peer ID through the socket
+                if (socketRef.current && roomIdRef.current) {
+                    console.log('Sending peer ID to guests via socket:', id);
+                    socketRef.current.emit('signal', {
+                        roomId: roomIdRef.current,
+                        to: null,
+                        signal: { type: 'peer-id', peerId: id }
+                    });
+                } else {
+                    console.error('Cannot send peer ID: socket or roomId is missing', { socket: !!socketRef.current, roomId: roomIdRef.current });
+                }
+            });
+            
+            newPeer.on('error', (err) => {
+                console.error('PeerJS error on host peer:', err);
+                setConnectionStatus('Host connection error: ' + err);
+            });
+            
+            setPeer(newPeer);
+        } catch (err) {
+            console.error('Error creating PeerJS object:', err);
+            setConnectionStatus('Failed to create connection: ' + err.message);
+        }
+    };
+
+    // Listen for peer ID from the host via socket.io
+    useEffect(() => {
+        if (socketRef.current) {
+            socketRef.current.on('signal', (data) => {
+                console.log('Received signal:', data);
+                
+                // Handle PeerJS signaling
+                if (data.signal && data.signal.type === 'peer-id') {
+                    console.log('Received peer ID:', data.signal.peerId);
+                    if (!isHostRef.current) {
+                        console.log('Client will connect to host with peer ID:', data.signal.peerId);
+                        // If we're not the host, connect to the host using their peer ID
+                        joinPeerConnection(data.signal.peerId);
+                    } else {
+                        console.log('Host received own peer ID signal, ignoring');
+                    }
+                } else {
+                    console.log('Received non-peer-id signal:', data.signal);
+                }
+            });
+        }
+        
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.off('signal');
+            }
+        };
+    }, []);
+
+    // Modify joinPeerConnection to have better debug logs and error handling
+    const joinPeerConnection = (hostPeerId) => {
+        console.log('Joining PeerJS connection as guest to host with ID:', hostPeerId);
+        // Create a new peer with random ID
+        const peerId = 'guest-' + Math.random().toString(36).substring(2, 8);
+        const newPeer = new Peer(peerId);
+        
+        newPeer.on('open', (id) => {
+            console.log('Guest PeerJS connection opened with ID:', id);
+            
+            // Connect to the host
+            try {
+                console.log('Attempting to connect to host:', hostPeerId);
+                const conn = newPeer.connect(hostPeerId);
+                
+                console.log('Created connection object:', conn);
+                
+                // Important: Need to wait for 'open' event on the conn object
+                // The handler is set up in setupConnectionEvents
+                setupConnectionEvents(conn);
+                setConnection(conn);
+            } catch (err) {
+                console.error('Error connecting to host:', err);
+                setConnectionStatus('Error connecting to host: ' + err.message);
             }
         });
-
-        // Handle when the peer connection is established
-        newPeer.on('connect', () => {
-            console.log('Peer connection established!');
-            setConnectionStatus('Connected to peer!');
-            setIsConnected(true);
+        
+        newPeer.on('error', (err) => {
+            console.error('PeerJS error on guest peer:', err);
+            setConnectionStatus('Connection error: ' + err);
         });
+        
+        setPeer(newPeer);
+    };
 
-        // Handle receiving data
-        newPeer.on('data', (data) => {
-            const message = JSON.parse(data.toString());
-            console.log('Received message:', message);
+    const setupConnectionEvents = (conn) => {
+        // Make sure the connection isn't null
+        if (!conn) {
+            console.error('Setup called with null connection');
+            return;
+        }
+        
+        console.log('Setting up connection events for connection:', conn);
+        
+        conn.on('open', () => {
+            console.log('Connection to peer successfully established!');
+            setIsConnected(true);
+            isConnectedRef.current = true;
+            setConnectionStatus('Connected to peer!');
+            
+            // Test the connection
+            try {
+                conn.send({
+                    type: 'connectionTest',
+                    message: 'Connection successful!'
+                });
+                console.log('Sent test message over peer connection');
+            } catch (err) {
+                console.error('Error sending test message:', err);
+            }
+        });
+        
+        conn.on('data', (data) => {
+            console.log('Received message from peer:', data);
             
             // Handle different types of messages
-            if (message.type === 'draftAction') {
-                handleRemoteDraftAction(message.action, message.data);
+            if (data.type === 'draftAction') {
+                handleRemoteDraftAction(data.action, data.data);
+            } else if (data.type === 'targetPokemon') {
+                // Only update targetPokemon if it's different to avoid infinite loops
+                if (JSON.stringify(data.pokemon) !== JSON.stringify(targetPokemon)) {
+                    console.log('Received targetPokemon from peer:', data.pokemon);
+                    setTargetPokemon(data.pokemon);
+                }
+            } else if (data.type === 'connectionTest') {
+                console.log('Connection test received:', data.message);
             }
         });
-
-        // Handle errors
-        newPeer.on('error', (err) => {
-            console.error('Peer connection error:', err);
-            setConnectionStatus('Connection error');
-        });
-
-        // Handle close
-        newPeer.on('close', () => {
-            console.log('Peer connection closed');
+        
+        conn.on('close', () => {
+            console.log('Connection to peer closed');
+            setIsConnected(false);
+            isConnectedRef.current = false;
             setConnectionStatus('Connection closed');
-            setPeer(null);
+            setConnection(null);
+        });
+        
+        conn.on('error', (err) => {
+            console.error('Peer connection error:', err);
+            setConnectionStatus('Connection error: ' + err);
         });
     };
 
@@ -192,8 +294,11 @@ function MultiDraft() {
         console.log('Handling remote draft action:', action, data);
         
         // "pokemon-selected" or "lock-in"
+        console.log(action);
+        console.log(data);
         switch (action) {
             case 'pokemon-selected':
+                console.log('pokemon-selected');
                 setTargetPokemon(data.pokemon);
                 break;
             case 'lock-in':
@@ -205,24 +310,21 @@ function MultiDraft() {
     };
 
     // Send draft actions to peer
-    // "pokemon-selected" or "lock-in"
     const sendDraftAction = (action, data) => {
-        if (peer && peer.connected) {
-            const message = JSON.stringify({
+        if (connection && connectionRef.current && connectionRef.current.open) {
+            const message = {
                 type: 'draftAction',
                 action,
                 data
-            });
-            peer.send(message);
+            };
+            connectionRef.current.send(message);
             console.log('Sent draft action:', action, data);
             return true;
         } else {
-            console.warn('Cannot send draft action - peer not connected');
+            console.warn('Cannot send draft action - connection not open');
             return false;
         }
     };
-
-    const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
 
     // Populates pokemonList with the return data from fetchCharacterDraftInfo() like name, class, id (status is initialized to none but will be changed to team1, team2, ban1, or ban2 to know where to place it and to gray it out) when the component first mounts.
     useEffect(() => {
@@ -270,13 +372,20 @@ function MultiDraft() {
     }, [draftState, loading]); // reset the timer any time draft state changes
     */
 
-    // Lock in the AI pick once it has made it
     useEffect(() => {
         // Send selected pokemon to peer if connected
-        console.log(peer);
-        if (targetPokemon !== null && isConnected && peer) {
-            console.log('sending pokemon-selected to peer');
-            sendDraftAction('pokemon-selected', { pokemon: targetPokemon });
+        console.log("Try to target");
+        console.log(isConnected);
+        console.log(connectionRef.current);
+        // Make sure it is the current user's turn to pick so we don't send messages in circles
+        // Change later to let users pick who is first pick but for now just host is second pick
+        console.log(isHostRef.current);
+        console.log(stateRef.current);
+        if ((isHostRef.current && stateRef.current.includes('team2')) || (!isHostRef.current && stateRef.current.includes('team1'))){
+            if (targetPokemon !== null && isConnected && connectionRef.current && connectionRef.current.open) {
+                console.log('sending pokemon-selected to peer');
+                sendDraftAction('pokemon-selected', { pokemon: targetPokemon });
+            }
         }
     }, [targetPokemon]);
 
@@ -365,7 +474,9 @@ function MultiDraft() {
     function lockIn(){
         if(targetPokemon !== null){
             // Send lock-in action to peer if connected
-            if (isConnected && peer && peer.connected) {
+            console.log("try to lock in");
+            if (isConnected && connectionRef.current && connectionRef.current.open) {
+                console.log("try to lock in 2");
                 sendDraftAction('lock-in', { pokemon: targetPokemon });
             }
             
@@ -446,9 +557,9 @@ function MultiDraft() {
             console.log('Room created response:', response);
             
             // Join the room in socket.io
-            if (socket) {
-                socket.emit('create-room', randomRoomId);
-                setRoomId(randomRoomId);
+            if (socketRef.current) {
+                socketRef.current.emit('create-room', randomRoomId);
+                roomIdRef.current = randomRoomId;
                 setConnectionStatus(`Room created: ${randomRoomId}`);
             }
         } catch (error) {
@@ -461,9 +572,9 @@ function MultiDraft() {
     function handleJoinRoom() {
         if (showRoomIdInput) {
             // If room ID input is already showing, attempt to join
-            if (inputRoomId && socket) {
-                socket.emit('join-room', inputRoomId);
-                setRoomId(inputRoomId);
+            if (inputRoomId && socketRef.current) {
+                socketRef.current.emit('join-room', inputRoomId);
+                roomIdRef.current = inputRoomId;
                 setConnectionStatus(`Joining room: ${inputRoomId}`);
                 setShowRoomIdInput(false);
             }
@@ -498,12 +609,12 @@ function MultiDraft() {
                     </div>
                 )}
                 <div id="connectionStatus">{connectionStatus}</div>
-                {roomId && <div id="roomIdDisplay">Room ID: {roomId}</div>}
+                {roomIdRef.current && <div id="roomIdDisplay">Room ID: {roomIdRef.current}</div>}
             </div>
         ) : (
             <div id="connectionInfo">
                 <div id="connectionStatus">{connectionStatus}</div>
-                {roomId && <div id="roomIdDisplay">Room ID: {roomId}</div>}
+                {roomIdRef.current && <div id="roomIdDisplay">Room ID: {roomIdRef.current}</div>}
             </div>
         )}
         <div id="purpleDraftContainer" className="draftContainer">
