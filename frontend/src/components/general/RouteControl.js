@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 // Pages and Routes
 import MainPage from '../mainComponents/js/Main';
 import Draft from '../mainComponents/js/Draft';
+import MultiDraft from '../mainComponents/js/MultiDraft';
 import ScoreComp from '../mainComponents/js/Score';
 import Stats from '../mainComponents/js/Stats';
 import TierList from '../mainComponents/js/TierList';
@@ -17,6 +18,7 @@ function RouteControl() {
         <Route exact path='/person-vs-ai' element={<Draft />} />
         <Route exact path='/ai-vs-ai' element={<Draft />} />
         <Route exact path='/person-vs-person' element={<Draft />} />
+        <Route exact path='/multi-draft' element={<MultiDraft />} />
         <Route exact path='/score-a-comp' element={<ScoreComp />} />
         <Route exact path='/stats' element={<Stats />} />
         <Route exact path='/tier-list' element={<TierList />} />

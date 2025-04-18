@@ -210,3 +210,46 @@ export async function insertSet(setMatches) {
     const setDataJson = await setData.json();
     return setDataJson;
 }
+
+// Function to create a new room
+export async function createRoom() {
+    const roomData = await fetch(routes.POST_ROOMS, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const roomDataJson = await roomData.json();
+    return roomDataJson;
+}
+
+// Function to get all rooms
+export async function getAllRooms() {
+    const roomData = await fetch(routes.GET_ROOMS, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const roomDataJson = await roomData.json();
+    return roomDataJson;
+}
+
+// Function to get room info by roomId
+export async function getRoomInfo(roomId) {
+    const roomData = await fetch(routes.GET_ROOM_INFO + roomId, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const roomDataJson = await roomData.json();
+    return roomDataJson;
+}
+
+
+
+
