@@ -644,4 +644,106 @@
     height: 20px;
 }
 
+.comps-sorting-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    min-height: 150px;
+    background-color: rgba(42, 42, 42, 0.85);
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
 
+.comps-sorting-container h3 {
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+.comps-sorting-dropdown-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.comps-sorting-dropdown {
+    width: 18%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: white;
+    font-size: 14px;
+    padding: 8px;
+}   
+
+.custom-dropdown-container {
+    width: 18%;
+}
+
+.custom-dropdown-container .custom-dropdown {
+    width: 100%;
+    font-size: 14px;
+}
+
+/* Add !important to force these styles */
+.comps-sorting-dropdown-container #sorting-pokemon-dropdown,
+#sorting-pokemon-dropdown {
+    width: 100% !important;
+    font-size: 14px !important;
+    height: 40px !important;
+}
+
+.comps-sorting-dropdown-container #sorting-pokemon-dropdown .dropdown-button,
+#sorting-pokemon-dropdown .dropdown-button {
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 8px !important;
+    font-size: 14px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.comps-sorting-dropdown-container #sorting-pokemon-dropdown .selected-option,
+#sorting-pokemon-dropdown .selected-option {
+    font-size: 14px !important; 
+}
+
+.comps-sorting-dropdown-container #sorting-pokemon-dropdown .dropdown-option,
+#sorting-pokemon-dropdown .dropdown-option {
+    font-size: 14px !important;
+    padding: 10px 8px !important;
+}
+
+/* Responsive adjustments for sorting container */
+@media (max-width: 1024px) {
+    .comps-sorting-dropdown-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .comps-sorting-dropdown, 
+    .custom-dropdown-container {
+        width: 90%;
+        margin-bottom: 10px;
+    }
+    
+    .comps-sorting-container {
+        height: auto;
+        padding: 20px 10px;
+    }
+}

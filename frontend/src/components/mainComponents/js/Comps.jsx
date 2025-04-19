@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import '../css/comps.css';
-import { fetchAllComps } from './backendCalls/http';
+import { fetchAllComps, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves } from './backendCalls/http';
 import SubmitSetModal from './compSupport/SubmitSetModal';
 import MatchDisplay from './compSupport/MatchDisplay';
+import CustomDropdown from './compSupport/CustomDropdown';
 
 function Comps() {
   const [compsData, setCompsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showSubmitForm, setShowSubmitForm] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [players, setPlayers] = useState([]);
+  const [charactersAndMoves, setCharactersAndMoves] = useState([]);
+  const [filteredComps, setFilteredComps] = useState([]);
 
   // Sample data - In a real app, this would come from an API
   useEffect(() => {
@@ -44,7 +50,29 @@ function Comps() {
         finalFormattedData.push(finalData);
       }
       setCompsData(finalFormattedData);
-      setLoading(false);
+
+      async function fetchAllData() {
+        try {
+            // Fetch all data to prepopulate dropdowns
+            const fetchedEvents = await fetchAllEvents();
+            const fetchedTeams = await fetchAllTeams();
+            const fetchedPlayers = await fetchAllPlayers();
+            const fetchedCharactersAndMoves = await fetchAllCharactersAndMoves();  
+            // Sort all in alphabetical order
+            setEvents(fetchedEvents.sort((a, b) => a.event_name.localeCompare(b.event_name)));
+            setTeams(fetchedTeams.sort((a, b) => a.team_name.localeCompare(b.team_name)));
+            setPlayers(fetchedPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name)));
+            // Doesn't need to be sorted. Is already in order of creation / proper move order
+            setCharactersAndMoves(fetchedCharactersAndMoves);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    // Fetch all data to prepopulate dropdowns
+    fetchAllData();
+
+    setLoading(false);
     });
   }, []);
 
@@ -72,28 +100,116 @@ function Comps() {
 
   return (
     <div id="mainContainer" className="main-container">
-      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCompsData={setCompsData} compsData={compsData} />}
+      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCompsData={setCompsData} compsData={compsData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} />}
       <div id="compsContainer">
         <div className="comps-list">
           <h1 className="page-title">Team Compositions</h1>
-          
-          {compsData.map((match, index) => (
+          <CompsSorting events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} compsData={compsData} setCompsData={setCompsData} setFilteredComps={setFilteredComps} />
+          { filteredComps && filteredComps.length > 0 ? filteredComps.map((match, index) => (
+            <MatchDisplay key={index} match={match} />
+          )) : compsData.map((match, index) => (
             <MatchDisplay key={index} match={match} />
           ))}
         </div>
       </div>
-      <div id="open-set-submit-form" className="open-set-submit-form" onClick={() => setShowSubmitForm(true)}>+</div>
+      <div id="open-set-submit-form" className="open-set-submit-form" onClick={() => {setShowSubmitForm(true); setFilteredComps([])}}>+</div>
     </div>
   );
 }
 
-function compsSorting() {
-  
+function CompsSorting({ events, teams, players, charactersAndMoves, compsData, setCompsData, setFilteredComps }) {
+  const [regions, setRegions] = useState([]);
+  const [characters, setCharacters] = useState([]);
+  const [baseData, setBaseData] = useState(compsData);
+  const [eventFilter, setEventFilter] = useState("");
+  const [characterFilter, setCharacterFilter] = useState("");
+  const [regionFilter, setRegionFilter] = useState("");
+  const [teamFilter, setTeamFilter] = useState("");
+  const [playerFilter, setPlayerFilter] = useState("");
+  const defaultEvent = "Event Select";
+  const defaultCharacter = "Pokemon Select";
+  const defaultRegion = "Region Select";
+  const defaultTeam = "Team Select";
+  const defaultPlayer = "Player Select";
+
+  useEffect(() => {
+    // Only add unique regions
+    const fetchedRegions = [...new Set(teams.map((team) => team.team_region))];
+    setRegions(fetchedRegions.sort((a, b) => a.localeCompare(b)));
+
+    // Get unique pokemon_name and pokemon_id combinations
+    const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str)); 
+    setCharacters(uniquePokemon);
+    // Set default values
+    setEventFilter(defaultEvent);
+    setCharacterFilter(defaultCharacter);
+    setRegionFilter(defaultRegion);
+    setTeamFilter(defaultTeam);
+    setPlayerFilter(defaultPlayer);
+  }, [charactersAndMoves, teams]);
+
+  function filterComps() {
+    const filteredComps = baseData.filter((comp) => {
+      return (eventFilter === defaultEvent || comp.event === eventFilter)
+       && (characterFilter === defaultCharacter || comp.team1.pokemon.includes(characterFilter.pokemon_name) || comp.team2.pokemon.includes(characterFilter.pokemon_name))
+       && (regionFilter === defaultRegion || comp.team1.region === regionFilter || comp.team2.region === regionFilter)
+       && (teamFilter === defaultTeam || comp.team1.name === teamFilter || comp.team2.name === teamFilter) 
+       && (playerFilter === defaultPlayer || comp.team1.players.includes(playerFilter) || comp.team2.players.includes(playerFilter));
+    });
+    setFilteredComps(filteredComps);
+  }
+
+  useEffect(() => {
+    filterComps();
+  }, [eventFilter, characterFilter, regionFilter, teamFilter, playerFilter]);
 
   return (
-    <div>
+    <div className="comps-sorting-container">
       <h3>Sorting</h3>
-      
+      <div className="comps-sorting-dropdown-container">
+        {/* Sort by Event */}
+        <select className="comps-sorting-dropdown" onChange={(e) => setEventFilter(e.target.value)}>
+          <option value={defaultEvent}>{defaultEvent}</option>
+        {events.map((event, index) => (
+          <option key={index} value={event.event_name}>{event.event_name}</option>
+        ))}
+        </select>
+        <div className="custom-dropdown-container">
+          {/* Sort by Pokemon */}
+          <div id="sorting-pokemon-dropdown">
+            <CustomDropdown
+              value={characterFilter}
+              onChange={setCharacterFilter}
+              options={characters}
+              placeholder={defaultCharacter}
+              disabled={false}
+              path="/assets/Draft/headshots"
+              defaultOption={defaultCharacter}
+            />
+          </div>
+        </div>
+        {/* Sort by Region */}
+        <select className="comps-sorting-dropdown" onChange={(e) => setRegionFilter(e.target.value)}>
+          <option value={defaultRegion}>{defaultRegion}</option>
+          {regions.map((region, index) => (
+            <option key={index} value={region}>{region}</option>
+          ))}
+        </select>
+        {/* Sort by Team */}
+        <select className="comps-sorting-dropdown" onChange={(e) => setTeamFilter(e.target.value)}>
+          <option value={defaultTeam}>{defaultTeam}</option>
+          {teams.map((team, index) => (
+            <option key={index} value={team.team_name}>{team.team_name}</option>
+          ))}
+        </select>
+        {/* Sort by Player */}
+        <select className="comps-sorting-dropdown" onChange={(e) => setPlayerFilter(e.target.value)}>
+          <option value={defaultPlayer}>{defaultPlayer}</option>
+          {players.map((player, index) => (
+            <option key={index} value={player.player_name}>{player.player_name}</option>
+            ))}
+        </select>
+      </div>
     </div>
   )
 }
