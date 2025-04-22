@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';  // Import from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { UserProvider } from './context/UserContext';
 
 // Create a root for the application
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -10,7 +11,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 // Render the application
 root.render(
   <BrowserRouter>
-    <App />
+    <UserProvider>
+      <App />
+    </UserProvider>
   </BrowserRouter>
 );
 

@@ -13,7 +13,7 @@ module.exports = function (app, database, passport) {
         }
     );
 
-    app.get('/api/logout', (req, res) => {
+    app.get('/logout', (req, res) => {
         req.logout((err) => {
             if (err) {
                 return res.status(500).json({ error: 'Failed to logout' });
@@ -22,7 +22,7 @@ module.exports = function (app, database, passport) {
         });
     });
 
-    app.get('/api/current_user', (req, res) => {
-        res.send(req.user || null);
+    app.get('/current_user', (req, res) => {
+        res.json(req.user || null);
     });
 };

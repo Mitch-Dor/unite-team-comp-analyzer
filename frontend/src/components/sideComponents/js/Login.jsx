@@ -1,32 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import '../css/login.css'; // Add a CSS file for styling if needed
+import { useUser } from '../../../context/UserContext';
+import { VscAccount } from "react-icons/vsc";
 
 const Login = () => {
-  const [user, setUser] = useState(null);
-  
-  useEffect(() => {
-    // Fetch current user on component mount
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await fetch('/api/current_user', {
-          credentials: 'include' // Important for sending cookies
-        });
-        const userData = await response.json();
-        setUser(userData);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-    
-    fetchCurrentUser();
-  }, []);
+  const { user } = useUser();
   
   return (
     <div className="login-container">
       {user ? (
         <div className="user-info">
+          <div className="profile-picture">
+            <VscAccount className="profile-icon" title={user.user_name + "\n" + user.user_email} />
+          </div>
           <button className="logout-button">
-            <a href="/api/logout">Logout</a>
+            <a href="http://localhost:3001/logout">Logout</a>
           </button>
         </div>
       ) : (

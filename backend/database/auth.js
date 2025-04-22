@@ -23,8 +23,7 @@ class Auth {
                                 reject(err);
                             } else {
                                 // After inserting, get the user to return it
-                                const userId = this.lastID;
-                                this.db.all('SELECT * FROM users WHERE user_google_id = ?', [userId], (err, rows) => {
+                                this.db.all('SELECT * FROM users WHERE user_google_id = ?', [googleId], (err, rows) => {
                                     if (err) {
                                         reject(err);
                                     } else {
