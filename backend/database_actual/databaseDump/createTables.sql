@@ -141,13 +141,8 @@ create table events (
     event_date text not null,
     vod_url text not null
 );
--- A Table to track open draft rooms
-create table rooms (
-    room_id integer primary key AUTOINCREMENT not null,
-    room_code text not null,
-    -- IDs that the server sends to the clients to identify the players
-    player_1_id text not null,
-    player_2_id text not null,
-    state text not null
+create table users (
+    user_google_id text primary key not null,
+    user_name text not null,
+    user_email text not null
 );
-

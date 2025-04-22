@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/main.css'
 import Settings from './Settings';
+import Login from '../../sideComponents/js/Login';
 
 function Main() {
   const [settings, setSettings] = useState({timer: 25, userTurn: "first"});
@@ -70,6 +71,7 @@ function Main() {
         <div id="cornerContainer">
             <button id="report" className="cornerBTN">!</button>
             <button id="info" className="cornerBTN">i</button>
+            <Login />
         </div>
         <div id="titleContainer"></div>
         <div id="bigBTNContainer">

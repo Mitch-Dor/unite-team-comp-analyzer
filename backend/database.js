@@ -15,3 +15,7 @@ exports.characters = characters;
 const Teams = require('./database/teams');
 const teams = new Teams(db);
 exports.teams = teams;
+
+const Auth = require('./database/auth');
+const auth = new Auth(db);
+exports.auth = auth;
