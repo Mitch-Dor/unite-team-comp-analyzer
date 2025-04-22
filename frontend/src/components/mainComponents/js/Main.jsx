@@ -92,8 +92,10 @@ function Main() {
         </div>
         <div id="nametag">Created by Mitchell Dorward</div>
         { settingsActive && (
-          <div id="setSettings" style={{ top: settingsLocation.y, left: settingsLocation.x }}>
-            < Settings settings={settings} updateSettings={setSettings} ></Settings>
+          <div id="settingsScreenCover" onClick={() => setSettingsActive(false)}>
+            <div id="setSettings">
+              < Settings settings={settings} updateSettings={setSettings} ></Settings>
+            </div>
           </div>
         )}
     </div>
