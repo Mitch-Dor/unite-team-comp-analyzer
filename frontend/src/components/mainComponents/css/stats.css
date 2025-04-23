@@ -21,7 +21,7 @@ h3 {
     flex-flow: row wrap;
 }
 
-#searchContainer {
+#orderingContainer {
     width: 44vw;
     height: 25vh;
     display: flex;
