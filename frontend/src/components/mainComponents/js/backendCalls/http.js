@@ -250,6 +250,16 @@ export async function getRoomInfo(roomId) {
     return roomDataJson;
 }
 
-
-
-
+// Function to fetch character stats based on query context
+export async function fetchCharacterStats(queryContext) {
+    const statsData = await fetch(routes.GET_CHARACTER_STATS, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(queryContext)
+    });
+    const statsDataJson = await statsData.json();
+    return statsDataJson;
+}

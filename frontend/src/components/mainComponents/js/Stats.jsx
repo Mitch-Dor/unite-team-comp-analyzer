@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, fetchAllComps } from './backendCalls/http.js';
-import CustomDropdown from './compSupport/CustomDropdown.jsx';
+import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, fetchCharacterStats } from './backendCalls/http.js';
 import '../css/stats.css';
 
 function Stats() {
-    const [mode, setMode] = useState("overall"); /* overall, individual */
     const [events, setEvents] = useState([]);
     const [teams, setTeams] = useState([]);
     const [players, setPlayers] = useState([]);
@@ -12,6 +10,7 @@ function Stats() {
     const [regions, setRegions] = useState([]);
     const [characters, setCharacters] = useState([]);
     const [data, setData] = useState([]);
+    const [orderBy, setOrderBy] = useState("all");
 
     useEffect(() => {
         async function fetchAllData() {
@@ -43,24 +42,66 @@ function Stats() {
 
   return (
     <div id="mainContainer">
-        <select name="mode" id="mode" onChange={(e) => setMode(e.target.value)}>
-            <option value="">Select Mode</option>
-            <option value="overall">Overall</option>
-            <option value="individual">Individual</option>
-        </select>
-        <StatsOrdering mode={mode} />
-        <StatsSorting mode={mode} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} regions={regions} characters={characters} setData={setData} />
-        <div id="graphContainer">
-            {/* Dont know how to do graphs right now. Will be something with react */}
+        <StatsOrdering setOrderBy={setOrderBy} />
+        <StatsSorting events={events} teams={teams} players={players} regions={regions} setData={setData} />
+        <div id="statsContainer">
+            {data.length > 0 ? (
+                <div className="stats-table-container">
+                    <table className="stats-table">
+                        <thead>
+                            <tr>
+                                <th>Character</th>
+                                <th>Ban Rate</th>
+                                <th>Pick Rate</th>
+                                <th>Presence</th>
+                                <th>Win Rate</th>
+                                <th>Pick R1</th>
+                                <th>Pick R2</th>
+                                <th>Pick R3</th>
+                                <th>Pick R4</th>
+                                <th>Pick R5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data
+                                .sort((a, b) => {
+                                    if (orderBy === "ban") return b.ban_rate - a.ban_rate;
+                                    if (orderBy === "pick") return b.pick_rate - a.pick_rate;
+                                    if (orderBy === "presence") return b.presence - a.presence;
+                                    if (orderBy === "win") return b.win_rate - a.win_rate;
+                                    // Default sort by presence
+                                    return b.presence - a.presence;
+                                })
+                                .map((character, index) => (
+                                    <tr key={index}>
+                                        <td>{character.pokemon_name}</td>
+                                        <td>{(character.ban_rate * 100).toFixed(1)}%</td>
+                                        <td>{(character.pick_rate * 100).toFixed(1)}%</td>
+                                        <td>{(character.presence * 100).toFixed(1)}%</td>
+                                        <td>{(character.win_rate * 100).toFixed(1)}%</td>
+                                        <td>{character.pick_round_1}</td>
+                                        <td>{character.pick_round_2}</td>
+                                        <td>{character.pick_round_3}</td>
+                                        <td>{character.pick_round_4}</td>
+                                        <td>{character.pick_round_5}</td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <div className="no-data-message">
+                    <p>Select filters to view character statistics</p>
+                </div>
+            )}
         </div>
     </div>
   );
 }
 
-function StatsSorting({ mode, events, teams, players, charactersAndMoves, regions, characters, setData }) {
-    const [moves, setMoves] = useState([]);
+function StatsSorting({ events, teams, players, regions, setData }) {
     const [selectedEvent, setSelectedEvent] = useState("");
-    const [selectedCharacter, setSelectedCharacter] = useState("");
     const [selectedRegion, setSelectedRegion] = useState("");
     const [selectedTeam, setSelectedTeam] = useState("");
     const [selectedPlayer, setSelectedPlayer] = useState("");
@@ -68,33 +109,30 @@ function StatsSorting({ mode, events, teams, players, charactersAndMoves, region
     const [beforeAfter, setBeforeAfter] = useState("");
 
     useEffect(() => {
-        // Get available moves for the selected character
-    const getPokemonMoves = (pokemonName) => {
-        if (!pokemonName) return [];
-        // Find all instances of the Pokémon and collect their moves
-        const pokemonInstances = charactersAndMoves.filter(char => char.pokemon_name === pokemonName);
-        // Push all of their moves to an array
-        let moves = [];
-        for (const pokemon of pokemonInstances) {
-            moves.push({move_name: pokemon.move_name, move_id: pokemon.move_id});
+        // Run filter function
+        const queryContext = {
+            event: selectedEvent ? selectedEvent.event_id : null,
+            region: selectedRegion ? selectedRegion : null, // Region is just a string
+            team: selectedTeam ? selectedTeam.team_id : null,
+            player: selectedPlayer ? selectedPlayer.player_id : null,
+            date: selectedDate ? selectedDate : null,
+            beforeAfter: beforeAfter ? beforeAfter : null
         }
-        return moves;
-        };
-        const availableMoves = selectedCharacter ? getPokemonMoves(selectedCharacter.pokemon_name) : [];
-        setMoves(availableMoves);
-    }, [selectedCharacter]);
-
-    useEffect(() => {
-        // If mode is overall, filter data uncondiionally
-        if (mode === "overall") {
-            // Run filter function
-        } else if (mode === "individual") { 
-            // If mode is individual, filter data based on the selected character (and make sure selectedCharacter is not null and availableMoves is not empty)
-            if (selectedCharacter) {
-                // Run filter function
-            }
+        
+        console.log("Query context:", queryContext);
+        
+        // Only fetch if at least one filter is applied
+        if (selectedEvent || selectedRegion || selectedTeam || selectedPlayer || (selectedDate && beforeAfter)) {
+            fetchCharacterStats(queryContext)
+                .then(data => {
+                    console.log(data);
+                    setData(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching character stats:", error);
+                });
         }
-    }, [selectedEvent, selectedCharacter, selectedRegion, selectedTeam, selectedPlayer, selectedDate, beforeAfter]);
+    }, [selectedEvent, selectedRegion, selectedTeam, selectedPlayer, selectedDate, beforeAfter, setData]);
   
     return (
         <div id="filterContainer">
@@ -105,68 +143,61 @@ function StatsSorting({ mode, events, teams, players, charactersAndMoves, region
                 <option value="after">After</option>
             </select>
             <input id="dateSelect" type="date" onChange={(e) => setSelectedDate(e.target.value)}></input> 
-            <select name="region" id="region" onChange={(e) => setSelectedRegion(e.target.value)}>
+            <select name="region" id="region" onChange={(e) => {
+                const selectedValue = e.target.value;
+                setSelectedRegion(selectedValue ? selectedValue : "");
+            }}>
                 <option value="">Select Region</option>
                 {regions.map((region, index) => (
                     <option key={index} value={region}>{region}</option>
                 ))}
             </select>
-            <select name="event" id="event" onChange={(e) => setSelectedEvent(e.target.value)}>
+            <select name="event" id="event" onChange={(e) => {
+                const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Event" option
+                setSelectedEvent(selectedIndex >= 0 ? events[selectedIndex] : "");
+            }}>
                 <option value="">Select Event</option>
                 {events.map((event, index) => (
-                    <option key={index} value={event.event_name}>{event.event_name}</option>
+                    <option key={index} value={event.event_id}>{event.event_name}</option>
                 ))}
             </select>
-            <select name="team" id="team" onChange={(e) => setSelectedTeam(e.target.value)}>
+            <select name="team" id="team" onChange={(e) => {
+                const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Team" option
+                setSelectedTeam(selectedIndex >= 0 ? teams[selectedIndex] : "");
+            }}>
                 <option value="">Select Team</option>
                 {teams.map((team, index) => (
-                    <option key={index} value={team.team_name}>{team.team_name}</option>
+                    <option key={index} value={team.team_id}>{team.team_name}</option>
                 ))}
             </select>
-            <select name="player" id="player" onChange={(e) => setSelectedPlayer(e.target.value)}>
+            <select name="player" id="player" onChange={(e) => {
+                const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Player" option
+                setSelectedPlayer(selectedIndex >= 0 ? players[selectedIndex] : "");
+            }}>
                 <option value="">Select Player</option>
                 {players.map((player, index) => (
-                    <option key={index} value={player.player_name}>{player.player_name}</option>
+                    <option key={index} value={player.player_id}>{player.player_name}</option>
                 ))}
             </select>
-            {mode === "individual" && (
-                <div className="custom-dropdown-container">
-                    {/* Sort by Pokemon */}
-                    <div id="sorting-pokemon-dropdown">
-                    <CustomDropdown
-                    value={selectedCharacter}
-                    onChange={setSelectedCharacter}
-                    options={characters}
-                    placeholder={"Select Pokemon"}
-                    disabled={false}
-                    path="/assets/Draft/headshots"
-                    />
-                </div>
-            </div>
-            )}
         </div>
     )
 }
 
-function StatsOrdering({ mode }) {
+function StatsOrdering({ setOrderBy }) {
     
     return (
-        mode === "overall" ? (
-            <div id="orderingContainer">
-                <h3>Order By</h3>
-                <select name="orderBy" id="orderBy">
-                    <option value="all">All Stats</option>
-                    <option value="ban">Ban Rate</option>
-                    <option value="pick">Pick Rate</option>
-                    <option value="presence">Presence</option>
-                    <option value="win">Win Rate</option>
-                    <option value="pick">Pick Order</option> 
-                    {/* Display bar groups of the number of times a Pokemon was chosen in the 1st, 2nd, 3rd, etc rounds. Each pokemon will therefore have 6 bars. */}
-                </select>
-            </div>
-        ) : (
-            null
-        )
+        <div id="orderingContainer">
+            <h3>Order By</h3>
+            <select name="orderBy" id="orderBy" onChange={(e) => setOrderBy(e.target.value)}>
+                <option value="all">All Stats</option>
+                <option value="ban">Ban Rate</option>
+                <option value="pick">Pick Rate</option>
+                <option value="presence">Presence</option>
+                <option value="win">Win Rate</option>
+                <option value="pick">Pick Order</option> 
+                {/* Display bar groups of the number of times a Pokemon was chosen in the 1st, 2nd, 3rd, etc rounds. Each pokemon will therefore have 6 bars. */}
+            </select>
+        </div>
     )
 }
 

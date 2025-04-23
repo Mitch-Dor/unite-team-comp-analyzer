@@ -15,7 +15,8 @@ const routes = {
     POST_SET: '/POSTset',
     POST_ROOMS: '/POSTrooms',
     GET_ROOMS: '/GETrooms',
-    GET_ROOM_INFO: '/GETrooms/'
+    GET_ROOM_INFO: '/GETrooms/',
+    GET_CHARACTER_STATS: '/GETcharacterStats'
 };
 
 module.exports = routes;

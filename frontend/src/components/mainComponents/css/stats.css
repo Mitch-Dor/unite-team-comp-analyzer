@@ -30,11 +30,58 @@ h3 {
     flex-flow: row wrap;
 }
 
-#graphContainer {
+#statsContainer {
     height: 65vh;
     width: 99vw;
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-start;
     flex-flow: row wrap;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.stats-table-container {
+    width: 95%;
+    max-height: 95%;
+    overflow-y: auto;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 8px 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.stats-table th {
+    background-color: #f4f4f4;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-weight: bold;
+}
+
+.stats-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.stats-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.no-data-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1.2rem;
+    color: #888;
 }
