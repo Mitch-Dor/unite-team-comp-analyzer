@@ -60,6 +60,7 @@ function Stats() {
                                 <th>Pick R3</th>
                                 <th>Pick R4</th>
                                 <th>Pick R5</th>
+                                <th>Pick R6</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,6 +85,7 @@ function Stats() {
                                         <td>{character.pick_round_3}</td>
                                         <td>{character.pick_round_4}</td>
                                         <td>{character.pick_round_5}</td>
+                                        <td>{character.pick_round_6}</td>
                                     </tr>
                                 ))
                             }

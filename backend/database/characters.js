@@ -164,16 +164,18 @@ class Characters {
                                          pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR 
                                          pc2.pokemon_5 = pc.pokemon_id) AND pc2.did_win = 1
                                  THEN pm.match_id ELSE NULL END) as wins,
-              COUNT(DISTINCT CASE WHEN pc1.pokemon_1 = pc.pokemon_id OR pc2.pokemon_1 = pc.pokemon_id 
+              COUNT(DISTINCT CASE WHEN pc1.pokemon_1 = pc.pokemon_id 
                                THEN pm.match_id ELSE NULL END) as pick_round_1,
-              COUNT(DISTINCT CASE WHEN pc1.pokemon_2 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id 
+              COUNT(DISTINCT CASE WHEN pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id 
                                THEN pm.match_id ELSE NULL END) as pick_round_2,
-              COUNT(DISTINCT CASE WHEN pc1.pokemon_3 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id 
+              COUNT(DISTINCT CASE WHEN pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id 
                                THEN pm.match_id ELSE NULL END) as pick_round_3,
-              COUNT(DISTINCT CASE WHEN pc1.pokemon_4 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id 
+              COUNT(DISTINCT CASE WHEN pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id 
                                THEN pm.match_id ELSE NULL END) as pick_round_4,
-              COUNT(DISTINCT CASE WHEN pc1.pokemon_5 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id 
-                               THEN pm.match_id ELSE NULL END) as pick_round_5
+              COUNT(DISTINCT CASE WHEN pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id 
+                               THEN pm.match_id ELSE NULL END) as pick_round_5,
+              COUNT(DISTINCT CASE WHEN pc2.pokemon_5 = pc.pokemon_id
+                               THEN pm.match_id ELSE NULL END) as pick_round_6
             FROM 
               playable_characters pc
             LEFT JOIN 
@@ -354,7 +356,8 @@ class Characters {
                   pick_round_2: 0,
                   pick_round_3: 0,
                   pick_round_4: 0,
-                  pick_round_5: 0
+                  pick_round_5: 0,
+                  pick_round_6: 0
                 });
               });
               
@@ -369,6 +372,7 @@ class Characters {
                   existingStat.pick_round_3 = stat.pick_round_3 || 0;
                   existingStat.pick_round_4 = stat.pick_round_4 || 0;
                   existingStat.pick_round_5 = stat.pick_round_5 || 0;
+                  existingStat.pick_round_6 = stat.pick_round_6 || 0;
                 } else {
                   statsMap.set(stat.pokemon_id, {
                     pokemon_id: stat.pokemon_id,
@@ -381,7 +385,8 @@ class Characters {
                     pick_round_2: stat.pick_round_2 || 0,
                     pick_round_3: stat.pick_round_3 || 0,
                     pick_round_4: stat.pick_round_4 || 0,
-                    pick_round_5: stat.pick_round_5 || 0
+                    pick_round_5: stat.pick_round_5 || 0,
+                    pick_round_6: stat.pick_round_6 || 0
                   });
                 }
               });
@@ -407,7 +412,8 @@ class Characters {
                         pick_round_2: 0,
                         pick_round_3: 0,
                         pick_round_4: 0,
-                        pick_round_5: 0
+                        pick_round_5: 0,
+                        pick_round_6: 0
                       });
                     }
                   });
