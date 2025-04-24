@@ -110,6 +110,208 @@ class Characters {
       });
     }
 
+    // Get character stats
+    async getCharacterStatsTest(queryContext) {
+      return new Promise((resolve, reject) => {
+        try {
+          const { event, region, team, player, date, beforeAfter } = queryContext;
+
+          // From clause
+          // pm contains bans and players.
+          // pc1 and pc2 contain picks, wins, and first pick
+          // ps basically just links to the event
+          // e contains the event name and date
+          const fromSQL = `
+            FROM 
+              playable_characters pc
+            LEFT JOIN
+              professional_matches pm ON 1=1
+            LEFT JOIN
+              professional_teams pt1 ON pm.team_1_id = pt1.team_id
+            LEFT JOIN
+              professional_teams pt2 ON pm.team_2_id = pt2.team_id
+            LEFT JOIN
+              professional_comps pc1 ON pm.team_1_comp_id = pc1.comp_id
+            LEFT JOIN
+              professional_comps pc2 ON pm.team_2_comp_id = pc2.comp_id
+            LEFT JOIN
+              professional_sets ps ON pm.set_id = ps.set_id
+            LEFT JOIN
+              events e ON ps.event_id = e.event_id
+          `;
+
+          // Where clause
+          let whereSQL = `
+            WHERE 1=1
+          `;
+
+          let whereParams = [];
+          // Easy Filters:
+          // Event
+          if (event) {
+            whereSQL += ` AND e.event_id = ?`;
+            whereParams.push(event);
+          }
+          // Date
+          if (date && beforeAfter) {
+            if (beforeAfter === 'before') {
+              whereSQL += ` AND e.event_date <= ?`;
+            } else if (beforeAfter === 'after') {
+              whereSQL += ` AND e.event_date >= ?`;
+            }
+            whereParams.push(date);
+          }
+
+          // Complex Filters (Basically limits the matches to a specific side or player)
+
+          // Team
+          // If team_1_id is equal to team then I want to only get information for team_1's picks and bans
+          // If team_2_id is equal to team then I want to only get information for team_2's picks and bans
+          if (team) {
+            whereSQL += ` AND (pm.team_1_id = ? OR pm.team_2_id = ?)`;
+            whereParams.push(team, team);
+          }
+          
+          // Region
+          // If region is equal to team_1_region then I want to only get information for team_1's picks and bans
+          // If region is equal to team_2_region then I want to only get information for team_2's picks and bans
+          if (region) {
+            whereSQL += ` AND (pt1.team_region = ? OR pt2.team_region = ?)`;
+            whereParams.push(region, region);
+          }
+
+          // Player
+          // If player_1 is equal to player then I want to only get information for player_1's picks and bans
+          // If player_2 is equal to player then I want to only get information for player_2's picks and bans
+          if (player) {
+            whereSQL += ` AND (pm.team_1_player_1 = ? OR pm.team_1_player_2 = ? OR pm.team_1_player_3 = ? OR pm.team_1_player_4 = ? OR pm.team_1_player_5 = ? OR pm.team_2_player_1 = ? OR pm.team_2_player_2 = ? OR pm.team_2_player_3 = ? OR pm.team_2_player_4 = ? OR pm.team_2_player_5 = ?)`;
+            whereParams.push(player, player, player, player, player, player, player, player, player, player);
+          }
+
+          // Select clause - base columns always included
+          let selectSQL = `
+            SELECT 
+              pc.pokemon_id,
+              pc.pokemon_name,
+          `;
+          
+          let selectParams = [];
+
+          // Add team/region/player specific columns if all three are provided
+          if (team && region && player) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN ((pm.team_1_id = ? AND pt1.team_region = ?) AND 
+                                       ((pc1.pokemon_1 = pc.pokemon_id AND pm.team_1_player_1 = ?) OR 
+                                        (pc1.pokemon_2 = pc.pokemon_id AND pm.team_1_player_2 = ?) OR 
+                                        (pc1.pokemon_3 = pc.pokemon_id AND pm.team_1_player_3 = ?) OR 
+                                        (pc1.pokemon_4 = pc.pokemon_id AND pm.team_1_player_4 = ?) OR 
+                                        (pc1.pokemon_5 = pc.pokemon_id AND pm.team_1_player_5 = ?))) OR
+                                      ((pm.team_2_id = ? AND pt2.team_region = ?) AND
+                                       ((pc2.pokemon_1 = pc.pokemon_id AND pm.team_2_player_1 = ?) OR 
+                                        (pc2.pokemon_2 = pc.pokemon_id AND pm.team_2_player_2 = ?) OR 
+                                        (pc2.pokemon_3 = pc.pokemon_id AND pm.team_2_player_3 = ?) OR 
+                                        (pc2.pokemon_4 = pc.pokemon_id AND pm.team_2_player_4 = ?) OR 
+                                        (pc2.pokemon_5 = pc.pokemon_id AND pm.team_2_player_5 = ?)))
+                                       THEN pm.match_id ELSE NULL END) as picks,
+              COUNT(DISTINCT CASE WHEN ((pm.team_1_id = ? AND pt1.team_region = ? AND pc1.did_win = 1) AND 
+                                       ((pc1.pokemon_1 = pc.pokemon_id AND pm.team_1_player_1 = ?) OR 
+                                        (pc1.pokemon_2 = pc.pokemon_id AND pm.team_1_player_2 = ?) OR 
+                                        (pc1.pokemon_3 = pc.pokemon_id AND pm.team_1_player_3 = ?) OR 
+                                        (pc1.pokemon_4 = pc.pokemon_id AND pm.team_1_player_4 = ?) OR 
+                                        (pc1.pokemon_5 = pc.pokemon_id AND pm.team_1_player_5 = ?))) OR
+                                      ((pm.team_2_id = ? AND pt2.team_region = ? AND pc2.did_win = 1) AND
+                                       ((pc2.pokemon_1 = pc.pokemon_id AND pm.team_2_player_1 = ?) OR 
+                                        (pc2.pokemon_2 = pc.pokemon_id AND pm.team_2_player_2 = ?) OR 
+                                        (pc2.pokemon_3 = pc.pokemon_id AND pm.team_2_player_3 = ?) OR 
+                                        (pc2.pokemon_4 = pc.pokemon_id AND pm.team_2_player_4 = ?) OR 
+                                        (pc2.pokemon_5 = pc.pokemon_id AND pm.team_2_player_5 = ?)))
+                                       THEN pm.match_id ELSE NULL END) as wins,
+              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_id = ? AND pt1.team_region = ? AND (pm.team_1_player_1 = ? OR pm.team_1_player_2 = ? OR pm.team_1_player_3 = ? OR pm.team_1_player_4 = ? OR pm.team_1_player_5 = ?)) OR
+                            ((pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_id = ? AND pt2.team_region = ? AND (pm.team_2_player_1 = ? OR pm.team_2_player_2 = ? OR pm.team_2_player_3 = ? OR pm.team_2_player_4 = ? OR pm.team_2_player_5 = ?))
+                       THEN 1 ELSE 0 END) as bans,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_1 = ?) OR
+                                       (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_1 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_1,
+              COUNT(DISTINCT CASE WHEN ((pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_1 = ?) OR
+                                       (pc2.pokemon_2 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_2 = ?) OR
+                                       (pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_1 = ?) OR
+                                       (pc1.pokemon_2 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_2 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_2,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_2 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_2 = ?) OR
+                                       (pc1.pokemon_3 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_3 = ?) OR
+                                       (pc2.pokemon_2 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_2 = ?) OR
+                                       (pc2.pokemon_3 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_3 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_3,
+              COUNT(DISTINCT CASE WHEN ((pc2.pokemon_3 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_3 = ?) OR
+                                       (pc2.pokemon_4 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_4 = ?) OR
+                                       (pc1.pokemon_3 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_3 = ?) OR
+                                       (pc1.pokemon_4 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_4 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_4,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_4 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_4 = ?) OR
+                                       (pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_5 = ?) OR
+                                       (pc2.pokemon_4 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_4 = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_5 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_5,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pt1.team_region = ? AND pm.team_1_player_5 = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pt2.team_region = ? AND pm.team_2_player_5 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_6
+            `;  
+            
+            // Add all the parameters for the complex SELECT columns
+            selectParams = [
+              team, region, player, player, player, player, player, 
+              team, region, player, player, player, player, player, 
+              team, region, player, player, player, player, player, 
+              team, region, player, player, player, player, player, 
+              team, region, player, player, player, player, player, 
+              team, region, player, player, player, player, player, 
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player,
+              team, region, player
+            ];
+          }
+
+          // Build and execute the final query
+          const query = `
+            ${selectSQL}
+            ${fromSQL}
+            ${whereSQL}
+            GROUP BY pc.pokemon_id, pc.pokemon_name
+          `;
+          
+          this.db.all(query, [...selectParams, ...whereParams], (err, rows) => {
+            if (err) {
+              console.error("SQL Error:", err.message);
+              reject(err);
+            } else {
+              resolve(rows);
+            }
+          });
+        } catch (error) {
+          console.error("Function error:", error.message);
+          reject(error);
+        }
+      });
+    }
+
+    // Get character stats
     async getCharacterStats(queryContext) {
       return new Promise((resolve, reject) => {
           const { event, region, team, player, date, beforeAfter } = queryContext;
@@ -393,7 +595,7 @@ class Characters {
               
               // Also add any character that doesn't have picks or bans
               // so they show up with 0% rates in the results
-              this.db.all('SELECT pokemon_id, pokemon_name FROM playable_characters', [], (err, allCharacters) => {
+              this.db.all('SELECT pokemon_id, pokemon_name FROM playable_characters', async (err, allCharacters) => {
                 if (err) {
                   console.error("Error fetching all characters:", err.message);
                   // Continue with what we have
@@ -435,7 +637,21 @@ class Characters {
                     win_rate: winRate
                   };
                 });
-                
+
+                // Get move combo stats for all characters
+                const moveCombos = await this.getAllPokemonMoveComboStats({
+                  event: event,
+                  region: region,
+                  team: team,
+                  player: player,
+                  date: date,
+                  beforeAfter: beforeAfter
+                });
+
+                // Add the move combos to the results
+                results.forEach(result => {
+                  result.move_combos = moveCombos.filter(combo => combo.pokemon_name === result.pokemon_name);
+                });
                 resolve(results);
               });
             })
