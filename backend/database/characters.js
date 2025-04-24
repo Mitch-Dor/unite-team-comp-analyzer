@@ -112,7 +112,7 @@ class Characters {
 
     // Get character stats
     async getCharacterStatsTest(queryContext) {
-      return new Promise((resolve, reject) => {
+      const pickBanStats = new Promise((resolve, reject) => {
         try {
           const { event, region, team, player, date, beforeAfter } = queryContext;
 
@@ -310,7 +310,195 @@ class Characters {
           reject(error);
         }
       });
-    }
+
+      const moveStats = new Promise((resolve, reject) => {
+        try {
+          const { event, region, team, player, date, beforeAfter } = queryContext;
+
+          // From clause
+          // pm contains bans and players.
+          // pc1 and pc2 contain picks, wins, and first pick
+          // ps basically just links to the event
+          // e contains the event name and date
+          const fromSQL = `
+            FROM 
+              playable_characters pc
+            LEFT JOIN
+              professional_matches pm ON 1=1
+            LEFT JOIN
+              professional_teams pt1 ON pm.team_1_id = pt1.team_id
+            LEFT JOIN
+              professional_teams pt2 ON pm.team_2_id = pt2.team_id
+            LEFT JOIN
+              professional_comps pc1 ON pm.team_1_comp_id = pc1.comp_id
+            LEFT JOIN
+              professional_comps pc2 ON pm.team_2_comp_id = pc2.comp_id
+            LEFT JOIN
+              professional_sets ps ON pm.set_id = ps.set_id
+            LEFT JOIN
+              events e ON ps.event_id = e.event_id
+            LEFT JOIN
+              pokemon_moves pm1 ON pm1.pokemon_id = pc.pokemon_id
+            LEFT JOIN
+              pokemon_moves pm2 ON pm2.pokemon_id = pc.pokemon_id
+          `;
+
+          // Where clause
+          let whereSQL = `
+            WHERE 1=1
+            AND pm1.move_id < pm2.move_id
+          `;
+
+          let whereParams = [];
+          // Easy Filters:
+          // Event
+          if (event) {
+            whereSQL += ` AND e.event_id = ?`;
+            whereParams.push(event);
+          }
+          // Date
+          if (date && beforeAfter) {
+            if (beforeAfter === 'before') {
+              whereSQL += ` AND e.event_date <= ?`;
+            } else if (beforeAfter === 'after') {
+              whereSQL += ` AND e.event_date >= ?`;
+            }
+            whereParams.push(date);
+          }
+
+          // Complex Filters (Basically limits the matches to a specific side or player)
+
+          // Team
+          // If team_1_id is equal to team then I want to only get information for team_1's picks and bans
+          // If team_2_id is equal to team then I want to only get information for team_2's picks and bans
+          if (team) {
+            whereSQL += ` AND (pm.team_1_id = ? OR pm.team_2_id = ?)`;
+            whereParams.push(team, team);
+          }
+          
+          // Region
+          // If region is equal to team_1_region then I want to only get information for team_1's picks and bans
+          // If region is equal to team_2_region then I want to only get information for team_2's picks and bans
+          if (region) {
+            whereSQL += ` AND (pt1.team_region = ? OR pt2.team_region = ?)`;
+            whereParams.push(region, region);
+          }
+
+          // Player
+          // If player_1 is equal to player then I want to only get information for player_1's picks and bans
+          // If player_2 is equal to player then I want to only get information for player_2's picks and bans
+          if (player) {
+            whereSQL += ` AND (pm.team_1_player_1 = ? OR pm.team_1_player_2 = ? OR pm.team_1_player_3 = ? OR pm.team_1_player_4 = ? OR pm.team_1_player_5 = ? OR pm.team_2_player_1 = ? OR pm.team_2_player_2 = ? OR pm.team_2_player_3 = ? OR pm.team_2_player_4 = ? OR pm.team_2_player_5 = ?)`;
+            whereParams.push(player, player, player, player, player, player, player, player, player, player);
+          }
+
+          // Select clause - base columns always included
+          let selectSQL = `
+            SELECT 
+              pc.pokemon_id,
+              pc.pokemon_name,
+              pm1.move_name as move_1,
+              pm2.move_name as move_2,
+              COUNT(DISTINCT CASE WHEN 
+                ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id))
+              THEN pm.match_id ELSE NULL END) as usages,
+              COUNT(DISTINCT CASE WHEN 
+                (((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id)) AND
+                 pc1.did_win = 1) OR
+                (((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)) AND
+                 pc2.did_win = 1)
+              THEN pm.match_id ELSE NULL END) as wins
+          `;
+          
+          let selectParams = [];
+
+          // Add team/region/player specific columns if all three are provided
+          if (team && region && player) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN 
+                (((pm.team_1_id = ? AND pt1.team_region = ?) AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id AND pm.team_1_player_1 = ?) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id AND pm.team_1_player_2 = ?) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id AND pm.team_1_player_3 = ?) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id AND pm.team_1_player_4 = ?) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id AND pm.team_1_player_5 = ?))) OR
+                 ((pm.team_2_id = ? AND pt2.team_region = ?) AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id AND pm.team_2_player_1 = ?) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id AND pm.team_2_player_2 = ?) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?))))
+              THEN pm.match_id ELSE NULL END) as player_team_usages,
+              COUNT(DISTINCT CASE WHEN 
+                (((pm.team_1_id = ? AND pt1.team_region = ? AND pc1.did_win = 1) AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id AND pm.team_1_player_1 = ?) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id AND pm.team_1_player_2 = ?) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id AND pm.team_1_player_3 = ?) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id AND pm.team_1_player_4 = ?) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id AND pm.team_1_player_5 = ?))) OR
+                 ((pm.team_2_id = ? AND pt2.team_region = ? AND pc2.did_win = 1) AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id AND pm.team_2_player_1 = ?) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id AND pm.team_2_player_2 = ?) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?))))
+              THEN pm.match_id ELSE NULL END) as player_team_wins
+            `;
+
+            selectParams.push(
+              team, region, player, player, player, player, player,
+              team, region, player, player, player, player, player,
+              team, region, player, player, player, player, player,
+              team, region, player, player, player, player, player
+            );
+          }
+
+          // Build and execute the final query
+          const query = `
+            ${selectSQL}
+            ${fromSQL}
+            ${whereSQL}
+            GROUP BY pc.pokemon_id, pc.pokemon_name, pm1.move_name, pm2.move_name
+            HAVING usages > 0
+            ORDER BY pc.pokemon_name, usages DESC
+          `;
+          
+          this.db.all(query, [...selectParams, ...whereParams], (err, rows) => {
+            if (err) {
+              console.error("SQL Error in moveStats:", err.message);
+              // Resolve with empty array instead of rejecting to avoid failing the entire function
+              resolve([]);
+            } else {
+              console.log(rows);
+              resolve(rows);
+            }
+          });
+        } catch (error) {
+          console.error("Function error in moveStats:", error.message);
+          // Resolve with empty array instead of rejecting
+          resolve([]);
+        }
+      });
+
+      return pickBanStats;
+    } 
 
     // Get character stats
     async getCharacterStats(queryContext) {
