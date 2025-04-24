@@ -295,8 +295,8 @@ class Characters {
               COUNT(DISTINCT CASE WHEN ((pm.team_1_id = ? AND pt1.team_region = ? AND pc1.did_win = 1 AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
                                       (pm.team_2_id = ? AND pt2.team_region = ? AND pc2.did_win = 1 AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)))
                                        THEN pm.match_id ELSE NULL END) as wins,
-              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_id = ? AND pt1.team_region = ?) OR
-                            (pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_id = ? AND pt2.team_region = ?))
+              SUM(CASE WHEN (((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_id = ? AND pt1.team_region = ?) OR
+                            ((pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_id = ? AND pt2.team_region = ?))
                        THEN 1 ELSE 0 END) as bans,
               COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pt1.team_region = ?) OR
                                        (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pt2.team_region = ?))
@@ -476,8 +476,8 @@ class Characters {
               COUNT(DISTINCT CASE WHEN ((pm.team_1_id = ? AND pc1.did_win = 1 AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
                                       (pm.team_2_id = ? AND pc2.did_win = 1 AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)))
                                        THEN pm.match_id ELSE NULL END) as wins,
-              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_id = ?) OR
-                            (pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_id = ?))
+              SUM(CASE WHEN (((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_id = ?) OR
+                            ((pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_id = ?))
                        THEN 1 ELSE 0 END) as bans,
               COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ?) OR
                                        (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ?))
@@ -513,8 +513,8 @@ class Characters {
               COUNT(DISTINCT CASE WHEN ((pt1.team_region = ? AND pc1.did_win = 1 AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
                                       (pt2.team_region = ? AND pc2.did_win = 1 AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)))
                                        THEN pm.match_id ELSE NULL END) as wins,
-              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_region = ?) OR
-                            (pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_region = ?))
+              SUM(CASE WHEN (((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_region = ?) OR
+                            ((pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_region = ?))
                        THEN 1 ELSE 0 END) as bans,
               COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pt1.team_region = ?) OR
                                        (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pt2.team_region = ?))
@@ -619,7 +619,7 @@ class Characters {
                                       pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)
                                       THEN pm.match_id ELSE NULL END) as picks,
               COUNT(DISTINCT CASE WHEN (pc1.did_win = 1 AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
-                                      pc2.did_win = 1 AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id))
+                                      (pc2.did_win = 1 AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id))
                                       THEN pm.match_id ELSE NULL END) as wins,
               SUM(CASE WHEN (pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id OR pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id)
                                       THEN 1 ELSE 0 END) as bans,
@@ -833,13 +833,13 @@ class Characters {
                    (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
                    (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
                    (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
-                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id)) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id))) OR
                  ((pm.team_2_id = ? AND pt2.team_region = ?) AND
                   ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
                    (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
                    (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
                    (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
-                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id))))
               THEN pm.match_id ELSE NULL END) as requested_usages,
               COUNT(DISTINCT CASE WHEN 
                 (((pm.team_1_id = ? AND pt1.team_region = ? AND pc1.did_win = 1) AND
@@ -853,7 +853,7 @@ class Characters {
                    (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
                    (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
                    (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
-                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id))))
               THEN pm.match_id ELSE NULL END) as requested_wins
             `;
 
@@ -947,13 +947,13 @@ class Characters {
                    (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
                    (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
                    (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
-                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id)) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id))) OR
                  (pm.team_2_id = ? AND
                   ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
                    (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
                    (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
                    (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
-                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id))))
               THEN pm.match_id ELSE NULL END) as requested_usages,
               COUNT(DISTINCT CASE WHEN 
                 (((pm.team_1_id = ? AND pc1.did_win = 1) AND
@@ -967,7 +967,7 @@ class Characters {
                    (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
                    (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
                    (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
-                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id))))
               THEN pm.match_id ELSE NULL END) as requested_wins
             `;
 
@@ -982,13 +982,13 @@ class Characters {
                    (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
                    (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
                    (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
-                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id)) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id))) OR
                  (pt2.team_region = ? AND
                   ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
                    (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
                    (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
                    (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
-                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id))))
               THEN pm.match_id ELSE NULL END) as requested_usages,
               COUNT(DISTINCT CASE WHEN 
                 (((pt1.team_region = ? AND pc1.did_win = 1) AND
@@ -1002,7 +1002,7 @@ class Characters {
                    (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
                    (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
                    (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
-                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id))))
               THEN pm.match_id ELSE NULL END) as requested_wins
             `;
 
