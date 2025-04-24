@@ -193,6 +193,7 @@ class Characters {
             SELECT 
               pc.pokemon_id,
               pc.pokemon_name,
+              COUNT(DISTINCT pm.match_id) as total_matches
           `;
           
           let selectParams = [];
