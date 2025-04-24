@@ -1119,7 +1119,7 @@ class Characters {
         const doubleTotalMatches = row.total_matches * 1.0;
         row.ban_rate = (doubleBans / doubleTotalMatches) * 100;
         row.pick_rate = (doublePicks / doubleTotalMatches) * 100;
-        row.win_rate = (doubleWins / doubleTotalMatches) * 100;
+        row.win_rate = (doubleWins / doublePicks) * 100;
         row.presence = ((doublePicks + doubleBans) / doubleTotalMatches) * 100;
       }
 
