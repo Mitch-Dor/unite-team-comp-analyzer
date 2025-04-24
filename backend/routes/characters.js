@@ -44,7 +44,7 @@ module.exports = function (app, database) {
     });
 
     app.put('/GETcharacterStats', (req, res) => {
-        database.characters.getCharacterStatsTest(req.body).then(data => {
+        database.characters.getCharacterStats(req.body).then(data => {
             res.json(data);
         })
         .catch(error => {

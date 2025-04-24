@@ -76,10 +76,10 @@ function Stats() {
                                 .map((character, index) => (
                                     <tr key={index}>
                                         <td>{character.pokemon_name}</td>
-                                        <td>{(character.ban_rate * 100).toFixed(1)}%</td>
-                                        <td>{(character.pick_rate * 100).toFixed(1)}%</td>
-                                        <td>{(character.presence * 100).toFixed(1)}%</td>
-                                        <td>{(character.win_rate * 100).toFixed(1)}%</td>
+                                        <td>{(character.ban_rate).toFixed(1)}%</td>
+                                        <td>{(character.pick_rate).toFixed(1)}%</td>
+                                        <td>{(character.presence).toFixed(1)}%</td>
+                                        <td>{(character.win_rate).toFixed(1)}%</td>
                                         <td>{character.pick_round_1}</td>
                                         <td>{character.pick_round_2}</td>
                                         <td>{character.pick_round_3}</td>
