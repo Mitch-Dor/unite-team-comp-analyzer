@@ -138,7 +138,7 @@ create table professional_sets (
 create table events (
     event_id integer primary key AUTOINCREMENT not null,
     event_name text not null,
-    event_date text not null,
+    event_date date not null,
     vod_url text not null
 );
 create table users (

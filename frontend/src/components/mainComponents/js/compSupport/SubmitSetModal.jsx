@@ -840,7 +840,7 @@ function EventCreation({ resetKey, setEventInsertion }) {
             {/* Event Name */}
             <input type="text" value={eventName ? eventName : ""} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
             {/* Event Date */}
-            <input type="text" value={eventDate ? eventDate : ""} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
+            <input type="date" value={eventDate ? eventDate : ""} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
             {/* Event VOD URL */}
             <input type="text" value={eventVodUrl ? eventVodUrl : ""} placeholder="Event VOD URL" onChange={(e) => setEventVodUrl(e.target.value)} />
         </div>
