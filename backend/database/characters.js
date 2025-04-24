@@ -112,7 +112,7 @@ class Characters {
 
     // Get character stats
     async getCharacterStatsTest(queryContext) {
-      const pickBanStats = new Promise((resolve, reject) => {
+      const pickBanStats = await new Promise((resolve, reject) => {
         try {
           const { event, region, team, player, date, beforeAfter } = queryContext;
 
@@ -311,7 +311,7 @@ class Characters {
         }
       });
 
-      const moveStats = new Promise((resolve, reject) => {
+      const moveStats = await new Promise((resolve, reject) => {
         try {
           const { event, region, team, player, date, beforeAfter } = queryContext;
 
@@ -445,7 +445,7 @@ class Characters {
                    (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
                    (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
                    (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?))))
-              THEN pm.match_id ELSE NULL END) as player_team_usages,
+              THEN pm.match_id ELSE NULL END) as requested_usages,
               COUNT(DISTINCT CASE WHEN 
                 (((pm.team_1_id = ? AND pt1.team_region = ? AND pc1.did_win = 1) AND
                   ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id AND pm.team_1_player_1 = ?) OR
@@ -459,7 +459,7 @@ class Characters {
                    (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
                    (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
                    (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?))))
-              THEN pm.match_id ELSE NULL END) as player_team_wins
+              THEN pm.match_id ELSE NULL END) as requested_wins
             `;
 
             selectParams.push(
@@ -486,7 +486,6 @@ class Characters {
               // Resolve with empty array instead of rejecting to avoid failing the entire function
               resolve([]);
             } else {
-              console.log(rows);
               resolve(rows);
             }
           });
@@ -496,6 +495,12 @@ class Characters {
           resolve([]);
         }
       });
+
+      for (const row of pickBanStats) {
+        // Find all rows where row.pokemon_id matches moveStats[x].pokemon_id and cumulate all of those objects
+        const matchingRows = moveStats.filter(move => move.pokemon_id === row.pokemon_id);
+        row.movesets = matchingRows;
+      }
 
       return pickBanStats;
     } 
