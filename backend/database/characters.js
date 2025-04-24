@@ -287,6 +287,363 @@ class Characters {
               team, region, player,
               team, region, player
             ];
+          } else if (team && region) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN ((pm.team_1_id = ? AND pt1.team_region = ? AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
+                                      (pm.team_2_id = ? AND pt2.team_region = ? AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)))
+                                       THEN pm.match_id ELSE NULL END) as picks,
+              COUNT(DISTINCT CASE WHEN ((pm.team_1_id = ? AND pt1.team_region = ? AND pc1.did_win = 1 AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
+                                      (pm.team_2_id = ? AND pt2.team_region = ? AND pc2.did_win = 1 AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)))
+                                       THEN pm.match_id ELSE NULL END) as wins,
+              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_id = ? AND pt1.team_region = ?) OR
+                            (pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_id = ? AND pt2.team_region = ?))
+                       THEN 1 ELSE 0 END) as bans,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pt1.team_region = ?) OR
+                                       (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pt2.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_1,
+              COUNT(DISTINCT CASE WHEN (((pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id) AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pt2.team_region = ?) OR
+                                       ((pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id) AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pt1.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_2,
+              COUNT(DISTINCT CASE WHEN (((pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id) AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pt1.team_region = ?) OR
+                                       ((pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id) AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pt2.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_3,
+              COUNT(DISTINCT CASE WHEN (((pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id) AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pt2.team_region = ?) OR
+                                       ((pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id) AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pt1.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_4,
+              COUNT(DISTINCT CASE WHEN (((pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id) AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pt1.team_region = ?) OR
+                                       ((pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id) AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pt2.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_5,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pt1.team_region = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pt2.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_6
+            `;  
+            
+            // Add all the parameters for the complex SELECT columns
+            selectParams = [
+              team, region, team, region, team, region, team, region, team, region, team, region,
+              team, region, team, region, team, region, team, region, team, region, team, region,
+              team, region, team, region, team, region, team, region, team, region, team, region
+            ];
+          } else if (team && player) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN (pm.team_1_id = ? AND 
+                                       ((pc1.pokemon_1 = pc.pokemon_id AND pm.team_1_player_1 = ?) OR 
+                                        (pc1.pokemon_2 = pc.pokemon_id AND pm.team_1_player_2 = ?) OR 
+                                        (pc1.pokemon_3 = pc.pokemon_id AND pm.team_1_player_3 = ?) OR 
+                                        (pc1.pokemon_4 = pc.pokemon_id AND pm.team_1_player_4 = ?) OR 
+                                        (pc1.pokemon_5 = pc.pokemon_id AND pm.team_1_player_5 = ?))) OR
+                                       (pm.team_2_id = ? AND 
+                                       ((pc2.pokemon_1 = pc.pokemon_id AND pm.team_2_player_1 = ?) OR 
+                                        (pc2.pokemon_2 = pc.pokemon_id AND pm.team_2_player_2 = ?) OR 
+                                        (pc2.pokemon_3 = pc.pokemon_id AND pm.team_2_player_3 = ?) OR 
+                                        (pc2.pokemon_4 = pc.pokemon_id AND pm.team_2_player_4 = ?) OR 
+                                        (pc2.pokemon_5 = pc.pokemon_id AND pm.team_2_player_5 = ?)))
+                                       THEN pm.match_id ELSE NULL END) as picks,
+              COUNT(DISTINCT CASE WHEN ((pm.team_1_id = ? AND pc1.did_win = 1) AND 
+                                       ((pc1.pokemon_1 = pc.pokemon_id AND pm.team_1_player_1 = ?) OR 
+                                        (pc1.pokemon_2 = pc.pokemon_id AND pm.team_1_player_2 = ?) OR 
+                                        (pc1.pokemon_3 = pc.pokemon_id AND pm.team_1_player_3 = ?) OR 
+                                        (pc1.pokemon_4 = pc.pokemon_id AND pm.team_1_player_4 = ?) OR 
+                                        (pc1.pokemon_5 = pc.pokemon_id AND pm.team_1_player_5 = ?))) OR
+                                      ((pm.team_2_id = ? AND pc2.did_win = 1) AND
+                                       ((pc2.pokemon_1 = pc.pokemon_id AND pm.team_2_player_1 = ?) OR 
+                                        (pc2.pokemon_2 = pc.pokemon_id AND pm.team_2_player_2 = ?) OR 
+                                        (pc2.pokemon_3 = pc.pokemon_id AND pm.team_2_player_3 = ?) OR 
+                                        (pc2.pokemon_4 = pc.pokemon_id AND pm.team_2_player_4 = ?) OR 
+                                        (pc2.pokemon_5 = pc.pokemon_id AND pm.team_2_player_5 = ?)))
+                                       THEN pm.match_id ELSE NULL END) as wins,
+              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_id = ? AND (pm.team_1_player_1 = ? OR pm.team_1_player_2 = ? OR pm.team_1_player_3 = ? OR pm.team_1_player_4 = ? OR pm.team_1_player_5 = ?)) OR
+                            ((pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_id = ? AND (pm.team_2_player_1 = ? OR pm.team_2_player_2 = ? OR pm.team_2_player_3 = ? OR pm.team_2_player_4 = ? OR pm.team_2_player_5 = ?))
+                       THEN 1 ELSE 0 END) as bans,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pm.team_1_player_1 = ?) OR
+                                       (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pm.team_2_player_1 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_1,
+              COUNT(DISTINCT CASE WHEN ((pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pm.team_2_player_1 = ?) OR
+                                       (pc2.pokemon_2 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pm.team_2_player_2 = ?) OR
+                                       (pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pm.team_1_player_1 = ?) OR
+                                       (pc1.pokemon_2 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pm.team_1_player_2 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_2,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_2 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pm.team_1_player_2 = ?) OR
+                                       (pc1.pokemon_3 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pm.team_1_player_3 = ?) OR
+                                       (pc2.pokemon_2 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pm.team_2_player_2 = ?) OR
+                                       (pc2.pokemon_3 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pm.team_2_player_3 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_3,
+              COUNT(DISTINCT CASE WHEN ((pc2.pokemon_3 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pm.team_2_player_3 = ?) OR
+                                       (pc2.pokemon_4 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pm.team_2_player_4 = ?) OR
+                                       (pc1.pokemon_3 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pm.team_1_player_3 = ?) OR
+                                       (pc1.pokemon_4 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pm.team_1_player_4 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_4,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_4 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pm.team_1_player_4 = ?) OR
+                                       (pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ? AND pm.team_1_player_5 = ?) OR
+                                       (pc2.pokemon_4 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pm.team_2_player_4 = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ? AND pm.team_2_player_5 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_5,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ? AND pm.team_1_player_5 = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ? AND pm.team_2_player_5 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_6
+            `;  
+            
+            // Add all the parameters for the complex SELECT columns
+            selectParams = [
+              team, player, player, player, player, player, 
+              team, player, player, player, player, player, 
+              team, player, player, player, player, player, 
+              team, player, player, player, player, player, 
+              team, player, player, player, player, player, 
+              team, player, player, player, player, player, 
+              team, player, team, player, team, player, team, player, team, player,
+              team, player, team, player, team, player, team, player, team, player,
+              team, player, team, player, team, player, team, player, team, player,
+              team, player, team, player, team, player, team, player, team, player
+            ];
+          } else if (region && player) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN (pt1.team_region = ? AND 
+                                       ((pc1.pokemon_1 = pc.pokemon_id AND pm.team_1_player_1 = ?) OR 
+                                        (pc1.pokemon_2 = pc.pokemon_id AND pm.team_1_player_2 = ?) OR 
+                                        (pc1.pokemon_3 = pc.pokemon_id AND pm.team_1_player_3 = ?) OR 
+                                        (pc1.pokemon_4 = pc.pokemon_id AND pm.team_1_player_4 = ?) OR 
+                                        (pc1.pokemon_5 = pc.pokemon_id AND pm.team_1_player_5 = ?))) OR
+                                       (pt2.team_region = ? AND
+                                       ((pc2.pokemon_1 = pc.pokemon_id AND pm.team_2_player_1 = ?) OR 
+                                        (pc2.pokemon_2 = pc.pokemon_id AND pm.team_2_player_2 = ?) OR 
+                                        (pc2.pokemon_3 = pc.pokemon_id AND pm.team_2_player_3 = ?) OR 
+                                        (pc2.pokemon_4 = pc.pokemon_id AND pm.team_2_player_4 = ?) OR 
+                                        (pc2.pokemon_5 = pc.pokemon_id AND pm.team_2_player_5 = ?)))
+                                       THEN pm.match_id ELSE NULL END) as picks,
+              COUNT(DISTINCT CASE WHEN (pt1.team_region = ? AND pc1.did_win = 1 AND
+                                       ((pc1.pokemon_1 = pc.pokemon_id AND pm.team_1_player_1 = ?) OR 
+                                        (pc1.pokemon_2 = pc.pokemon_id AND pm.team_1_player_2 = ?) OR 
+                                        (pc1.pokemon_3 = pc.pokemon_id AND pm.team_1_player_3 = ?) OR 
+                                        (pc1.pokemon_4 = pc.pokemon_id AND pm.team_1_player_4 = ?) OR 
+                                        (pc1.pokemon_5 = pc.pokemon_id AND pm.team_1_player_5 = ?))) OR
+                                       (pt2.team_region = ? AND pc2.did_win = 1 AND
+                                       ((pc2.pokemon_1 = pc.pokemon_id AND pm.team_2_player_1 = ?) OR 
+                                        (pc2.pokemon_2 = pc.pokemon_id AND pm.team_2_player_2 = ?) OR 
+                                        (pc2.pokemon_3 = pc.pokemon_id AND pm.team_2_player_3 = ?) OR 
+                                        (pc2.pokemon_4 = pc.pokemon_id AND pm.team_2_player_4 = ?) OR 
+                                        (pc2.pokemon_5 = pc.pokemon_id AND pm.team_2_player_5 = ?)))
+                                       THEN pm.match_id ELSE NULL END) as wins,
+              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_region = ? AND (pm.team_1_player_1 = ? OR pm.team_1_player_2 = ? OR pm.team_1_player_3 = ? OR pm.team_1_player_4 = ? OR pm.team_1_player_5 = ?)) OR
+                            ((pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_region = ? AND (pm.team_2_player_1 = ? OR pm.team_2_player_2 = ? OR pm.team_2_player_3 = ? OR pm.team_2_player_4 = ? OR pm.team_2_player_5 = ?))
+                       THEN 1 ELSE 0 END) as bans,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pt1.team_region = ? AND pm.team_1_player_1 = ?) OR
+                                       (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pt2.team_region = ? AND pm.team_2_player_1 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_1,
+              COUNT(DISTINCT CASE WHEN ((pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 0 AND pt2.team_region = ? AND pm.team_2_player_1 = ?) OR
+                                       (pc2.pokemon_2 = pc.pokemon_id AND pc2.first_pick = 0 AND pt2.team_region = ? AND pm.team_2_player_2 = ?) OR
+                                       (pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 0 AND pt1.team_region = ? AND pm.team_1_player_1 = ?) OR
+                                       (pc1.pokemon_2 = pc.pokemon_id AND pc1.first_pick = 0 AND pt1.team_region = ? AND pm.team_1_player_2 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_2,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_2 = pc.pokemon_id AND pc1.first_pick = 1 AND pt1.team_region = ? AND pm.team_1_player_2 = ?) OR
+                                       (pc1.pokemon_3 = pc.pokemon_id AND pc1.first_pick = 1 AND pt1.team_region = ? AND pm.team_1_player_3 = ?) OR
+                                       (pc2.pokemon_2 = pc.pokemon_id AND pc2.first_pick = 1 AND pt2.team_region = ? AND pm.team_2_player_2 = ?) OR
+                                       (pc2.pokemon_3 = pc.pokemon_id AND pc2.first_pick = 1 AND pt2.team_region = ? AND pm.team_2_player_3 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_3,
+              COUNT(DISTINCT CASE WHEN ((pc2.pokemon_3 = pc.pokemon_id AND pc2.first_pick = 0 AND pt2.team_region = ? AND pm.team_2_player_3 = ?) OR
+                                       (pc2.pokemon_4 = pc.pokemon_id AND pc2.first_pick = 0 AND pt2.team_region = ? AND pm.team_2_player_4 = ?) OR
+                                       (pc1.pokemon_3 = pc.pokemon_id AND pc1.first_pick = 0 AND pt1.team_region = ? AND pm.team_1_player_3 = ?) OR
+                                       (pc1.pokemon_4 = pc.pokemon_id AND pc1.first_pick = 0 AND pt1.team_region = ? AND pm.team_1_player_4 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_4,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_4 = pc.pokemon_id AND pc1.first_pick = 1 AND pt1.team_region = ? AND pm.team_1_player_4 = ?) OR
+                                       (pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 1 AND pt1.team_region = ? AND pm.team_1_player_5 = ?) OR
+                                       (pc2.pokemon_4 = pc.pokemon_id AND pc2.first_pick = 1 AND pt2.team_region = ? AND pm.team_2_player_4 = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 1 AND pt2.team_region = ? AND pm.team_2_player_5 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_5,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 0 AND pt1.team_region = ? AND pm.team_1_player_5 = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 0 AND pt2.team_region = ? AND pm.team_2_player_5 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_6
+            `;  
+            
+            // Add all the parameters for the complex SELECT columns
+            selectParams = [
+              region, player, player, player, player, player, 
+              region, player, player, player, player, player, 
+              region, player, player, player, player, player, 
+              region, player, player, player, player, player, 
+              region, player, player, player, player, player, 
+              region, player, player, player, player, player, 
+              region, player, region, player, region, player, region, player, region, player,
+              region, player, region, player, region, player, region, player, region, player,
+              region, player, region, player, region, player, region, player, region, player,
+              region, player, region, player, region, player, region, player, region, player
+            ];
+          } else if (team) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN ((pm.team_1_id = ? AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
+                                      (pm.team_2_id = ? AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)))
+                                       THEN pm.match_id ELSE NULL END) as picks,
+              COUNT(DISTINCT CASE WHEN ((pm.team_1_id = ? AND pc1.did_win = 1 AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
+                                      (pm.team_2_id = ? AND pc2.did_win = 1 AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)))
+                                       THEN pm.match_id ELSE NULL END) as wins,
+              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_id = ?) OR
+                            (pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_id = ?))
+                       THEN 1 ELSE 0 END) as bans,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_id = ?) OR
+                                       (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_id = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_1,
+              COUNT(DISTINCT CASE WHEN (((pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id) AND pc2.first_pick = 0 AND pm.team_2_id = ?) OR
+                                       ((pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id) AND pc1.first_pick = 0 AND pm.team_1_id = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_2,
+              COUNT(DISTINCT CASE WHEN (((pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id) AND pc1.first_pick = 1 AND pm.team_1_id = ?) OR
+                                       ((pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id) AND pc2.first_pick = 1 AND pm.team_2_id = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_3,
+              COUNT(DISTINCT CASE WHEN (((pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id) AND pc2.first_pick = 0 AND pm.team_2_id = ?) OR
+                                       ((pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id) AND pc1.first_pick = 0 AND pm.team_1_id = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_4,
+              COUNT(DISTINCT CASE WHEN (((pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id) AND pc1.first_pick = 1 AND pm.team_1_id = ?) OR
+                                       ((pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id) AND pc2.first_pick = 1 AND pm.team_2_id = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_5,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_id = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_id = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_6
+            `;  
+            
+            // Add all the parameters for the complex SELECT columns
+            selectParams = [
+              team, team, team, team, team, team,
+              team, team, team, team, team, team,
+              team, team, team, team, team, team
+            ];
+          } else if (region) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN ((pt1.team_region = ? AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
+                                      (pt2.team_region = ? AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)))
+                                       THEN pm.match_id ELSE NULL END) as picks,
+              COUNT(DISTINCT CASE WHEN ((pt1.team_region = ? AND pc1.did_win = 1 AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
+                                      (pt2.team_region = ? AND pc2.did_win = 1 AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)))
+                                       THEN pm.match_id ELSE NULL END) as wins,
+              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND pt1.team_region = ?) OR
+                            (pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND pt2.team_region = ?))
+                       THEN 1 ELSE 0 END) as bans,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pt1.team_region = ?) OR
+                                       (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pt2.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_1,
+              COUNT(DISTINCT CASE WHEN (((pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id) AND pc2.first_pick = 0 AND pt2.team_region = ?) OR
+                                       ((pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id) AND pc1.first_pick = 0 AND pt1.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_2,
+              COUNT(DISTINCT CASE WHEN (((pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id) AND pc1.first_pick = 1 AND pt1.team_region = ?) OR
+                                       ((pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id) AND pc2.first_pick = 1 AND pt2.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_3,
+              COUNT(DISTINCT CASE WHEN (((pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id) AND pc2.first_pick = 0 AND pt2.team_region = ?) OR
+                                       ((pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id) AND pc1.first_pick = 0 AND pt1.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_4,
+              COUNT(DISTINCT CASE WHEN (((pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id) AND pc1.first_pick = 1 AND pt1.team_region = ?) OR
+                                       ((pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id) AND pc2.first_pick = 1 AND pt2.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_5,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 0 AND pt1.team_region = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 0 AND pt2.team_region = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_6
+            `;  
+            
+            // Add all the parameters for the complex SELECT columns
+            selectParams = [
+              region, region, region, region, region, region,
+              region, region, region, region, region, region,
+              region, region, region, region, region, region
+            ];
+          } else if (player) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pm.team_1_player_1 = ?) OR 
+                                        (pc1.pokemon_2 = pc.pokemon_id AND pm.team_1_player_2 = ?) OR 
+                                        (pc1.pokemon_3 = pc.pokemon_id AND pm.team_1_player_3 = ?) OR 
+                                        (pc1.pokemon_4 = pc.pokemon_id AND pm.team_1_player_4 = ?) OR 
+                                        (pc1.pokemon_5 = pc.pokemon_id AND pm.team_1_player_5 = ?) OR
+                                        (pc2.pokemon_1 = pc.pokemon_id AND pm.team_2_player_1 = ?) OR 
+                                        (pc2.pokemon_2 = pc.pokemon_id AND pm.team_2_player_2 = ?) OR 
+                                        (pc2.pokemon_3 = pc.pokemon_id AND pm.team_2_player_3 = ?) OR 
+                                        (pc2.pokemon_4 = pc.pokemon_id AND pm.team_2_player_4 = ?) OR 
+                                        (pc2.pokemon_5 = pc.pokemon_id AND pm.team_2_player_5 = ?))
+                                       THEN pm.match_id ELSE NULL END) as picks,
+              COUNT(DISTINCT CASE WHEN (pc1.did_win = 1 AND
+                                       ((pc1.pokemon_1 = pc.pokemon_id AND pm.team_1_player_1 = ?) OR 
+                                        (pc1.pokemon_2 = pc.pokemon_id AND pm.team_1_player_2 = ?) OR 
+                                        (pc1.pokemon_3 = pc.pokemon_id AND pm.team_1_player_3 = ?) OR 
+                                        (pc1.pokemon_4 = pc.pokemon_id AND pm.team_1_player_4 = ?) OR 
+                                        (pc1.pokemon_5 = pc.pokemon_id AND pm.team_1_player_5 = ?))) OR
+                                       (pc2.did_win = 1 AND
+                                       ((pc2.pokemon_1 = pc.pokemon_id AND pm.team_2_player_1 = ?) OR 
+                                        (pc2.pokemon_2 = pc.pokemon_id AND pm.team_2_player_2 = ?) OR 
+                                        (pc2.pokemon_3 = pc.pokemon_id AND pm.team_2_player_3 = ?) OR 
+                                        (pc2.pokemon_4 = pc.pokemon_id AND pm.team_2_player_4 = ?) OR 
+                                        (pc2.pokemon_5 = pc.pokemon_id AND pm.team_2_player_5 = ?)))
+                                       THEN pm.match_id ELSE NULL END) as wins,
+              SUM(CASE WHEN ((pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id) AND (pm.team_1_player_1 = ? OR pm.team_1_player_2 = ? OR pm.team_1_player_3 = ? OR pm.team_1_player_4 = ? OR pm.team_1_player_5 = ?)) OR
+                            ((pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id) AND (pm.team_2_player_1 = ? OR pm.team_2_player_2 = ? OR pm.team_2_player_3 = ? OR pm.team_2_player_4 = ? OR pm.team_2_player_5 = ?))
+                       THEN 1 ELSE 0 END) as bans,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_player_1 = ?) OR
+                                       (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_player_1 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_1,
+              COUNT(DISTINCT CASE WHEN ((pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_player_1 = ?) OR
+                                       (pc2.pokemon_2 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_player_2 = ?) OR
+                                       (pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_player_1 = ?) OR
+                                       (pc1.pokemon_2 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_player_2 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_2,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_2 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_player_2 = ?) OR
+                                       (pc1.pokemon_3 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_player_3 = ?) OR
+                                       (pc2.pokemon_2 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_player_2 = ?) OR
+                                       (pc2.pokemon_3 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_player_3 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_3,
+              COUNT(DISTINCT CASE WHEN ((pc2.pokemon_3 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_player_3 = ?) OR
+                                       (pc2.pokemon_4 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_player_4 = ?) OR
+                                       (pc1.pokemon_3 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_player_3 = ?) OR
+                                       (pc1.pokemon_4 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_player_4 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_4,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_4 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_player_4 = ?) OR
+                                       (pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 1 AND pm.team_1_player_5 = ?) OR
+                                       (pc2.pokemon_4 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_player_4 = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 1 AND pm.team_2_player_5 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_5,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 0 AND pm.team_1_player_5 = ?) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 0 AND pm.team_2_player_5 = ?))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_6
+            `;  
+            
+            // Add all the parameters for the complex SELECT columns
+            selectParams = [
+              player, player, player, player, player, 
+              player, player, player, player, player, 
+              player, player, player, player, player, 
+              player, player, player, player, player, 
+              player, player, player, player, player, 
+              player, player, player, player, player, 
+              player, player, player, player, player,
+              player, player, player, player, player,
+              player, player, player, player, player,
+              player, player, player, player, player
+            ];
+          } else {
+            // None of the complex filters are provided
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id OR
+                                      pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id)
+                                      THEN pm.match_id ELSE NULL END) as picks,
+              COUNT(DISTINCT CASE WHEN (pc1.did_win = 1 AND (pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id)) OR
+                                      pc2.did_win = 1 AND (pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id))
+                                      THEN pm.match_id ELSE NULL END) as wins,
+              SUM(CASE WHEN (pm.team_1_ban_1 = pc.pokemon_id OR pm.team_1_ban_2 = pc.pokemon_id OR pm.team_2_ban_1 = pc.pokemon_id OR pm.team_2_ban_2 = pc.pokemon_id)
+                                      THEN 1 ELSE 0 END) as bans,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_1 = pc.pokemon_id AND pc1.first_pick = 1) OR
+                                       (pc2.pokemon_1 = pc.pokemon_id AND pc2.first_pick = 1))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_1,
+              COUNT(DISTINCT CASE WHEN (((pc2.pokemon_1 = pc.pokemon_id OR pc2.pokemon_2 = pc.pokemon_id) AND pc2.first_pick = 0) OR
+                                       ((pc1.pokemon_1 = pc.pokemon_id OR pc1.pokemon_2 = pc.pokemon_id) AND pc1.first_pick = 0))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_2,
+              COUNT(DISTINCT CASE WHEN (((pc1.pokemon_2 = pc.pokemon_id OR pc1.pokemon_3 = pc.pokemon_id) AND pc1.first_pick = 1) OR
+                                       ((pc2.pokemon_2 = pc.pokemon_id OR pc2.pokemon_3 = pc.pokemon_id) AND pc2.first_pick = 1))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_3,
+              COUNT(DISTINCT CASE WHEN (((pc2.pokemon_3 = pc.pokemon_id OR pc2.pokemon_4 = pc.pokemon_id) AND pc2.first_pick = 0) OR
+                                       ((pc1.pokemon_3 = pc.pokemon_id OR pc1.pokemon_4 = pc.pokemon_id) AND pc1.first_pick = 0))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_4,
+              COUNT(DISTINCT CASE WHEN (((pc1.pokemon_4 = pc.pokemon_id OR pc1.pokemon_5 = pc.pokemon_id) AND pc1.first_pick = 1) OR
+                                       ((pc2.pokemon_4 = pc.pokemon_id OR pc2.pokemon_5 = pc.pokemon_id) AND pc2.first_pick = 1))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_5,
+              COUNT(DISTINCT CASE WHEN ((pc1.pokemon_5 = pc.pokemon_id AND pc1.first_pick = 0) OR
+                                       (pc2.pokemon_5 = pc.pokemon_id AND pc2.first_pick = 0))
+                                      THEN pm.match_id ELSE NULL END) as pick_round_6
+            `;  
+            
+            // No params
           }
 
           // Build and execute the final query
@@ -468,6 +825,262 @@ class Characters {
               team, region, player, player, player, player, player,
               team, region, player, player, player, player, player
             );
+          } else if (team && region) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN 
+                (((pm.team_1_id = ? AND pt1.team_region = ?) AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id)) OR
+                 ((pm.team_2_id = ? AND pt2.team_region = ?) AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+              THEN pm.match_id ELSE NULL END) as requested_usages,
+              COUNT(DISTINCT CASE WHEN 
+                (((pm.team_1_id = ? AND pt1.team_region = ? AND pc1.did_win = 1) AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id))) OR
+                 ((pm.team_2_id = ? AND pt2.team_region = ? AND pc2.did_win = 1) AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+              THEN pm.match_id ELSE NULL END) as requested_wins
+            `;
+
+            selectParams.push(
+              team, region,
+              team, region,
+              team, region,
+              team, region
+            );
+          } else if (team && player) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN 
+                ((pm.team_1_id = ? AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id AND pm.team_1_player_1 = ?) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id AND pm.team_1_player_2 = ?) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id AND pm.team_1_player_3 = ?) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id AND pm.team_1_player_4 = ?) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id AND pm.team_1_player_5 = ?))) OR
+                (pm.team_2_id = ? AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id AND pm.team_2_player_1 = ?) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id AND pm.team_2_player_2 = ?) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?))))
+              THEN pm.match_id ELSE NULL END) as requested_usages,
+              COUNT(DISTINCT CASE WHEN 
+                (((pm.team_1_id = ? AND pc1.did_win = 1) AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id AND pm.team_1_player_1 = ?) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id AND pm.team_1_player_2 = ?) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id AND pm.team_1_player_3 = ?) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id AND pm.team_1_player_4 = ?) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id AND pm.team_1_player_5 = ?))) OR
+                 ((pm.team_2_id = ? AND pc2.did_win = 1) AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id AND pm.team_2_player_1 = ?) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id AND pm.team_2_player_2 = ?) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?))))
+              THEN pm.match_id ELSE NULL END) as requested_wins
+            `;
+
+            selectParams.push(
+              team, player, player, player, player, player,
+              team, player, player, player, player, player,
+              team, player, player, player, player, player,
+              team, player, player, player, player, player
+            );
+          } else if (region && player) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN 
+                ((pt1.team_region = ? AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id AND pm.team_1_player_1 = ?) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id AND pm.team_1_player_2 = ?) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id AND pm.team_1_player_3 = ?) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id AND pm.team_1_player_4 = ?) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id AND pm.team_1_player_5 = ?))) OR
+                 (pt2.team_region = ? AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id AND pm.team_2_player_1 = ?) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id AND pm.team_2_player_2 = ?) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?))))
+              THEN pm.match_id ELSE NULL END) as requested_usages,
+              COUNT(DISTINCT CASE WHEN 
+                (((pt1.team_region = ? AND pc1.did_win = 1) AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id AND pm.team_1_player_1 = ?) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id AND pm.team_1_player_2 = ?) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id AND pm.team_1_player_3 = ?) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id AND pm.team_1_player_4 = ?) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id AND pm.team_1_player_5 = ?))) OR
+                 ((pt2.team_region = ? AND pc2.did_win = 1) AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id AND pm.team_2_player_1 = ?) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id AND pm.team_2_player_2 = ?) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?))))
+              THEN pm.match_id ELSE NULL END) as requested_wins
+            `;
+
+            selectParams.push(
+              region, player, player, player, player, player,
+              region, player, player, player, player, player,
+              region, player, player, player, player, player,
+              region, player, player, player, player, player
+            );
+          } else if (team) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN 
+                ((pm.team_1_id = ? AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id)) OR
+                 (pm.team_2_id = ? AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+              THEN pm.match_id ELSE NULL END) as requested_usages,
+              COUNT(DISTINCT CASE WHEN 
+                (((pm.team_1_id = ? AND pc1.did_win = 1) AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id))) OR
+                 ((pm.team_2_id = ? AND pc2.did_win = 1) AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+              THEN pm.match_id ELSE NULL END) as requested_wins
+            `;
+
+            selectParams.push(
+              team, team, team, team
+            );
+          } else if (region) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN 
+                ((pt1.team_region = ? AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id)) OR
+                 (pt2.team_region = ? AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+              THEN pm.match_id ELSE NULL END) as requested_usages,
+              COUNT(DISTINCT CASE WHEN 
+                (((pt1.team_region = ? AND pc1.did_win = 1) AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id))) OR
+                 ((pt2.team_region = ? AND pc2.did_win = 1) AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)))
+              THEN pm.match_id ELSE NULL END) as requested_wins
+            `;
+
+            selectParams.push(
+              region, region, region, region
+            );
+          } else if (player) {
+            selectSQL += `,
+              COUNT(DISTINCT CASE WHEN 
+                (((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id AND pm.team_1_player_1 = ?) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id AND pm.team_1_player_2 = ?) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id AND pm.team_1_player_3 = ?) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id AND pm.team_1_player_4 = ?) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id AND pm.team_1_player_5 = ?)) OR
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id AND pm.team_2_player_1 = ?) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id AND pm.team_2_player_2 = ?) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?)))
+              THEN pm.match_id ELSE NULL END) as requested_usages,
+              COUNT(DISTINCT CASE WHEN 
+                ((pc1.did_win = 1 AND
+                  ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id AND pm.team_1_player_1 = ?) OR
+                   (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id AND pm.team_1_player_2 = ?) OR
+                   (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id AND pm.team_1_player_3 = ?) OR
+                   (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id AND pm.team_1_player_4 = ?) OR
+                   (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id AND pm.team_1_player_5 = ?))) OR
+                 (pc2.did_win = 1 AND
+                  ((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id AND pm.team_2_player_1 = ?) OR
+                   (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id AND pm.team_2_player_2 = ?) OR
+                   (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id AND pm.team_2_player_3 = ?) OR
+                   (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id AND pm.team_2_player_4 = ?) OR
+                   (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id AND pm.team_2_player_5 = ?))))
+              THEN pm.match_id ELSE NULL END) as requested_wins
+            `;
+
+            selectParams.push(
+              player, player, player, player, player,
+              player, player, player, player, player,
+              player, player, player, player, player,
+              player, player, player, player, player
+            );
+          } else {
+            // None of the complex filters are provided
+            // Same as the base SQL statement but with the names changed
+            selectSQL = `
+            SELECT 
+              pc.pokemon_id,
+              pc.pokemon_name,
+              pm1.move_name as move_1,
+              pm2.move_name as move_2,
+              COUNT(DISTINCT CASE WHEN 
+                ((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id))
+              THEN pm.match_id ELSE NULL END) as requested_usages,
+              COUNT(DISTINCT CASE WHEN 
+                (((pc1.pokemon_1 = pc.pokemon_id AND pc1.pokemon_1_move_1 = pm1.move_id AND pc1.pokemon_1_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_2 = pc.pokemon_id AND pc1.pokemon_2_move_1 = pm1.move_id AND pc1.pokemon_2_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_3 = pc.pokemon_id AND pc1.pokemon_3_move_1 = pm1.move_id AND pc1.pokemon_3_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_4 = pc.pokemon_id AND pc1.pokemon_4_move_1 = pm1.move_id AND pc1.pokemon_4_move_2 = pm2.move_id) OR
+                 (pc1.pokemon_5 = pc.pokemon_id AND pc1.pokemon_5_move_1 = pm1.move_id AND pc1.pokemon_5_move_2 = pm2.move_id)) AND
+                 pc1.did_win = 1) OR
+                (((pc2.pokemon_1 = pc.pokemon_id AND pc2.pokemon_1_move_1 = pm1.move_id AND pc2.pokemon_1_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_2 = pc.pokemon_id AND pc2.pokemon_2_move_1 = pm1.move_id AND pc2.pokemon_2_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_3 = pc.pokemon_id AND pc2.pokemon_3_move_1 = pm1.move_id AND pc2.pokemon_3_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_4 = pc.pokemon_id AND pc2.pokemon_4_move_1 = pm1.move_id AND pc2.pokemon_4_move_2 = pm2.move_id) OR
+                 (pc2.pokemon_5 = pc.pokemon_id AND pc2.pokemon_5_move_1 = pm1.move_id AND pc2.pokemon_5_move_2 = pm2.move_id)) AND
+                 pc2.did_win = 1)
+              THEN pm.match_id ELSE NULL END) as requested_wins
+          `;
           }
 
           // Build and execute the final query
@@ -476,8 +1089,8 @@ class Characters {
             ${fromSQL}
             ${whereSQL}
             GROUP BY pc.pokemon_id, pc.pokemon_name, pm1.move_name, pm2.move_name
-            HAVING usages > 0
-            ORDER BY pc.pokemon_name, usages DESC
+            HAVING requested_usages > 0
+            ORDER BY pc.pokemon_name, requested_usages DESC
           `;
           
           this.db.all(query, [...selectParams, ...whereParams], (err, rows) => {
