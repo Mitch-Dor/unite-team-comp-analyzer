@@ -11,6 +11,7 @@ function Stats() {
     const [characters, setCharacters] = useState([]);
     const [data, setData] = useState([]);
     const [orderBy, setOrderBy] = useState("all");
+    const [moveData, setMoveData] = useState([]);
 
     useEffect(() => {
         async function fetchAllData() {
@@ -33,6 +34,44 @@ function Stats() {
                 setPlayers(fetchedPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name)));
                 // Doesn't need to be sorted. Is already in order of creation / proper move order
                 setCharactersAndMoves(fetchedCharactersAndMoves);
+                // Cumulate all the moves for each character
+                const cumulativeMoves = [];
+                for (const character of uniquePokemon) {
+                    const characterMoves = fetchedCharactersAndMoves.filter(move => move.pokemon_name === character.pokemon_name);
+                    const moveObj = {
+                        pokemon_name: character.pokemon_name,
+                        move_1_1: characterMoves[0].move_name,
+                    };
+
+                    switch (character.pokemon_name) {
+                        // 2 move pokemon
+                        case "Mew": 
+                        case "Urshifu_SS": 
+                        case "Urshifu_RS":
+                        case "Blaziken":
+                            moveObj.move_2_1 = characterMoves[1].move_name;
+                            moveObj.move_combos = [[characterMoves[0].move_name, characterMoves[1].move_name]];
+                            break;
+
+                        // 3 move pokemon
+                        case "Scyther":
+                        case "Scizor":
+                            moveObj.move_2_1 = characterMoves[1].move_name;
+                            moveObj.move_2_2 = characterMoves[2].move_name;
+                            moveObj.move_combos = [[characterMoves[0].move_name, characterMoves[1].move_name], [characterMoves[0].move_name, characterMoves[2].move_name]];
+                            break;
+
+                        // 4 move pokemon
+                        default: 
+                            moveObj.move_1_2 = characterMoves[1].move_name;
+                            moveObj.move_2_1 = characterMoves[2].move_name;
+                            moveObj.move_2_2 = characterMoves[3].move_name;
+                            moveObj.move_combos = [[characterMoves[0].move_name, characterMoves[2].move_name], [characterMoves[0].move_name, characterMoves[3].move_name], [characterMoves[1].move_name, characterMoves[2].move_name], [characterMoves[1].move_name, characterMoves[3].move_name]];
+                            break;
+                    }
+                    cumulativeMoves.push(moveObj);
+                }
+                setMoveData(cumulativeMoves);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -43,10 +82,11 @@ function Stats() {
   return (
     <div id="mainContainer">
         <StatsOrdering setOrderBy={setOrderBy} />
-        <StatsSorting events={events} teams={teams} players={players} regions={regions} setData={setData} />
+        <StatsSorting events={events} teams={teams} players={players} regions={regions} setData={setData} moveData={moveData} />
         <div id="statsContainer">
             {data.length > 0 ? (
                 <div className="stats-table-container">
+                    {/* Vision For The Table: Display bar graphs of the "Order By" column for every Pokemon in sorted order. When the user clicks on a column, it turns the graph into that pokemon's data which shows bar graphs of all the data and move combination usage and winrates. */}
                     <table className="stats-table">
                         <thead>
                             <tr>
@@ -70,6 +110,19 @@ function Stats() {
                                     if (orderBy === "pick") return b.pick_rate - a.pick_rate;
                                     if (orderBy === "presence") return b.presence - a.presence;
                                     if (orderBy === "win") return b.win_rate - a.win_rate;
+                                    if (orderBy === "pickOrder") {
+                                        const round1Diff = b.pick_round_1 - a.pick_round_1;
+                                        if (round1Diff !== 0) return round1Diff;
+                                        const round2Diff = b.pick_round_2 - a.pick_round_2;
+                                        if (round2Diff !== 0) return round2Diff;
+                                        const round3Diff = b.pick_round_3 - a.pick_round_3;
+                                        if (round3Diff !== 0) return round3Diff;
+                                        const round4Diff = b.pick_round_4 - a.pick_round_4;
+                                        if (round4Diff !== 0) return round4Diff;
+                                        const round5Diff = b.pick_round_5 - a.pick_round_5;
+                                        if (round5Diff !== 0) return round5Diff;
+                                        return b.pick_round_6 - a.pick_round_6;
+                                    }
                                     // Default sort by presence
                                     return b.presence - a.presence;
                                 })
@@ -102,7 +155,7 @@ function Stats() {
   );
 }
 
-function StatsSorting({ events, teams, players, regions, setData }) {
+function StatsSorting({ events, teams, players, regions, setData, moveData }) {
     const [selectedEvent, setSelectedEvent] = useState("");
     const [selectedRegion, setSelectedRegion] = useState("");
     const [selectedTeam, setSelectedTeam] = useState("");
@@ -127,7 +180,39 @@ function StatsSorting({ events, teams, players, regions, setData }) {
         if (selectedEvent || selectedRegion || selectedTeam || selectedPlayer || (selectedDate && beforeAfter)) {
             fetchCharacterStats(queryContext)
                 .then(data => {
-                    console.log(data);
+                    // Process the data without modifying moveData directly
+                    const processedData = data.map(row => {
+                        // Create a deep copy of the row to avoid modifying the original
+                        const rowCopy = { ...row, movesets: [...row.movesets] };
+                        
+                        // Find the corresponding moveObj but don't modify it
+                        const moveObj = moveData.find(move => move.pokemon_name === row.pokemon_name);
+                        if (moveObj && row.movesets.length < moveObj.move_combos.length) {
+                            // Add missing move combinations to the row's movesets
+                            for (const moveCombo of moveObj.move_combos) {
+                                const found = row.movesets.some(moveSet => 
+                                    moveSet.move_1 === moveCombo[0] && moveSet.move_2 === moveCombo[1]
+                                );
+                                
+                                if (!found) {
+                                    // Add missing combo to this row's movesets only
+                                    rowCopy.movesets.push({
+                                        move_1: moveCombo[0],
+                                        move_2: moveCombo[1],
+                                        pokemon_id: row.pokemon_id,
+                                        pokemon_name: row.pokemon_name,
+                                        requested_usages: 0,
+                                        requested_wins: 0
+                                    });
+                                }
+                            }
+                        }
+                        return rowCopy;
+                    });
+                    
+                    console.log(processedData);
+                    // Use the processed data instead of the original
+                    setData(processedData);
                     setData(data);
                 })
                 .catch(error => {
@@ -196,7 +281,7 @@ function StatsOrdering({ setOrderBy }) {
                 <option value="pick">Pick Rate</option>
                 <option value="presence">Presence</option>
                 <option value="win">Win Rate</option>
-                <option value="pick">Pick Order</option> 
+                <option value="pickOrder">Pick Order</option> 
                 {/* Display bar groups of the number of times a Pokemon was chosen in the 1st, 2nd, 3rd, etc rounds. Each pokemon will therefore have 6 bars. */}
             </select>
         </div>
