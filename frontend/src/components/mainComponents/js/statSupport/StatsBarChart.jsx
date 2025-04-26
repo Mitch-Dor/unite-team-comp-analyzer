@@ -1,4 +1,23 @@
 import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+// Register the required chart components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function StatsBarChart({ data }) {
   const chartData = {
@@ -12,7 +31,18 @@ function StatsBarChart({ data }) {
     ],
   };
 
-  return <Bar data={chartData} />;
+  const options = {
+    scales: {
+      x: {
+        type: 'category',
+      },
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
+  return <Bar data={chartData} options={options} />;
 }
 
 export default StatsBarChart;
