@@ -89,7 +89,7 @@ function TierList() {
     { class: 'Attacker', title: 'Attackers' },
     { class: 'Speedster', title: 'Speedsters' },
     { class: 'Supporter', title: 'Supporters' },
-    { class: 'All-Rounder', title: 'All-Rounders' },
+    { class: 'All_Rounder', title: 'All-Rounders' },
     { class: 'Defender', title: 'Defenders' }
   ];
 
