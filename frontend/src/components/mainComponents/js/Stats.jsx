@@ -84,70 +84,43 @@ function Stats() {
 
   return (
     <div id="mainContainer">
-        <StatsOrdering setOrderBy={setOrderBy} />
-        <StatsSorting events={events} teams={teams} players={players} regions={regions} setData={setData} moveData={moveData} />
+        <div id="headerContainer">
+            <StatsOrdering setOrderBy={setOrderBy} />
+            <StatsSorting events={events} teams={teams} players={players} regions={regions} setData={setData} moveData={moveData} />
+        </div>
         <div id="statsContainer">
             {data.length > 0 ? (
                 <div className="stats-table-container">
-                    {/* Vision For The Table: Display bar graphs of the "Order By" column for every Pokemon in sorted order. When the user clicks on a column, it turns the graph into that pokemon's data which shows bar graphs of all the data and move combination usage and winrates. */}
-                    <table className="stats-table">
-                        <thead>
-                            <tr>
-                                <th>Character</th>
-                                <th>Ban Rate</th>
-                                <th>Pick Rate</th>
-                                <th>Presence</th>
-                                <th>Win Rate</th>
-                                <th>Pick R1</th>
-                                <th>Pick R2</th>
-                                <th>Pick R3</th>
-                                <th>Pick R4</th>
-                                <th>Pick R5</th>
-                                <th>Pick R6</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data
-                                .sort((a, b) => {
-                                    if (orderBy === "ban") return b.ban_rate - a.ban_rate;
-                                    if (orderBy === "pick") return b.pick_rate - a.pick_rate;
-                                    if (orderBy === "presence") return b.presence - a.presence;
-                                    if (orderBy === "win") return b.win_rate - a.win_rate;
-                                    if (orderBy === "pickOrder") {
-                                        const round1Diff = b.pick_round_1 - a.pick_round_1;
-                                        if (round1Diff !== 0) return round1Diff;
-                                        const round2Diff = b.pick_round_2 - a.pick_round_2;
-                                        if (round2Diff !== 0) return round2Diff;
-                                        const round3Diff = b.pick_round_3 - a.pick_round_3;
-                                        if (round3Diff !== 0) return round3Diff;
-                                        const round4Diff = b.pick_round_4 - a.pick_round_4;
-                                        if (round4Diff !== 0) return round4Diff;
-                                        const round5Diff = b.pick_round_5 - a.pick_round_5;
-                                        if (round5Diff !== 0) return round5Diff;
-                                        return b.pick_round_6 - a.pick_round_6;
-                                    }
-                                    // Default sort by presence
-                                    return b.presence - a.presence;
-                                })
-                                .map((character, index) => (
-                                    <tr key={index}>
-                                        <td>{character.pokemon_name}</td>
-                                        <td><StatsBarChart data={character} /></td>
-                                        {/* <td>{character.ban_rate && character.ban_rate !== 0 ? (character.ban_rate).toFixed(1) : "0.0"}%</td>
-                                        <td>{character.pick_rate && character.pick_rate !== 0 ? (character.pick_rate).toFixed(1) : "0.0"}%</td>
-                                        <td>{character.presence && character.presence !== 0 ? (character.presence).toFixed(1) : "0.0"}%</td>
-                                        <td>{character.win_rate !== null && character.win_rate !== undefined ? (character.win_rate).toFixed(1)+"%" : "No Data"}</td>
-                                        <td>{character.pick_round_1}</td>
-                                        <td>{character.pick_round_2}</td>
-                                        <td>{character.pick_round_3}</td>
-                                        <td>{character.pick_round_4}</td>
-                                        <td>{character.pick_round_5}</td>
-                                        <td>{character.pick_round_6}</td> */}
-                                    </tr>
-                                ))
-                            }
-                        </tbody>
-                    </table>
+                    <div className="charts-grid">
+                        {data
+                            .sort((a, b) => {
+                                if (orderBy === "ban") return b.ban_rate - a.ban_rate;
+                                if (orderBy === "pick") return b.pick_rate - a.pick_rate;
+                                if (orderBy === "presence") return b.presence - a.presence;
+                                if (orderBy === "win") return b.win_rate - a.win_rate;
+                                if (orderBy === "pickOrder") {
+                                    const round1Diff = b.pick_round_1 - a.pick_round_1;
+                                    if (round1Diff !== 0) return round1Diff;
+                                    const round2Diff = b.pick_round_2 - a.pick_round_2;
+                                    if (round2Diff !== 0) return round2Diff;
+                                    const round3Diff = b.pick_round_3 - a.pick_round_3;
+                                    if (round3Diff !== 0) return round3Diff;
+                                    const round4Diff = b.pick_round_4 - a.pick_round_4;
+                                    if (round4Diff !== 0) return round4Diff;
+                                    const round5Diff = b.pick_round_5 - a.pick_round_5;
+                                    if (round5Diff !== 0) return round5Diff;
+                                    return b.pick_round_6 - a.pick_round_6;
+                                }
+                                // Default sort by presence
+                                return b.presence - a.presence;
+                            })
+                            .map((character, index) => (
+                                <div key={index} className="chart-item">
+                                    <StatsBarChart data={character} />
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
             ) : (
                 <div className="no-data-message">
