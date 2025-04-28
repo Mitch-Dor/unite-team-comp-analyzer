@@ -178,7 +178,7 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
         type: 'category',
         ticks: {
           font: {
-            size: 8
+            size: 11
           }
         }
       },
@@ -366,7 +366,7 @@ function PokemonDataChart({ data, setShowPokemonData }) {
         type: 'category',
         ticks: {
           font: {
-            size: 8
+            size: 7
           }
         }
       },
