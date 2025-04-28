@@ -116,7 +116,7 @@ function Stats() {
                             })
                             .map((character, index) => (
                                 <div key={index} className="chart-item">
-                                    <StatsBarChart data={character} />
+                                    <StatsBarChart data={character} orderBy={orderBy} />
                                 </div>
                             ))
                         }

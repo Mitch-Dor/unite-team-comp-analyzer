@@ -55,11 +55,8 @@ function StatsSorting({ events, teams, players, regions, setData, moveData }) {
                         }
                         return rowCopy;
                     });
-                    
-                    console.log(processedData);
                     // Use the processed data instead of the original
                     setData(processedData);
-                    setData(data);
                 })
                 .catch(error => {
                     console.error("Error fetching character stats:", error);
