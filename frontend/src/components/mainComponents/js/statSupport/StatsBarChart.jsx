@@ -135,6 +135,9 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
         }
       },
       tooltip: { // When hovering over a bar, this is the hover box.
+        bodyFont: {
+          size: 10 // Making the tooltip text smaller
+        },
         callbacks: orderBy !== "pickOrder" ? {
           label: function(context) {
             switch(context.label) {
@@ -309,6 +312,9 @@ function PokemonDataChart({ data, setShowPokemonData }) {
         }
       },
       tooltip: { // When hovering over a bar, this is the hover box.
+        bodyFont: {
+          size: 8 // Making the tooltip text smaller to fit all the data with movesets
+        },
         callbacks: {
           label: function(context) {
             switch(context.label) {
