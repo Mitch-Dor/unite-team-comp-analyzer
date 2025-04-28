@@ -1117,10 +1117,10 @@ class Characters {
         const doubleBans = row.bans * 1.0;
         const doubleWins = row.wins * 1.0;
         const doubleTotalMatches = row.total_matches * 1.0;
-        row.ban_rate = (doubleBans / doubleTotalMatches) * 100;
-        row.pick_rate = (doublePicks / doubleTotalMatches) * 100;
-        row.win_rate = (doubleWins / doublePicks) * 100;
-        row.presence = ((doublePicks + doubleBans) / doubleTotalMatches) * 100;
+        row.ban_rate = parseFloat(((doubleBans / doubleTotalMatches) * 100).toFixed(1));
+        row.pick_rate = parseFloat(((doublePicks / doubleTotalMatches) * 100).toFixed(1));
+        row.win_rate = parseFloat(((doubleWins / doublePicks) * 100).toFixed(1));
+        row.presence = parseFloat((((doublePicks + doubleBans) / doubleTotalMatches) * 100).toFixed(1));
       }
 
       return pickBanStats;
