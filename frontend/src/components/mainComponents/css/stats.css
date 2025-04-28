@@ -131,6 +131,7 @@ h3 {
     max-width: 100%;
     box-sizing: border-box;
     justify-self: center;
+    position: relative;
 }
 
 @media (max-width: 768px) {
@@ -138,6 +139,18 @@ h3 {
     .chart-item {
         width: 100% !important;
     }
+}
+
+.stats-graph-pokemon-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    z-index: 10;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }
 
 .stats-table {

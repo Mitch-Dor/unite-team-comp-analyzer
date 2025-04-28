@@ -22,131 +22,16 @@ ChartJS.register(
 
 function StatsBarChart({ data, orderBy }) {
   const [showPokemonData, setShowPokemonData] = useState(false);
-
-  // Create a custom title with an image
-  const TitleWithImage = {
-    id: 'titleWithImage',
-    beforeDraw(chart) {
-      const { ctx } = chart;
-      const { top, left, right, bottom, width, height } = chart.chartArea;
-      
-      // Calculate title position (centered at the top)
-      const titleText = data.pokemon_name;
-      const titleX = (left + right) / 2;
-      const titleY = 22; // Fixed position further down from the top
-      
-      // Set title font
-      ctx.font = 'bold 16px Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#333';
-      
-      // Calculate text width
-      const textWidth = ctx.measureText(titleText).width;
-      
-      // Draw the title text
-      ctx.fillText(titleText, titleX, titleY);
-      
-      // Load and draw image
-      const image = new Image();
-      image.src = `/assets/Draft/headshots/${data.pokemon_name}.png`;
-      
-      // Calculate image dimensions and position
-      const imgSize = 28;
-      const imgX = titleX - (textWidth / 2) - imgSize - 8;
-      const imgY = titleY - imgSize / 2;
-      
-      // Draw circular background with border for the image
-      ctx.beginPath();
-      ctx.arc(imgX + imgSize/2, imgY + imgSize/2, imgSize/2 + 2, 0, Math.PI * 2);
-      ctx.fillStyle = 'white';
-      ctx.fill();
-      ctx.strokeStyle = '#ddd';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      
-      // Always reset the image when the pokemon changes
-      if (chart.titleImage && chart.titlePokemon !== data.pokemon_name) {
-        chart.titleImage = null;
-      }
-      
-      // Draw the image when it loads
-      image.onload = () => {
-        // Save the image to the chart for reference
-        chart.titleImage = image;
-        chart.titlePokemon = data.pokemon_name;
-        
-        // Create a circular clipping region
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(imgX + imgSize/2, imgY + imgSize/2, imgSize/2, 0, Math.PI * 2);
-        ctx.clip();
-        
-        // Draw the image inside the clipping region
-        ctx.drawImage(image, imgX, imgY, imgSize, imgSize);
-        ctx.restore();
-      };
-    },
-    // Add afterEvent to redraw the image on hover
-    afterEvent(chart, args) {
-      if (chart.titleImage) {
-        const { ctx } = chart;
-        const { top, left, right } = chart.chartArea;
-        
-        // Get the stored title text
-        const titleText = data.pokemon_name;
-        const titleX = (left + right) / 2;
-        const titleY = 22;
-        
-        // Check if the pokemon has changed
-        if (chart.titlePokemon !== data.pokemon_name) {
-          return; // Skip drawing the old image if pokemon changed
-        }
-        
-        // Calculate text width and image position
-        ctx.font = 'bold 16px Arial';
-        const textWidth = ctx.measureText(titleText).width;
-        
-        const imgSize = 28;
-        const imgX = titleX - (textWidth / 2) - imgSize - 8;
-        const imgY = titleY - imgSize / 2;
-        
-        // Redraw circular background with border
-        ctx.beginPath();
-        ctx.arc(imgX + imgSize/2, imgY + imgSize/2, imgSize/2 + 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'white';
-        ctx.fill();
-        ctx.strokeStyle = '#ddd';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        
-        // Redraw the image in a circular clip
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(imgX + imgSize/2, imgY + imgSize/2, imgSize/2, 0, Math.PI * 2);
-        ctx.clip();
-        ctx.drawImage(chart.titleImage, imgX, imgY, imgSize, imgSize);
-        ctx.restore();
-        
-        // Redraw the title text
-        ctx.font = 'bold 16px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#333';
-        ctx.fillText(titleText, titleX, titleY);
-      }
-    }
-  };
   
   return (
     <>
-      {!showPokemonData && <BaseDataChart data={data} orderBy={orderBy} setShowPokemonData={setShowPokemonData} titleWithImage={TitleWithImage} />}
-      {showPokemonData && <PokemonDataChart data={data} setShowPokemonData={setShowPokemonData} titleWithImage={TitleWithImage} />}
+      {!showPokemonData && <BaseDataChart data={data} orderBy={orderBy} setShowPokemonData={setShowPokemonData} />}
+      {showPokemonData && <PokemonDataChart data={data} setShowPokemonData={setShowPokemonData} />}
     </>
   );
 }
 
-function BaseDataChart({ data, orderBy, setShowPokemonData, titleWithImage }) {
+function BaseDataChart({ data, orderBy, setShowPokemonData }) {
   const chartData = {
     labels: (() => { // x-axis labels
       switch(orderBy) {
@@ -238,12 +123,18 @@ function BaseDataChart({ data, orderBy, setShowPokemonData, titleWithImage }) {
         display: false, // Hide legend to save space
       },
       title: {
-        display: false, // We'll use custom title plugin instead
+        display: true,
+        text: data.pokemon_name,
+        font: {
+          size: 16,
+          weight: 'bold',
+        },
+        padding: {
+          top: 10,
+          bottom: 10
+        }
       },
       tooltip: { // When hovering over a bar, this is the hover box.
-        bodyFont: {
-          size: 10 // Making the tooltip text 1 point smaller
-        },
         callbacks: orderBy !== "pickOrder" ? {
           label: function(context) {
             switch(context.label) {
@@ -284,7 +175,7 @@ function BaseDataChart({ data, orderBy, setShowPokemonData, titleWithImage }) {
         type: 'category',
         ticks: {
           font: {
-            size: 11
+            size: 8
           }
         }
       },
@@ -298,23 +189,18 @@ function BaseDataChart({ data, orderBy, setShowPokemonData, titleWithImage }) {
         }
       },
     },
-    layout: {
-      padding: {
-        top: 50 // Adds more space at the top
-      }
-    },
     barPercentage: 0.85,
     categoryPercentage: 0.85,
   };
 
   return (
     <div style={{ height: '250px', width: '100%' }} onClick={() => setShowPokemonData(true)}>
-      <Bar data={chartData} options={options} plugins={[titleWithImage]} key={data.pokemon_name} />
+      <Bar data={chartData} options={options} />
     </div>
   );
 }
 
-function PokemonDataChart({ data, setShowPokemonData, titleWithImage }) {
+function PokemonDataChart({ data, setShowPokemonData }) {
   const chartData = {
     labels: (() => {
       const baseLabels = ['Ban Rate', 'Pick Rate', 'Presence', 'Win Rate', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6'];
@@ -411,12 +297,18 @@ function PokemonDataChart({ data, setShowPokemonData, titleWithImage }) {
         display: false, // Hide legend to save space
       },
       title: {
-        display: false, // We'll use custom title plugin instead
+        display: true,
+        text: data.pokemon_name,
+        font: {
+          size: 16,
+          weight: 'bold',
+        },
+        padding: {
+          top: 10,
+          bottom: 10
+        }
       },
       tooltip: { // When hovering over a bar, this is the hover box.
-        bodyFont: {
-          size: 10 // Making the tooltip text 1 point smaller
-        },
         callbacks: {
           label: function(context) {
             switch(context.label) {
@@ -482,18 +374,13 @@ function PokemonDataChart({ data, setShowPokemonData, titleWithImage }) {
         }
       },
     },
-    layout: {
-      padding: {
-        top: 50 // Adds more space at the top
-      }
-    },
     barPercentage: 0.85,
     categoryPercentage: 0.85,
   };
 
   return (
     <div style={{ height: '250px', width: '100%' }} onClick={() => setShowPokemonData(false)}>
-      <Bar data={chartData} options={options} plugins={[titleWithImage]} key={data.pokemon_name} />
+      <Bar data={chartData} options={options} />
     </div>
   );
 }

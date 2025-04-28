@@ -128,6 +128,7 @@ function Stats() {
                             })
                             .map((character, index) => (
                                 <div key={index} className="chart-item">
+                                    <img src={`/assets/Draft/headshots/${character.pokemon_name}.png`} alt={character.pokemon_name} className="stats-graph-pokemon-icon" />
                                     <StatsBarChart data={character} orderBy={orderBy} />
                                 </div>
                             ))
