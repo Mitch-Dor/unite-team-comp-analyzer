@@ -96,6 +96,13 @@ h3 {
     background-color: rgba(0, 0, 0, 0.6);
 }
 
+#headerContainer h1 {
+    color: white; 
+    margin: 0 20px;
+    font-family: 'Roboto, sans-serif';
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
 .stats-table-container {
     height: 100%;
     width: 100%;
