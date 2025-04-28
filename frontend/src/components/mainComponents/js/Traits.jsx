@@ -42,7 +42,7 @@ function Traits() {
     if (pokemonClass === "Attacker") return 'text-attacker';
     if (pokemonClass === "Defender") return 'text-defender';
     if (pokemonClass === "Supporter") return 'text-supporter';
-    if (pokemonClass === "All-Rounder") return 'text-all-rounder';
+    if (pokemonClass === "All_Rounder") return 'text-all-rounder';
     if (pokemonClass === "Speedster") return 'text-speedster';
     
     return 'text-none';
@@ -83,7 +83,7 @@ function Traits() {
       if (value === "Attacker" || value === "BottomCarry" || value === "ADC" || value === "UtilityMage" || value === "BurstMage") return 'text-attacker';
       if (value === "Defender" || value === "EXPShareBot" || value === "CCTank" || value === "Engage") return 'text-defender';
       if (value === "Supporter" || value === "EXPShareTop" || value ==="Buffer" || value === "Healer") return 'text-supporter';
-      if (value === "All-Rounder" || value === "TopCarry" || value ==="Bruiser" || value === "DrainTank") return 'text-all-rounder';
+      if (value === "All_Rounder" || value === "TopCarry" || value ==="Bruiser" || value === "DrainTank") return 'text-all-rounder';
       if (value === "Speedster" || value === "JungleCarry" || value === "Assassin") return 'text-speedster';
     }
     
