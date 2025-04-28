@@ -136,7 +136,7 @@ function Stats() {
                 </div>
             ) : (
                 <div className="no-data-message">
-                    <p>Select filters to view character statistics</p>
+                    <p>No valid data found. Please change your filters.</p>
                 </div>
             )}
         </div>

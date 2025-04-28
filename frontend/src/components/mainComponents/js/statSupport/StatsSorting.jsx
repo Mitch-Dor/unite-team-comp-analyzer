@@ -20,48 +20,43 @@ function StatsSorting({ events, teams, players, regions, setData, moveData }) {
             beforeAfter: beforeAfter ? beforeAfter : null
         }
         
-        console.log("Query context:", queryContext);
-        
-        // Only fetch if at least one filter is applied
-        if (selectedEvent || selectedRegion || selectedTeam || selectedPlayer || (selectedDate && beforeAfter)) {
-            fetchCharacterStats(queryContext)
-                .then(data => {
-                    // Process the data without modifying moveData directly
-                    const processedData = data.map(row => {
-                        // Create a deep copy of the row to avoid modifying the original
-                        const rowCopy = { ...row, movesets: [...row.movesets] };
-                        
-                        // Find the corresponding moveObj but don't modify it
-                        const moveObj = moveData.find(move => move.pokemon_name === row.pokemon_name);
-                        if (moveObj && row.movesets.length < moveObj.move_combos.length) {
-                            // Add missing move combinations to the row's movesets
-                            for (const moveCombo of moveObj.move_combos) {
-                                const found = row.movesets.some(moveSet => 
-                                    moveSet.move_1 === moveCombo[0] && moveSet.move_2 === moveCombo[1]
-                                );
-                                
-                                if (!found) {
-                                    // Add missing combo to this row's movesets only
-                                    rowCopy.movesets.push({
-                                        move_1: moveCombo[0],
-                                        move_2: moveCombo[1],
-                                        pokemon_id: row.pokemon_id,
-                                        pokemon_name: row.pokemon_name,
-                                        requested_usages: 0,
-                                        requested_wins: 0
-                                    });
-                                }
+        fetchCharacterStats(queryContext)
+            .then(data => {
+                // Process the data without modifying moveData directly
+                const processedData = data.map(row => {
+                    // Create a deep copy of the row to avoid modifying the original
+                    const rowCopy = { ...row, movesets: [...row.movesets] };
+                    
+                    // Find the corresponding moveObj but don't modify it
+                    const moveObj = moveData.find(move => move.pokemon_name === row.pokemon_name);
+                    if (moveObj && row.movesets.length < moveObj.move_combos.length) {
+                        // Add missing move combinations to the row's movesets
+                        for (const moveCombo of moveObj.move_combos) {
+                            const found = row.movesets.some(moveSet => 
+                                moveSet.move_1 === moveCombo[0] && moveSet.move_2 === moveCombo[1]
+                            );
+                            
+                            if (!found) {
+                                // Add missing combo to this row's movesets only
+                                rowCopy.movesets.push({
+                                    move_1: moveCombo[0],
+                                    move_2: moveCombo[1],
+                                    pokemon_id: row.pokemon_id,
+                                    pokemon_name: row.pokemon_name,
+                                    requested_usages: 0,
+                                    requested_wins: 0
+                                });
                             }
                         }
-                        return rowCopy;
-                    });
-                    // Use the processed data instead of the original
-                    setData(processedData);
-                })
-                .catch(error => {
-                    console.error("Error fetching character stats:", error);
+                    }
+                    return rowCopy;
                 });
-        }
+                // Use the processed data instead of the original
+                setData(processedData);
+            })
+            .catch(error => {
+                console.error("Error fetching character stats:", error);
+            });
     }, [selectedEvent, selectedRegion, selectedTeam, selectedPlayer, selectedDate, beforeAfter, setData]);
   
     return (

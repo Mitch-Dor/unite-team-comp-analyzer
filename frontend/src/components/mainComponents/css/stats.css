@@ -133,6 +133,13 @@ h3 {
     justify-self: center;
 }
 
+@media (max-width: 768px) {
+    /* Make all charts full width on smaller screens */
+    .chart-item {
+        width: 100% !important;
+    }
+}
+
 .stats-table {
     width: 100%;
     border-collapse: collapse;
