@@ -65,12 +65,16 @@ function StatsBarChart({ data, orderBy }) {
       ctx.lineWidth = 2;
       ctx.stroke();
       
+      // Always reset the image when the pokemon changes
+      if (chart.titleImage && chart.titlePokemon !== data.pokemon_name) {
+        chart.titleImage = null;
+      }
+      
       // Draw the image when it loads
       image.onload = () => {
         // Save the image to the chart for reference
-        if (!chart.titleImage) {
-          chart.titleImage = image;
-        }
+        chart.titleImage = image;
+        chart.titlePokemon = data.pokemon_name;
         
         // Create a circular clipping region
         ctx.save();
@@ -93,6 +97,11 @@ function StatsBarChart({ data, orderBy }) {
         const titleText = data.pokemon_name;
         const titleX = (left + right) / 2;
         const titleY = 22;
+        
+        // Check if the pokemon has changed
+        if (chart.titlePokemon !== data.pokemon_name) {
+          return; // Skip drawing the old image if pokemon changed
+        }
         
         // Calculate text width and image position
         ctx.font = 'bold 16px Arial';
@@ -232,6 +241,9 @@ function BaseDataChart({ data, orderBy, setShowPokemonData, titleWithImage }) {
         display: false, // We'll use custom title plugin instead
       },
       tooltip: { // When hovering over a bar, this is the hover box.
+        bodyFont: {
+          size: 10 // Making the tooltip text 1 point smaller
+        },
         callbacks: orderBy !== "pickOrder" ? {
           label: function(context) {
             switch(context.label) {
@@ -297,7 +309,7 @@ function BaseDataChart({ data, orderBy, setShowPokemonData, titleWithImage }) {
 
   return (
     <div style={{ height: '250px', width: '100%' }} onClick={() => setShowPokemonData(true)}>
-      <Bar data={chartData} options={options} plugins={[titleWithImage]} />
+      <Bar data={chartData} options={options} plugins={[titleWithImage]} key={data.pokemon_name} />
     </div>
   );
 }
@@ -402,6 +414,9 @@ function PokemonDataChart({ data, setShowPokemonData, titleWithImage }) {
         display: false, // We'll use custom title plugin instead
       },
       tooltip: { // When hovering over a bar, this is the hover box.
+        bodyFont: {
+          size: 10 // Making the tooltip text 1 point smaller
+        },
         callbacks: {
           label: function(context) {
             switch(context.label) {
@@ -478,7 +493,7 @@ function PokemonDataChart({ data, setShowPokemonData, titleWithImage }) {
 
   return (
     <div style={{ height: '250px', width: '100%' }} onClick={() => setShowPokemonData(false)}>
-      <Bar data={chartData} options={options} plugins={[titleWithImage]} />
+      <Bar data={chartData} options={options} plugins={[titleWithImage]} key={data.pokemon_name} />
     </div>
   );
 }
