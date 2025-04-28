@@ -67,48 +67,52 @@ function StatsSorting({ events, teams, players, regions, setData, moveData }) {
     return (
         <div id="filterContainer">
             <h3>Filters</h3>
-            <select name="beforeAfter" id="beforeAfter" onChange={(e) => setBeforeAfter(e.target.value)}>
-                <option value="">Before / After</option>
-                <option value="before">Before</option>
-                <option value="after">After</option>
-            </select>
-            <input id="dateSelect" type="date" onChange={(e) => setSelectedDate(e.target.value)}></input> 
-            <select name="region" id="region" onChange={(e) => {
-                const selectedValue = e.target.value;
-                setSelectedRegion(selectedValue ? selectedValue : "");
-            }}>
-                <option value="">Select Region</option>
-                {regions.map((region, index) => (
-                    <option key={index} value={region}>{region}</option>
-                ))}
-            </select>
-            <select name="event" id="event" onChange={(e) => {
-                const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Event" option
-                setSelectedEvent(selectedIndex >= 0 ? events[selectedIndex] : "");
-            }}>
-                <option value="">Select Event</option>
-                {events.map((event, index) => (
-                    <option key={index} value={event.event_id}>{event.event_name}</option>
-                ))}
-            </select>
-            <select name="team" id="team" onChange={(e) => {
-                const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Team" option
-                setSelectedTeam(selectedIndex >= 0 ? teams[selectedIndex] : "");
-            }}>
-                <option value="">Select Team</option>
-                {teams.map((team, index) => (
-                    <option key={index} value={team.team_id}>{team.team_name}</option>
-                ))}
-            </select>
-            <select name="player" id="player" onChange={(e) => {
-                const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Player" option
-                setSelectedPlayer(selectedIndex >= 0 ? players[selectedIndex] : "");
-            }}>
-                <option value="">Select Player</option>
-                {players.map((player, index) => (
-                    <option key={index} value={player.player_id}>{player.player_name}</option>
-                ))}
-            </select>
+            <div className="filter-row">
+                <select name="beforeAfter" id="beforeAfter" onChange={(e) => setBeforeAfter(e.target.value)}>
+                    <option value="">Before / After</option>
+                    <option value="before">Before</option>
+                    <option value="after">After</option>
+                </select>
+                <input id="dateSelect" type="date" onChange={(e) => setSelectedDate(e.target.value)}></input> 
+                <select name="region" id="region" onChange={(e) => {
+                    const selectedValue = e.target.value;
+                    setSelectedRegion(selectedValue ? selectedValue : "");
+                }}>
+                    <option value="">Select Region</option>
+                    {regions.map((region, index) => (
+                        <option key={index} value={region}>{region}</option>
+                    ))}
+                </select>
+            </div>
+            <div className="filter-row">
+                <select name="event" id="event" onChange={(e) => {
+                    const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Event" option
+                    setSelectedEvent(selectedIndex >= 0 ? events[selectedIndex] : "");
+                }}>
+                    <option value="">Select Event</option>
+                    {events.map((event, index) => (
+                        <option key={index} value={event.event_id}>{event.event_name}</option>
+                    ))}
+                </select>
+                <select name="team" id="team" onChange={(e) => {
+                    const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Team" option
+                    setSelectedTeam(selectedIndex >= 0 ? teams[selectedIndex] : "");
+                }}>
+                    <option value="">Select Team</option>
+                    {teams.map((team, index) => (
+                        <option key={index} value={team.team_id}>{team.team_name}</option>
+                    ))}
+                </select>
+                <select name="player" id="player" onChange={(e) => {
+                    const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Player" option
+                    setSelectedPlayer(selectedIndex >= 0 ? players[selectedIndex] : "");
+                }}>
+                    <option value="">Select Player</option>
+                    {players.map((player, index) => (
+                        <option key={index} value={player.player_id}>{player.player_name}</option>
+                    ))}
+                </select>
+            </div>
         </div>
     )
 }
