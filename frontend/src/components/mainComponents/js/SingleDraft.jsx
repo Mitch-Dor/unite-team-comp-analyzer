@@ -196,9 +196,6 @@ function SingleDraft() {
         // Ensure it's not the last state
         if (currentIndex >= 0 && currentIndex < draftProgression.length - 1) {
             // Get the next state
-            const nextState = draftProgression[currentIndex + 1];
-            // Update the draft state
-            stateRef.current = nextState;
             const none = {pokemon_name: 'none', pokemon_class: 'none'};
 
             let actionPokemon = none;

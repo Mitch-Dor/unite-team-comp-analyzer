@@ -164,7 +164,7 @@ button {
 
 #settingsScreenCover {
     position: absolute;
-    z-index: 1000;
+    z-index: 999;
     background-color: rgba(0, 0, 0, 0.5);
     width: 100vw;
     height: 100vh;

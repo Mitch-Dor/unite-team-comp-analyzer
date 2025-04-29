@@ -140,7 +140,7 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
         */ 
         let candidates = new MinHeap();
         // Go through every immediate candidate and computer heuristic (~50 candidates)
-        for (const pokemon of pokemonObjects) {
+        for (const pokemon of remainingPokemon) {
             // Can't add a pokemon that is already in the team
             if (!currNode.hasPokemon(pokemon)){
                 // Create the array with added pokemon
@@ -265,30 +265,15 @@ function heuristic_synergy_score(yourTeam){
         // Having too many weak early game pokemon is very punishing
         totalPoints += attrCounts.earlyGame.Weak * 10 - 10;
     }
-    totalPoints += attrCounts.earlyGame.Strong * 1;
-    totalPoints += attrCounts.earlyGame.Medium * 3;
-    totalPoints += attrCounts.earlyGame.Weak * 5;
-
-    totalPoints += attrCounts.midGame.Strong * 1;
-    totalPoints += attrCounts.midGame.Medium * 3;
-    totalPoints += attrCounts.midGame.Weak * 5;
-
-    totalPoints += attrCounts.lateGame.Strong * 1;
-    totalPoints += attrCounts.lateGame.Medium * 3;
-    totalPoints += attrCounts.lateGame.Weak * 5;
-
-    totalPoints += attrCounts.mobility.High * 1;
-    totalPoints += attrCounts.mobility.Medium * 3;
-    totalPoints += attrCounts.mobility.Low * 5;
 
     if (attrCounts.range.low > 3) {
         // Too many low range pokemon 
         totalPoints += attrCounts.range.Low * 5 - 5;
     }
 
-    if (attrCounts.bulk.High < 1) {
+    if (attrCounts.bulk.Low > 1) {
         // Need more bulky pokemon
-        totalPoints += 6;
+        totalPoints += attrCounts.bulk.Low * 5 - 5;
     }
 
     if (attrCounts.damage.High < 2) {
@@ -307,6 +292,164 @@ function heuristic_synergy_score(yourTeam){
             totalPoints += 5
         }
     });
+
+    /// Role distribution is probably the most important set of traits, so heavily tax bad role distributions.
+
+    // You need at least 2 pokemon that can exp share
+    if (attrCounts.canExpShare.Yes < 2 && yourTeam.length == 5) {
+        totalPoints += 100;
+    }
+
+    // If you get to 5 pokemon, and the team can't have at least 1 pokemon fill every role, that's very bad.
+    if (checkRoles(yourTeam, attrCounts) == false) {
+        totalPoints += 100;
+    }
+
+    // Check if the team can fill every role
+    function checkRoles(team, attrCounts) {
+        if (team.length == 4) {
+            // Make sure the team can cover at least 4 roles
+            if (attrCounts.canExpShare.Yes < 1) {
+                return false;
+            }
+            if ((attrCounts.canTopLaneCarry.Yes < 1 && attrCounts.canJungleCarry.Yes < 1) || (attrCounts.canTopLaneCarry.Yes < 1 && attrCounts.canBottomLaneCarry.Yes < 1) || (attrCounts.canJungleCarry.Yes < 1 && attrCounts.canBottomLaneCarry.Yes < 1)) {
+                return false;
+            }
+        }
+        if (team.length != 5) {
+            // Don't penalize yet
+            return true;
+        }
+        if (attrCounts.canTopLaneCarry.Yes < 1 || attrCounts.canJungleCarry.Yes < 1 || attrCounts.canBottomLaneCarry.Yes < 1 || attrCounts.canExpShare.Yes < 2) {
+            // Don't have enough traits in general to fill every role
+            return false;
+        }
+        // Check unique pokemon to be able to fill all roles (EX: one pokemon can't be a top laner and a jungle carry)
+        let topLane = null;
+        let topEXPShare = null;
+        let jungle = null;
+        let botLane = null;
+        let botEXPShare = null;
+        
+        // First pass: assign pokemon that MUST fill specific roles
+        for (const pokemon of team) {
+            // Must fill this role because they can only play this role
+            if (pokemon.attributes.canTopLaneCarry === "Yes" && pokemon.attributes.canExpShare === "No" && pokemon.attributes.canJungleCarry === "No" && pokemon.attributes.canBottomLaneCarry === "No") {
+                topLane = pokemon;
+            }
+            if (pokemon.attributes.canExpShare === "Yes" && pokemon.attributes.canTopLaneCarry === "No" && pokemon.attributes.canJungleCarry === "No" && pokemon.attributes.canBottomLaneCarry === "No") {
+                if (topEXPShare === null) {
+                    topEXPShare = pokemon;
+                } else if (botEXPShare === null) {
+                    botEXPShare = pokemon;
+                }
+            }
+            if (pokemon.attributes.canJungleCarry === "Yes" && pokemon.attributes.canExpShare === "No" && pokemon.attributes.canTopLaneCarry === "No" && pokemon.attributes.canBottomLaneCarry === "No") {
+                jungle = pokemon;
+            }
+            if (pokemon.attributes.canBottomLaneCarry === "Yes" && pokemon.attributes.canExpShare === "No" && pokemon.attributes.canTopLaneCarry === "No" && pokemon.attributes.canJungleCarry === "No") {
+                botLane = pokemon;
+            }
+            
+            // Must fill this role because they are the only Pokemon that can fill it
+            if (pokemon.attributes.canTopLaneCarry === "Yes" && attrCounts.canTopLaneCarry.Yes === 1) {
+                topLane = pokemon;
+            }
+            if (pokemon.attributes.canJungleCarry === "Yes" && attrCounts.canJungleCarry.Yes === 1) {
+                jungle = pokemon;
+            }
+            if (pokemon.attributes.canBottomLaneCarry === "Yes" && attrCounts.canBottomLaneCarry.Yes === 1) {
+                botLane = pokemon;
+            }
+            if (pokemon.attributes.canExpShare === "Yes" && attrCounts.canExpShare.Yes === 2) {
+                if (topEXPShare === null) {
+                    topEXPShare = pokemon;
+                } else if (botEXPShare === null && topEXPShare !== pokemon) {
+                    botEXPShare = pokemon;
+                }
+            }
+        }
+        
+        // Second pass: try to fill remaining roles with flexible pokemon
+        // Get unassigned Pokemon
+        const unassignedPokemon = team.filter(p => 
+            p !== topLane && p !== topEXPShare && p !== jungle && p !== botLane && p !== botEXPShare
+        );
+        
+        // Helper function to get all permutations of an array
+        function getPermutations(arr) {
+            if (arr.length <= 1) return [arr];
+            let result = [];
+            
+            for (let i = 0; i < arr.length; i++) {
+                const current = arr[i];
+                const remaining = [...arr.slice(0, i), ...arr.slice(i + 1)];
+                const permutationsOfRemaining = getPermutations(remaining);
+                
+                for (let perm of permutationsOfRemaining) {
+                    result.push([current, ...perm]);
+                }
+            }
+            
+            return result;
+        }
+        
+        // Get all permutations of unassigned Pokemon
+        const permutations = getPermutations(unassignedPokemon);
+        
+        // Try all possible combinations to fill remaining roles
+        for (const perm of permutations) {
+            for (const pokemon of perm) {
+                // Try to fill top lane
+                if (topLane === null && pokemon.attributes.canTopLaneCarry === "Yes") {
+                    topLane = pokemon;
+                }
+                // Try to fill jungle
+                else if (jungle === null && pokemon.attributes.canJungleCarry === "Yes") {
+                    jungle = pokemon;
+                }
+                // Try to fill bottom lane
+                else if (botLane === null && pokemon.attributes.canBottomLaneCarry === "Yes") {
+                    botLane = pokemon;
+                }
+                // Try to fill top exp share
+                else if (topEXPShare === null && pokemon.attributes.canExpShare === "Yes") {
+                    topEXPShare = pokemon;
+                }
+                // Try to fill bottom exp share
+                else if (botEXPShare === null && pokemon.attributes.canExpShare === "Yes") {
+                    botEXPShare = pokemon;
+                }
+            }
+            // All roles filled
+            if (topLane !== null && topEXPShare !== null && jungle !== null && botLane !== null && botEXPShare !== null) {
+                return true;
+            }
+        }
+        
+        // Roles could not be filled
+        return false;
+    }
+
+    // If we don't have these best roles it's bad
+    // EXP Shares are generally more important to have on their proper role
+    // This will also trend the model towards picking EXP Shares early unless there is a good counter elsewhere which is generally good
+    if (attrCounts.bestLane.EXPShareTop < 1) {
+        totalPoints += 80;
+    }
+    if (attrCounts.bestLane.EXPShareBot < 1) {
+        totalPoints += 80;
+    }
+    // Lanes are less important on their proper role, jungle especially so
+    if (attrCounts.bestLane.TopLane < 1) {
+        totalPoints += 40;
+    }
+    if (attrCounts.bestLane.JungleCarry < 1) {
+        totalPoints += 20;
+    }
+    if (attrCounts.bestLane.BottomCarry < 1) {
+        totalPoints += 40;
+    }
 
     return totalPoints;
 }
@@ -332,7 +475,7 @@ function countAttributes(data) {
         canTopLaneCarry: { Yes: 0, No: 0 },
         canJungleCarry: { Yes: 0, No: 0 },
         canBottomLaneCarry: { Yes: 0, No: 0 },
-        bestLane: { TopLane: 0, JungleCarry: 0, BottomCarry: 0, BottomSupport: 0 },
+        bestLane: { TopLane: 0, JungleCarry: 0, BottomCarry: 0, EXPShareTop: 0, EXPShareBot: 0 },
     };
     
     data.forEach(entry => {

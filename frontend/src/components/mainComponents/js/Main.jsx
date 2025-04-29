@@ -95,7 +95,7 @@ function Main() {
         <div id="nametag">Created by Mitchell Dorward</div>
         { settingsActive && (
           <div id="settingsScreenCover" onClick={() => setSettingsActive(false)}>
-            <div id="setSettings">
+            <div id="setSettings" onClick={(e) => e.stopPropagation()}>
               < Settings settings={settings} updateSettings={setSettings} ></Settings>
             </div>
           </div>
