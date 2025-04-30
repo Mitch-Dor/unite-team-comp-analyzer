@@ -634,7 +634,7 @@ function rateComp(comp, allPokemon){
     const tierScore = heuristic_tier_score(yourTeamObjects);
     const synergyScore = heuristic_synergy_score(yourTeamObjects);
     const totalScore = tierScore + synergyScore;
-    return totalScore;
+    return {totalScore, tierScore, synergyScore};
 }
 
 // const algorithmicPerfectAnswer = a_star_search([], [], [], rawTraitData);

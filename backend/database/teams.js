@@ -417,8 +417,8 @@ class Teams {
       // Remove nulls from comp
       const filteredComp = comp.filter(pokemon => pokemon !== null);
 
-      const score = aStar.rateComp(filteredComp, rawTraitData);
-      return score;
+      const {totalScore, tierScore, synergyScore} = aStar.rateComp(filteredComp, rawTraitData);
+      return {totalScore, tierScore, synergyScore};
     }
 }
 

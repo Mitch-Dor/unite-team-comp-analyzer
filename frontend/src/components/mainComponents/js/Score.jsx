@@ -84,7 +84,9 @@ function Score() {
                 </div>
                 <div id="compScore">
                     <h2>Comp Score</h2>
-                    <p id="score">{compScore}</p>
+                    <p id="totalScore">Total: {compScore.totalScore}</p>
+                    <p id="tierScore">Tier Score: {compScore.tierScore}</p>
+                    <p id="synergyScore">Synergy Score: {compScore.synergyScore}</p>
                 </div>
             </div>
         </div>
