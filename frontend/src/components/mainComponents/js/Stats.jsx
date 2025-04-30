@@ -3,6 +3,7 @@ import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMo
 import StatsOrdering from './statSupport/StatsOrdering.jsx';
 import StatsSorting from './statSupport/StatsSorting.jsx';
 import StatsBarChart from './statSupport/StatsBarChart.jsx';
+import Home from '../../sideComponents/js/Home.jsx';
 import '../css/stats.css';
 
 function Stats() {
@@ -142,6 +143,7 @@ function Stats() {
                 </div>
             )}
         </div>
+        <Home />
     </div>
   );
 }

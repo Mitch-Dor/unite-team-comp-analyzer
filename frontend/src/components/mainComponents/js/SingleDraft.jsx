@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
 import { fetchCharacterDraftInfo, runAStarAlgorithm } from './backendCalls/http.js';
+import Home from '../../sideComponents/js/Home.jsx';
 import '../css/draft.css';
 
 function SingleDraft() {
@@ -311,6 +312,7 @@ function SingleDraft() {
   return (
     <div id="draftContainer">
         <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
+        <Home />
     </div>
   );
 }

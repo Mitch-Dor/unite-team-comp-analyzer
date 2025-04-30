@@ -5,7 +5,7 @@ import { fetchCharacterDraftInfo, runAStarAlgorithm, createRoom as apiCreateRoom
 import '../css/draft.css';
 import { Peer } from 'peerjs';
 import io from 'socket.io-client';
-
+import Home from '../../sideComponents/js/Home.jsx';
 function MultiDraft() {
     const location = useLocation();
     const { numUsers, settings } = location.state || {};
@@ -639,6 +639,7 @@ function MultiDraft() {
             </div>
         )}
         <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
+        <Home />
     </div>
   );
 }

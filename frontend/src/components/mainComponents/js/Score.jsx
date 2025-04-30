@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchAllCharactersAndMoves, fetchAllCharacterAttributes, rateComp } from './backendCalls/http.js';
 import TraitDisplay from './scoreSupport/TraitDisplay.jsx';
+import Home from '../../sideComponents/js/Home.jsx';
 import '../css/score.css';
 
 function Score() {
@@ -90,6 +91,7 @@ function Score() {
                 </div>
             </div>
         </div>
+        <Home />
     </div>
   );
 }

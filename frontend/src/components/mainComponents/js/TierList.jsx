@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../css/tierList.css';
 import { fetchCharacterDraftInfo } from './backendCalls/http.js';
+import Home from '../../sideComponents/js/Home.jsx';
 
 function TierList() {
   const [pokemonList, updatePokemonList] = useState([]);
@@ -158,6 +159,7 @@ function TierList() {
         ))}
       </div>
     </div>
+    <Home />
     </div>
   );
 }

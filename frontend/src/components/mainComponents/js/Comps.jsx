@@ -4,6 +4,7 @@ import { fetchAllComps, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAll
 import SubmitSetModal from './compSupport/SubmitSetModal';
 import MatchDisplay from './compSupport/MatchDisplay';
 import CustomDropdown from './compSupport/CustomDropdown';
+import Home from '../../sideComponents/js/Home.jsx';
 
 function Comps() {
   const [compsData, setCompsData] = useState([]);
@@ -210,6 +211,7 @@ function CompsSorting({ events, teams, players, charactersAndMoves, compsData, s
             ))}
         </select>
       </div>
+      <Home />
     </div>
   )
 }

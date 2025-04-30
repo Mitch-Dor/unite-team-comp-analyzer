@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../css/traits.css';
 import { updateCharacterAttributes, fetchAllCharacterAttributes } from './backendCalls/http.js';
+import Home from '../../sideComponents/js/Home.jsx';
+
 function Traits() {
   const [traitsData, setTraitsData] = useState([]);
   const [columnOptions, setColumnOptions] = useState({});
@@ -228,6 +230,7 @@ function Traits() {
           </table>
         </div>
       </div>
+      <Home />
     </div>
   );
 }
