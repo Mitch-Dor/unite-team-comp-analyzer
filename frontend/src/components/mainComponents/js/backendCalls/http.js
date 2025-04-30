@@ -263,3 +263,17 @@ export async function fetchCharacterStats(queryContext) {
     const statsDataJson = await statsData.json();
     return statsDataJson;
 }
+
+// Function to rate a comp using the heuristics used in A*
+export async function rateComp(comp) {
+    const compData = await fetch(routes.GET_RATE_COMP, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(comp)
+    });
+    const compDataJson = await compData.json();
+    return compDataJson;
+}

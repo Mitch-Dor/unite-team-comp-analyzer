@@ -209,45 +209,51 @@ function heuristic(yourTeam, enemyTeam){
 function heuristic_tier_score(providedTeam){
     // Hard-coded rules always
     // Larger score means WORSE tier
-    const sTier = ["Absol", "Zeraora", "Inteleon", "Suicune", "Umbreon", "Snorlax", "Psyduck"];
-    const aTier = ["Urshifu-SS", "Talonflame", "Leafeon", "Meowscarada", "Garchomp", "Pikachu",
-                 "Zacian", "Mimikyu", "Hoopa", "Comfey", "Blissey", "Slowbro", "Mamoswine", "Metagross"];
-    const bTier = ["Gengar", "Aegislash", "Dodrio", "Zoroark", "Blaziken", "Ceruledge", "Mew", "Scyther", "Espeon",
-                    "Buzzwole", "MewtwoY", "Trevenant", "HoOh", "Greedent", "Wigglytuff", "Lucario", "Miraidon", "Gyarados", "Eldegoss"];
-    const cTier = ["Galarian-Rapidash", "Charizard", "Cinderace", "Alolan-Ninetales", "Glaceon", "Urshifu-RS", 
-                    "Venusaur", "Darkrai", "Goodra", "Sabeleye", "Blastoise", "Dragonite"];
-    const dTier = ["Cramorant", "Sylveon", "Crustle", "Clefable", "MrMime", "Machamp", "Greninja", "Tyranitar"];
-    const eTier = ["Chandelure", "Delphox", "Dragapult", "Gardevoir", "Decidueye", "Armarouge", "MewtwoX", "Tsareena"];
-    const fTier = ["Tinkaton", "Duraludon", "Lapras", "Falinks", "Azumarill", "Scizor"];
+    const sTier = ["absol", "zeraora", "inteleon", "suicune", "umbreon", "snorlax", "psyduck"];
+    const aTier = ["urshifu_ss", "talonflame", "leafeon", "meowscarada", "garchomp", "pikachu",
+                 "zacian", "mimikyu", "hoopa", "comfey", "blissey", "slowbro", "mamoswine", "metagross"];
+    const bTier = ["gengar", "aegislash", "dodrio", "zoroark", "blaziken", "ceruledge", "mew", "scyther", "espeon",
+                    "buzzwole", "mewtwoy", "trevenant", "hooh", "greedent", "wigglytuff", "lucario", "miraidon", "gyarados", "eldegoss"];
+    const cTier = ["galarian_rapidash", "charizard", "cinderace", "alolan_ninetales", "glaceon", "urshifu_rs", 
+                    "venusaur", "darkrai", "goodra", "sabeleye", "blastoise", "dragonite"];
+    const dTier = ["cramorant", "sylveon", "crustle", "clefable", "mrmime", "machamp", "greninja", "tyranitar"];
+    const eTier = ["chandelure", "delphox", "dragapult", "gardevoir", "decidueye", "armarouge", "mewtwox", "tsareena"];
+    const fTier = ["tinkaton", "duraludon", "lapras", "falinks", "azumarill", "scizor"];
     
     const tierPoints = {
         sTier: 1,
-        aTier: 3,
-        bTier: 5,
+        aTier: 8,
+        bTier: 15,
         // Anything below bTier is a lot worse unless it has a perfect matchup
-        cTier: 9,
-        dTier: 11,
-        eTier: 13,
-        fTier: 15
+        cTier: 30,
+        dTier: 50,
+        eTier: 70,
+        fTier: 90
     }
 
     let totalPoints = 0;
     // For each pokemon on the team, add points based on which tier it's in
     providedTeam.forEach(pokemon => {
-        if (sTier.includes(pokemon)) {
+        // Check if pokemon_name exists before trying to use toLowerCase()
+        const pokemonName = pokemon.pokemon_name || pokemon.name || '';
+        const pokemonNameLower = pokemonName.toLowerCase();
+        
+        if (sTier.includes(pokemonNameLower)) {
             totalPoints += tierPoints.sTier;
-        } else if (aTier.includes(pokemon)) {
+        } else if (aTier.includes(pokemonNameLower)) {
             totalPoints += tierPoints.aTier;
-        } else if (bTier.includes(pokemon)) {
+        } else if (bTier.includes(pokemonNameLower)) {
             totalPoints += tierPoints.bTier;
-        } else if (cTier.includes(pokemon)) {
+        } else if (cTier.includes(pokemonNameLower)) {
             totalPoints += tierPoints.cTier;
-        } else if (dTier.includes(pokemon)) {
+        } else if (dTier.includes(pokemonNameLower)) {
             totalPoints += tierPoints.dTier;
-        } else if (eTier.includes(pokemon)) {
+        } else if (eTier.includes(pokemonNameLower)) {
             totalPoints += tierPoints.eTier;
-        } else if (fTier.includes(pokemon)) {
+        } else if (fTier.includes(pokemonNameLower)) {
             totalPoints += tierPoints.fTier;
+        } else {
+            console.error("Pokemon not found in tier list: " + pokemonName);
         }
     });
 
@@ -600,7 +606,38 @@ function compareTwoComps(){
 
 }
 
+function rateComp(comp, allPokemon){
+    // Get all pokemon objects
+    const pokemonObjects = allPokemon.map(p => 
+        p instanceof Pokemon ? p : new Pokemon(p)
+    );
+
+    // Make pokemon objects
+    const yourTeamObjects = [];
+
+    // Loop through all team member names
+    for (const name of comp) {
+        // Find the matching Pokemon in the full data set
+        const matchingPokemon = pokemonObjects.find(pokemon => 
+            pokemon.name === name.pokemon_name || pokemon.id === name.pokemon_name
+        );
+        
+        if (matchingPokemon) {
+            yourTeamObjects.push(matchingPokemon);
+        } else {
+            console.warn(`Pokemon "${name.pokemon_name}" not found in available data`);
+            // Create a basic Pokemon object with just the name
+            yourTeamObjects.push(new Pokemon({pokemon_name: name.pokemon_name}));
+        }
+    }
+    // Throw it into the heuristics
+    const tierScore = heuristic_tier_score(yourTeamObjects);
+    const synergyScore = heuristic_synergy_score(yourTeamObjects);
+    const totalScore = tierScore + synergyScore;
+    return totalScore;
+}
+
 // const algorithmicPerfectAnswer = a_star_search([], [], [], rawTraitData);
 // console.log(algorithmicPerfectAnswer);
 
-module.exports = { a_star_search };
+module.exports = { a_star_search, rateComp };

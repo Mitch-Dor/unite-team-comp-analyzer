@@ -398,6 +398,28 @@ class Teams {
         });
       });
     }
+
+    // Rate a comp using the heuristics used in A*
+    async rateComp(comp) {
+      // Properly wait for the database result by wrapping it in a Promise
+      const rawTraitData = await new Promise((resolve, reject) => {
+        this.db.all('select * from pokemon_attributes natural join playable_characters', (err, rows) => {
+          if (err) {
+            console.error('Database error:', err);
+            reject(err);
+          } else {
+            console.log('Retrieved trait data:', rows.length, 'records');
+            resolve(rows);
+          }
+        });
+      });
+
+      // Remove nulls from comp
+      const filteredComp = comp.filter(pokemon => pokemon !== null);
+
+      const score = aStar.rateComp(filteredComp, rawTraitData);
+      return score;
+    }
 }
 
 module.exports = Teams;

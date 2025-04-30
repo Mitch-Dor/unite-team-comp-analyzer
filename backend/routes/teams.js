@@ -109,4 +109,14 @@ module.exports = function (app, database) {
             res.sendStatus(401);
         });
     });
+
+    app.put('/GETrateComp', (req, res) => {
+        database.teams.rateComp(req.body).then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error rating comp:', error);
+            res.sendStatus(401);
+        });
+    });
 };
