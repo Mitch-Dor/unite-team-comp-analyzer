@@ -149,7 +149,7 @@ button {
     width: 10vw;
     flex: 1; /* Allow select to take up available space */
 }
-
+settingsInputs#
 .informationHover {
     width: 20px; /* Increase size for better visibility */
     height: 20px;
@@ -177,3 +177,246 @@ button {
     display: flex;
     align-items: center;
 }
+
+.characterList {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.characterList p {
+    width: 100%;
+    height: 20px;
+    margin: 0;
+    font-size: 12px;
+    color: black;
+    text-align: center;
+    overflow: hidden;
+}
+
+.characterList div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+}
+
+.characterListDiv {
+    border: 1px solid black;
+}
+
+.characterListDiv.disallowed {
+    filter: grayscale(100%);
+}
+
+.characterList img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Character class background patterns */
+.characterList img.All_Rounder {
+    background-image: linear-gradient(
+        45deg,
+        purple 0%,
+        purple 10%,
+        plum 10%,
+        plum 11%,
+        purple 11%,
+        purple 21%,
+        plum 21%,
+        plum 22%,
+        purple 22%,
+        purple 32%,
+        plum 32%,
+        plum 33%,
+        purple 33%,
+        purple 43%,
+        plum 43%,
+        plum 44%,
+        purple 44%,
+        purple 54%,
+        plum 54%,
+        plum 55%,
+        purple 55%,
+        purple 65%,
+        plum 65%,
+        plum 66%,
+        purple 66%,
+        purple 76%,
+        plum 76%,
+        plum 77%,
+        purple 77%,
+        purple 87%,
+        plum 87%,
+        plum 88%,
+        purple 88%,
+        purple 100%
+    );
+}
+
+.characterList img.Attacker {
+    background-image: linear-gradient(
+        45deg,
+        fireBrick 0%,
+        fireBrick 10%,
+        lightCoral 10%,
+        lightCoral 11%,
+        fireBrick 11%,
+        fireBrick 21%,
+        lightCoral 21%,
+        lightCoral 22%,
+        fireBrick 22%,
+        fireBrick 32%,
+        lightCoral 32%,
+        lightCoral 33%,
+        fireBrick 33%,
+        fireBrick 43%,
+        lightCoral 43%,
+        lightCoral 44%,
+        fireBrick 44%,
+        fireBrick 54%,
+        lightCoral 54%,
+        lightCoral 55%,
+        fireBrick 55%,
+        fireBrick 65%,
+        lightCoral 65%,
+        lightCoral 66%,
+        fireBrick 66%,
+        fireBrick 76%,
+        lightCoral 76%,
+        lightCoral 77%,
+        fireBrick 77%,
+        fireBrick 87%,
+        lightCoral 87%,
+        lightCoral 88%,
+        fireBrick 88%,
+        fireBrick 100%
+    );
+}
+
+.characterList img.Speedster {
+    background-image: linear-gradient(
+        45deg,
+        dodgerBlue 0%,
+        dodgerBlue 10%,
+        skyBlue 10%,
+        skyBlue 11%,
+        dodgerBlue 11%,
+        dodgerBlue 21%,
+        skyBlue 21%,
+        skyBlue 22%,
+        dodgerBlue 22%,
+        dodgerBlue 32%,
+        skyBlue 32%,
+        skyBlue 33%,
+        dodgerBlue 33%,
+        dodgerBlue 43%,
+        skyBlue 43%,
+        skyBlue 44%,
+        dodgerBlue 44%,
+        dodgerBlue 54%,
+        skyBlue 54%,
+        skyBlue 55%,
+        dodgerBlue 55%,
+        dodgerBlue 65%,
+        skyBlue 65%,
+        skyBlue 66%,
+        dodgerBlue 66%,
+        dodgerBlue 76%,
+        skyBlue 76%,
+        skyBlue 77%,
+        dodgerBlue 77%,
+        dodgerBlue 87%,
+        skyBlue 87%,
+        skyBlue 88%,
+        dodgerBlue 88%,
+        dodgerBlue 100%
+    );
+}
+
+.characterList img.Defender {
+    background-image: linear-gradient(
+        45deg,
+        SeaGreen 0%,
+        SeaGreen 10%,
+        paleGreen 10%,
+        paleGreen 11%,
+        SeaGreen 11%,
+        SeaGreen 21%,
+        paleGreen 21%,
+        paleGreen 22%,
+        SeaGreen 22%,
+        SeaGreen 32%,
+        paleGreen 32%,
+        paleGreen 33%,
+        SeaGreen 33%,
+        SeaGreen 43%,
+        paleGreen 43%,
+        paleGreen 44%,
+        SeaGreen 44%,
+        SeaGreen 54%,
+        paleGreen 54%,
+        paleGreen 55%,
+        SeaGreen 55%,
+        SeaGreen 65%,
+        paleGreen 65%,
+        paleGreen 66%,
+        SeaGreen 66%,
+        SeaGreen 76%,
+        paleGreen 76%,
+        paleGreen 77%,
+        SeaGreen 77%,
+        SeaGreen 87%,
+        paleGreen 87%,
+        paleGreen 88%,
+        SeaGreen 88%,
+        SeaGreen 100%
+    );
+}
+
+.characterList img.Supporter {
+    background-image: linear-gradient(
+        45deg,
+        gold 0%,
+        gold 10%,
+        lemonChiffon 10%,
+        lemonChiffon 11%,
+        gold 11%,
+        gold 21%,
+        lemonChiffon 21%,
+        lemonChiffon 22%,
+        gold 22%,
+        gold 32%,
+        lemonChiffon 32%,
+        lemonChiffon 33%,
+        gold 33%,
+        gold 43%,
+        lemonChiffon 43%,
+        lemonChiffon 44%,
+        gold 44%,
+        gold 54%,
+        lemonChiffon 54%,
+        lemonChiffon 55%,
+        gold 55%,
+        gold 65%,
+        lemonChiffon 65%,
+        lemonChiffon 66%,
+        gold 66%,
+        gold 76%,
+        lemonChiffon 76%,
+        lemonChiffon 77%,
+        gold 77%,
+        gold 87%,
+        lemonChiffon 87%,
+        lemonChiffon 88%,
+        gold 88%,
+        gold 100%
+    );
+}
+
+
+
+
+

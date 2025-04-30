@@ -12,7 +12,11 @@ function Score() {
     const [selectedCharacter3, setSelectedCharacter3] = useState(null);
     const [selectedCharacter4, setSelectedCharacter4] = useState(null);
     const [selectedCharacter5, setSelectedCharacter5] = useState(null);
-    const [compScore, setCompScore] = useState(0);
+    const [compScore, setCompScore] = useState({
+        totalScore: 0,
+        tierScore: 0,
+        synergyScore: 0
+    });
 
     useEffect(() => {
         async function fetchAllData() {
@@ -43,6 +47,7 @@ function Score() {
 
     useEffect(() => {
         async function calculateCompScore() {
+            // Check if any character is selected before calling API
             if(selectedCharacter1 || selectedCharacter2 || selectedCharacter3 || selectedCharacter4 || selectedCharacter5){
                 try {
                     const score = await rateComp([selectedCharacter1, selectedCharacter2, selectedCharacter3, selectedCharacter4, selectedCharacter5]);

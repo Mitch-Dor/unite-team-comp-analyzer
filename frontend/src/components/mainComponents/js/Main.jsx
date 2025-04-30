@@ -5,7 +5,7 @@ import Settings from './Settings';
 import Login from '../../sideComponents/js/Login';
 
 function Main() {
-  const [settings, setSettings] = useState({timer: 25, userTurn: "first"});
+  const [settings, setSettings] = useState({timer: 25, userTurn: "first", disallowedCharacters: []});
   const [settingsActive, setSettingsActive] = useState(false);
   const [settingsLocation, setSettingsLocation] = useState({x: 0, y: 0});
   const navigate = useNavigate();
@@ -83,7 +83,7 @@ function Main() {
             </div>
             <div id="AdditionalFeaturesContainer">
                 <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list')}>Tier List</button>
-                <button id="compScore" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
+                <button id="compScoreBTN" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
                 <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
                 <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits')}>Traits</button>
                 <button id="comps" className="modeBTN bigBTNs" onClick={() => navigate('/comps')}>Team Comps</button>

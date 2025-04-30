@@ -1,7 +1,31 @@
-import React from 'react';
+import {useState, useEffect} from 'react';
+import { fetchCharacterDraftInfo } from './backendCalls/http.js';
 import { BiQuestionMark } from "react-icons/bi";
 
 function Settings({ settings, updateSettings }) {
+    const [characters, setCharacters] = useState([]);
+
+    useEffect(() => {
+        fetchCharacterDraftInfo().then(data => setCharacters(data));
+    }, []);
+
+    function handleCharacterClick(character) {
+        // Check if character is already in disallowedCharacters
+        if (settings.disallowedCharacters.includes(character)) {
+            // If it is, remove it
+            updateSettings({
+                ...settings, 
+                disallowedCharacters: settings.disallowedCharacters.filter(c => c !== character)
+            });
+        } else {
+            // If it's not, add it
+            updateSettings({
+                ...settings, 
+                disallowedCharacters: [...settings.disallowedCharacters, character]
+            });
+        }
+    }
+    
     return (
         <div id="settingsInputs">
             <h3>Settings</h3>
@@ -16,6 +40,14 @@ function Settings({ settings, updateSettings }) {
                     <option value="second">second</option>
                 </select>
                 <div className="informationHover" title="This only applies to Person VS AI"><BiQuestionMark /></div>
+            </div>
+            <div className="characterList">
+                <p>Disallowed Characters</p>
+                {characters.map(character => (
+                    <div key={character.name} className={`characterListDiv ${settings.disallowedCharacters.includes(character.pokemon_name) ? 'disallowed' : ''}`} onClick={() => handleCharacterClick(character.pokemon_name)}>
+                        <img className={`characterListImg ${character.pokemon_class}`} src={`/assets/Draft/headshots/${character.pokemon_name}.png`} alt={character.name} />
+                    </div>
+                ))}
             </div>
         </div>
     );

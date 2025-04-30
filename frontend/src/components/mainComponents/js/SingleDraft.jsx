@@ -20,6 +20,7 @@ function SingleDraft() {
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
     const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
     const timerRef = useRef(null); // Ref to store the timer timeout ID
+    const [disallowedCharacters, updateDisallowedCharacters] = useState([]);
 
     // Update the ref whenever targetPokemon changes
     useEffect(() => {
@@ -44,6 +45,7 @@ function SingleDraft() {
 
         fetchCharacterListing(); // Call the fetch function to populate pokemonList
         setBackground();
+        updateDisallowedCharacters(settings.disallowedCharacters);
     }, []); // Empty dependency array ensures this runs once when the component mounts
 
     useEffect(() => {
@@ -116,7 +118,8 @@ function SingleDraft() {
     const pickAI = async () => {
         try {
             // Create arrays of objects from the ban and team states
-            const allBans = [...team1Bans, ...team2Bans];
+            // Just treat disallowed characters as bans, makes no difference in the algorithm
+            const allBans = [...team1Bans, ...team2Bans, ...disallowedCharacters];
             
             let targetTeam = [];
             let opposingTeam = [];
