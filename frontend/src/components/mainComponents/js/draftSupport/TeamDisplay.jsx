@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import HoverInsights from './HoverInsights';
 
-const TeamDisplay = ({ team, bans, picks }) => {
+const TeamDisplay = ({ team, bans, picks, idealTeams, side }) => {
     const [hoveredPokemon, setHoveredPokemon] = useState(null);
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 })
@@ -68,8 +68,10 @@ const TeamDisplay = ({ team, bans, picks }) => {
                 </div>
             ))}
             {hoveredPokemon && (
-                <div id="hoverDiv" style={{ top: hoverPosition.y, left: hoverPosition.x }} >
-                    <HoverInsights pokemon={hoveredPokemon} index={hoveredIndex} />
+                <div id="hoverDiv" style={ side === 'purple' ? 
+                    { top: hoveredIndex === 4 ? hoverPosition.y - 100 : hoverPosition.y, left: hoverPosition.x } : 
+                    { top: hoveredIndex === 4 ? hoverPosition.y - 100 : hoverPosition.y, right: `calc(100vw - ${hoverPosition.x}px + 80px)` }} >
+                    <HoverInsights pokemon={hoveredPokemon} index={hoveredIndex} idealTeam={idealTeams[hoveredIndex]} />
                 </div>
             )}
         </>

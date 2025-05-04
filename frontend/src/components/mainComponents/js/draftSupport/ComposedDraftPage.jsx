@@ -2,11 +2,11 @@ import DraftListing from './DraftListing';
 import TeamDisplay from './TeamDisplay.jsx';
 import Filtering from './Filtering.jsx';
 
-function ComposedDraftPage({ team1Bans, team1Picks, team2Bans, team2Picks, pokemonList, updateFilteredList, targetPokemon, setTargetPokemon, lockIn, updatePokemonStatus, draftProgression, numUsers, settings, filteredList, stateRef }) {
+function ComposedDraftPage({ team1Bans, team1Picks, team2Bans, team2Picks, pokemonList, updateFilteredList, targetPokemon, setTargetPokemon, lockIn, updatePokemonStatus, draftProgression, numUsers, settings, filteredList, stateRef, idealTeams1, idealTeams2 }) {
     return (
         <>
         <div id="purpleDraftContainer" className="draftContainer">
-            <TeamDisplay team={'purple'} bans={team1Bans} picks={team1Picks} ></TeamDisplay>
+            <TeamDisplay team={'purple'} bans={team1Bans} picks={team1Picks} idealTeams={idealTeams1} side={'purple'} ></TeamDisplay>
         </div>
         <div id="middlePartsContainer">
             <div id="timerContainer">
@@ -23,7 +23,7 @@ function ComposedDraftPage({ team1Bans, team1Picks, team2Bans, team2Picks, pokem
             </div>
         </div>
         <div id="orangeDraftContainer" className="draftContainer">
-            <TeamDisplay team={'orange'} bans={team2Bans} picks={team2Picks} ></TeamDisplay>
+            <TeamDisplay team={'orange'} bans={team2Bans} picks={team2Picks} idealTeams={idealTeams2} side={'orange'} ></TeamDisplay>
         </div>
         </>
     );

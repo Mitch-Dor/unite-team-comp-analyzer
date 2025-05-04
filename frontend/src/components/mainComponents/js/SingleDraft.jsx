@@ -101,19 +101,19 @@ function SingleDraft() {
         if (!stateRef.current.includes("Ban") && !stateRef.current.includes("done")){ // Don't generate during ban phase
             if (numUsers == 2){
                 // It is a user turn so generate an ideal team each time
-                genIdealTeam("user");
+                genIdealTeam();
             } else if (numUsers == 1) {
                 if ((settings.userTurn === "first" && stateRef.current.includes("team1")) || (settings.userTurn === "second" && stateRef.current.includes("team2"))){
                     // It is a user turn so generate an ideal team each time
-                    genIdealTeam("user");
+                    genIdealTeam();
                 } else {
                     // It is the AI's turn so generate an ideal team
-                    genIdealTeam("ai");
+                    genIdealTeam();
                 }
             } else if (firstTurns.includes(stateRef.current)){
                 // AI branch
                 // These are the start of a team's turn to pick either one or two pokemon, so gen the best team
-                genIdealTeam("ai");
+                genIdealTeam();
             }
         }
         
@@ -214,7 +214,7 @@ function SingleDraft() {
         }
     }, [stateRef.current]);
 
-    async function genIdealTeam(userType){
+    async function genIdealTeam(){
         // Create arrays of objects from the ban and team states
         // Just treat disallowed characters as bans, makes no difference in the algorithm
         const allBans = [...team1Bans, ...team2Bans, ...disallowedCharacters];
@@ -235,29 +235,9 @@ function SingleDraft() {
         console.log("AI recommended team:", idealTeam);
         // Append the team to the side that is picking
         if (stateRef.current.startsWith('team1')){
-            if (userType == "ai"){
-                if (stateRef.current.startsWith('team1Pick1')){
-                    // AI is picking but just once
-                    updateIdealTeams1(prevTeams => [...prevTeams, idealTeam]);
-                } else {
-                    // AI is picking twice
-                    updateIdealTeams1(prevTeams => [...prevTeams, idealTeam, idealTeam]);
-                }
-            } else {
-                updateIdealTeams1(prevTeams => [...prevTeams, idealTeam]);
-            }
+            updateIdealTeams1(prevTeams => [...prevTeams, idealTeam]);
         } else {
-            if (userType == "ai"){
-                if (stateRef.current.startsWith('team2Pick5')){
-                    // AI is picking but just once
-                    updateIdealTeams2(prevTeams => [...prevTeams, idealTeam]);
-                } else {
-                    // AI is picking twice
-                    updateIdealTeams2(prevTeams => [...prevTeams, idealTeam, idealTeam]);
-                }
-            } else {
-                updateIdealTeams2(prevTeams => [...prevTeams, idealTeam]);
-            }
+            updateIdealTeams2(prevTeams => [...prevTeams, idealTeam]);
         }
     }
 
@@ -469,7 +449,7 @@ function SingleDraft() {
 
   return (
     <div id="draftContainer">
-        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
+        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} />
         <Home />
     </div>
   );

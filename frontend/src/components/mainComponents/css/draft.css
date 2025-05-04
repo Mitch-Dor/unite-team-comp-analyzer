@@ -485,17 +485,6 @@ html::-webkit-scrollbar {
     box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
 }
 
-#hoverDiv {
-    position: absolute;
-    z-index: 1000;
-    pointer-events: 'none'; /* Prevent blocking other elements */
-}
-
-.hoverInsights {
-    border: 1px solid black;
-    background-color: white;
-    padding: 10px;
-}
 /* Character class background patterns */
 .All_Rounder .characterPortrait,
 .All_Rounder.characterPortrait {
@@ -737,5 +726,66 @@ html::-webkit-scrollbar {
     top: 20px;
     left: 10px;
 }
+
+#hoverDiv {
+    position: absolute;
+    z-index: 1000;
+    pointer-events: 'none'; /* Prevent blocking other elements */
+}
+
+.hoverInsights {
+    border: 1px solid black;
+    background-color: white;
+    padding: 10px;
+    width: 150px;
+    height: 180px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: #333;
+    color: white;
+    border: 1px solid black;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+.idealTeamInsights {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: auto;
+}
+
+.idealTeamInsights p {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.idealTeamPokemonContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.idealTeamPokemon {
+    width: 15%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.idealTeamPokemon img {
+    width: 100%;
+    height: 80%;
+}
+
+
 
 
