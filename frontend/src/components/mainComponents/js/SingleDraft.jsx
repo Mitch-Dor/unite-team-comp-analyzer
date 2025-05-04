@@ -16,11 +16,15 @@ function SingleDraft() {
     const [team1Picks, updateTeam1Picks] = useState([]);
     const [team2Picks, updateTeam2Picks] = useState([]);
     const stateRef = useRef("team1Ban1"); // Initialize stateRef with first state
-    const [idealComp, updateIdealComp] = useState(null);
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
     const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
     const timerRef = useRef(null); // Ref to store the timer timeout ID
+    const aiPickTimeoutRef = useRef(null);
+    const aiPickTimeoutRef2 = useRef(null);
+    const aiBanTimeoutRef = useRef(null);
     const [disallowedCharacters, updateDisallowedCharacters] = useState([]);
+    const [idealTeams1, updateIdealTeams1] = useState([]);
+    const [idealTeams2, updateIdealTeams2] = useState([]);
 
     // Update the ref whenever targetPokemon changes
     useEffect(() => {
@@ -28,7 +32,8 @@ function SingleDraft() {
     }, [targetPokemon]);
 
     const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
-
+    const firstTurns = ['team1Pick1', 'team2Pick1', 'team1Pick2', 'team2Pick3', 'team1Pick4', 'team2Pick5']
+    
     // Populates pokemonList with the return data from fetchCharacterDraftInfo() like name, class, id (status is initialized to none but will be changed to team1, team2, ban1, or ban2 to know where to place it and to gray it out) when the component first mounts.
     useEffect(() => {
         async function fetchCharacterListing() {
@@ -73,70 +78,193 @@ function SingleDraft() {
         };
     }, [stateRef.current, loading]); // reset the timer any time stateRef.current changes
 
-    // Handles the AI's turn
+    // Lock in the AI pick once it has made it
     useEffect(() => {
-        if (stateRef.current !== 'done'){
-            if(numUsers == 0) {
-                // It's all AI just let them do their thing
-                const handleAITurn = async () => {
-                    const choiceAI = await pickAI();
-                    setTargetPokemon(choiceAI);
-                };
-                handleAITurn();
+        if (targetPokemon !== null && stateRef.current !== 'done'){
+            // Determine if it's AI's turn
+            const isAITurn = 
+                numUsers === 0 || // All AI
+                (numUsers === 1 && (
+                    (settings.userTurn === "first" && stateRef.current.includes("team2")) || 
+                    (settings.userTurn === "second" && stateRef.current.includes("team1"))
+                ));
+                
+            if (isAITurn) {
+                // Auto lock-in for AI turns (both picks and bans)
+                lockIn();
+            }
+        }
+    }, [targetPokemon]);
+
+    // Handle the AI's turn
+    useEffect(() => {
+        if (!stateRef.current.includes("Ban") && !stateRef.current.includes("done")){ // Don't generate during ban phase
+            if (numUsers == 2){
+                // It is a user turn so generate an ideal team each time
+                genIdealTeam("user");
             } else if (numUsers == 1) {
-                if ((settings.userTurn === "first" && stateRef.current.includes("team2")) || (settings.userTurn === "second" && stateRef.current.includes("team1"))){
-                    // There is a user but it's the AI's turn
-                    const handleAITurn = async () => {
-                        const choiceAI = await pickAI();
-                        setTargetPokemon(choiceAI);
-                    };
-                    handleAITurn();
+                if ((settings.userTurn === "first" && stateRef.current.includes("team1")) || (settings.userTurn === "second" && stateRef.current.includes("team2"))){
+                    // It is a user turn so generate an ideal team each time
+                    genIdealTeam("user");
+                } else {
+                    // It is the AI's turn so generate an ideal team
+                    genIdealTeam("ai");
+                }
+            } else if (firstTurns.includes(stateRef.current)){
+                // AI branch
+                // These are the start of a team's turn to pick either one or two pokemon, so gen the best team
+                genIdealTeam("ai");
+            }
+        }
+        
+        console.log("StateRef.current:", stateRef.current);
+        // Handle AI bans
+        if (stateRef.current.includes("Ban") && !loading && pokemonList.length > 0){
+            // Determine if it's AI's turn to ban
+            const isAIBanTurn = 
+                numUsers === 0 || // All AI
+                (numUsers === 1 && (
+                    (settings.userTurn === "first" && stateRef.current.includes("team2")) || 
+                    (settings.userTurn === "second" && stateRef.current.includes("team1"))
+                ));
+                
+            if (isAIBanTurn) {
+                // Ban some random pokemon (Eventually it will just ban random high tier pokemon)
+                aiBanTimeoutRef.current = setTimeout(() => {
+                    const randomPokemon = genRandomPokemon();
+                    setTargetPokemon(randomPokemon);
+                }, 3000);
+
+                // Cleanup function to destroy timeout if user leaves the page
+                return () => {
+                    if (aiBanTimeoutRef.current) {
+                        clearTimeout(aiBanTimeoutRef.current);
+                    }
+                };
+            }
+        }
+    }, [stateRef.current, pokemonList, loading, disallowedCharacters]);
+
+    useEffect(() => {
+        if (idealTeams1.length > 0 || idealTeams2.length > 0){
+            if (numUsers == 0 || (numUsers == 1 && stateRef.current.includes("team1") && settings.userTurn === "second") || (numUsers == 1 && stateRef.current.includes("team2") && settings.userTurn === "first")){
+                // If it is AI's turn, pick the next pokemon from their latest ideal team after a delay
+                // Set a timeout for 3 seconds before executing AI pick
+                
+                aiPickTimeoutRef.current = setTimeout(() => {
+                    // Choose the first Pokemon
+                    if (numUsers == 1) {
+                        if (settings.userTurn === "second" && stateRef.current.includes("team1")) {
+                            if (idealTeams1.length > 0) {
+                                const nextPokemon = pickAI(idealTeams1[idealTeams1.length - 1]);
+                                setTargetPokemon(nextPokemon);
+                            }
+                        } else if (settings.userTurn === "first" && stateRef.current.includes("team2")) {
+                            if (idealTeams2.length > 0) {
+                                const nextPokemon = pickAI(idealTeams2[idealTeams2.length - 1]);
+                                setTargetPokemon(nextPokemon);
+                            }
+                        }
+                    } else if (numUsers == 0) {
+                        if (stateRef.current.includes("team1")) {
+                            if (idealTeams1.length > 0) {
+                                const nextPokemon = pickAI(idealTeams1[idealTeams1.length - 1]);
+                                setTargetPokemon(nextPokemon);
+                            }
+                        } else if (stateRef.current.includes("team2")) {
+                            if (idealTeams2.length > 0) {
+                                const nextPokemon = pickAI(idealTeams2[idealTeams2.length - 1]);
+                                setTargetPokemon(nextPokemon);
+                            }
+                        }
+                    }
+                }, 3000);
+                
+                // Cleanup function to destroy timeouts if user leaves the page
+                return () => {
+                    if (aiPickTimeoutRef.current) {
+                        clearTimeout(aiPickTimeoutRef.current);
+                    }
+                };
+            }
+        }
+    }, [idealTeams1, idealTeams2]);
+
+    // Handle the case where the AI needs to pick twice in a row
+    useEffect(() => {
+        const isAITurn = 
+                numUsers === 0 || // All AI
+                (numUsers === 1 && (
+                    (settings.userTurn === "first" && stateRef.current.includes("team2")) || 
+                    (settings.userTurn === "second" && stateRef.current.includes("team1"))
+                ));
+        if (isAITurn){
+            const currIndex = draftProgression.indexOf(stateRef.current);
+            if (currIndex > 0){
+                const prevState = draftProgression[currIndex - 1];
+                if ((prevState.includes("team1") && stateRef.current.includes("team1")) || (prevState.includes("team2") && stateRef.current.includes("team2"))){
+                    // Ai needs to pick again, add the most recent ideal team to the list again
+                    if (stateRef.current.includes("team1")){
+                        updateIdealTeams1(prevTeams => [...prevTeams, idealTeams1[idealTeams1.length - 1]]);
+                    } else {
+                        updateIdealTeams2(prevTeams => [...prevTeams, idealTeams2[idealTeams2.length - 1]]);
+                    }
                 }
             }
         }
     }, [stateRef.current]);
 
-
-    // Lock in the AI pick once it has made it
-    useEffect(() => {
-        if (targetPokemon !== null){
-            if (stateRef.current !== 'done'){
-                if(numUsers == 0) {
-                    // It's all AI just let them do their thing
-                    lockIn();
-                } else if (numUsers == 1) {
-                    if ((settings.userTurn === "first" && stateRef.current.includes("team2")) || (settings.userTurn === "second" && stateRef.current.includes("team1"))){
-                        // There is a user but it's the AI's turn
-                        lockIn();
-                    }
+    async function genIdealTeam(userType){
+        // Create arrays of objects from the ban and team states
+        // Just treat disallowed characters as bans, makes no difference in the algorithm
+        const allBans = [...team1Bans, ...team2Bans, ...disallowedCharacters];
+        
+        let targetTeam = [];
+        let opposingTeam = [];
+        
+        if (stateRef.current.startsWith('team1')) {
+            targetTeam = team1Picks;
+            opposingTeam = team2Picks;
+        } else {
+            targetTeam = team2Picks;
+            opposingTeam = team1Picks;
+        }
+        
+        // Call the imported runAStarAlgorithm function
+        const idealTeam = await runAStarAlgorithm(targetTeam, opposingTeam, allBans);
+        console.log("AI recommended team:", idealTeam);
+        // Append the team to the side that is picking
+        if (stateRef.current.startsWith('team1')){
+            if (userType == "ai"){
+                if (stateRef.current.startsWith('team1Pick1')){
+                    // AI is picking but just once
+                    updateIdealTeams1(prevTeams => [...prevTeams, idealTeam]);
+                } else {
+                    // AI is picking twice
+                    updateIdealTeams1(prevTeams => [...prevTeams, idealTeam, idealTeam]);
                 }
+            } else {
+                updateIdealTeams1(prevTeams => [...prevTeams, idealTeam]);
+            }
+        } else {
+            if (userType == "ai"){
+                if (stateRef.current.startsWith('team2Pick5')){
+                    // AI is picking but just once
+                    updateIdealTeams2(prevTeams => [...prevTeams, idealTeam]);
+                } else {
+                    // AI is picking twice
+                    updateIdealTeams2(prevTeams => [...prevTeams, idealTeam, idealTeam]);
+                }
+            } else {
+                updateIdealTeams2(prevTeams => [...prevTeams, idealTeam]);
             }
         }
-    }, [targetPokemon]);
+    }
 
     // Picks the AI's pokemon
-    const pickAI = async () => {
+    function pickAI(idealTeam){
         try {
-            // Create arrays of objects from the ban and team states
-            // Just treat disallowed characters as bans, makes no difference in the algorithm
-            const allBans = [...team1Bans, ...team2Bans, ...disallowedCharacters];
-            
-            let targetTeam = [];
-            let opposingTeam = [];
-            
-            if (stateRef.current.startsWith('team1')) {
-                targetTeam = team1Picks;
-                opposingTeam = team2Picks;
-            } else {
-                targetTeam = team2Picks;
-                opposingTeam = team1Picks;
-            }
-            
-            // Call the imported runAStarAlgorithm function
-            const idealTeam = await runAStarAlgorithm(targetTeam, opposingTeam, allBans);
-            console.log("AI recommended team:", idealTeam);
-            updateIdealComp(idealTeam);
-            
+            console.log("Ideal team:", idealTeam);
             // If the algorithm returned a recommended team, choose the first pokemon 
             // that isn't already picked or banned
             if (idealTeam && idealTeam.length > 0) {
@@ -166,11 +294,35 @@ function SingleDraft() {
     }
 
     function genRandomPokemon() {
+        if (pokemonList.length === 0) {
+            console.error("Cannot generate random Pokemon: pokemonList is empty");
+            return null;
+        }
+        
         const randIndex = Math.floor(Math.random() * pokemonList.length);
         const pokemon = pokemonList[randIndex];
-        if (!team1Bans.includes(pokemon) && !team2Bans.includes(pokemon) && !team1Picks.includes(pokemon) && !team2Picks.includes(pokemon)) {
+        if (!team1Bans.includes(pokemon) && 
+            !team2Bans.includes(pokemon) && 
+            !team1Picks.includes(pokemon) && 
+            !team2Picks.includes(pokemon) && 
+            !disallowedCharacters.includes(pokemon.pokemon_name)) {
             return pokemon;
         } 
+        
+        // Safety check to prevent infinite recursion
+        let availableOptions = pokemonList.filter(p => 
+            !team1Bans.includes(p) && 
+            !team2Bans.includes(p) && 
+            !team1Picks.includes(p) && 
+            !team2Picks.includes(p) && 
+            !disallowedCharacters.includes(p.pokemon_name)
+        );
+        
+        if (availableOptions.length === 0) {
+            console.error("No available Pokemon to select");
+            return null;
+        }
+        
         return genRandomPokemon();
     }
 
@@ -243,33 +395,36 @@ function SingleDraft() {
     }
 
     function lockIn(){
-        if(targetPokemon !== null){
-            switch (stateRef.current) {
-                case 'team1Ban1':
-                case 'team1Ban2':
-                    updatePokemonStatus(targetPokemon, 'ban1');
-                    break;
-                case 'team2Ban1':
-                case 'team2Ban2':
-                    updatePokemonStatus(targetPokemon, 'ban2');
-                    break;
-                case 'team1Pick1':
-                case 'team1Pick2':
-                case 'team1Pick3':
-                case 'team1Pick4':
-                case 'team1Pick5':
-                    updatePokemonStatus(targetPokemon, 'team1');
-                    break;
-                case 'team2Pick1':
-                case 'team2Pick2':
-                case 'team2Pick3':
-                case 'team2Pick4':
-                case 'team2Pick5':
-                    updatePokemonStatus(targetPokemon, 'team2');
-                    break;
-                default:
-                    console.error('Unhandled draft state:', stateRef.current);
-            }
+        if(targetPokemon === null){
+            console.warn("Cannot lock in: No Pokemon selected");
+            return;
+        }
+        
+        switch (stateRef.current) {
+            case 'team1Ban1':
+            case 'team1Ban2':
+                updatePokemonStatus(targetPokemon, 'ban1');
+                break;
+            case 'team2Ban1':
+            case 'team2Ban2':
+                updatePokemonStatus(targetPokemon, 'ban2');
+                break;
+            case 'team1Pick1':
+            case 'team1Pick2':
+            case 'team1Pick3':
+            case 'team1Pick4':
+            case 'team1Pick5':
+                updatePokemonStatus(targetPokemon, 'team1');
+                break;
+            case 'team2Pick1':
+            case 'team2Pick2':
+            case 'team2Pick3':
+            case 'team2Pick4':
+            case 'team2Pick5':
+                updatePokemonStatus(targetPokemon, 'team2');
+                break;
+            default:
+                console.error('Unhandled draft state:', stateRef.current);
         }
     }
 
