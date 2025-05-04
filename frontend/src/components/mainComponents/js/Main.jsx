@@ -4,6 +4,9 @@ import '../css/main.css'
 import Settings from '../../sideComponents/js/Settings';
 import Login from '../../sideComponents/js/Login';
 import Information from '../../sideComponents/js/Information';
+import { IoIosInformationCircle } from "react-icons/io";
+import { IoMdAlert } from "react-icons/io";
+
 
 function Main() {
   const [settings, setSettings] = useState({timer: 25, userTurn: "first", disallowedCharacters: []});
@@ -68,8 +71,12 @@ function Main() {
   return (
     <div id="mainContainer" className="scrollingBackground">
         <div id="cornerContainer">
-            <button id="report" className="cornerBTN" onClick={() => window.open("https://forms.gle/CcD2mnziUqcEsy56A", "_blank")}>!</button>
-            <button id="info" className="cornerBTN" onClick={() => setInfoActive(true)}>i</button>
+            <button id="report" className="cornerBTN" onClick={() => window.open("https://forms.gle/CcD2mnziUqcEsy56A", "_blank")}>
+              <IoMdAlert style={{ width: '100%', height: '100%' }} />
+            </button>
+            <button id="info" className="cornerBTN" onClick={() => setInfoActive(true)}>
+              <IoIosInformationCircle style={{ width: '100%', height: '100%' }} />
+            </button>
             <Login />
         </div>
         <div id="titleContainer"></div>
