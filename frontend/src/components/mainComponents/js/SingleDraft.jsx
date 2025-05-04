@@ -230,11 +230,13 @@ function SingleDraft() {
             opposingTeam = team1Picks;
         }
         
+        // Save the current state
+        const currentState = stateRef.current;
+
         // Call the imported runAStarAlgorithm function
         const idealTeam = await runAStarAlgorithm(targetTeam, opposingTeam, allBans);
-        console.log("AI recommended team:", idealTeam);
         // Append the team to the side that is picking
-        if (stateRef.current.startsWith('team1')){
+        if (currentState.startsWith('team1')){
             updateIdealTeams1(prevTeams => [...prevTeams, idealTeam]);
         } else {
             updateIdealTeams2(prevTeams => [...prevTeams, idealTeam]);
