@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
-import { fetchCharacterDraftInfo } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo } from '../../mainComponents/js/backendCalls/http.js';
 import { BiQuestionMark } from "react-icons/bi";
+import '../css/settings.css';
 
 function Settings({ settings, updateSettings }) {
     const [characters, setCharacters] = useState([]);

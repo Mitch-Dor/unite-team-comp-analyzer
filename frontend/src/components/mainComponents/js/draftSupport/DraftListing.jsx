@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-const constants = require('../../../../common/naming_constants.js');
-const routes = require('../../../../common/route_constants.js');
+import React from 'react';
 
 const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, updateDraftState, updatePokemonStatus, draftProgression, numUsers, settings, targetPokemon, setTargetPokemon }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
 

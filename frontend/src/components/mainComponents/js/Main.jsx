@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/main.css'
-import Settings from './Settings';
+import Settings from '../../sideComponents/js/Settings';
 import Login from '../../sideComponents/js/Login';
+import Information from '../../sideComponents/js/Information';
 
 function Main() {
   const [settings, setSettings] = useState({timer: 25, userTurn: "first", disallowedCharacters: []});
   const [settingsActive, setSettingsActive] = useState(false);
-  const [settingsLocation, setSettingsLocation] = useState({x: 0, y: 0});
+  const [infoActive, setInfoActive] = useState(false);
   const navigate = useNavigate();
 
   function chooseBackgrounds(){
@@ -57,8 +58,6 @@ function Main() {
 
   function openCloseSettings (event) {
     setSettingsActive(!settingsActive);
-    const rect = event.target.getBoundingClientRect();
-    setSettingsLocation({ x: ((rect.left + rect.right)/2)-(window.innerWidth/10), y: rect.top - (window.innerHeight/4) });
   }
 
   useEffect(() => {
@@ -69,8 +68,8 @@ function Main() {
   return (
     <div id="mainContainer" className="scrollingBackground">
         <div id="cornerContainer">
-            <button id="report" className="cornerBTN">!</button>
-            <button id="info" className="cornerBTN">i</button>
+            <button id="report" className="cornerBTN" onClick={() => window.open("https://forms.gle/CcD2mnziUqcEsy56A", "_blank")}>!</button>
+            <button id="info" className="cornerBTN" onClick={() => setInfoActive(true)}>i</button>
             <Login />
         </div>
         <div id="titleContainer"></div>
@@ -97,6 +96,13 @@ function Main() {
           <div id="settingsScreenCover" onClick={() => setSettingsActive(false)}>
             <div id="setSettings" onClick={(e) => e.stopPropagation()}>
               < Settings settings={settings} updateSettings={setSettings} ></Settings>
+            </div>
+          </div>
+        )}
+        { infoActive && (
+          <div id="infoScreenCover" onClick={() => setInfoActive(false)}>
+            <div id="infoScreen" onClick={(e) => e.stopPropagation()}>
+              < Information ></Information>
             </div>
           </div>
         )}
