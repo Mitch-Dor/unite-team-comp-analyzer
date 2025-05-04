@@ -17,7 +17,9 @@ const routes = {
     GET_ROOMS: '/GETrooms',
     GET_ROOM_INFO: '/GETrooms/',
     GET_CHARACTER_STATS: '/GETcharacterStats',
-    GET_RATE_COMP: '/GETrateComp'
+    GET_RATE_COMP: '/GETrateComp',
+    GET_TIER_LIST: '/GETtierList',
+    POST_TIER_LIST_ENTRY: '/POSTtierListEntry'
 };
 
 module.exports = routes;

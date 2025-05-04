@@ -146,3 +146,14 @@ create table users (
     user_name text not null,
     user_email text not null
 );
+create table verified_users (
+    user_google_id text primary key not null,
+    FOREIGN KEY (user_google_id) REFERENCES users (user_google_id)
+);
+create table tier_list (
+    tier_name text not null,
+    pokemon_id int primary key not null,
+    FOREIGN KEY (pokemon_id) REFERENCES playable_characters (pokemon_id)
+);
+
+

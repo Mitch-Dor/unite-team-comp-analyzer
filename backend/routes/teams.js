@@ -1,4 +1,4 @@
-module.exports = function (app, database) {
+module.exports = function (app, database, adminGoogleId) {
     // App is of course the server so that is how we send data
     // Database we can get to the database SQL functions using database.characters.XXX()
     
@@ -119,4 +119,29 @@ module.exports = function (app, database) {
             res.sendStatus(401);
         });
     });
+
+    app.get('/GETtierList', (req, res) => {
+        database.teams.getAllTierListEntries().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching tier list:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.post('/POSTtierListEntry', (req, res) => {
+        if (req.body.googleId !== adminGoogleId) {
+            res.sendStatus(402);
+            return;
+        }
+        database.teams.insertTierListEntry(req.body.tierName, req.body.pokemonId).then(() => {
+            res.sendStatus(200);
+        })
+        .catch(error => {
+            console.error('Error inserting tier list entry:', error);
+            res.sendStatus(401);
+        });
+    });
+    
 };

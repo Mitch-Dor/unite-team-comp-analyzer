@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import '../css/tierList.css';
-import { fetchCharacterDraftInfo } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry } from './backendCalls/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
 
 function TierList() {
+  const location = useLocation();
+  const { user } = location.state || {};
   const [pokemonList, updatePokemonList] = useState([]);
   const [items, setItems] = useState({
     S: [],
@@ -15,6 +18,8 @@ function TierList() {
     F: [],
     unassigned: []
   });
+  const isAdmin = user && user.user_email === 'pokemonunitedrafter@gmail.com';
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchCharacterListing() {
@@ -31,11 +36,17 @@ function TierList() {
   }, []); 
 
   useEffect(() => {
+    if (isAdmin) {
+      applyDefaultTiers();
+    }
+  }, [pokemonList]);
+
+  useEffect(() => {
     if (pokemonList.length > 0) {
       setItems(prevItems => ({
         ...prevItems,
         unassigned: pokemonList.map((pokemon, index) => ({
-          id: index,
+          id: pokemon.pokemon_id,
           tier: 'unassigned',
           pokemon_name: pokemon.pokemon_name,
           pokemon_class: pokemon.pokemon_class
@@ -83,6 +94,10 @@ function TierList() {
       newItems[targetTier] = [...newItems[targetTier], { ...itemData, tier: targetTier }];
       return newItems;
     });
+
+    if (isAdmin) {
+      insertTierListEntry(targetTier, itemData.id, user.user_google_id);
+    }
   };
 
   const tiers = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
@@ -98,8 +113,101 @@ function TierList() {
     return items.unassigned.filter(item => item.pokemon_class === className);
   };
 
+  async function applyDefaultTiers() {
+    try {
+      setLoading(true);
+      const tierEntries = await fetchAllTierListEntries();
+      
+      // Create a new items state based on default tiers
+      const newItems = {
+        S: [],
+        A: [],
+        B: [],
+        C: [],
+        D: [],
+        E: [],
+        F: [],
+        unassigned: [] // Start with empty unassigned
+      };
+
+      // First, collect all pokemon from the pokemonList to ensure we have them all
+      const allCharacters = pokemonList.map(pokemon => ({
+        id: pokemon.pokemon_id,
+        tier: 'unassigned',
+        pokemon_name: pokemon.pokemon_name,
+        pokemon_class: pokemon.pokemon_class
+      }));
+      
+      // Create a set of IDs for quick lookup
+      const characterIdsSet = new Set(allCharacters.map(char => char.id));
+      
+      // Apply tier entries
+      tierEntries.forEach(entry => {
+        const pokemonId = entry.pokemon_id;
+        const targetTier = entry.tier_name;
+        
+        // Find the Pokemon in our list
+        const pokemonIndex = allCharacters.findIndex(p => p.id === pokemonId);
+        
+        if (pokemonIndex !== -1) {
+          // Found the pokemon - add to appropriate tier and mark as processed
+          const pokemon = allCharacters[pokemonIndex];
+          newItems[targetTier].push({...pokemon, tier: targetTier});
+          // Remove from our tracking set
+          characterIdsSet.delete(pokemonId);
+        }
+      });
+      
+      // Any IDs still in the set need to be added to unassigned
+      for (const character of allCharacters) {
+        if (characterIdsSet.has(character.id)) {
+          newItems.unassigned.push(character);
+        }
+      }
+      
+      setItems(newItems);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error applying default tiers:", error);
+      setLoading(false);
+    }
+  }
+
+  async function emptyTiers() {
+    if (pokemonList.length > 0) {
+      setItems(prevItems => {
+        // Create a new state object with empty tier arrays
+        const newItems = {
+          S: [],
+          A: [],
+          B: [],
+          C: [],
+          D: [],
+          E: [],
+          F: [],
+          unassigned: []
+        };
+        
+        // Move all pokemon to unassigned
+        newItems.unassigned = pokemonList.map(pokemon => ({
+          id: pokemon.pokemon_id,
+          tier: 'unassigned',
+          pokemon_name: pokemon.pokemon_name,
+          pokemon_class: pokemon.pokemon_class
+        }));
+        
+        return newItems;
+      });
+    }
+  }
+
   return (
     <div id="mainContainer">
+    {isAdmin && (
+      <div className="admin-warning">
+        Warning: As an admin user, your changes will update the database.
+      </div>
+    )}
     <div id="tierListContainer">
       <div className="tier-list-section">
         {tiers.map(tier => (
@@ -160,6 +268,20 @@ function TierList() {
       </div>
     </div>
     <Home />
+    <button 
+      className="default-tiers-button" 
+      onClick={applyDefaultTiers}
+      disabled={loading}
+    >
+      {loading ? 'Loading...' : 'Apply Default Tiers'}
+    </button>
+    <button 
+      className="empty-tiers-button" 
+      onClick={emptyTiers}
+      disabled={loading}
+    >
+      {loading ? 'Loading...' : 'Empty Tiers'}
+    </button>
     </div>
   );
 }

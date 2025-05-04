@@ -318,3 +318,81 @@
         gold 100%
     );
 }
+
+/* Add the admin warning styles */
+.admin-warning {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(255, 50, 50, 0.9);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  font-weight: bold;
+  max-width: 300px;
+  text-align: center;
+}
+
+.default-tiers-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(79, 129, 255, 0.9);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.default-tiers-button:hover {
+  background-color: rgba(100, 149, 255, 0.9);
+  transform: scale(1.05);
+}
+
+.default-tiers-button:active {
+  transform: scale(0.98);
+}
+
+.default-tiers-button:disabled {
+  background-color: rgba(150, 150, 150, 0.9);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.empty-tiers-button {
+  position: fixed;
+  bottom: 20px;
+  right: 250px;
+  background-color: rgba(255, 50, 50, 0.9);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.empty-tiers-button:hover {
+  background-color: rgba(255, 100, 100, 0.9);
+  transform: scale(1.05);
+}
+
+.empty-tiers-button:active {
+  transform: scale(0.98);
+}
+
+.empty-tiers-button:disabled {
+  background-color: rgba(150, 150, 150, 0.9);
+  cursor: not-allowed;
+  transform: none;
+}

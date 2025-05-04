@@ -277,3 +277,39 @@ export async function rateComp(comp) {
     const compDataJson = await compData.json();
     return compDataJson;
 }
+
+// Function to fetch all tier list entries
+export async function fetchAllTierListEntries() {
+    const tierListData = await fetch(routes.GET_TIER_LIST, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const tierListDataJson = await tierListData.json();
+    return tierListDataJson;
+}
+
+// Function to insert a tier list entry
+export async function insertTierListEntry(tierName, pokemonId, googleId) {
+    const response = await fetch(routes.POST_TIER_LIST_ENTRY, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            tierName: tierName,
+            pokemonId: pokemonId,
+            googleId: googleId
+        })
+    }); 
+    
+    // Just check if status is 200, no need to parse response
+    if (response.status === 200) {
+        return true;
+    }
+    throw new Error('Failed to update tier list entry');
+}
+

@@ -12,6 +12,7 @@ function Main() {
   const [settings, setSettings] = useState({timer: 25, userTurn: "first", disallowedCharacters: []});
   const [settingsActive, setSettingsActive] = useState(false);
   const [infoActive, setInfoActive] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   function chooseBackgrounds(){
@@ -77,7 +78,7 @@ function Main() {
             <button id="info" className="cornerBTN" onClick={() => setInfoActive(true)}>
               <IoIosInformationCircle style={{ width: '100%', height: '100%' }} />
             </button>
-            <Login />
+            <Login setUser={setUser} />
         </div>
         <div id="titleContainer"></div>
         <div id="bigBTNContainer">
@@ -88,7 +89,7 @@ function Main() {
                 <button id="AIvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/ai-vs-ai', {state: {numUsers: 0, settings: settings}})}>AI VS AI</button>
             </div>
             <div id="AdditionalFeaturesContainer">
-                <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list')}>Tier List</button>
+                <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list', {state: {user: user}})}>Tier List</button>
                 <button id="compScoreBTN" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
                 <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
                 <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits')}>Traits</button>

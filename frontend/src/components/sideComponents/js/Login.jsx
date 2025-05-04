@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../css/login.css'; // Add a CSS file for styling if needed
 import { useUser } from '../../../context/UserContext';
 import { VscAccount } from "react-icons/vsc";
 
-const Login = () => {
+function Login({ setUser }) {
   const { user } = useUser();
   
+  useEffect(() => {
+    if (user) {
+      setUser(user);
+    }
+  }, [user, setUser]);
+
   return (
     <div className="login-container">
       {user ? (

@@ -420,6 +420,50 @@ class Teams {
       const {totalScore, tierScore, synergyScore} = aStar.rateComp(filteredComp, rawTraitData);
       return {totalScore, tierScore, synergyScore};
     }
+
+    // Get all tier list entries
+    async getAllTierListEntries() {
+      return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM tier_list natural join playable_characters';
+        this.db.all(sql, (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        });
+      });
+    }
+
+    // Insert a tier list entry
+    async insertTierListEntry(tierName, pokemonId) {
+      // In one transaction, delete the entry containing the pokemon_id, then insert the new entry
+      return new Promise((resolve, reject) => {
+        this.db.run('BEGIN TRANSACTION');
+        this.db.all('DELETE FROM tier_list WHERE pokemon_id = ?', [pokemonId], (err) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          
+          const sql = 'INSERT INTO tier_list (tier_name, pokemon_id) VALUES (?, ?)';
+          this.db.run(sql, [tierName, pokemonId], (err) => {
+            if (err) { 
+              reject(err);
+            } else {
+              this.db.run('COMMIT', (err) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              });
+            }
+          });
+        });
+      });
+    }
+    
 }
 
 module.exports = Teams;

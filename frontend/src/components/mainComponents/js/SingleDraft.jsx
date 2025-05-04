@@ -117,7 +117,6 @@ function SingleDraft() {
             }
         }
         
-        console.log("StateRef.current:", stateRef.current);
         // Handle AI bans
         if (stateRef.current.includes("Ban") && !loading && pokemonList.length > 0){
             // Determine if it's AI's turn to ban
