@@ -83,7 +83,6 @@ function SingleDraft() {
 
     useEffect(() => {
         if (draftingActive){
-            console.log(numUsers, settings);
             stateRef.current = "team1Ban1";
         }
     }, [draftingActive]);
@@ -258,7 +257,6 @@ function SingleDraft() {
     // Picks the AI's pokemon
     function pickAI(idealTeam){
         try {
-            console.log("Ideal team:", idealTeam);
             // If the algorithm returned a recommended team, choose the first pokemon 
             // that isn't already picked or banned
             if (idealTeam && idealTeam.length > 0) {
