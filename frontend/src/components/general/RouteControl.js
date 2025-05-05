@@ -16,9 +16,7 @@ function RouteControl() {
   return (
       <Routes>
         <Route exact path='/' element={<MainPage />} />
-        <Route exact path='/person-vs-ai' element={<SingleDraft />} />
-        <Route exact path='/ai-vs-ai' element={<SingleDraft />} />
-        <Route exact path='/person-vs-person' element={<SingleDraft />} />
+        <Route exact path='/single-draft' element={<SingleDraft />} />
         <Route exact path='/multi-draft' element={<MultiDraft />} />
         <Route exact path='/score-a-comp' element={<ScoreComp />} />
         <Route exact path='/stats' element={<Stats />} />

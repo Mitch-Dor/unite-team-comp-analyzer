@@ -3,7 +3,7 @@ import { fetchCharacterDraftInfo } from '../../mainComponents/js/backendCalls/ht
 import { BiQuestionMark } from "react-icons/bi";
 import '../css/settings.css';
 
-function Settings({ settings, updateSettings }) {
+function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft }) {
     const [characters, setCharacters] = useState([]);
 
     useEffect(() => {
@@ -34,14 +34,31 @@ function Settings({ settings, updateSettings }) {
                 <label htmlFor="timerLen">Timer</label> 
                 <input name="timerLen" id="timerLen" type="number" min="5" value={settings.timer} onChange={(e) => updateSettings({...settings, timer: Number(e.target.value) >= 5 ? Number(e.target.value) : 5 })}></input>
             </div>
-            <div className="settingsRow">
-                <label htmlFor="playerTurn">Player picks...</label> 
-                <select name="playerTurn" id="playerTurn" onChange={(e) => updateSettings({...settings, userTurn: e.target.value})}>
-                    <option value="first">first</option>
-                    <option value="second">second</option>
-                </select>
-                <div className="informationHover" title="This only applies to Person VS AI"><BiQuestionMark /></div>
-            </div>
+            {numUsers != null && (
+                <div className="settingsRow">
+                    <label htmlFor="numPlayers">Select Mode</label> 
+                    <select 
+                        name="numPlayers" 
+                        id="numPlayers" 
+                        value={numUsers}
+                        onChange={(e) => setNumUsers(Number(e.target.value))}
+                    >
+                        <option value={2}>Person VS Person (Local)</option>
+                        <option value={1}>Person VS AI</option>
+                        <option value={0}>AI VS AI</option>
+                    </select>
+                </div>
+            )}
+            {numUsers === 1 &&(
+                <div className="settingsRow">
+                    <label htmlFor="playerTurn">Player picks...</label> 
+                    <select name="playerTurn" id="playerTurn" onChange={(e) => updateSettings({...settings, userTurn: e.target.value})}>
+                        <option value="first">first</option>
+                        <option value="second">second</option>
+                    </select>
+                    <div className="informationHover" title="This only applies to Person VS AI"><BiQuestionMark /></div>
+                </div>
+            )}
             <div className="characterList">
                 <p>Disallowed Characters</p>
                 {characters.map(character => (
@@ -50,6 +67,9 @@ function Settings({ settings, updateSettings }) {
                     </div>
                 ))}
             </div>
+            {startDraft && (
+                <button id="startDraft" onClick={() => startDraft(true)}>Start Draft</button>
+            )}
         </div>
     );
 }

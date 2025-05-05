@@ -3,11 +3,14 @@ import { useLocation } from 'react-router-dom';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
 import { fetchCharacterDraftInfo, runAStarAlgorithm } from './backendCalls/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
+import Settings from '../../sideComponents/js/Settings.jsx';
 import '../css/draft.css';
 
 function SingleDraft() {
     const location = useLocation();
-    const { numUsers, settings } = location.state || {};
+    const [draftingActive, setDraftingActive] = useState(false);
+    const [numUsers, setNumUsers] = useState(location.state.numUsers);
+    const [settings, setSettings] = useState(location.state.settings);
     const [pokemonList, updatePokemonList] = useState([]);
     const [filteredList, updateFilteredList] = useState([]);
     const [targetPokemon, setTargetPokemon] = useState(null);
@@ -15,7 +18,7 @@ function SingleDraft() {
     const [team2Bans, updateTeam2Bans] = useState([]);
     const [team1Picks, updateTeam1Picks] = useState([]);
     const [team2Picks, updateTeam2Picks] = useState([]);
-    const stateRef = useRef("team1Ban1"); // Initialize stateRef with first state
+    const stateRef = useRef("");
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
     const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
     const timerRef = useRef(null); // Ref to store the timer timeout ID
@@ -54,7 +57,7 @@ function SingleDraft() {
     }, []); // Empty dependency array ensures this runs once when the component mounts
 
     useEffect(() => {
-        if (!loading) {
+        if (!loading && draftingActive) {
             if(stateRef.current !== 'done'){
                 const timerElement = document.getElementById("timer");
                 if (timerElement) {
@@ -76,7 +79,13 @@ function SingleDraft() {
                 timerRef.current = null;
             }
         };
-    }, [stateRef.current, loading]); // reset the timer any time stateRef.current changes
+    }, [stateRef.current, loading, draftingActive]); // reset the timer any time stateRef.current changes. Loading and draftingActive are to make sure the timer only starts once the component is mounted and the settings have been selected
+
+    useEffect(() => {
+        if (draftingActive){
+            stateRef.current = "team1Ban1";
+        }
+    }, [draftingActive]);
 
     // Lock in the AI pick once it has made it
     useEffect(() => {
@@ -98,6 +107,9 @@ function SingleDraft() {
 
     // Handle the AI's turn
     useEffect(() => {
+        if (!draftingActive){
+            return;
+        }
         if (!stateRef.current.includes("Ban") && !stateRef.current.includes("done")){ // Don't generate during ban phase
             if (numUsers == 2){
                 // It is a user turn so generate an ideal team each time
@@ -450,6 +462,13 @@ function SingleDraft() {
 
   return (
     <div id="draftContainer">
+        {!draftingActive && (
+            <div id="settingsScreenCover">
+                <div id="setSettings" onClick={(e) => e.stopPropagation()}>
+                < Settings numUsers={numUsers} setNumUsers={setNumUsers} settings={settings} updateSettings={setSettings} startDraft={setDraftingActive} ></Settings>
+            </div>
+          </div>
+        )}
         <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} />
         <Home />
     </div>

@@ -9,6 +9,7 @@ import { IoMdAlert } from "react-icons/io";
 
 
 function Main() {
+  const [numUsers, setNumUsers] = useState(2);
   const [settings, setSettings] = useState({timer: 25, userTurn: "first", disallowedCharacters: []});
   const [settingsActive, setSettingsActive] = useState(false);
   const [infoActive, setInfoActive] = useState(false);
@@ -83,10 +84,8 @@ function Main() {
         <div id="titleContainer"></div>
         <div id="bigBTNContainer">
             <div id="modesContainer">
-                <button id="YOUvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/person-vs-ai', {state: {numUsers: 1, settings: settings}})}>Person VS AI</button>
-                <button id="MULTI" className="modeBTN bigBTNs" onClick={() => navigate('/multi-draft', {state: {numUsers: 2, settings: settings}})}>Multi Draft</button>
-                <button id="PERSONvsPERSON" className="modeBTN bigBTNs" onClick={() => navigate('/person-vs-person', {state: {numUsers: 2, settings: settings}})}>Person VS Person</button>
-                <button id="AIvsAI" className="modeBTN bigBTNs" onClick={() => navigate('/ai-vs-ai', {state: {numUsers: 0, settings: settings}})}>AI VS AI</button>
+                <button id="SingleDraft" className="modeBTN bigBTNs" onClick={() => navigate('/single-draft', {state: {numUsers: numUsers, settings: settings}})}>Single Draft</button>
+                <button id="MultiDraft" className="modeBTN bigBTNs" onClick={() => navigate('/multi-draft', {state: {settings: settings}})}>Multiplayer Draft</button>
             </div>
             <div id="AdditionalFeaturesContainer">
                 <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list', {state: {user: user}})}>Tier List</button>
@@ -103,7 +102,7 @@ function Main() {
         { settingsActive && (
           <div id="settingsScreenCover" onClick={() => setSettingsActive(false)}>
             <div id="setSettings" onClick={(e) => e.stopPropagation()}>
-              < Settings settings={settings} updateSettings={setSettings} ></Settings>
+              < Settings settings={settings} updateSettings={setSettings} numUsers={numUsers} setNumUsers={setNumUsers} ></Settings>
             </div>
           </div>
         )}
