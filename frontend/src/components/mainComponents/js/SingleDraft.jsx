@@ -460,6 +460,17 @@ function SingleDraft() {
         return <div>Loading...</div>
     }
 
+    function draftAgain(){
+        stateRef.current = 'team1Ban1';
+        setTargetPokemon(null);
+        updateTeam1Bans([]);
+        updateTeam2Bans([]);
+        updateTeam1Picks([]);
+        updateTeam2Picks([]);
+        updateIdealTeams1([]);
+        updateIdealTeams2([]);
+    }
+
   return (
     <div id="draftContainer">
         {!draftingActive && (
@@ -468,6 +479,14 @@ function SingleDraft() {
                 < Settings numUsers={numUsers} setNumUsers={setNumUsers} settings={settings} updateSettings={setSettings} startDraft={setDraftingActive} ></Settings>
             </div>
           </div>
+        )}
+        {stateRef.current === 'done' && (
+            <div id="doneScreenCover">
+                <div id="doneScreen">
+                    <h1>Draft Complete</h1>
+                    <button id="doneScreenBTN" onClick={() => draftAgain()}>Draft Again</button>
+                </div>
+            </div>
         )}
         <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} />
         <Home />
