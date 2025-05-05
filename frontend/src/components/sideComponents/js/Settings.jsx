@@ -62,8 +62,16 @@ function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft 
             <div className="characterList">
                 <p>Disallowed Characters</p>
                 {characters.map(character => (
-                    <div key={character.name} className={`characterListDiv ${settings.disallowedCharacters.includes(character.pokemon_name) ? 'disallowed' : ''}`} onClick={() => handleCharacterClick(character.pokemon_name)}>
-                        <img className={`characterListImg ${character.pokemon_class}`} src={`/assets/Draft/headshots/${character.pokemon_name}.png`} alt={character.name} />
+                    <div 
+                        key={character.pokemon_name} 
+                        className={`characterListDiv ${settings.disallowedCharacters.includes(character.pokemon_name) ? 'disallowed' : ''}`} 
+                        onClick={() => handleCharacterClick(character.pokemon_name)}
+                    >
+                        <img 
+                            className={`characterListImg ${character.pokemon_class}`} 
+                            src={`/assets/Draft/headshots/${character.pokemon_name}.png`} 
+                            alt={character.pokemon_name} 
+                        />
                     </div>
                 ))}
             </div>

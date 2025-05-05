@@ -83,6 +83,7 @@ function SingleDraft() {
 
     useEffect(() => {
         if (draftingActive){
+            console.log(numUsers, settings);
             stateRef.current = "team1Ban1";
         }
     }, [draftingActive]);
