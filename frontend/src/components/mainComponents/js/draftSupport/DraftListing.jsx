@@ -5,6 +5,7 @@ const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Pick
     function handleTargetPokemon(pokemon){
         // Check if the pokemon is already picked/banned
         const isUnavailable = team1Bans.includes(pokemon) || team2Bans.includes(pokemon) || team1Picks.includes(pokemon) || team2Picks.includes(pokemon) || settings.disallowedCharacters.includes(pokemon.pokemon_name);
+        console.log("handling target pokemon", pokemon);
         if (draftState !== 'done' && !isUnavailable){
             if(numUsers == 2) {
                 // It's definitely a user turn

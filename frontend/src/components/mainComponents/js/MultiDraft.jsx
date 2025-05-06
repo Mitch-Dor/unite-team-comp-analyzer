@@ -10,7 +10,8 @@ import RoomCreateJoin from './draftSupport/RoomCreateJoin.jsx';
 
 function MultiDraft() {
     const location = useLocation();
-    const { numUsers, settings } = location.state || {};
+    const [numUsers, setNumUsers] = useState(2);
+    const { settings } = location.state || {};
     const [pokemonList, updatePokemonList] = useState([]);
     const [filteredList, updateFilteredList] = useState([]);
     const [targetPokemon, setTargetPokemon] = useState(null);
@@ -30,7 +31,6 @@ function MultiDraft() {
     const [peer, setPeer] = useState(null);
     const [connection, setConnection] = useState(null);
     const [inputRoomId, setInputRoomId] = useState('');
-    const [showRoomIdInput, setShowRoomIdInput] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState('Disconnected');
     const peerRef = useRef(null);
     const connectionRef = useRef(null);
@@ -639,6 +639,12 @@ function MultiDraft() {
         )}
         <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
         <Home />
+        <div id="roomInfoDisplay">
+            <h4>Room ID: {roomIdRef.current}</h4>
+            <h4>Connection Status: {connectionStatus}</h4>
+            <h4>Is Host: {isHostRef.current ? "Yes" : "No"}</h4>
+            <h4>Is Your Turn: {(isHostRef.current && stateRef.current.includes("team2")) || (!isHostRef.current && stateRef.current.includes("team1")) ? "Yes" : "No"} </h4>
+        </div>
     </div>
   );
 }

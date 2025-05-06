@@ -917,3 +917,25 @@ html::-webkit-scrollbar {
     box-shadow: 0 0 10px rgba(80, 80, 80, 0.7);
 }
 
+#roomInfoDisplay {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+#roomInfoDisplay h4 {
+    margin: 0;
+    padding: 0;
+    font-size: 0.6rem;
+    font-weight: bold;
+}
+
+
+
+
