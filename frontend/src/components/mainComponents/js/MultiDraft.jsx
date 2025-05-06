@@ -6,6 +6,8 @@ import '../css/draft.css';
 import { Peer } from 'peerjs';
 import io from 'socket.io-client';
 import Home from '../../sideComponents/js/Home.jsx';
+import RoomCreateJoin from './draftSupport/RoomCreateJoin.jsx';
+
 function MultiDraft() {
     const location = useLocation();
     const { numUsers, settings } = location.state || {};
@@ -17,7 +19,6 @@ function MultiDraft() {
     const [team1Picks, updateTeam1Picks] = useState([]);
     const [team2Picks, updateTeam2Picks] = useState([]);
     const stateRef = useRef("team1Ban1"); // Initialize with the first state
-    const [idealComp, updateIdealComp] = useState(null);
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
     const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
     const timerRef = useRef(null); // Ref to store the timer timeout ID
@@ -591,17 +592,11 @@ function MultiDraft() {
 
     // Implementation of joinRoom function to join an existing draft room
     function handleJoinRoom() {
-        if (showRoomIdInput) {
-            // If room ID input is already showing, attempt to join
-            if (inputRoomId && socketRef.current) {
-                socketRef.current.emit('join-room', inputRoomId);
-                roomIdRef.current = inputRoomId;
-                setConnectionStatus(`Joining room: ${inputRoomId}`);
-                setShowRoomIdInput(false);
-            }
-        } else {
-            // Show the room ID input
-            setShowRoomIdInput(true);
+        // Attempt to join room
+        if (inputRoomId && socketRef.current) {
+            socketRef.current.emit('join-room', inputRoomId);
+            roomIdRef.current = inputRoomId;
+            setConnectionStatus(`Joining room: ${inputRoomId}`);
         }
     }
 
@@ -612,7 +607,7 @@ function MultiDraft() {
 
   return (
     <div id="draftContainer">
-        {!isConnected ? (
+        {/* {!isConnected ? (
             <div id="roomControls">
                 <button id="createRoomBTN" onClick={handleCreateRoom}>Create Room</button>
                 <button id="joinRoomBTN" onClick={handleJoinRoom}>Join Room</button>
@@ -637,6 +632,10 @@ function MultiDraft() {
                 <div id="connectionStatus">{connectionStatus}</div>
                 {roomIdRef.current && <div id="roomIdDisplay">Room ID: {roomIdRef.current}</div>}
             </div>
+        )} */}
+
+        {!isConnected && (
+            <RoomCreateJoin createRoom={handleCreateRoom} joinRoom={handleJoinRoom} inputRoomId={inputRoomId} handleInputChange={handleInputChange} roomIdRef={roomIdRef} />
         )}
         <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
         <Home />
