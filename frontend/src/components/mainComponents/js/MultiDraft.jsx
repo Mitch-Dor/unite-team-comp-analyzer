@@ -46,7 +46,7 @@ function MultiDraft() {
         // Send a message to the peer if it is the current user's turn to pick so we don't go in circles
         console.log('stateRef.current:', stateRef.current);
         console.log('isHostRef.current:', isHostRef.current);
-        if ((isHostRef.current && stateRef.current !== null && stateRef.current.includes('team2')) || (!isHostRef.current && stateRef.current !== null && stateRef.current.includes('team1'))){
+        if (checkIsTurn()){
             if (targetPokemon !== null && isConnected && connectionRef.current && connectionRef.current.open) {
                 console.log('sending pokemon-selected to peer');
                 sendDraftAction('pokemon-selected', { pokemon: targetPokemon.pokemon_name });
@@ -476,6 +476,25 @@ function MultiDraft() {
         }
     }
 
+    function checkIsTurn(){
+        // First check if it's appropriate for this user to make a lock-in
+        const isTeam1Turn = stateRef.current.includes('team1');
+        const isTeam2Turn = stateRef.current.includes('team2');
+        if (isHostRef.current){
+            if (isTeam2Turn){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (isTeam1Turn){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     function lockIn(){
         console.log('targetPokemonRef:', targetPokemonRef.current);
         if(targetPokemonRef.current !== null){
@@ -483,14 +502,11 @@ function MultiDraft() {
             console.log("try to lock in");
             
             // First check if it's appropriate for this user to make a lock-in
-            const isTeam1Turn = stateRef.current.includes('team1');
-            const isTeam2Turn = stateRef.current.includes('team2');
-            const isHostTurn = !isHostRef.current && isTeam1Turn;
-            const isGuestTurn = isHostRef.current && isTeam2Turn;
+            const isTurn = checkIsTurn();
             
             // Send lock-in to peer when it's our turn
             if (isConnected && connectionRef.current && connectionRef.current.open) {
-                if (isHostTurn || isGuestTurn) {
+                if (isTurn) {
                     console.log('sending lock-in to peer');
                     sendDraftAction('lock-in', { pokemon: targetPokemon.pokemon_name });
                 }
@@ -605,39 +621,24 @@ function MultiDraft() {
         setInputRoomId(e.target.value);
     }
 
+    function trySetTargetPokemon(pokemon){
+        if (checkIsTurn()){
+            setTargetPokemon(pokemon);
+        }
+    }
+
+    function tryLockIn(){
+        if (checkIsTurn()){
+            lockIn();
+        }
+    }
+
   return (
     <div id="draftContainer">
-        {/* {!isConnected ? (
-            <div id="roomControls">
-                <button id="createRoomBTN" onClick={handleCreateRoom}>Create Room</button>
-                <button id="joinRoomBTN" onClick={handleJoinRoom}>Join Room</button>
-                {showRoomIdInput && (
-                    <div id="roomIdInputContainer">
-                        <input 
-                            id="roomInput"
-                            type="text" 
-                            placeholder="Enter Room ID" 
-                            value={inputRoomId}
-                            onChange={handleInputChange}
-                            maxLength="6"
-                        />
-                        <button id="joinRoomBTN" onClick={handleJoinRoom}>Join</button>
-                    </div>
-                )}
-                <div id="connectionStatus">{connectionStatus}</div>
-                {roomIdRef.current && <div id="roomIdDisplay">Room ID: {roomIdRef.current}</div>}
-            </div>
-        ) : (
-            <div id="connectionInfo">
-                <div id="connectionStatus">{connectionStatus}</div>
-                {roomIdRef.current && <div id="roomIdDisplay">Room ID: {roomIdRef.current}</div>}
-            </div>
-        )} */}
-
         {!isConnected && (
             <RoomCreateJoin createRoom={handleCreateRoom} joinRoom={handleJoinRoom} inputRoomId={inputRoomId} handleInputChange={handleInputChange} roomIdRef={roomIdRef} />
         )}
-        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
+        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
         <Home />
         <div id="roomInfoDisplay">
             <h4>Room ID: {roomIdRef.current}</h4>
