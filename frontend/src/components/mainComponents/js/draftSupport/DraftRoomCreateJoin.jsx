@@ -3,7 +3,7 @@ import Settings from '../../../sideComponents/js/Settings.jsx';
 import { GoArrowLeft } from "react-icons/go";
 import { GoCopy } from "react-icons/go";
 
-function RoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, roomIdRef, isConnected, settings, updateSettings, startDraft }) {
+function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, roomIdRef, isConnected, settings, updateSettings, startDraft }) {
     const [joiningOrCreating, setJoiningOrCreating] = useState("");
 
     useEffect(() => {
@@ -84,4 +84,4 @@ function RoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, 
     );
 }
 
-export default RoomCreateJoin;
+export default DraftRoomCreateJoin;

@@ -6,7 +6,7 @@ import '../css/draft.css';
 import { Peer } from 'peerjs';
 import io from 'socket.io-client';
 import Home from '../../sideComponents/js/Home.jsx';
-import RoomCreateJoin from './draftSupport/RoomCreateJoin.jsx';
+import RoomCreateJoin from './draftSupport/DraftRoomCreateJoin.jsx';
 
 function MultiDraft() {
     const location = useLocation();
