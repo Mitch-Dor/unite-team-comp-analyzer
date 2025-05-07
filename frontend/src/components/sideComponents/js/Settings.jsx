@@ -3,7 +3,7 @@ import { fetchCharacterDraftInfo } from '../../mainComponents/js/backendCalls/ht
 import { BiQuestionMark } from "react-icons/bi";
 import '../css/settings.css';
 
-function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft }) {
+function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft, isConnected, joinCreate, firstUser, setFirstUser }) {
     const [characters, setCharacters] = useState([]);
 
     useEffect(() => {
@@ -52,11 +52,20 @@ function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft 
             {numUsers === 1 &&(
                 <div className="settingsRow">
                     <label htmlFor="playerTurn">Player picks...</label> 
-                    <select name="playerTurn" id="playerTurn" onChange={(e) => updateSettings({...settings, userTurn: e.target.value})}>
+                    <select name="playerTurn" id="playerTurn" value={settings.userTurn} onChange={(e) => updateSettings({...settings, userTurn: e.target.value})}>
                         <option value="first">first</option>
                         <option value="second">second</option>
                     </select>
                     <div className="informationHover" title="This only applies to Person VS AI"><BiQuestionMark /></div>
+                </div>
+            )}
+            {settings.firstUser && (
+                <div className="settingsRow">
+                    <label htmlFor="playerTurn">Host picks...</label> 
+                    <select name="playerTurn" id="playerTurn" value={settings.firstUser} onChange={(e) => updateSettings({...settings, firstUser: Number(e.target.value)})}>
+                        <option value={1}>first</option>
+                        <option value={2}>second</option>
+                    </select>
                 </div>
             )}
             <div className="characterList">
@@ -75,7 +84,7 @@ function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft 
                     </div>
                 ))}
             </div>
-            {startDraft && (
+            {startDraft && joinCreate && joinCreate === "create" && isConnected && (
                 <button id="startDraft" onClick={() => startDraft(true)}>Start Draft</button>
             )}
         </div>

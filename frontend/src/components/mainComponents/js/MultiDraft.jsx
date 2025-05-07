@@ -11,7 +11,9 @@ import RoomCreateJoin from './draftSupport/RoomCreateJoin.jsx';
 function MultiDraft() {
     const location = useLocation();
     const [numUsers, setNumUsers] = useState(2);
-    const { settings } = location.state || {};
+    const settingsRef = useRef({...location.state.settings, firstUser: 1});
+    const [settings, setSettings] = useState({...location.state.settings, firstUser: 1});
+    const [draftStarted, setDraftStarted] = useState(false);
     const [pokemonList, updatePokemonList] = useState([]);
     const [filteredList, updateFilteredList] = useState([]);
     const [targetPokemon, setTargetPokemon] = useState(null);
@@ -259,6 +261,12 @@ function MultiDraft() {
                     type: 'connectionTest',
                     message: 'Connection successful!'
                 });
+                if (isHostRef.current){
+                    conn.send({
+                        type: 'settings',
+                        settings: settingsRef.current
+                    });
+                }
                 console.log('Sent test message over peer connection');
             } catch (err) {
                 console.error('Error sending test message:', err);
@@ -309,6 +317,12 @@ function MultiDraft() {
                     }
                 } else if (data.type === 'connectionTest') {
                     console.log('Connection test received:', data.message);
+                } else if (data.type === 'settings') {
+                    console.log('Received settings from peer:', data.settings);
+                    settingsRef.current = data.settings;
+                    setSettings(data.settings); // This will trigger a re-render
+                } else if (data.type === 'draftStarted') {
+                    setDraftStarted(true);
                 }
             });
         }
@@ -481,13 +495,21 @@ function MultiDraft() {
         const isTeam1Turn = stateRef.current.includes('team1');
         const isTeam2Turn = stateRef.current.includes('team2');
         if (isHostRef.current){
-            if (isTeam2Turn){
+            // Host is second pick AND it's team 2's turn
+            if (isTeam2Turn && settingsRef.current.firstUser === 2){
+                return true;
+            // Host is first pick AND it's team 1's turn
+            } else if (isTeam1Turn && settingsRef.current.firstUser === 1){
                 return true;
             } else {
                 return false;
             }
         } else {
-            if (isTeam1Turn){
+            // Host is second pick but it's team 1's turn
+            if (isTeam1Turn && settingsRef.current.firstUser === 2){
+                return true;
+            // Host is first pick but it's team 2's turn
+            } else if (isTeam2Turn && settingsRef.current.firstUser === 1){
                 return true;
             } else {
                 return false;
@@ -633,21 +655,46 @@ function MultiDraft() {
         }
     }
 
-  return (
-    <div id="draftContainer">
-        {!isConnected && (
-            <RoomCreateJoin createRoom={handleCreateRoom} joinRoom={handleJoinRoom} inputRoomId={inputRoomId} handleInputChange={handleInputChange} roomIdRef={roomIdRef} />
-        )}
-        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
-        <Home />
-        <div id="roomInfoDisplay">
-            <h4>Room ID: {roomIdRef.current}</h4>
-            <h4>Connection Status: {connectionStatus}</h4>
-            <h4>Is Host: {isHostRef.current ? "Yes" : "No"}</h4>
-            <h4>Is Your Turn: {(isHostRef.current && stateRef.current.includes("team2")) || (!isHostRef.current && stateRef.current.includes("team1")) ? "Yes" : "No"} </h4>
+    function startDraft(){
+        setDraftStarted(true);
+        // Send settings to peer if connected
+        if (isConnected && connectionRef.current && connectionRef.current.open) {
+            connectionRef.current.send({
+                type: 'draftStarted'
+            });
+        }
+    }
+
+    function updateSettings(newSettings){
+        if (isHostRef.current){
+            console.log('updateSettings:', newSettings);
+            settingsRef.current = newSettings;
+            setSettings(newSettings); // This will trigger a re-render
+            // Send settings to peer if connected
+            if (isConnected && connectionRef.current && connectionRef.current.open) {
+                connectionRef.current.send({
+                    type: 'settings',
+                    settings: newSettings
+                });
+            }
+        }
+    }
+
+    return (
+        <div id="draftContainer">
+            {!draftStarted && (
+                <RoomCreateJoin createRoom={handleCreateRoom} joinRoom={handleJoinRoom} inputRoomId={inputRoomId} handleInputChange={handleInputChange} roomIdRef={roomIdRef} isConnected={isConnected} settings={settings} updateSettings={updateSettings} startDraft={startDraft} />
+            )}
+            <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
+            <Home />
+            <div id="roomInfoDisplay">
+                <h4>Room ID: {roomIdRef.current}</h4>
+                <h4>Connection Status: {connectionStatus}</h4>
+                <h4>Is Host: {isHostRef.current ? "Yes" : "No"}</h4>
+                <h4>Is Your Turn: {checkIsTurn() ? "Yes" : "No"} </h4>
+            </div>
         </div>
-    </div>
-  );
+    );
 }
 
 export default MultiDraft;

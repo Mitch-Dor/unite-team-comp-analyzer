@@ -811,7 +811,7 @@ html::-webkit-scrollbar {
 .roomCreateJoinContainer {
     background-color: #121212;
     width: 50%;
-    height: 50%;
+    height: 70%;
     border-radius: 10px;
     border: 1px solid black;
     padding: 10px;
@@ -892,6 +892,11 @@ html::-webkit-scrollbar {
     margin: 20px 0;
     font-size: 1.2rem;
     font-weight: bold;
+}
+
+#joinRoomBTN:hover {
+    background-color: #3a3a3a;
+    box-shadow: 0 0 15px rgba(80, 80, 80, 0.7);
 }
 
 .returnToSelectBTN {

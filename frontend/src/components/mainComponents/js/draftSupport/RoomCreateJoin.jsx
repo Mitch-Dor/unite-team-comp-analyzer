@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import Settings from '../../../sideComponents/js/Settings.jsx';
 import { GoArrowLeft } from "react-icons/go";
 
-function RoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, roomIdRef }) {
+function RoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, roomIdRef, isConnected, settings, updateSettings, startDraft }) {
     const [joiningOrCreating, setJoiningOrCreating] = useState("");
 
     useEffect(() => {
@@ -26,32 +27,46 @@ function RoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, 
             )}
             {joiningOrCreating === "create" && (
                 <div className="roomCreateJoinContainer">
-                    <button className="returnToSelectBTN" onClick={() => setJoiningOrCreating("")}>
-                        <GoArrowLeft />
-                    </button>
+                    {!isConnected && (
+                        <button className="returnToSelectBTN" onClick={() => setJoiningOrCreating("")}>
+                            <GoArrowLeft />
+                        </button>
+                    )}
                     <div className="roomCreateJoinHeader">
-                        <h1>Room ID: {roomIdRef.current}</h1>
+                        <h1>{isConnected ? "Room Host: Set The Settings" : "Room ID: " + roomIdRef.current}</h1>
+                    </div>
+                    <div className="roomCreateJoinContent">
+                        <Settings settings={settings} updateSettings={updateSettings} startDraft={startDraft} isConnected={isConnected} joinCreate={joiningOrCreating} />
                     </div>
                 </div>
             )}
             {joiningOrCreating === "join" && (
                 <div className="roomCreateJoinContainer">
-                    <button className="returnToSelectBTN" onClick={() => setJoiningOrCreating("")}>
-                        <GoArrowLeft />
-                    </button>
+                    {!isConnected && (
+                        <button className="returnToSelectBTN" onClick={() => setJoiningOrCreating("")}>
+                            <GoArrowLeft />
+                        </button>
+                    )}
                     <div className="roomCreateJoinHeader">
                         <h1>Join Draft Room</h1>
                     </div>
                     <div className="roomCreateJoinContent">
-                        <input 
-                            id="roomInput"
-                            type="text" 
-                            placeholder="Enter Room ID" 
-                            value={inputRoomId}
-                            onChange={handleInputChange}
-                            maxLength="6"
-                        />
-                        <button id="joinRoomBTN" onClick={joinRoom}>Join</button>
+                        {!isConnected && (
+                            <>
+                                <input 
+                                    id="roomInput"
+                                type="text" 
+                                placeholder="Enter Room ID" 
+                                value={inputRoomId}
+                                onChange={handleInputChange}
+                                maxLength="6"
+                                />
+                                <button id="joinRoomBTN" onClick={joinRoom}>Join</button>
+                            </>
+                        )}
+                        {isConnected && (
+                            <Settings settings={settings} updateSettings={updateSettings} startDraft={startDraft} isConnected={isConnected} joinCreate={joiningOrCreating} />
+                        )}
                     </div>
                 </div>
             )}

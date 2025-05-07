@@ -19,6 +19,11 @@
     width: 100%;
 }
 
+#settingsInputs h3 {
+    color: white;
+    margin: 0;
+}
+
 .settingsRow {
     display: flex;
     align-items: center;
@@ -105,6 +110,7 @@
     align-items: center;
     width: 20px;
     height: 20px;
+    cursor: pointer;
 }
 
 .characterListDiv {
