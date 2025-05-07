@@ -179,7 +179,7 @@ html::-webkit-scrollbar {
 #searchBar {
     margin: 1vh 1vw;
     height: clamp(20px, 2vh, 30px);
-    width: clamp(200px, 28vw, 500px);
+    width: clamp(200px, 20vw, 500px);
     border: 2px solid black;
     font-size: clamp(0.8rem, 1vw, 1.2rem);
     padding: 0 0.5em;
@@ -187,7 +187,6 @@ html::-webkit-scrollbar {
 }
 
 .laneFilters {
-    margin: 1vh 0.5vw;
     height: clamp(20px, 2vh, 30px);
     width: clamp(100px, 7vw, 150px);
     display: flex;
@@ -204,7 +203,6 @@ html::-webkit-scrollbar {
 }
 
 .classFilters {
-    margin: 1vh 0.5vw;
     height: clamp(20px, 2vh, 30px);
     width: clamp(100px, 7vw, 150px);
     display: flex;
