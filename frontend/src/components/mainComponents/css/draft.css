@@ -939,6 +939,30 @@ html::-webkit-scrollbar {
     font-weight: bold;
 }
 
+.roomIDContainer {
+    display: flex;
+    align-items: center;
+}
 
+.copyBTN {
+    margin-left: 10px; 
+    padding: 5px; 
+    background: #2c2c2c; 
+    border: 1px solid #444;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    font-size: 0.8rem;
+}
+
+.copyBTN:hover {
+    background-color: #3a3a3a;
+    box-shadow: 0 0 15px rgba(80, 80, 80, 0.7);
+}
+
+.copyBTN:active {
+    background-color: #444;
+    box-shadow: 0 0 15px rgba(100, 100, 100, 0.7);
+}
 
 

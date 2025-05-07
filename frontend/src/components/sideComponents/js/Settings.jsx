@@ -84,7 +84,7 @@ function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft,
                     </div>
                 ))}
             </div>
-            {startDraft && joinCreate && joinCreate === "create" && isConnected && (
+            {(joinCreate ? (joinCreate === "create" && isConnected && startDraft) : startDraft) && (
                 <button id="startDraft" onClick={() => startDraft(true)}>Start Draft</button>
             )}
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Settings from '../../../sideComponents/js/Settings.jsx';
 import { GoArrowLeft } from "react-icons/go";
+import { GoCopy } from "react-icons/go";
 
 function RoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, roomIdRef, isConnected, settings, updateSettings, startDraft }) {
     const [joiningOrCreating, setJoiningOrCreating] = useState("");
@@ -33,7 +34,16 @@ function RoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, 
                         </button>
                     )}
                     <div className="roomCreateJoinHeader">
-                        <h1>{isConnected ? "Room Host: Set The Settings" : "Room ID: " + roomIdRef.current}</h1>
+                        <h1>{isConnected ? "Room Host: Set The Settings" : (
+                            <div className="roomIDContainer">
+                                Room ID: {roomIdRef.current}
+                                <button className="copyBTN"
+                                    onClick={() => navigator.clipboard.writeText(roomIdRef.current)}
+                                >
+                                    <GoCopy />
+                                </button>
+                            </div>
+                        )}</h1>
                     </div>
                     <div className="roomCreateJoinContent">
                         <Settings settings={settings} updateSettings={updateSettings} startDraft={startDraft} isConnected={isConnected} joinCreate={joiningOrCreating} />
