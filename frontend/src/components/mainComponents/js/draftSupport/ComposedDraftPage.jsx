@@ -10,7 +10,7 @@ function ComposedDraftPage({ team1Bans, team1Picks, team2Bans, team2Picks, pokem
         </div>
         <div id="middlePartsContainer">
             <div id="timerContainer">
-                <button id="timer"></button> 
+                <button id="timer">{lockIn ? 'Waiting for draft to start...' : 'No Timer'}</button> 
             </div>
             <div id="draftBoardContainer">
                 <Filtering pokemonList={pokemonList} updateFilteredList={updateFilteredList} ></Filtering>

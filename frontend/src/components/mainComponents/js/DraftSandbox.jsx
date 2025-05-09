@@ -89,6 +89,13 @@ function DraftSandbox() {
         <div id="draftContainer">
             <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} setPosition={setPosition} filteredList={filteredList} />
             <Home />
+            <button id="startOverBTN" onClick={() => {
+                updateTeam1Bans([]);
+                updateTeam2Bans([]);
+                updateTeam1Picks([]);
+                updateTeam2Picks([]);
+                setTargetPokemon(null);
+            }}>Start Over</button>
         </div>
     );
 }
