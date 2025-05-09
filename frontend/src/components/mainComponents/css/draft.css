@@ -91,6 +91,26 @@ html::-webkit-scrollbar {
     border: 1px solid black;
 }
 
+.characterPortrait.selectable {
+    cursor: pointer;
+    border: 3px solid gold;
+    box-shadow: 0 0 10px gold;
+    animation: pulse 1s infinite alternate;
+}
+
+.characterSelection.selectable {
+    cursor: pointer;
+    border: 3px solid gold;
+    box-shadow: 0 0 10px gold;
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        box-shadow: 0 0 5px gold;
+    }
+}
+
 .characterSelection h3 {
     width: auto;
 }

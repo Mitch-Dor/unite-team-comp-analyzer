@@ -11,6 +11,7 @@ import TierList from '../mainComponents/js/TierList';
 import Traits from '../mainComponents/js/Traits';
 import Comps from '../mainComponents/js/Comps';
 import Login from '../sideComponents/js/Login';
+import DraftSandbox from '../mainComponents/js/DraftSandbox';
 
 function RouteControl() {
   return (
@@ -18,6 +19,7 @@ function RouteControl() {
         <Route exact path='/' element={<MainPage />} />
         <Route exact path='/single-draft' element={<SingleDraft />} />
         <Route exact path='/multi-draft' element={<MultiDraft />} />
+        <Route exact path='/draft-sandbox' element={<DraftSandbox />} />
         <Route exact path='/score-a-comp' element={<ScoreComp />} />
         <Route exact path='/stats' element={<Stats />} />
         <Route exact path='/tier-list' element={<TierList />} />

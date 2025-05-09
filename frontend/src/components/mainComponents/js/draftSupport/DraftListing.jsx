@@ -2,10 +2,20 @@ import React from 'react';
 
 const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, updateDraftState, updatePokemonStatus, draftProgression, numUsers, settings, targetPokemon, setTargetPokemon }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
 
+    function isUnavailablePokemon(pokemon){
+        if (settings){
+            return team1Bans.includes(pokemon) || team2Bans.includes(pokemon) || team1Picks.includes(pokemon) || team2Picks.includes(pokemon) || settings.disallowedCharacters.includes(pokemon.pokemon_name);
+        } else {
+            return team1Bans.some(item => item.pokemon === pokemon) || 
+                   team2Bans.some(item => item.pokemon === pokemon) || 
+                   team1Picks.some(item => item.pokemon === pokemon) || 
+                   team2Picks.some(item => item.pokemon === pokemon);
+        }
+    }
+
     function handleTargetPokemon(pokemon){
         // Check if the pokemon is already picked/banned
-        const isUnavailable = team1Bans.includes(pokemon) || team2Bans.includes(pokemon) || team1Picks.includes(pokemon) || team2Picks.includes(pokemon) || settings.disallowedCharacters.includes(pokemon.pokemon_name);
-        console.log("handling target pokemon", pokemon);
+        const isUnavailable = isUnavailablePokemon(pokemon);
         if (draftState !== 'done' && !isUnavailable){
             if(numUsers == 2) {
                 // It's definitely a user turn
@@ -17,13 +27,16 @@ const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Pick
                 }
             }
         }
+        if (!draftState && !isUnavailable){
+            setTargetPokemon(pokemon);
+        }
     }
 
     return (
         <>
             {pokemonList && pokemonList.length > 0 ? (
                 pokemonList.map(pokemon => {
-                    const isUnavailable = team1Bans.includes(pokemon) || team2Bans.includes(pokemon) || team1Picks.includes(pokemon) || team2Picks.includes(pokemon) || settings.disallowedCharacters.includes(pokemon.pokemon_name);
+                    const isUnavailable = isUnavailablePokemon(pokemon);
                     return (
                         <div key={pokemon.pokemon_name} className={`draftCharacter ${pokemon.pokemon_class} ${isUnavailable ? 'unavailable' : 'available'} ${targetPokemon === pokemon ? 'targeted' : ''}`} onClick={() => {handleTargetPokemon(pokemon)}}>
                             <img className="characterPortrait" src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />

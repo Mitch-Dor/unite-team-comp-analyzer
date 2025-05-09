@@ -85,6 +85,7 @@ function Main() {
         <div id="bigBTNContainer">
             <div id="modesContainer">
                 <button id="SingleDraft" className="modeBTN bigBTNs" onClick={() => navigate('/single-draft', {state: {numUsers: numUsers, settings: settings}})}>Single Draft</button>
+                <button id="DraftSandbox" className="modeBTN bigBTNs" onClick={() => navigate('/draft-sandbox')}>Draft Sandbox</button>
                 <button id="MultiDraft" className="modeBTN bigBTNs" onClick={() => navigate('/multi-draft', {state: {settings: settings}})}>Multiplayer Draft</button>
             </div>
             <div id="AdditionalFeaturesContainer">
