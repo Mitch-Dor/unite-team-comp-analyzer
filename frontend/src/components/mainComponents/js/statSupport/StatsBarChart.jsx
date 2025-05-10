@@ -79,7 +79,7 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
             case 'win':
               return ['rgba(75, 192, 192, 0.6)'];
             case 'pickOrder':
-              return ['rgba(75, 192, 192, 0.6)'];
+              return ['rgba(192, 75, 161, 0.6)'];
             default:
               return [
                 'rgba(255, 99, 132, 0.6)',  // Red for Ban Rate
@@ -100,7 +100,7 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
             case 'win':
               return ['rgba(75, 192, 192, 1)'];
             case 'pickOrder':
-              return ['rgba(75, 192, 192, 1)'];
+              return ['rgba(192, 75, 161, 0.6)'];
             default:
               return [
                 'rgba(255, 99, 132, 1)',
@@ -265,12 +265,12 @@ function PokemonDataChart({ data, setShowPokemonData }) {
             'rgba(54, 162, 235, 0.6)',  // Pick Rate
             'rgba(255, 206, 86, 0.6)',  // Presence
             'rgba(75, 192, 192, 0.6)',  // Win Rate
-            'rgba(75, 192, 192, 0.6)',  // Round 1
-            'rgba(75, 192, 192, 0.6)',  // Round 2
-            'rgba(75, 192, 192, 0.6)',  // Round 3
-            'rgba(75, 192, 192, 0.6)',  // Round 4
-            'rgba(75, 192, 192, 0.6)',  // Round 5
-            'rgba(75, 192, 192, 0.6)'   // Round 6
+            'rgba(192, 75, 161, 0.6)',  // Round 1
+            'rgba(192, 75, 161, 0.6)',  // Round 2
+            'rgba(192, 75, 161, 0.6)',  // Round 3
+            'rgba(192, 75, 161, 0.6)',  // Round 4
+            'rgba(192, 75, 161, 0.6)',  // Round 5
+            'rgba(192, 75, 161, 0.6)'   // Round 6
           ];
           
           // Add colors for movesets
