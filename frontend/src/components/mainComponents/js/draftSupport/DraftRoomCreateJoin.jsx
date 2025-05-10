@@ -3,7 +3,7 @@ import Settings from '../../../sideComponents/js/Settings.jsx';
 import { GoArrowLeft } from "react-icons/go";
 import { GoCopy } from "react-icons/go";
 
-function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, roomIdRef, isConnected, settings, updateSettings, startDraft }) {
+function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, roomIdRef, isConnected, settings, updateSettings, startDraft, user, opposingUser }) {
     const [joiningOrCreating, setJoiningOrCreating] = useState("");
 
     useEffect(() => {
@@ -46,6 +46,12 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
                         )}</h1>
                     </div>
                     <div className="roomCreateJoinContent">
+                        {isConnected && (
+                            <div className="userInformationContainer">
+                                <p>Hosted By (You): {user ? user.user_name : "Unknown"}</p>
+                                <p>Opposing User: {opposingUser ? opposingUser.user_name : "Unknown"}</p>
+                            </div>
+                        )}
                         <Settings settings={settings} updateSettings={updateSettings} startDraft={startDraft} isConnected={isConnected} joinCreate={joiningOrCreating} />
                     </div>
                 </div>
@@ -75,7 +81,13 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
                             </>
                         )}
                         {isConnected && (
-                            <Settings settings={settings} updateSettings={updateSettings} startDraft={startDraft} isConnected={isConnected} joinCreate={joiningOrCreating} />
+                            <>
+                                <div className="userInformationContainer">
+                                    <p>Hosted By: {opposingUser ? opposingUser.user_name : "Unknown"}</p>
+                                    <p>Opposing User (You): {user ? user.user_name : "Unknown"}</p>
+                                </div>
+                                <Settings settings={settings} updateSettings={updateSettings} startDraft={startDraft} isConnected={isConnected} joinCreate={joiningOrCreating} />
+                            </>
                         )}
                     </div>
                 </div>

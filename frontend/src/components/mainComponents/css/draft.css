@@ -1007,3 +1007,17 @@ html::-webkit-scrollbar {
     box-shadow: 0 0 15px rgba(100, 100, 100, 0.7);
 }
 
+.userInformationContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.userInformationContainer p {
+    margin: 0;
+    padding: 0px 20px;
+    padding-bottom: 20px;
+    color: white;
+}
+

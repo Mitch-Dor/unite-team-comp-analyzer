@@ -10,6 +10,8 @@ import RoomCreateJoin from './draftSupport/DraftRoomCreateJoin.jsx';
 
 function MultiDraft() {
     const location = useLocation();
+    const user = location.state.user;
+    const [opposingUser, setOpposingUser] = useState(null);
     const [numUsers, setNumUsers] = useState(2);
     const settingsRef = useRef({...location.state.settings, firstUser: 1});
     const [settings, setSettings] = useState({...location.state.settings, firstUser: 1});
@@ -267,6 +269,13 @@ function MultiDraft() {
                         settings: settingsRef.current
                     });
                 }
+                // Send user information if it exists
+                if (user) {
+                    conn.send({
+                        type: 'userInfo',
+                        user: user
+                    });
+                }
                 console.log('Sent test message over peer connection');
             } catch (err) {
                 console.error('Error sending test message:', err);
@@ -327,6 +336,9 @@ function MultiDraft() {
                     setSettings(data.settings); // This will trigger a re-render
                 } else if (data.type === 'draftStarted') {
                     setDraftStarted(true);
+                } else if (data.type === 'userInfo') {
+                    console.log('Received user info from peer:', data.user);
+                    setOpposingUser(data.user);
                 }
             });
         }
@@ -665,7 +677,7 @@ function MultiDraft() {
     return (
         <div id="draftContainer">
             {!draftStarted && (
-                <RoomCreateJoin createRoom={handleCreateRoom} joinRoom={handleJoinRoom} inputRoomId={inputRoomId} handleInputChange={handleInputChange} roomIdRef={roomIdRef} isConnected={isConnected} settings={settings} updateSettings={updateSettings} startDraft={startDraft} />
+                <RoomCreateJoin createRoom={handleCreateRoom} joinRoom={handleJoinRoom} inputRoomId={inputRoomId} handleInputChange={handleInputChange} roomIdRef={roomIdRef} isConnected={isConnected} settings={settings} updateSettings={updateSettings} startDraft={startDraft} user={user} opposingUser={opposingUser} />
             )}
             <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
             <Home />
@@ -674,6 +686,7 @@ function MultiDraft() {
                 <h4>Connection Status: {connectionStatus}</h4>
                 <h4>Is Host: {isHostRef.current ? "Yes" : "No"}</h4>
                 <h4>Is Your Turn: {checkIsTurn() ? "Yes" : "No"} </h4>
+                <h4>Opposing User: {opposingUser ? opposingUser.user_name : "Unknown"}</h4>
             </div>
         </div>
     );

@@ -70,6 +70,10 @@ function Main() {
     setTitle();
   }, []);
 
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   return (
     <div id="mainContainer" className="scrollingBackground">
         <div id="cornerContainer">
@@ -86,7 +90,7 @@ function Main() {
             <div id="modesContainer">
                 <button id="SingleDraft" className="modeBTN bigBTNs" onClick={() => navigate('/single-draft', {state: {numUsers: numUsers, settings: settings}})}>Single Draft</button>
                 <button id="DraftSandbox" className="modeBTN bigBTNs" onClick={() => navigate('/draft-sandbox')}>Draft Sandbox</button>
-                <button id="MultiDraft" className="modeBTN bigBTNs" onClick={() => navigate('/multi-draft', {state: {settings: settings}})}>Multiplayer Draft</button>
+                <button id="MultiDraft" className="modeBTN bigBTNs" onClick={() => navigate('/multi-draft', {state: {settings: settings, user: user}})}>Multiplayer Draft</button>
             </div>
             <div id="AdditionalFeaturesContainer">
                 <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list', {state: {user: user}})}>Tier List</button>
