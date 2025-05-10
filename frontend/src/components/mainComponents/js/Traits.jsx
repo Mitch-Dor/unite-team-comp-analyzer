@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import '../css/traits.css';
 import { updateCharacterAttributes, fetchAllCharacterAttributes } from './backendCalls/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
@@ -9,7 +10,8 @@ function Traits() {
   const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  
+  const { user } = useLocation().state;
+
   // Define column order and widths
   const columnConfig = {
     pokemon_name: { width: '150px' },
@@ -163,7 +165,7 @@ function Traits() {
         ...newData[rowIndex],
         [column]: value
       };
-      updateCharacterAttributes(newData[rowIndex].pokemon_name, newData[rowIndex]);
+      updateCharacterAttributes(newData[rowIndex].pokemon_id, newData[rowIndex], user.user_google_id);
       return newData;
     });
   };

@@ -1,4 +1,4 @@
-module.exports = function (app, database) {
+module.exports = function (app, database, adminGoogleId) {
     // App is of course the server so that is how we send data
     // Database we can get to the database SQL functions using database.characters.XXX()
     app.get('/GETallDraftInfo', (req, res) => {
@@ -34,13 +34,18 @@ module.exports = function (app, database) {
     });
 
     app.put('/PUTCharacterAttributes', (req, res) => {
-        database.characters.updateCharacterAttributes(req.body.name, req.body.traits).then(data => {
-            res.json(data);
-        })
+        // Check if the user is an admin
+        if (req.body.userGoogleId === adminGoogleId) {
+            database.characters.updateCharacterAttributes(req.body.pokemonId, req.body.traits).then(data => {
+                res.json(data);
+            })
         .catch(error => {
             console.error('Error updating character Attributes:', error);
+                res.sendStatus(401);
+            });
+        } else {
             res.sendStatus(401);
-        });
+        }
     });
 
     app.put('/GETcharacterStats', (req, res) => {

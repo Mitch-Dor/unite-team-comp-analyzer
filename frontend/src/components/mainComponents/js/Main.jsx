@@ -6,6 +6,7 @@ import Login from '../../sideComponents/js/Login';
 import Information from '../../sideComponents/js/Information';
 import { IoIosInformationCircle } from "react-icons/io";
 import { IoMdAlert } from "react-icons/io";
+import { isAdmin } from './backendCalls/http.js';
 
 
 function Main() {
@@ -14,7 +15,18 @@ function Main() {
   const [settingsActive, setSettingsActive] = useState(false);
   const [infoActive, setInfoActive] = useState(false);
   const [user, setUser] = useState(null);
+  const [admin, setAdmin] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function checkAdmin() {
+      if (user) {
+        const admin = await isAdmin(user.user_google_id);
+        setAdmin(admin);
+      }
+    }
+    checkAdmin();
+  }, [user]);
 
   function chooseBackgrounds(){
     let rand = Math.floor(Math.random() * 5); // 5 Possible backgrounds
@@ -96,7 +108,9 @@ function Main() {
                 <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list', {state: {user: user}})}>Tier List</button>
                 <button id="compScoreBTN" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
                 <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
-                <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits')}>Traits</button>
+                {admin && (
+                  <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits', {state: {user: user}})}>Traits</button>
+                )}
                 <button id="comps" className="modeBTN bigBTNs" onClick={() => navigate('/comps', {state: {user: user}})}>Team Comps</button>
             </div>
             <div id="settingContainer">

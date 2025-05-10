@@ -45,7 +45,7 @@ export async function fetchCharacterAttributes(name) {
 }
 
 // Function to update a single character's attributes
-export async function updateCharacterAttributes(name, traits) {
+export async function updateCharacterAttributes(pokemonId, traits, userGoogleId) {
     const characterAttributeData = await fetch(routes.PUT_CHARACTER_ATTRIBUTES, {
         method: 'PUT',
         credentials: 'include',
@@ -53,8 +53,9 @@ export async function updateCharacterAttributes(name, traits) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            name: name,
-            traits: traits
+            pokemonId: pokemonId,
+            traits: traits,
+            userGoogleId: userGoogleId
         })
     });
     const characterAttributeDataJson = await characterAttributeData.json();

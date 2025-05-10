@@ -73,7 +73,7 @@ class Characters {
                     best_lane = ?, 
                     assumed_move_1 = ?, 
                     assumed_move_2 = ? 
-                    WHERE pokemon_name = ?`;
+                    WHERE pokemon_id = ?`;
         
         const params = [
           traits.early_game,
