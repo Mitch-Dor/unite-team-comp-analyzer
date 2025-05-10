@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import '../css/comps.css';
-import { fetchAllComps, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves } from './backendCalls/http';
+import { fetchAllComps, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, isVerifiedUser } from './backendCalls/http';
 import SubmitSetModal from './compSupport/SubmitSetModal';
 import MatchDisplay from './compSupport/MatchDisplay';
 import CustomDropdown from './compSupport/CustomDropdown';
 import Home from '../../sideComponents/js/Home.jsx';
+import { useLocation } from 'react-router-dom';
 
 function Comps() {
   const [compsData, setCompsData] = useState([]);
@@ -15,6 +16,8 @@ function Comps() {
   const [players, setPlayers] = useState([]);
   const [charactersAndMoves, setCharactersAndMoves] = useState([]);
   const [filteredComps, setFilteredComps] = useState([]);
+  const { user } = useLocation().state || {};
+  const [verifiedUser, setVerifiedUser] = useState(false);
 
   // Sample data - In a real app, this would come from an API
   useEffect(() => {
@@ -78,6 +81,16 @@ function Comps() {
   }, []);
 
   useEffect(() => {
+    async function checkVerifiedUser() {
+      if (user) {
+        const isVerified = await isVerifiedUser(user.user_google_id);
+        setVerifiedUser(isVerified);
+      }
+    }
+    checkVerifiedUser();
+  }, [user]);
+
+  useEffect(() => {
     // Use setTimeout to ensure DOM is ready
     setTimeout(() => {
       const mainContainer = document.getElementById("mainContainer");
@@ -101,7 +114,7 @@ function Comps() {
 
   return (
     <div id="mainContainer" className="main-container">
-      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCompsData={setCompsData} compsData={compsData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} />}
+      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCompsData={setCompsData} compsData={compsData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} user={user} />}
       <div id="compsContainer">
         <div className="comps-list">
           <h1 className="page-title">Team Compositions</h1>
@@ -113,7 +126,9 @@ function Comps() {
           ))}
         </div>
       </div>
-      <div id="open-set-submit-form" className="open-set-submit-form" onClick={() => {setShowSubmitForm(true); setFilteredComps([])}}>+</div>
+      {verifiedUser && (
+        <div id="open-set-submit-form" className="open-set-submit-form" onClick={() => {setShowSubmitForm(true); setFilteredComps([])}}>+</div>
+      )}
     </div>
   );
 }

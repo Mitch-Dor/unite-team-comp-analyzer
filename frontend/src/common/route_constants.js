@@ -19,7 +19,9 @@ const routes = {
     GET_CHARACTER_STATS: '/GETcharacterStats',
     GET_RATE_COMP: '/GETrateComp',
     GET_TIER_LIST: '/GETtierList',
-    POST_TIER_LIST_ENTRY: '/POSTtierListEntry'
+    POST_TIER_LIST_ENTRY: '/POSTtierListEntry',
+    GET_IS_VERIFIED_USER: '/GETisVerifiedUser',
+    GET_IS_ADMIN: '/GETisAdmin'
 };
 
 module.exports = routes;

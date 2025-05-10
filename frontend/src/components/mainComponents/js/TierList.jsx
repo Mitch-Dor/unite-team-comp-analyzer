@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../css/tierList.css';
-import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry, isAdmin } from './backendCalls/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
 
 function TierList() {
@@ -18,7 +18,7 @@ function TierList() {
     F: [],
     unassigned: []
   });
-  const isAdmin = user && user.user_email === 'pokemonunitedrafter@gmail.com';
+  const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -36,10 +36,20 @@ function TierList() {
   }, []); 
 
   useEffect(() => {
-    if (isAdmin) {
+    async function checkAdmin() {
+      if (user) {
+        const admin = await isAdmin(user.user_google_id);
+        setAdmin(admin);
+      }
+    }
+    checkAdmin();
+  }, [user]);
+
+  useEffect(() => {
+    if (admin) {
       applyDefaultTiers();
     }
-  }, [pokemonList]);
+  }, [pokemonList, admin]);
 
   useEffect(() => {
     if (pokemonList.length > 0) {
@@ -95,7 +105,7 @@ function TierList() {
       return newItems;
     });
 
-    if (isAdmin) {
+    if (admin) {
       insertTierListEntry(targetTier, itemData.id, user.user_google_id);
     }
   };
@@ -203,7 +213,7 @@ function TierList() {
 
   return (
     <div id="mainContainer">
-    {isAdmin && (
+    {admin && (
       <div className="admin-warning">
         Warning: As an admin user, your changes will update the database.
       </div>

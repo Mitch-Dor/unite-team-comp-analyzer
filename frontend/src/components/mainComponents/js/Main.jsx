@@ -97,7 +97,7 @@ function Main() {
                 <button id="compScoreBTN" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
                 <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
                 <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits')}>Traits</button>
-                <button id="comps" className="modeBTN bigBTNs" onClick={() => navigate('/comps')}>Team Comps</button>
+                <button id="comps" className="modeBTN bigBTNs" onClick={() => navigate('/comps', {state: {user: user}})}>Team Comps</button>
             </div>
             <div id="settingContainer">
                 <button id="settings" className="settingBTN bigBTNs" onClick={(e) => openCloseSettings(e)}>Draft Settings</button>

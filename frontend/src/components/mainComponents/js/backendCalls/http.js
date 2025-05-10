@@ -146,7 +146,7 @@ export async function fetchAllCharactersAndMoves() {
 }
 
 // Function to insert an event
-export async function insertEvent(name, date, vodUrl) {
+export async function insertEvent(name, date, vodUrl, userGoogleId) {
     const eventData = await fetch(routes.POST_EVENT, {
         method: 'POST',
         credentials: 'include',
@@ -156,7 +156,8 @@ export async function insertEvent(name, date, vodUrl) {
         body: JSON.stringify({
             name: name,
             date: date,
-            vodUrl: vodUrl
+            vodUrl: vodUrl,
+            userGoogleId: userGoogleId
         })
     });
     const eventDataJson = await eventData.json();
@@ -165,7 +166,7 @@ export async function insertEvent(name, date, vodUrl) {
 }
 
 // Function to insert a team
-export async function insertTeam(name, region) {
+export async function insertTeam(name, region, userGoogleId) {
     const teamData = await fetch(routes.POST_TEAM, {
         method: 'POST',
         credentials: 'include',
@@ -174,7 +175,8 @@ export async function insertTeam(name, region) {
         },
         body: JSON.stringify({
             name: name,
-            region: region
+            region: region,
+            userGoogleId: userGoogleId
         })
     });
     const teamDataJson = await teamData.json();
@@ -182,7 +184,7 @@ export async function insertTeam(name, region) {
 }
 
 // Function to insert a player
-export async function insertPlayer(name) {
+export async function insertPlayer(name, userGoogleId) {
     const playerData = await fetch(routes.POST_PLAYER, {
         method: 'POST',
         credentials: 'include',
@@ -190,7 +192,8 @@ export async function insertPlayer(name) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            name: name
+            name: name,
+            userGoogleId: userGoogleId
         })
     });
     const playerDataJson = await playerData.json();
@@ -198,14 +201,17 @@ export async function insertPlayer(name) {
 }
 
 // Function to insert a set
-export async function insertSet(setMatches) {
+export async function insertSet(setMatches, userGoogleId) {
     const setData = await fetch(routes.POST_SET, {
         method: 'POST',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(setMatches)
+        body: JSON.stringify({
+            setMatches: setMatches,
+            userGoogleId: userGoogleId
+        })
     });
     const setDataJson = await setData.json();
     return setDataJson;
@@ -311,5 +317,37 @@ export async function insertTierListEntry(tierName, pokemonId, googleId) {
         return true;
     }
     throw new Error('Failed to update tier list entry');
+}
+
+// Function to check if a user is verified
+export async function isVerifiedUser(userGoogleId) {
+    const response = await fetch(routes.GET_IS_VERIFIED_USER, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userGoogleId: userGoogleId
+        })
+    });
+    const responseJson = await response.json();
+    return responseJson;
+}
+
+// Function to check if a user is an admin
+export async function isAdmin(userGoogleId) {
+    const response = await fetch(routes.GET_IS_ADMIN, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userGoogleId: userGoogleId
+        })
+    });
+    const responseJson = await response.json();
+    return responseJson;
 }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
 import CustomDropdown from './CustomDropdown';
 
-function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers }) {
+function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers, user }) {
     const [setInsertion, setSetInsertion] = useState(false);
     const [eventInsertion, setEventInsertion] = useState(false);
     const [teamInsertion, setTeamInsertion] = useState(false);
@@ -176,7 +176,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             }
 
             // Submit the data
-            insertSet(databaseData).then(data => {
+            insertSet(databaseData, user.user_google_id).then(data => {
                 // Update the comp data on the comp display page with the new comps
                 // Do after sending to database to only show data that was successfully inserted
                 setCompsData([...compsData, ...formattedData]);
@@ -194,7 +194,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             checkNull(eventInsertion.vod_url, "Event VOD URL");
             // If there are no errors, submit the data
             if (errorCount === 0) {
-                insertEvent(eventInsertion.event_name, eventInsertion.event_date, eventInsertion.vod_url).then(data => {
+                insertEvent(eventInsertion.event_name, eventInsertion.event_date, eventInsertion.vod_url, user.user_google_id).then(data => {
                     // Update the event data with the ID
                     const newEvent = {
                         event_id: data.id,
@@ -221,7 +221,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             checkNull(teamInsertion.team_region, "Team Region");
             // If there are no errors, submit the data
             if (errorCount === 0) {
-                insertTeam(teamInsertion.team_name, teamInsertion.team_region).then(data => {
+                insertTeam(teamInsertion.team_name, teamInsertion.team_region, user.user_google_id).then(data => {
                     // Update the team data with the ID
                     const newTeam = {
                         team_id: data.id,
@@ -246,7 +246,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             checkNull(playerInsertion.player_name, "Player Name");
             // If there are no errors, submit the data
             if (errorCount === 0) {
-                insertPlayer(playerInsertion.player_name).then(data => {
+                insertPlayer(playerInsertion.player_name, user.user_google_id).then(data => {
                     // Update the player data with the ID
                     const newPlayer = {
                         player_id: data.id,

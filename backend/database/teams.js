@@ -463,7 +463,16 @@ class Teams {
         });
       });
     }
-    
+
+    // Get all verified users
+    async getAllVerifiedUsers() {
+      return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM verified_users';
+        this.db.all(sql, (err, rows) => {
+          resolve(rows);
+        });
+      });
+    }
 }
 
 module.exports = Teams;

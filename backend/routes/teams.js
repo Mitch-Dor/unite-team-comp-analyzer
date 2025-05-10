@@ -71,43 +71,91 @@ module.exports = function (app, database, adminGoogleId) {
     });
 
     app.post('/POSTevent', (req, res) => {
-        database.teams.insertEvent(req.body.name, req.body.date, req.body.vodUrl).then(data => {
-            res.json(data);
-        })
-        .catch(error => {
-            console.error('Error inserting event:', error);
-            res.sendStatus(401);
-        });
+        // Check if user is verified
+        checkVerifiedUser(req.body.userGoogleId)
+            .then(isVerified => {
+                if (!isVerified) {
+                    res.sendStatus(402);
+                    return;
+                }
+                database.teams.insertEvent(req.body.name, req.body.date, req.body.vodUrl).then(data => {
+                    res.json(data); 
+                })
+                .catch(error => {
+                    console.error('Error inserting event:', error);
+                    res.sendStatus(401);
+                });
+            })
+            .catch(error => {
+                console.error('Error checking verified user:', error);
+                res.sendStatus(401);
+            });
     });
 
     app.post('/POSTteam', (req, res) => {
-        database.teams.insertTeam(req.body.name, req.body.region).then(data => {
-            res.json(data);
-        })
-        .catch(error => {
-            console.error('Error inserting team:', error);
-            res.sendStatus(401);
-        });
+        // Check if user is verified
+        checkVerifiedUser(req.body.userGoogleId)
+            .then(isVerified => {
+                if (!isVerified) {
+                    res.sendStatus(402);
+                    return;
+                }
+                database.teams.insertTeam(req.body.name, req.body.region).then(data => {
+                    res.json(data);
+                })
+                .catch(error => {
+                    console.error('Error inserting team:', error);
+                    res.sendStatus(401);
+                });
+            })
+            .catch(error => {
+                console.error('Error checking verified user:', error);
+                res.sendStatus(401);
+            });
     });
 
     app.post('/POSTplayer', (req, res) => {
-        database.teams.insertPlayer(req.body.name).then(data => {
-            res.json(data);
-        })
-        .catch(error => {
-            console.error('Error inserting player:', error);
-            res.sendStatus(401);
-        });
+        // Check if user is verified
+        checkVerifiedUser(req.body.userGoogleId)
+            .then(isVerified => {
+                if (!isVerified) {
+                    res.sendStatus(402);
+                    return;
+                }
+                database.teams.insertPlayer(req.body.name).then(data => {
+                    res.json(data);
+                })
+                .catch(error => {
+                    console.error('Error inserting player:', error);
+                    res.sendStatus(401);
+                });
+            })
+            .catch(error => {
+                console.error('Error checking verified user:', error);
+                res.sendStatus(401);
+            });
     });
 
     app.post('/POSTset', (req, res) => {
-        database.teams.insertSet(req.body).then(data => {
-            res.json(data);
-        })
-        .catch(error => {
-            console.error('Error inserting set:', error);
-            res.sendStatus(401);
-        });
+        // Check if user is verified
+        checkVerifiedUser(req.body.userGoogleId)
+            .then(isVerified => {
+                if (!isVerified) {
+                    res.sendStatus(402);
+                    return;
+                }
+                database.teams.insertSet(req.body.setMatches).then(data => {
+                    res.json(data);
+                })
+                .catch(error => {
+                    console.error('Error inserting set:', error);
+                    res.sendStatus(401);
+                });
+            })
+            .catch(error => {
+                console.error('Error checking verified user:', error);
+                res.sendStatus(401);
+            });
     });
 
     app.put('/GETrateComp', (req, res) => {
@@ -143,5 +191,43 @@ module.exports = function (app, database, adminGoogleId) {
             res.sendStatus(401);
         });
     });
-    
+
+    app.put('/GETisVerifiedUser', (req, res) => {
+        checkVerifiedUser(req.body.userGoogleId)
+            .then(isVerified => {
+                res.json(true);
+            })
+            .catch(error => {
+                if (error.status === 402) {
+                    res.json(false);
+                } else {
+                    console.error('Error checking verified user:', error);
+                    res.sendStatus(401);
+                }
+            });
+    });
+
+    app.put('/GETisAdmin', (req, res) => {
+        const userGoogleId = req.body.userGoogleId;
+        const isAdmin = userGoogleId === adminGoogleId;
+        res.json(isAdmin);
+    });
+
+    async function checkVerifiedUser(userGoogleId) {
+        return new Promise((resolve, reject) => {
+            database.teams.getAllVerifiedUsers()
+                .then(users => {
+                    const isVerified = users.some(user => user.user_google_id === userGoogleId);
+                    if (!isVerified) {
+                        reject({ status: 402, message: 'User not verified' });
+                    } else {
+                        resolve(true);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking verified user:', error);
+                    reject({ status: 401, message: 'Database error' });
+                });
+        });
+    }
 };
