@@ -7,7 +7,7 @@ const MinHeap = require('./MinHeap');
 // Maybe could use these numbers only if there is sufficient data
 
 
-function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
+function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
     // Convert raw pokemon data to Pokemon objects if needed
     const pokemonObjects = allPokemon.map(p => 
         p instanceof Pokemon ? p : new Pokemon(p)
@@ -147,7 +147,7 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
                 const newTeam = [...currNode.picks, pokemon];
                 const teamKey = newTeam.map(p => p.id).sort().join('|'); // Create team key in same way TeamNode would
                 if (!closed.has(teamKey)) { // Convert set to string for uniqueness
-                    const score = heuristic(newTeam, enemyTeamObjects); // Heuristic needs to be on the teams list of Pokemon. Not a TeamNode object.
+                    const score = heuristic(newTeam, enemyTeamObjects, tierList); // Heuristic needs to be on the teams list of Pokemon. Not a TeamNode object.
                     const candidate = new TeamNode(newTeam, currNode.score, score);
                     candidates.push(candidate);
                     // Not adding to closed because we know there will not be duplicates in pokemonObjects and I want to save memory
@@ -167,6 +167,7 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon) {
 class Pokemon {
     constructor(data) {
         this.name = data.pokemon_name;
+        this.pokemon_id = data.pokemon_id;
         this.attributes = {
             earlyGame: data.early_game,
             midGame: data.mid_game,
@@ -197,8 +198,8 @@ class Pokemon {
 }
 
 // Heuristic function that takes in a team and returns a score
-function heuristic(yourTeam, enemyTeam){
-    const tierScore = heuristic_tier_score(yourTeam);
+function heuristic(yourTeam, enemyTeam, tierList){
+    const tierScore = heuristic_tier_score(yourTeam, tierList);
     const synergyScore = heuristic_synergy_score(yourTeam);
     const counterScore = heuristic_counter_score(yourTeam, enemyTeam);
     const totalScore = tierScore + synergyScore + counterScore;
@@ -206,20 +207,7 @@ function heuristic(yourTeam, enemyTeam){
 }
 
 // Heuristic function that takes in a team and returns a score based on the tier of the pokemon in the team
-function heuristic_tier_score(providedTeam){
-    // Hard-coded rules always
-    // Larger score means WORSE tier
-    const sTier = ["absol", "zeraora", "inteleon", "suicune", "umbreon", "snorlax", "psyduck"];
-    const aTier = ["urshifu_ss", "talonflame", "leafeon", "meowscarada", "garchomp", "pikachu",
-                 "zacian", "mimikyu", "hoopa", "comfey", "blissey", "slowbro", "mamoswine", "metagross"];
-    const bTier = ["gengar", "aegislash", "dodrio", "zoroark", "blaziken", "ceruledge", "mew", "scyther", "espeon",
-                    "buzzwole", "mewtwoy", "trevenant", "hooh", "greedent", "wigglytuff", "lucario", "miraidon", "gyarados", "eldegoss"];
-    const cTier = ["galarian_rapidash", "charizard", "cinderace", "alolan_ninetales", "glaceon", "urshifu_rs", 
-                    "venusaur", "darkrai", "goodra", "sabeleye", "blastoise", "dragonite"];
-    const dTier = ["cramorant", "sylveon", "crustle", "clefable", "mrmime", "machamp", "greninja", "tyranitar"];
-    const eTier = ["chandelure", "delphox", "dragapult", "gardevoir", "decidueye", "armarouge", "mewtwox", "tsareena"];
-    const fTier = ["tinkaton", "duraludon", "lapras", "falinks", "azumarill", "scizor"];
-    
+function heuristic_tier_score(providedTeam, tierList){
     const tierPoints = {
         sTier: 1,
         aTier: 8,
@@ -234,26 +222,22 @@ function heuristic_tier_score(providedTeam){
     let totalPoints = 0;
     // For each pokemon on the team, add points based on which tier it's in
     providedTeam.forEach(pokemon => {
-        // Check if pokemon_name exists before trying to use toLowerCase()
-        const pokemonName = pokemon.pokemon_name || pokemon.name || '';
-        const pokemonNameLower = pokemonName.toLowerCase();
-        
-        if (sTier.includes(pokemonNameLower)) {
+        if (tierList.S.includes(pokemon.pokemon_id)) {
             totalPoints += tierPoints.sTier;
-        } else if (aTier.includes(pokemonNameLower)) {
+        } else if (tierList.A.includes(pokemon.pokemon_id)) {
             totalPoints += tierPoints.aTier;
-        } else if (bTier.includes(pokemonNameLower)) {
+        } else if (tierList.B.includes(pokemon.pokemon_id)) {
             totalPoints += tierPoints.bTier;
-        } else if (cTier.includes(pokemonNameLower)) {
+        } else if (tierList.C.includes(pokemon.pokemon_id)) {
             totalPoints += tierPoints.cTier;
-        } else if (dTier.includes(pokemonNameLower)) {
+        } else if (tierList.D.includes(pokemon.pokemon_id)) {
             totalPoints += tierPoints.dTier;
-        } else if (eTier.includes(pokemonNameLower)) {
+        } else if (tierList.E.includes(pokemon.pokemon_id)) {
             totalPoints += tierPoints.eTier;
-        } else if (fTier.includes(pokemonNameLower)) {
+        } else if (tierList.F.includes(pokemon.pokemon_id)) {
             totalPoints += tierPoints.fTier;
         } else {
-            console.error("Pokemon not found in tier list: " + pokemonName);
+            console.error("Pokemon not found in tier list: " + pokemon);
         }
     });
 
