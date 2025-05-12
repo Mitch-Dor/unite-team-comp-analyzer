@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
-import { fetchCharacterDraftInfo, runAStarAlgorithm } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo, runAStarAlgorithm, fetchAllTierListEntries } from './backendCalls/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
 import Settings from '../../sideComponents/js/Settings.jsx';
 import '../css/draft.css';
@@ -28,6 +28,7 @@ function SingleDraft() {
     const [disallowedCharacters, updateDisallowedCharacters] = useState([]);
     const [idealTeams1, updateIdealTeams1] = useState([]);
     const [idealTeams2, updateIdealTeams2] = useState([]);
+    const tierList = useRef([]);
 
     // Update the ref whenever targetPokemon changes
     useEffect(() => {
@@ -51,7 +52,17 @@ function SingleDraft() {
             }
         }
 
+        async function fetchTierList(){
+            try {
+                const foundTierList = await fetchAllTierListEntries();
+                tierList.current = foundTierList;
+            } catch (error) {
+                console.error("Error fetching Tier List:", error);
+            }
+        }
+
         fetchCharacterListing(); // Call the fetch function to populate pokemonList
+        fetchTierList();
         setBackground();
         updateDisallowedCharacters(settings.disallowedCharacters);
     }, []); // Empty dependency array ensures this runs once when the component mounts
@@ -140,9 +151,21 @@ function SingleDraft() {
                 ));
                 
             if (isAIBanTurn) {
-                // Ban some random pokemon (Eventually it will just ban random high tier pokemon)
+                // Ban some random highest tier pokemon
                 aiBanTimeoutRef.current = setTimeout(() => {
-                    const randomPokemon = genRandomPokemon();
+                    // Get the S tier pokemon from the tier list
+                    let sTier = [];
+                    tierList.current.forEach(tier => {
+                        if (tier.tier_name === "S"){
+                            // Find the pokemonList.pokemon_id that correlates with tier.pokemon_id and add it to sTier
+                            const sTierPokemon = pokemonList.find(p => p.pokemon_id === tier.pokemon_id);
+                            if (sTierPokemon && !disallowedCharacters.includes(sTierPokemon) && !team1Bans.includes(sTierPokemon) && !team2Bans.includes(sTierPokemon)) {
+                                sTier.push(sTierPokemon);
+                            }
+                        }
+                    });
+                    // Choose a random S tier pokemon
+                    const randomPokemon = sTier[Math.floor(Math.random() * sTier.length)];
                     setTargetPokemon(randomPokemon);
                 }, 3000);
 
@@ -154,7 +177,7 @@ function SingleDraft() {
                 };
             }
         }
-    }, [stateRef.current, pokemonList, loading, disallowedCharacters]);
+    }, [stateRef.current, pokemonList, loading, disallowedCharacters, draftingActive]);
 
     useEffect(() => {
         if (idealTeams1.length > 0 || idealTeams2.length > 0){
