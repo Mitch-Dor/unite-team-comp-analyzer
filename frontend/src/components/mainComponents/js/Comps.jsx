@@ -3,8 +3,8 @@ import '../css/comps.css';
 import { fetchAllComps, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, isVerifiedUser } from './backendCalls/http';
 import SubmitSetModal from './compSupport/SubmitSetModal';
 import MatchDisplay from './compSupport/MatchDisplay';
-import CustomDropdown from './compSupport/CustomDropdown';
-import Home from '../../sideComponents/js/Home.jsx';
+import CompsSorting from './compSupport/CompsSorting';
+import SetDisplay from './compSupport/SetDisplay';
 import { useLocation } from 'react-router-dom';
 
 function Comps() {
@@ -22,7 +22,7 @@ function Comps() {
   // Sample data - In a real app, this would come from an API
   useEffect(() => {
     fetchAllComps().then(data => {
-      let finalFormattedData = [];
+      let formattedData = [];
       for (const comp of data) {
         const team1Data = {
           pokemon: [comp.team1_pokemon1, comp.team1_pokemon2, comp.team1_pokemon3, comp.team1_pokemon4, comp.team1_pokemon5],
@@ -49,11 +49,44 @@ function Comps() {
           event: comp.event_name,
           matchDate: comp.event_date,
           set_description: comp.set_descriptor,
-          vod: comp.vod_url
+          vod: comp.vod_url,
+          set_id: comp.set_id
         }
-        finalFormattedData.push(finalData);
+        formattedData.push(finalData);
       }
-      setCompsData(finalFormattedData);
+      // Create an array of set objects. Each set object is an array of matches with the same set_id
+      const setData = formattedData.reduce((acc, comp) => {
+        const setId = comp.set_id;
+        if (!acc[setId]) {
+          acc[setId] = [];
+        }
+        acc[setId].push(comp);
+        return acc;
+      }, {});
+      // Go through each set and count how many times each team won. The team with more wins is the winner of the set. Add this to the set object
+      const setWinnerData = Object.keys(setData).map(setId => {
+        const set = setData[setId];
+        // Which team is team1 and team2 can change so we need to count wins relative to team_name
+        const team1 = set[0].team1.name;
+        const team2 = set[0].team2.name;
+        let team1Wins = 0;
+        let team2Wins = 0;
+        for (const match of set) {
+          if ((match.team1.name === team1 && match.winningTeam === 1) || (match.team2.name === team1 && match.winningTeam === 2)) {
+            team1Wins++;
+          } else if ((match.team1.name === team2 && match.winningTeam === 1) || (match.team2.name === team2 && match.winningTeam === 2)) {
+            team2Wins++;
+          }
+        }
+        return {
+          matches: set,
+          winner: team1Wins > team2Wins ? team1 : team2,
+          team1_wins: team1Wins,
+          team2_wins: team2Wins
+        }
+      })
+      console.log(setWinnerData);
+      setCompsData(setWinnerData);
 
       async function fetchAllData() {
         try {
@@ -119,11 +152,11 @@ function Comps() {
         <div className="comps-list">
           <h1 className="page-title">Team Compositions</h1>
           <CompsSorting events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} compsData={compsData} setCompsData={setCompsData} setFilteredComps={setFilteredComps} />
-          { filteredComps && filteredComps.length > 0 ? filteredComps.map((match, index) => (
-            <MatchDisplay key={index} match={match} />
-          )) : compsData.map((match, index) => (
-            <MatchDisplay key={index} match={match} />
-          ))}
+          { filteredComps && filteredComps.length > 0 ? filteredComps.map((set, index) => (
+            <SetDisplay key={index} set={set} />
+          )) : (
+            <div className="no-matches-found">No matches found</div>
+          )}
         </div>
       </div>
       {verifiedUser && (
@@ -131,104 +164,6 @@ function Comps() {
       )}
     </div>
   );
-}
-
-function CompsSorting({ events, teams, players, charactersAndMoves, compsData, setCompsData, setFilteredComps }) {
-  const [regions, setRegions] = useState([]);
-  const [characters, setCharacters] = useState([]);
-  const [baseData, setBaseData] = useState(compsData);
-  const [eventFilter, setEventFilter] = useState("");
-  const [characterFilter, setCharacterFilter] = useState("");
-  const [regionFilter, setRegionFilter] = useState("");
-  const [teamFilter, setTeamFilter] = useState("");
-  const [playerFilter, setPlayerFilter] = useState("");
-  const defaultEvent = "Event Select";
-  const defaultCharacter = "Pokemon Select";
-  const defaultRegion = "Region Select";
-  const defaultTeam = "Team Select";
-  const defaultPlayer = "Player Select";
-
-  useEffect(() => {
-    // Only add unique regions
-    const fetchedRegions = [...new Set(teams.map((team) => team.team_region))];
-    setRegions(fetchedRegions.sort((a, b) => a.localeCompare(b)));
-
-    // Get unique pokemon_name and pokemon_id combinations
-    const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str)); 
-    setCharacters(uniquePokemon);
-    // Set default values
-    setEventFilter(defaultEvent);
-    setCharacterFilter(defaultCharacter);
-    setRegionFilter(defaultRegion);
-    setTeamFilter(defaultTeam);
-    setPlayerFilter(defaultPlayer);
-  }, [charactersAndMoves, teams]);
-
-  function filterComps() {
-    const filteredComps = baseData.filter((comp) => {
-      return (eventFilter === defaultEvent || comp.event === eventFilter)
-       && (characterFilter === defaultCharacter || comp.team1.pokemon.includes(characterFilter.pokemon_name) || comp.team2.pokemon.includes(characterFilter.pokemon_name))
-       && (regionFilter === defaultRegion || comp.team1.region === regionFilter || comp.team2.region === regionFilter)
-       && (teamFilter === defaultTeam || comp.team1.name === teamFilter || comp.team2.name === teamFilter) 
-       && (playerFilter === defaultPlayer || comp.team1.players.includes(playerFilter) || comp.team2.players.includes(playerFilter));
-    });
-    setFilteredComps(filteredComps);
-  }
-
-  useEffect(() => {
-    filterComps();
-  }, [eventFilter, characterFilter, regionFilter, teamFilter, playerFilter]);
-
-  return (
-    <div className="comps-sorting-container">
-      <h3>Sorting</h3>
-      <div className="comps-sorting-dropdown-container">
-        {/* Sort by Event */}
-        <select className="comps-sorting-dropdown" onChange={(e) => setEventFilter(e.target.value)}>
-          <option value={defaultEvent}>{defaultEvent}</option>
-        {events.map((event, index) => (
-          <option key={index} value={event.event_name}>{event.event_name}</option>
-        ))}
-        </select>
-        <div className="custom-dropdown-container">
-          {/* Sort by Pokemon */}
-          <div id="sorting-pokemon-dropdown">
-            <CustomDropdown
-              value={characterFilter}
-              onChange={setCharacterFilter}
-              options={characters}
-              placeholder={defaultCharacter}
-              disabled={false}
-              path="/assets/Draft/headshots"
-              defaultOption={defaultCharacter}
-            />
-          </div>
-        </div>
-        {/* Sort by Region */}
-        <select className="comps-sorting-dropdown" onChange={(e) => setRegionFilter(e.target.value)}>
-          <option value={defaultRegion}>{defaultRegion}</option>
-          {regions.map((region, index) => (
-            <option key={index} value={region}>{region}</option>
-          ))}
-        </select>
-        {/* Sort by Team */}
-        <select className="comps-sorting-dropdown" onChange={(e) => setTeamFilter(e.target.value)}>
-          <option value={defaultTeam}>{defaultTeam}</option>
-          {teams.map((team, index) => (
-            <option key={index} value={team.team_name}>{team.team_name}</option>
-          ))}
-        </select>
-        {/* Sort by Player */}
-        <select className="comps-sorting-dropdown" onChange={(e) => setPlayerFilter(e.target.value)}>
-          <option value={defaultPlayer}>{defaultPlayer}</option>
-          {players.map((player, index) => (
-            <option key={index} value={player.player_name}>{player.player_name}</option>
-            ))}
-        </select>
-      </div>
-      <Home />
-    </div>
-  )
 }
 
 export default Comps;

@@ -61,5 +61,5 @@ INSERT INTO professional_players (player_name,other_names) VALUES
 	 ('Gyro',NULL),
 	 ('vision_',NULL),
 	 ('Kruelty',NULL),
-	 ('Loveu',NULL),
+	 ('ChiefX','Loveu'),
 	 ('rayyw','rhys#1fan<3');

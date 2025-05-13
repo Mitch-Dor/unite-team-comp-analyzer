@@ -140,6 +140,7 @@ class Teams {
           
           -- Match-related information
           ps.set_descriptor,
+          ps.set_id,
           e.event_name,
           e.event_date,
           e.vod_url,
@@ -149,7 +150,7 @@ class Teams {
           pc1.did_win AS team1_win,
           pc2.first_pick AS team2_first_pick,
           pc2.did_win AS team2_win
-          
+           
         FROM professional_matches pm
         
         -- Join with teams
