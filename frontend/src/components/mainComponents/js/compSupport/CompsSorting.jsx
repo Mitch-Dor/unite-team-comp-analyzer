@@ -34,21 +34,28 @@ function CompsSorting({ events, teams, players, charactersAndMoves, compsData, s
     }, [charactersAndMoves, teams]);
   
     function filterComps() {
-      const filteredComps = baseData.filter((set) => {
-        const matches = set.matches.filter((comp => {
+      const filteredComps = baseData.map(set => {
+        // Filter matches within each set
+        const filteredMatches = set.matches.filter(comp => {
           return (eventFilter === defaultEvent || comp.event === eventFilter)
-         && (characterFilter === defaultCharacter || comp.team1.pokemon.includes(characterFilter.pokemon_name) || comp.team2.pokemon.includes(characterFilter.pokemon_name))
-         && (regionFilter === defaultRegion || comp.team1.region === regionFilter || comp.team2.region === regionFilter)
-         && (teamFilter === defaultTeam || comp.team1.name === teamFilter || comp.team2.name === teamFilter) 
-         && (playerFilter === defaultPlayer || comp.team1.players.includes(playerFilter) || comp.team2.players.includes(playerFilter));
-        }))
-        return {
-          matches: matches,
-          winner: set.winner,
-          team1_wins: set.team1_wins,
-          team2_wins: set.team2_wins
+            && (characterFilter === defaultCharacter || comp.team1.pokemon.includes(characterFilter.pokemon_name) || comp.team2.pokemon.includes(characterFilter.pokemon_name))
+            && (regionFilter === defaultRegion || comp.team1.region === regionFilter || comp.team2.region === regionFilter)
+            && (teamFilter === defaultTeam || comp.team1.name === teamFilter || comp.team2.name === teamFilter)
+            && (playerFilter === defaultPlayer || comp.team1.players.includes(playerFilter) || comp.team2.players.includes(playerFilter));
+        });
+  
+        // If no matches are left after filtering, exclude this set
+        if (filteredMatches.length === 0) {
+          return null;
         }
-      });
+  
+        // Return the set with filtered matches
+        return {
+          ...set,
+          matches: filteredMatches
+        };
+      }).filter(set => set !== null); // Remove null sets
+  
       setFilteredComps(filteredComps);
     }
   
