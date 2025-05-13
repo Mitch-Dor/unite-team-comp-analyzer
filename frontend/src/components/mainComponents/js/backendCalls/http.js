@@ -130,6 +130,12 @@ export async function fetchAllPlayers() {
         },
     });
     const playerDataJson = await playerData.json();
+    // Append other_names to player_name for each player in parenthesis
+    playerDataJson.forEach(player => {
+        if (player.other_names) {
+            player.player_name = player.player_name + " (" + player.other_names + ")";
+        }
+    });
     return playerDataJson;
 }
 

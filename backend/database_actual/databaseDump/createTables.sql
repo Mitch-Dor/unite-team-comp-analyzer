@@ -119,7 +119,8 @@ create table professional_matches (
 -- A table symbolizing professional players
 create table professional_players (
     player_id integer primary key AUTOINCREMENT not null,
-    player_name text not null
+    player_name text not null,
+    other_names text
 );
 -- A table symbolizing a professional team 
 create table professional_teams (

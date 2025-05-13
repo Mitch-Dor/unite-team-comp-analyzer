@@ -1,12 +1,6 @@
 const MinHeap = require('./MinHeap');
 
-// When it is the AI's turn, it will run its A* function to determine what Pokemon to pick.
-// The Pokemon will have 2 scores: a counter pick score and a synergies score.
-// Synergies are determined by known comps while counterpicks are hard-coded more or less.
-// IDEA: Analyze that number of times each pokemon loses/wins to a certain other pokemon and use that to try and draw good counters
-// Maybe could use these numbers only if there is sufficient data
-
-
+// Calculate the best draft possible given both current teams and the pokemon that are available to be picked.
 function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
     // Convert raw pokemon data to Pokemon objects if needed
     const pokemonObjects = allPokemon.map(p => 
@@ -15,21 +9,20 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
     
     // Get a list of all remaining pokemon (Not picked or banned)
     const remainingPokemon = pokemonObjects.filter(pokemon => {
-        const pokemonNameLower = pokemon.name.toLowerCase();
         
         // Check if this pokemon is already in your team
         const inYourTeam = yourTeam.some(teamPokemon => 
-            teamPokemon.pokemon_name && teamPokemon.pokemon_name.toLowerCase() === pokemonNameLower
+            teamPokemon.pokemon_id && teamPokemon.pokemon_id === pokemon.pokemon_id
         );
         
         // Check if this pokemon is already in enemy team
         const inEnemyTeam = enemyTeam.some(teamPokemon => 
-            teamPokemon.pokemon_name && teamPokemon.pokemon_name.toLowerCase() === pokemonNameLower
+            teamPokemon.pokemon_id && teamPokemon.pokemon_id === pokemon.pokemon_id
         );
         
         // Check if this pokemon is banned
         const isBanned = bans.some(bannedPokemon => 
-            bannedPokemon.pokemon_name && bannedPokemon.pokemon_name.toLowerCase() === pokemonNameLower
+            bannedPokemon.pokemon_id && bannedPokemon.pokemon_id === pokemon.pokemon_id
         );
         
         // Return true if the pokemon is not in any of these collections
@@ -52,12 +45,12 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
         // Helper method to get team key
         getKey() {
             // Sort by pokemon id to ensure consistent representation
-            return this.picks.map(p => p.id).sort().join('|');
+            return this.picks.map(p => p.pokemon_id).sort().join('|');
         }
         
         // Helper to check if team already has this pokemon
         hasPokemon(pokemon) {
-            return this.picks.some(p => p.id === pokemon.id);
+            return this.picks.some(p => p.pokemon_id === pokemon.pokemon_id);
         }
         
         // Create a new node with an additional pokemon
@@ -74,18 +67,18 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
     const yourTeamObjects = [];
 
     // Loop through all team member names
-    for (const name of yourTeam) {
+    for (const pokemon of yourTeam) {
         // Find the matching Pokemon in the full data set
         const matchingPokemon = pokemonObjects.find(pokemon => 
-            pokemon.name === name.pokemon_name || pokemon.id === name.pokemon_name
+            pokemon.pokemon_id === pokemon.pokemon_id
         );
         
         if (matchingPokemon) {
             yourTeamObjects.push(matchingPokemon);
         } else {
-            console.warn(`Pokemon "${name.pokemon_name}" not found in available data`);
+            console.warn(`Pokemon "${pokemon.pokemon_id}" not found in available data`);
             // Create a basic Pokemon object with just the name
-            yourTeamObjects.push(new Pokemon({pokemon_name: name.pokemon_name}));
+            yourTeamObjects.push(new Pokemon({pokemon_id: pokemon.pokemon_id}));
         }
     }
 
@@ -93,18 +86,18 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
     const enemyTeamObjects = [];
 
     // Loop through all team member names
-    for (const name of enemyTeam) {
+    for (const pokemon of enemyTeam) {
         // Find the matching Pokemon in the full data set
         const matchingPokemon = pokemonObjects.find(pokemon => 
-            pokemon.name === name.pokemon_name || pokemon.id === name.pokemon_name
+            pokemon.pokemon_id === pokemon.pokemon_id
         );
         
         if (matchingPokemon) {
             enemyTeamObjects.push(matchingPokemon);
         } else {
-            console.warn(`Pokemon "${name.pokemon_name}" not found in available data`);
+            console.warn(`Pokemon "${pokemon.pokemon_id}" not found in available data`);
             // Create a basic Pokemon object with just the name
-            enemyTeamObjects.push(new Pokemon({pokemon_name: name.pokemon_name}));
+            enemyTeamObjects.push(new Pokemon({pokemon_id: pokemon.pokemon_id}));
         }
     }
 
@@ -167,7 +160,7 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
 class Pokemon {
     constructor(data) {
         this.name = data.pokemon_name;
-        this.pokemon_id = data.pokemon_id;
+        this.pokemon_id = data.pokemon_id; // Unique
         this.attributes = {
             earlyGame: data.early_game,
             midGame: data.mid_game,
@@ -191,9 +184,6 @@ class Pokemon {
             assumedMove2: data.assumed_move_2,
             class: data.pokemon_class,
         };
-        
-        // Add a unique ID property for easier comparison
-        this.id = data.pokemon_name; // Assuming pokemon_name is unique
     }
 }
 
@@ -566,28 +556,6 @@ function heuristic_counter_score(yourTeam, enemyTeam){
     }
 
     return totalPoints;
-}
-
-// Helper function that takes in a team and returns a list of traits
-// TODO: This will be useful later when traits are stored in database. Unused right now.
-function getTeamTraits(givenTeam) {
-    // do a for each loop on givenTeam to get the pokemon and then get each of their traits
-    let teamTraits = [];
-    givenTeam.forEach( function(individualPokemon) {
-        let pokemonTraits = getCharacterTraits(individualPokemon);
-        pokemonTraits.forEach( function(trait) {
-            teamTraits.push(trait);
-        });
-    });
-    return teamTraits;
-}
-
-function getSynergies(){
-    // Basically do a select all on the known comps table
-}
-
-function compareTwoComps(){
-
 }
 
 function rateComp(comp, allPokemon){

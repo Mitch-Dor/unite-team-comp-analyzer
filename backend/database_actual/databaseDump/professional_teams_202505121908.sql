@@ -10,4 +10,5 @@ INSERT INTO professional_teams (team_name,team_region) VALUES
 	 ('T3','NA'),
 	 ('TI Gang','NA');
 INSERT INTO professional_teams (team_name,team_region) VALUES
-	 ('YT','NA');
+	 ('YT','NA'),
+	 ('Standing On Business','NA');

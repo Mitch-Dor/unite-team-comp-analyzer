@@ -11,4 +11,6 @@ INSERT INTO professional_sets (event_id,set_descriptor) VALUES
 	 (1,'Grand Finals Reset');
 INSERT INTO professional_sets (event_id,set_descriptor) VALUES
 	 (2,'Winner Semis'),
-	 (2,'Loser Quarters');
+	 (2,'Loser Quarters'),
+	 (2,'Loser Quarters'),
+	 (2,'Winner Finals');

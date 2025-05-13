@@ -80,4 +80,4 @@ INSERT INTO playable_characters (pokemon_name,pokemon_class) VALUES
 	 ('Tinkaton','All_Rounder'),
 	 ('Galarian_Rapidash','Speedster'),
 	 ('Suicune','All_Rounder'),
-	 ('Alolan_Raichu', 'Attacker');
+	 ('Alolan_Raichu','Attacker');

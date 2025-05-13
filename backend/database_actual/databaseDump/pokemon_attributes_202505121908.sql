@@ -80,4 +80,4 @@ INSERT INTO pokemon_attributes (pokemon_id,early_game,mid_game,late_game,mobilit
 	 (72,'Medium','Medium','Medium','Low','Low','Medium','Medium','Burst','MediumAOE','Medium','Teamfight','Bruiser','None','No','Yes','No','No','TopCarry','GigatonHammer','Thief'),
 	 (73,'Medium','Medium','Medium','High','Low','Medium','Medium','Burst','SmallAOE','None','SplitMap','Assassin','PickFinding','No','Yes','Yes','No','JungleCarry','DazzlingGleam','Agility'),
 	 (74,'Strong','Medium','Medium','None','Medium','Medium','Medium','Burst','MediumAOE','Medium','Teamfight','UtilityMage','None','Yes','Yes','No','Yes','EXPShareTop','Whirlpool','IceBeam'),
-	 (75, 'Medium','Weak','Strong','Low','Medium','Low','High','Consistent','SmallAOE','None','Teamfight','Healer','Heals','Yes','No','No','No','EXPShareTop','Stored Power','Psychic');
+	 (75,'Medium','Weak','Strong','Low','Medium','Low','High','Consistent','SmallAOE','None','Teamfight','ADC','None','Yes','No','Yes','Yes','JungleCarry','Stored Power','Psychic');

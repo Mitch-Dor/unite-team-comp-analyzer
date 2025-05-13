@@ -313,7 +313,7 @@ INSERT INTO pokemon_moves (move_name,pokemon_id) VALUES
 	 ('Surf',74),
 	 ('Ice Beam',74),
 	 ('Icy Wind',74),
-	 ('Stored Power', 75),
-	 ('Electro Ball', 75),
-	 ('Psychic', 75),
-	 ('Thunderbolt', 75);
+	 ('Stored Power',75),
+	 ('Electro Ball',75),
+	 ('Psychic',75),
+	 ('Thunderbolt',75);

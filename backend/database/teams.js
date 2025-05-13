@@ -113,18 +113,18 @@ class Teams {
           m2_10.move_name AS team2_pokemon5_move2,
           
           -- Team 1 Players
-          pp1_1.player_name AS team1_player1,
-          pp1_2.player_name AS team1_player2,
-          pp1_3.player_name AS team1_player3,
-          pp1_4.player_name AS team1_player4,
-          pp1_5.player_name AS team1_player5,
+          CASE WHEN pp1_1.other_names IS NULL OR pp1_1.other_names = '' THEN pp1_1.player_name ELSE pp1_1.player_name || ' (' || pp1_1.other_names || ')' END AS team1_player1,
+          CASE WHEN pp1_2.other_names IS NULL OR pp1_2.other_names = '' THEN pp1_2.player_name ELSE pp1_2.player_name || ' (' || pp1_2.other_names || ')' END AS team1_player2,
+          CASE WHEN pp1_3.other_names IS NULL OR pp1_3.other_names = '' THEN pp1_3.player_name ELSE pp1_3.player_name || ' (' || pp1_3.other_names || ')' END AS team1_player3,
+          CASE WHEN pp1_4.other_names IS NULL OR pp1_4.other_names = '' THEN pp1_4.player_name ELSE pp1_4.player_name || ' (' || pp1_4.other_names || ')' END AS team1_player4,
+          CASE WHEN pp1_5.other_names IS NULL OR pp1_5.other_names = '' THEN pp1_5.player_name ELSE pp1_5.player_name || ' (' || pp1_5.other_names || ')' END AS team1_player5,
           
           -- Team 2 Players
-          pp2_1.player_name AS team2_player1,
-          pp2_2.player_name AS team2_player2,
-          pp2_3.player_name AS team2_player3,
-          pp2_4.player_name AS team2_player4,
-          pp2_5.player_name AS team2_player5,
+          CASE WHEN pp2_1.other_names IS NULL OR pp2_1.other_names = '' THEN pp2_1.player_name ELSE pp2_1.player_name || ' (' || pp2_1.other_names || ')' END AS team2_player1,
+          CASE WHEN pp2_2.other_names IS NULL OR pp2_2.other_names = '' THEN pp2_2.player_name ELSE pp2_2.player_name || ' (' || pp2_2.other_names || ')' END AS team2_player2,
+          CASE WHEN pp2_3.other_names IS NULL OR pp2_3.other_names = '' THEN pp2_3.player_name ELSE pp2_3.player_name || ' (' || pp2_3.other_names || ')' END AS team2_player3,
+          CASE WHEN pp2_4.other_names IS NULL OR pp2_4.other_names = '' THEN pp2_4.player_name ELSE pp2_4.player_name || ' (' || pp2_4.other_names || ')' END AS team2_player4,
+          CASE WHEN pp2_5.other_names IS NULL OR pp2_5.other_names = '' THEN pp2_5.player_name ELSE pp2_5.player_name || ' (' || pp2_5.other_names || ')' END AS team2_player5,
           
           -- Team Names and Regions
           pt1.team_name AS team1_name,
