@@ -21,10 +21,10 @@ INSERT INTO pokemon_moves (move_name,pokemon_id) VALUES
 	 ('Blizzard',5),
 	 ('Aurora Veil',5);
 INSERT INTO pokemon_moves (move_name,pokemon_id) VALUES
-	 ('Double Slap',6),
-	 ('Dazzling Gleam',6),
 	 ('Rollout',6),
 	 ('Sing',6),
+	 ('Double Slap',6),
+	 ('Dazzling Gleam',6),
 	 ('Dynamic Punch',7),
 	 ('Submission',7),
 	 ('Close Combat',7),
