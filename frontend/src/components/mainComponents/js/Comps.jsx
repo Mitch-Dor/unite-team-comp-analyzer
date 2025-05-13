@@ -19,7 +19,6 @@ function Comps() {
   const { user } = useLocation().state || {};
   const [verifiedUser, setVerifiedUser] = useState(false);
 
-  // Sample data - In a real app, this would come from an API
   useEffect(() => {
     fetchAllComps().then(data => {
       let formattedData = [];
@@ -79,10 +78,15 @@ function Comps() {
           }
         }
         return {
-          matches: set,
+          matches: set, // Remove event, matchData, set_description, vod, set_id from each match object
           winner: team1Wins > team2Wins ? team1 : team2,
           team1_wins: team1Wins,
-          team2_wins: team2Wins
+          team2_wins: team2Wins,
+          set_description: set[0].set_description,
+          vod: set[0].vod,
+          set_event: set[0].event,
+          set_date: set[0].matchDate,
+          set_id: set[0].set_id
         }
       })
       console.log(setWinnerData);

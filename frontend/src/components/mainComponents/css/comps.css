@@ -60,19 +60,64 @@
     width: 100%;
 }
 
-.comp-header {
-    background-color: rgba(26, 26, 26, 0.9);
+.set-header {
+    background-color: rgba(26, 26, 26);
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     color: white;
-}
-
-.comp-event-name-vod-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    width: 100% - 40px;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.set-event-name-vod-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.set-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.set-footer .winner-label {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+    text-align: center;
+    width: 100%;
+    background-color: rgba(26, 26, 26);
+    padding: 15px 20px;
+    border-radius: 0px 0px 10px 10px;
+}
+
+.set-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    background-color: rgba(26, 26, 26, 0.85);
+}
+
+.set-match-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 45%;
+    min-width: 513px;
+    padding: 10px;
 }
 
 .comp-event {
@@ -86,8 +131,8 @@
 
 .comp-content {
     display: flex;
-    padding: 20px;
-    gap: 30px;
+    padding: 15px;
+    gap: 15px;
     min-height: 200px;
 }
 
@@ -95,8 +140,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 15px;
+    gap: 15px;
+    padding: 8px;
     border-radius: 6px;
     background-color: rgba(26, 26, 26, 0.6);
 }
@@ -110,39 +155,53 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
     padding-bottom: 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.team-header-left-side {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-left: 10px;
+}
+
+.team-header-right-side {
+    display: flex;
+    padding-right: 10px;
+}
+
 .team-name {
-    font-size: 1.3rem;
+    font-size: 1.0rem;
     font-weight: bold;
     color: white;
 }
 
 .team-region {
     background-color: rgba(52, 73, 94, 0.6);
-    padding: 3px 8px;
+    padding: 2px 5px;
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 0.5rem;
     color: #ccc;
 }
 
 .first-pick {
-    margin-left: auto;
     background-color: rgba(89, 144, 222, 0.6);
     color: white;
-    padding: 3px 10px;
+    padding: 2px 5px;
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 0.5rem;
 }
 
 .team-bans {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 0;
+    padding: 0;
 }
 
 .ban-label {
@@ -156,16 +215,16 @@
 }
 
 .pokemon-icon {
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background-color: rgba(52, 73, 94, 0.6);
     padding: 2px;
 }
 
 .pokemon-icon.ban {
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 25px;
     opacity: 0.8;
     filter: grayscale(50%);
 }
@@ -179,10 +238,20 @@
 .draft-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
     padding: 8px 10px;
     background-color: rgba(52, 73, 94, 0.3);
     border-radius: 6px;
+    min-width: 200px;
+    width: 100% - 16px;
+}
+
+.draft-row-number-headshot-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
 }
 
 .draft-number {
@@ -204,24 +273,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 11px;
 }
 
 .player-name {
     color: #ccc;
     margin-left: auto;
     text-align: right;
-    min-width: 100px;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 40px;
+    max-width: 60px;
 }
 
 .comp-footer {
     background-color: rgba(26, 26, 26, 0.9);
-    padding: 15px 20px;
+    padding: 8px 20px;
     color: white;
     text-align: center;
 }
 
 .winner-label {
     font-weight: bold;
+    font-size: 0.8rem;
 }
 
 .winner-name {
@@ -259,8 +335,8 @@
 }
 
 .move-icon {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
 }
 
