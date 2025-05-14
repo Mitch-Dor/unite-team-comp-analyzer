@@ -9,6 +9,7 @@ function Information() {
             <p>The tool is still in development, and will be updated regularly.</p>
             <p>If you have any feedback, please use the report button in the top left of the main screen, or if that is inadequate, contact me at <a href="mailto:pokemonunitedrafter@gmail.com">pokemonunitedrafter@gmail.com</a>. Inqueries sent to this email are not guranteed to receive a response quickly.</p>
             <p>This tool is not affiliated with The Pokemon Company, Nintendo, Pokemon Unite, or any of their affiliates. This tool is created and maintained by a fan of the game, for the community.</p>
+            <p>DISCLAIMER: I can only access data from matches that were publicly streamed. The data is entered by hand. Because of this, some data may be missing.</p>
         </div>
     )
 }
