@@ -20,6 +20,9 @@ class MinHeap {
     }
 
     push(node) {
+        if (!node || typeof node.score !== 'number') {
+            throw new Error('Invalid node: A node must have a numeric score property.');
+        }
         this.heap.push(node);
         this.heapifyUp();
     }
@@ -36,6 +39,9 @@ class MinHeap {
     }
 
     pop() {
+        if (this.isEmpty()) {
+            throw new Error('Heap is empty. Cannot pop from an empty heap.');
+        }
         if (this.heap.length === 1) return this.heap.pop();
         const root = this.heap[0];
         this.heap[0] = this.heap.pop();

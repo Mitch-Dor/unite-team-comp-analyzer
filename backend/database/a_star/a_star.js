@@ -69,8 +69,8 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
     // Loop through all team member names
     for (const pokemon of yourTeam) {
         // Find the matching Pokemon in the full data set
-        const matchingPokemon = pokemonObjects.find(pokemon => 
-            pokemon.pokemon_id === pokemon.pokemon_id
+        const matchingPokemon = pokemonObjects.find(pokemonObject => 
+            pokemonObject.pokemon_id === pokemon.pokemon_id
         );
         
         if (matchingPokemon) {
@@ -88,8 +88,8 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
     // Loop through all team member names
     for (const pokemon of enemyTeam) {
         // Find the matching Pokemon in the full data set
-        const matchingPokemon = pokemonObjects.find(pokemon => 
-            pokemon.pokemon_id === pokemon.pokemon_id
+        const matchingPokemon = pokemonObjects.find(pokemonObject => 
+            pokemonObject.pokemon_id === pokemon.pokemon_id
         );
         
         if (matchingPokemon) {
@@ -101,10 +101,16 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
         }
     }
 
-    // Initialize the search with whatever is currently in your team
-    const startNode = new TeamNode(yourTeamObjects); // yourTeam is an array of pokemon names
-    open.push(startNode);
-    closed.add(startNode.getKey());
+    // Initialize the search with whatever is currently in your team or if your team is empty, add a node for every available pokemon
+    if (yourTeamObjects.length > 0) {
+        const teamNode = new TeamNode(yourTeamObjects); // yourTeam is an array of pokemon names
+        open.push(teamNode);
+    } else {
+        for (const pokemon of remainingPokemon) {
+            const teamNode = new TeamNode([pokemon]);
+            open.push(teamNode);
+        }
+    }
 
     // TODO: Could implement a cache for heuristic calculations
 
