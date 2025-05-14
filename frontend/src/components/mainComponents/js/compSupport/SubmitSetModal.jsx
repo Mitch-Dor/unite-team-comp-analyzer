@@ -79,6 +79,24 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                         continue;
                     }
 
+                    // Group team1 and team2 Pokémon and bans for duplicate checking
+                    const allPokemonAndBans = [
+                        ...matchData.team1.slice(4, 9), // team1 Pokémon
+                        ...matchData.team2.slice(4, 9), // team2 Pokémon
+                        matchData.team1[2], matchData.team1[3], // team1 bans
+                        matchData.team2[2], matchData.team2[3]  // team2 bans
+                    ];
+                    if (new Set(allPokemonAndBans).size !== allPokemonAndBans.length) {
+                        error += "\n" + "Match " + (j + 1) + " has duplicate Pokémon or bans";
+                        errorCount++;
+                    }
+
+                    // Check if team names are equal
+                    if (matchData.team1[0]?.team_name === matchData.team2[0]?.team_name) {
+                        error += "\n" + "Match " + (j + 1) + " has identical team names";
+                        errorCount++;
+                    }
+
                     let team1Data = {
                         name: checkNull(matchData.team1[0]?.team_name, "team1TeamName", i),
                         region: checkNull(matchData.team1[0]?.team_region, "team1TeamRegion", i),
@@ -106,6 +124,22 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                         errorCount++;
                     }
 
+                    // Check for duplicate moves for each Pokémon in team1
+                    for (let k = 9; k <= 18; k += 2) {
+                        if (matchData.team1[k] === matchData.team1[k + 1]) {
+                            error += "\n" + "Match " + (j + 1) + " has duplicate moves for a Pokémon in team 1";
+                            errorCount++;
+                        }
+                    }
+
+                    // Check for duplicate moves for each Pokémon in team2
+                    for (let k = 9; k <= 18; k += 2) {
+                        if (matchData.team2[k] === matchData.team2[k + 1]) {
+                            error += "\n" + "Match " + (j + 1) + " has duplicate moves for a Pokémon in team 2";
+                            errorCount++;
+                        }
+                    }
+
                     // Put it all in one match object with the event data added too
                     // comps page wants first picks as booleans (like they are now), database does not
                     formattedData.push({
@@ -120,6 +154,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                     i++;
                 }
             }
+
             // If something is missing, don't submit
             if (errorCount > 0) {
                 alert(error);
@@ -162,11 +197,39 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                 matches: matchData
             }
 
-            // Set data needs to be the same as the data that's already in the comps page
-            const setData = formatSet(formattedData);
+            // Check if the number of wins for each team is equal
+            const team1Name = formattedData[0].team1.team_id;
+            const team2Name = formattedData[0].team2.team_id;
+            let team1Wins = 0;
+            let team2Wins = 0;
+            formattedData.forEach(match => {
+                if ((match.winningTeam === 1 && match.team1.team_id === team1Name) || (match.winningTeam === 2 && match.team2.team_id === team1Name)) {
+                    team1Wins++;
+                } else if ((match.winningTeam === 1 && match.team2.team_id === team2Name) || (match.winningTeam === 2 && match.team1.team_id === team2Name)) {
+                    team2Wins++;
+                }
+            });
+            if (team1Wins === team2Wins) {
+                error += "\n" + "Set has equal wins for both teams";
+                errorCount++;
+            }
+
+            // If something is missing, don't submit
+            if (errorCount > 0) {
+                alert(error);
+                return;
+            }
 
             // Submit the data
             insertSet(databaseData, user.user_google_id).then(data => {
+                // Add the set ID to the set data
+                formattedData.forEach(match => {
+                    match.set_id = data.id;
+                });
+
+                // Set data needs to be the same as the data that's already in the comps page
+                const setData = formatSet(formattedData);
+
                 // Update the comp data on the comp display page with the new comps
                 // Do after sending to database to only show data that was successfully inserted
                 setCompsData([...compsData, ...setData]);
