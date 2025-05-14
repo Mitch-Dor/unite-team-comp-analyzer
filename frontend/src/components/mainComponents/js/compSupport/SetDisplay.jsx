@@ -2,8 +2,6 @@ import MatchDisplay from './MatchDisplay';
 
 function SetDisplay({ set }) {
 
-
-
     return (
         <div className="set-card">
             <div className="set-header">

@@ -53,7 +53,7 @@ function CompDisplay({ match, teamData, teamNumber }) {
                         />
                         </div>
                     </div>
-                    <div className="player-name">{teamData.players[i] || '—'}</div>
+                    <div className="player-name" title={teamData.players[i] || '—'}>{teamData.players[i] || '—'}</div>
                 </div>
             ))}
             </div>

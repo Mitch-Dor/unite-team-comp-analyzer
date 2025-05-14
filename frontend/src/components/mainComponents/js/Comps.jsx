@@ -134,6 +134,10 @@ function Comps() {
   }, [user]);
 
   useEffect(() => {
+    setFilteredComps(compsData);
+  }, [compsData]);
+
+  useEffect(() => {
     // Use setTimeout to ensure DOM is ready
     setTimeout(() => {
       const mainContainer = document.getElementById("mainContainer");
@@ -170,7 +174,7 @@ function Comps() {
         </div>
       </div>
       {verifiedUser && (
-        <div id="open-set-submit-form" className="open-set-submit-form" onClick={() => {setShowSubmitForm(true); setFilteredComps([])}}>+</div>
+        <div id="open-set-submit-form" className="open-set-submit-form" onClick={() => {setShowSubmitForm(true); setFilteredComps(compsData)}}>+</div>
       )}
     </div>
   );
