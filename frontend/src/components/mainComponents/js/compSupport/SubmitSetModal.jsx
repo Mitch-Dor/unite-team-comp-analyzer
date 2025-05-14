@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
 import CustomDropdown from './CustomDropdown';
+import { formatSet } from '../Comps';
 
 function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers, user }) {
     const [setInsertion, setSetInsertion] = useState(false);
@@ -49,20 +50,6 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
         }
 
         function setCheck() {
-            // Pull out the data
-            // setInsertion[0] = match1 (match1[0] = team1, match1[1] = team2, match1[2] = winner)
-                // match1[X][0] = team data, match1[X][1] = team is first pick (boolean), match1[X][2-3] = bans, match1[X][4-8] = pokemon, match1[X][9-18] = pokemon moves, match1[X][19-23] = players
-                // team data contains team_name, team_region, team_id
-                // pokemon contain pokemon_name and pokemon_id
-                // moves contains move_name and move_id
-                // players contain player_id and player_name
-            // setInsertion[1] = match2 (match2[0] = team1, match2[1] = team2, match2[2] = winner)
-            // setInsertion[2] = match3 (match3[0] = team1, match3[1] = team2, match3[2] = winner)
-            // setInsertion[3] = match4 (match4[0] = team1, match4[1] = team2, match4[2] = winner)
-            // setInsertion[4] = match5 (match5[0] = team1, match5[1] = team2, match5[2] = winner)
-            // setInsertion[5] = event (event_id, event_name, event_date, vod_url)
-            // setInsertion[6] = setDescriptor
-
             // Check if setInsertion exists and has the required length
             if (!setInsertion || setInsertion.length < 7) {
                 error += "\n" + "Invalid set data structure";
@@ -175,11 +162,14 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                 matches: matchData
             }
 
+            // Set data needs to be the same as the data that's already in the comps page
+            const setData = formatSet(formattedData);
+
             // Submit the data
             insertSet(databaseData, user.user_google_id).then(data => {
                 // Update the comp data on the comp display page with the new comps
                 // Do after sending to database to only show data that was successfully inserted
-                setCompsData([...compsData, ...formattedData]);
+                setCompsData([...compsData, ...setData]);
                 // Clear the set insertion data and the input fields
                 setSetInsertion(null);
                 resetAllForms();
