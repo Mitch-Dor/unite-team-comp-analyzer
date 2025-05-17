@@ -5,6 +5,7 @@ import { fetchCharacterDraftInfo, runAStarAlgorithm, fetchAllTierListEntries } f
 import Home from '../../sideComponents/js/Home.jsx';
 import Settings from '../../sideComponents/js/Settings.jsx';
 import '../css/draft.css';
+import DraftAgain from './draftSupport/DraftAgain.jsx';
 
 function SingleDraft() {
     const location = useLocation();
@@ -503,12 +504,7 @@ function SingleDraft() {
           </div>
         )}
         {stateRef.current === 'done' && (
-            <div id="doneScreenCover">
-                <div id="doneScreen">
-                    <h1>Draft Complete</h1>
-                    <button id="doneScreenBTN" onClick={() => draftAgain()}>Draft Again</button>
-                </div>
-            </div>
+            <DraftAgain draftAgain={draftAgain} />
         )}
         <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} />
         <Home />

@@ -7,6 +7,7 @@ import { Peer } from 'peerjs';
 import io from 'socket.io-client';
 import Home from '../../sideComponents/js/Home.jsx';
 import RoomCreateJoin from './draftSupport/DraftRoomCreateJoin.jsx';
+import DraftAgain from './draftSupport/DraftAgain.jsx';
 
 function MultiDraft() {
     const location = useLocation();
@@ -367,6 +368,10 @@ function MultiDraft() {
                 console.log('lock-in');
                 lockIn();
                 break;
+            case 'restartDraft':
+                console.log('restartDraft');
+                draftAgain(false);
+                break;
             default:
                 console.warn('Unknown draft action:', action);
         }
@@ -674,10 +679,25 @@ function MultiDraft() {
         }
     }
 
+    function draftAgain(firstTime = true){
+        stateRef.current = 'team1Ban1';
+        setTargetPokemon(null);
+        updateTeam1Bans([]);
+        updateTeam2Bans([]);
+        updateTeam1Picks([]);
+        updateTeam2Picks([]);
+        if (firstTime){
+            sendDraftAction('restartDraft', {});
+        }
+    }
+
     return (
         <div id="draftContainer">
             {!draftStarted && (
                 <RoomCreateJoin createRoom={handleCreateRoom} joinRoom={handleJoinRoom} inputRoomId={inputRoomId} handleInputChange={handleInputChange} roomIdRef={roomIdRef} isConnected={isConnected} settings={settings} updateSettings={updateSettings} startDraft={startDraft} user={user} opposingUser={opposingUser} />
+            )}
+            {stateRef.current === 'done' && (
+                <DraftAgain draftAgain={draftAgain} />
             )}
             <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
             <Home />

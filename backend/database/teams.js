@@ -26,29 +26,8 @@ class Teams {
         });
 
         // Get the tier list data
-        const tierListData = await new Promise((resolve, reject) => {
-          this.db.all('SELECT * FROM tier_list', (err, rows) => {
-            if (err) {
-              console.error('Database error:', err);
-              reject(err);
-            } else {
-              resolve(rows);
-            }
-          });
-        });
-        
-        // Format the tier list data
-        // Should be an object with tier names "S" through "F" as keys, and an array of pokemon ids as values
-        const tierList = {};
-        tierListData.forEach(row => {
-          const tierName = row.tier_name;
-          const pokemonId = row.pokemon_id;
-          if (!tierList[tierName]) {
-            tierList[tierName] = [];
-          }
-          tierList[tierName].push(pokemonId);
-        });
-        
+        const tierList = await this.formatTierList();
+
         const aStarSolution = aStar.a_star_search(targetTeam, opposingTeam, bans, rawTraitData, tierList);
         
         // Transform the solution to a simplified format
@@ -442,7 +421,9 @@ class Teams {
       // Remove nulls from comp
       const filteredComp = comp.filter(pokemon => pokemon !== null);
 
-      const {totalScore, tierScore, synergyScore} = aStar.rateComp(filteredComp, rawTraitData);
+      const tierList = await this.formatTierList();
+
+      const {totalScore, tierScore, synergyScore} = aStar.rateComp(filteredComp, rawTraitData, tierList);
       return {totalScore, tierScore, synergyScore};
     }
 
@@ -497,6 +478,35 @@ class Teams {
           resolve(rows);
         });
       });
+    }
+
+    // Create a tier list object
+    async formatTierList() {
+      // Get the tier list data
+      const tierListData = await new Promise((resolve, reject) => {
+        this.db.all('SELECT * FROM tier_list', (err, rows) => {
+          if (err) {
+            console.error('Database error:', err);
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        });
+      });
+      
+      // Format the tier list data
+      // Should be an object with tier names "S" through "F" as keys, and an array of pokemon ids as values
+      const tierList = {};
+      tierListData.forEach(row => {
+        const tierName = row.tier_name;
+        const pokemonId = row.pokemon_id;
+        if (!tierList[tierName]) {
+          tierList[tierName] = [];
+        }
+        tierList[tierName].push(pokemonId);
+      });
+
+      return tierList;
     }
 }
 

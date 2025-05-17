@@ -564,7 +564,7 @@ function heuristic_counter_score(yourTeam, enemyTeam){
     return totalPoints;
 }
 
-function rateComp(comp, allPokemon){
+function rateComp(comp, allPokemon, tierList){
     // Get all pokemon objects
     const pokemonObjects = allPokemon.map(p => 
         p instanceof Pokemon ? p : new Pokemon(p)
@@ -589,7 +589,7 @@ function rateComp(comp, allPokemon){
         }
     }
     // Throw it into the heuristics
-    const tierScore = heuristic_tier_score(yourTeamObjects);
+    const tierScore = heuristic_tier_score(yourTeamObjects, tierList);
     const synergyScore = heuristic_synergy_score(yourTeamObjects);
     const totalScore = tierScore + synergyScore;
     return {totalScore, tierScore, synergyScore};
