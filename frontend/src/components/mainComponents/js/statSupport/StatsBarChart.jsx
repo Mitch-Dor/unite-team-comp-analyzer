@@ -146,7 +146,7 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
               case "Pick Rate":
                 return `${context.label}: ${data.picks} picks over ${data.total_matches} total matches (${context.raw}%)`;
               case "Presence":
-                return `${context.label}: ${data.presence}% presence over ${data.total_matches} total matches (${context.raw}%)`;
+                return `${context.label}: ${data.picks + data.bans} picks/bans over ${data.total_matches} total matches (${context.raw}%)`;
               case "Win Rate":
                 return `${context.label}: ${data.wins} wins over ${data.picks} total picks (${context.raw}%)`;
               default:
@@ -323,7 +323,7 @@ function PokemonDataChart({ data, setShowPokemonData }) {
               case "Pick Rate":
                 return `${context.label}: ${data.picks} picks over ${data.total_matches} total matches (${context.raw}%)`;
               case "Presence":
-                return `${context.label}: ${data.presence}% presence over ${data.total_matches} total matches (${context.raw}%)`;
+                return `${context.label}: ${data.picks + data.bans} picks/bans over ${data.total_matches} total matches (${context.raw}%)`;
               case "Win Rate":
                 return `${context.label}: ${data.wins} wins over ${data.picks} total picks (${context.raw}%)`;
               case "Round 1":
