@@ -82,10 +82,6 @@ function Main() {
     setTitle();
   }, []);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   return (
     <div id="mainContainer" className="scrollingBackground">
         <div id="cornerContainer">

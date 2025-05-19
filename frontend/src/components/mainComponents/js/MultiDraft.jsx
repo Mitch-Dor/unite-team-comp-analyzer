@@ -8,6 +8,7 @@ import io from 'socket.io-client';
 import Home from '../../sideComponents/js/Home.jsx';
 import RoomCreateJoin from './draftSupport/DraftRoomCreateJoin.jsx';
 import DraftAgain from './draftSupport/DraftAgain.jsx';
+import { genRandomPokemon } from './draftSupport/draftFunctions.js';
 
 function MultiDraft() {
     const location = useLocation();
@@ -461,15 +462,6 @@ function MultiDraft() {
         }
     }
 
-    function genRandomPokemon() {
-        const randIndex = Math.floor(Math.random() * pokemonList.length);
-        const pokemon = pokemonList[randIndex];
-        if (!team1Bans.includes(pokemon) && !team2Bans.includes(pokemon) && !team1Picks.includes(pokemon) && !team2Picks.includes(pokemon)) {
-            return pokemon;
-        } 
-        return genRandomPokemon();
-    }
-
     function ranOutOfTime() {
         const none = {pokemon_name: 'none', pokemon_class: 'none'};
 
@@ -699,7 +691,7 @@ function MultiDraft() {
             {stateRef.current === 'done' && (
                 <DraftAgain draftAgain={draftAgain} />
             )}
-            <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} />
+            <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
             <Home />
             <div id="roomInfoDisplay">
                 <h4>Room ID: {roomIdRef.current}</h4>

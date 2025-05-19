@@ -6,6 +6,7 @@ import Home from '../../sideComponents/js/Home.jsx';
 import Settings from '../../sideComponents/js/Settings.jsx';
 import '../css/draft.css';
 import DraftAgain from './draftSupport/DraftAgain.jsx';
+import { genRandomPokemon, checkIfSpecialCase } from './draftSupport/draftFunctions.js';
 
 function SingleDraft() {
     const location = useLocation();
@@ -56,7 +57,15 @@ function SingleDraft() {
         async function fetchTierList(){
             try {
                 const foundTierList = await fetchAllTierListEntries();
-                tierList.current = foundTierList;
+                // Create an array that has an array of each tier (S, A-F) and fill it with the pokemon_id's that are in that tier
+                const tierListFilled = [];
+                foundTierList.forEach(entry => {
+                    if (!tierListFilled[entry.tier_name]) {
+                        tierListFilled[entry.tier_name] = [];
+                    }
+                    tierListFilled[entry.tier_name].push(entry.pokemon_id);
+                });
+                tierList.current = tierListFilled;
             } catch (error) {
                 console.error("Error fetching Tier List:", error);
             }
@@ -154,20 +163,23 @@ function SingleDraft() {
             if (isAIBanTurn) {
                 // Ban some random highest tier pokemon
                 aiBanTimeoutRef.current = setTimeout(() => {
-                    // Get the S tier pokemon from the tier list
-                    let sTier = [];
-                    tierList.current.forEach(tier => {
-                        if (tier.tier_name === "S"){
-                            // Find the pokemonList.pokemon_id that correlates with tier.pokemon_id and add it to sTier
-                            const sTierPokemon = pokemonList.find(p => p.pokemon_id === tier.pokemon_id);
-                            if (sTierPokemon && !disallowedCharacters.includes(sTierPokemon) && !team1Bans.includes(sTierPokemon) && !team2Bans.includes(sTierPokemon)) {
-                                sTier.push(sTierPokemon);
-                            }
+                    function genRandomSTierPokemon(){
+                        // Get the S tier pokemon from the tier list
+                        let sTier = tierList.current.S;
+                        // Choose a random S tier pokemon
+                        const randomPokemon = sTier[Math.floor(Math.random() * sTier.length)];
+                        // Fill out the pokemon object
+                        // sTier is an array of pokemon_id's, so we need to find the pokemon in pokemonList that has that pokemon_id
+                        const sTierPokemon = pokemonList.find(p => p.pokemon_id === randomPokemon);
+                        // Make sure it is not something already banned or special case
+                        if (!team1Bans.includes(sTierPokemon) && !team2Bans.includes(sTierPokemon) && !disallowedCharacters.includes(sTierPokemon) && !checkIfSpecialCase(sTierPokemon, team1Bans, team2Bans, team1Picks, team2Picks)) {
+                            setTargetPokemon(sTierPokemon);
+                        } else {
+                            // If it is something already banned or special case, try again
+                            genRandomSTierPokemon();
                         }
-                    });
-                    // Choose a random S tier pokemon
-                    const randomPokemon = sTier[Math.floor(Math.random() * sTier.length)];
-                    setTargetPokemon(randomPokemon);
+                    }
+                    genRandomSTierPokemon();
                 }, 3000);
 
                 // Cleanup function to destroy timeout if user leaves the page
@@ -307,39 +319,6 @@ function SingleDraft() {
             console.error("Error in AI pick:", error);
             return genRandomPokemon();
         }
-    }
-
-    function genRandomPokemon() {
-        if (pokemonList.length === 0) {
-            console.error("Cannot generate random Pokemon: pokemonList is empty");
-            return null;
-        }
-        
-        const randIndex = Math.floor(Math.random() * pokemonList.length);
-        const pokemon = pokemonList[randIndex];
-        if (!team1Bans.includes(pokemon) && 
-            !team2Bans.includes(pokemon) && 
-            !team1Picks.includes(pokemon) && 
-            !team2Picks.includes(pokemon) && 
-            !disallowedCharacters.includes(pokemon.pokemon_name)) {
-            return pokemon;
-        } 
-        
-        // Safety check to prevent infinite recursion
-        let availableOptions = pokemonList.filter(p => 
-            !team1Bans.includes(p) && 
-            !team2Bans.includes(p) && 
-            !team1Picks.includes(p) && 
-            !team2Picks.includes(p) && 
-            !disallowedCharacters.includes(p.pokemon_name)
-        );
-        
-        if (availableOptions.length === 0) {
-            console.error("No available Pokemon to select");
-            return null;
-        }
-        
-        return genRandomPokemon();
     }
 
     function countdownTimer() {
@@ -506,7 +485,7 @@ function SingleDraft() {
         {stateRef.current === 'done' && (
             <DraftAgain draftAgain={draftAgain} />
         )}
-        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} />
+        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
         <Home />
     </div>
   );

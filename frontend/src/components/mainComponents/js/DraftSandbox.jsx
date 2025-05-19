@@ -55,7 +55,6 @@ function DraftSandbox() {
                     updateTeam1Picks(prevPicks => {
                         // Remove any existing pokemon with the same position
                         const filtered = prevPicks.filter(item => item.position !== position);
-                        console.log(prevPicks, filtered);
                         return [...filtered, {pokemon, position: position}];
                     });
                 }

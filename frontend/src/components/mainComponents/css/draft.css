@@ -115,38 +115,6 @@ html::-webkit-scrollbar {
     width: auto;
 }
 
-.purpleSelection .characterPortrait {
-    width: 8vh;
-    height: 8vh;
-    margin-left: auto;
-    margin-right: 2vw;
-    object-fit: cover;
-    box-sizing: border-box;
-    aspect-ratio: 1/1;
-}
-
-.orangeSelection .characterPortrait {
-    width: 8vh;
-    height: 8vh;
-    margin-right: auto;
-    margin-left: 2vw;
-    object-fit: cover;
-    box-sizing: border-box;
-    aspect-ratio: 1/1;
-}
-
-.characterSelection {
-    flex: 1;
-    height: 15vh;
-    width: 18vw;
-    margin-top: 2vh;
-    border: solid 3px black;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    overflow: hidden;
-}
-
 .purpleSelection {
     background-color: rgb(194, 161, 228);
 }
@@ -155,26 +123,12 @@ html::-webkit-scrollbar {
     background-color: rgb(225, 165, 106);
 }
 
-#purpleDraftContainer {
-
-}
-
 .purpleSelection {
-    margin-left: 0px;
-    margin-right: 2vw;
     border-left: none;
-    padding-left: 2vw;
-}
-
-#orangeDraftContainer {
-
 }
 
 .orangeSelection {
-    margin-left: 2vw;
-    margin-right: 0px;
     border-right: none;
-    padding-right: 2vw;
 }
 
 #draftBoardContainer {
@@ -336,9 +290,13 @@ html::-webkit-scrollbar {
     border: solid 3px black;
     display: flex;
     align-items: center;
-    background-color: white;
     max-height: 15vh;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1vw;
 }
 
 .characterSelection h3 {
@@ -353,8 +311,6 @@ html::-webkit-scrollbar {
 .purpleSelection .characterPortrait {
     width: 8vh;
     height: 8vh;
-    margin-left: auto;
-    margin-right: 2vw;
     object-fit: cover;
     box-sizing: border-box;
     aspect-ratio: 1/1;
@@ -363,8 +319,6 @@ html::-webkit-scrollbar {
 .orangeSelection .characterPortrait {
     width: 8vh;
     height: 8vh;
-    margin-right: auto;
-    margin-left: 2vw;
     object-fit: cover;
     box-sizing: border-box;
     aspect-ratio: 1/1;
@@ -1020,4 +974,27 @@ html::-webkit-scrollbar {
     padding-bottom: 20px;
     color: white;
 }
+
+.switchButton {
+    width: 20px;
+    height: 20px;
+    background-color: #3a3a3a;
+    box-shadow: 0 0 15px rgba(80, 80, 80, 0.7);
+    color: white;
+    border: 1px solid black;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.switchButton:hover {
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+}
+
 
