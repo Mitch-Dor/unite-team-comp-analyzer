@@ -19,8 +19,18 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
         setHoveredIndex(null);
     };
 
+    const handleClick = (event, pokemon, team, position) => {
+        event.preventDefault(); // Prevent default context menu
+        if (event.button === 0) { // Left click
+            handleSetPosition(pokemon, team, position);
+        } else if (event.button === 2) { // Right click
+            // Remove the selection
+            handleSetPosition(null, team, position);
+        }
+    };
+
     function handleSetPosition(pokemon, team, position){
-        if (pokemon){
+        if (position) { // Only call setPosition if we have a valid position
             setPosition(pokemon, team, position);
         }
     }
@@ -68,7 +78,10 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                         {["ban1", "ban2"].map((banPosition, index) => {
                             const currentBan = bans.find(ban => ban.position === banPosition);
                             return (
-                                <div key={index} onClick={() => handleSetPosition(targetPokemon, team, banPosition)}>
+                                <div key={index} 
+                                    onClick={(e) => handleClick(e, targetPokemon, team, banPosition)}
+                                    onContextMenu={(e) => handleClick(e, targetPokemon, team, banPosition)}
+                                >
                                     <img 
                                         className={`characterPortrait banDisplay ${targetPokemon ? 'selectable' : null}`} 
                                         src={currentBan ? `/assets/Draft/headshots/${currentBan?.pokemon?.pokemon_name || ''}.png` : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'} 
@@ -81,7 +94,11 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                         const currentPick = picks.find(pick => pick.position === pickPosition);
                         const relatedPick = currentPick ? specialCase(currentPick.pokemon) : null;
                         return (
-                            <div key={index} className={`characterSelection ${team}Selection ${currentPick?.pokemon ? '' : 'placeholder'} ${targetPokemon ? 'selectable' : null}`} onClick={() => handleSetPosition(targetPokemon, team, pickPosition)}>
+                            <div key={index} 
+                                className={`characterSelection ${team}Selection ${currentPick?.pokemon ? '' : 'placeholder'} ${targetPokemon ? 'selectable' : null}`} 
+                                onClick={(e) => handleClick(e, targetPokemon, team, pickPosition)}
+                                onContextMenu={(e) => handleClick(e, targetPokemon, team, pickPosition)}
+                            >
                                 {currentPick?.pokemon ? (
                                     // Difference between purple and orange is just content is reversed
                                     team === 'purple' ? (

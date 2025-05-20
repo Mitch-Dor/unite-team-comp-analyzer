@@ -43,37 +43,54 @@ function DraftSandbox() {
     }
 
     function setPosition(pokemon, team, position){
-        switch(team){
-            case 'purple': // Team 1
-                if(position.includes('ban')){
-                    updateTeam1Bans(prevBans => {
-                        // Remove any existing pokemon with the same position
-                        const filtered = prevBans.filter(item => item.position !== position);
-                        return [...filtered, {pokemon, position: position}];
-                    });
-                } else if(position.includes('pick')){
-                    updateTeam1Picks(prevPicks => {
-                        // Remove any existing pokemon with the same position
-                        const filtered = prevPicks.filter(item => item.position !== position);
-                        return [...filtered, {pokemon, position: position}];
-                    });
+        if (!pokemon){
+            // Remove the pokemon from the team
+            if (position.includes('ban')){
+                if (team === 'purple'){
+                    updateTeam1Bans(prevBans => prevBans.filter(item => item.position !== position));
+                } else if (team === 'orange'){
+                    updateTeam2Bans(prevBans => prevBans.filter(item => item.position !== position));
                 }
-                break; // Add break to prevent fall-through
-            case 'orange': // Team 2
-                if(position.includes('ban')){
-                    updateTeam2Bans(prevBans => {
-                        // Remove any existing pokemon with the same position
-                        const filtered = prevBans.filter(item => item.position !== position);
-                        return [...filtered, {pokemon, position: position}];
-                    });
-                } else if(position.includes('pick')){
-                    updateTeam2Picks(prevPicks => {
-                        // Remove any existing pokemon with the same position
-                        const filtered = prevPicks.filter(item => item.position !== position);
-                        return [...filtered, {pokemon, position: position}];
-                    });
+            } else if (position.includes('pick')){
+                if (team === 'purple'){
+                    updateTeam1Picks(prevPicks => prevPicks.filter(item => item.position !== position));
+                } else if (team === 'orange'){
+                    updateTeam2Picks(prevPicks => prevPicks.filter(item => item.position !== position));
                 }
-                break; // Add break to prevent fall-through
+            }
+        } else {
+            switch(team){
+                case 'purple': // Team 1
+                    if(position.includes('ban')){
+                        updateTeam1Bans(prevBans => {
+                            // Remove any existing pokemon with the same position
+                            const filtered = prevBans.filter(item => item.position !== position);
+                            return [...filtered, {pokemon, position: position}];
+                        });
+                    } else if(position.includes('pick')){
+                        updateTeam1Picks(prevPicks => {
+                            // Remove any existing pokemon with the same position
+                            const filtered = prevPicks.filter(item => item.position !== position);
+                            return [...filtered, {pokemon, position: position}];
+                        });
+                    }
+                    break; // Add break to prevent fall-through
+                case 'orange': // Team 2
+                    if(position.includes('ban')){
+                        updateTeam2Bans(prevBans => {
+                            // Remove any existing pokemon with the same position
+                            const filtered = prevBans.filter(item => item.position !== position);
+                            return [...filtered, {pokemon, position: position}];
+                        });
+                    } else if(position.includes('pick')){
+                        updateTeam2Picks(prevPicks => {
+                            // Remove any existing pokemon with the same position
+                            const filtered = prevPicks.filter(item => item.position !== position);
+                            return [...filtered, {pokemon, position: position}];
+                        });
+                    }
+                    break; // Add break to prevent fall-through
+            }
         }
         setTargetPokemon(null);
     }
