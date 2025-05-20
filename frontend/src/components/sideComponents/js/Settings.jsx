@@ -7,10 +7,13 @@ function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft,
     const [characters, setCharacters] = useState([]);
 
     useEffect(() => {
-        fetchCharacterDraftInfo().then(data => setCharacters(data));
+        fetchCharacterDraftInfo().then(data => {
+            setCharacters(data);
+        });
     }, []);
 
     function handleCharacterClick(character) {
+        console.log(characters.length, settings.disallowedCharacters.length, characters.length - settings.disallowedCharacters.length);
         // Check if character is already in disallowedCharacters
         if (settings.disallowedCharacters.includes(character)) {
             // If it is, remove it
@@ -19,6 +22,11 @@ function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft,
                 disallowedCharacters: settings.disallowedCharacters.filter(c => c !== character)
             });
         } else {
+            // There need to be at least 14 characters for a draft.
+            if (characters.length - settings.disallowedCharacters.length <= 14) {
+                alert("There need to be at least 14 characters for a draft.");
+                return;
+            }
             // If it's not, add it
             updateSettings({
                 ...settings, 
