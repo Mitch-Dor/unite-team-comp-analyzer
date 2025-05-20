@@ -18,11 +18,11 @@ html::-webkit-scrollbar {
     width: 100vw;
     flex-wrap: wrap;
     flex-direction: row;
-    top: 0px;
+    justify-content: space-between;
 }
 
 #middlePartsContainer {
-    height: 90vh;
+    height: 100%;
     width: 59vw;
     display: flex;
     flex-wrap: wrap;
@@ -30,62 +30,55 @@ html::-webkit-scrollbar {
 }
 
 #timerContainer {
-    height: 5vh;
-    width: 60vw;
+    height: 5%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 #timer {
-    width: 30vw;
-    height: 5vh;
+    width: 50%;
+    height: 100%;
     border: 3px solid black;
     border-top: none;
     border-bottom-left-radius: 50%;
     border-bottom-right-radius: 50%;
 }
 
-.draftContainer {
-    height: 96vh;
-    width: 20vw;
+.teamDraftContainer {
+    height: 90%;
+    width: 20%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-around;
+    padding-top: 15px;
+}
+
+.teamBans { 
+    width: 50%;
+    height: 4%;
+    display: flex;
+    justify-content: space-around;
 }
 
 #purpleBans {
-    width: 20vw;
-    height: 4vh;
-    display: flex;
-    justify-content: left;
+    margin-right: 45%;
 }
 
 #orangeBans {
-    width: 20vw;
-    height: 4vh;
-    display: flex;
-    justify-content: right;
+    margin-left: 45%;
 }
 
 .banDisplay {
     filter: grayscale(1);
     background-color: rgb(201, 201, 201);
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1/1;
 }
 
-#purpleBans .banDisplay {
-    margin-left: 1vw;
-    margin-top: auto;
-    width: 2vh;
-    height: 2vh;
-}
-
-#orangeBans .banDisplay {
-    margin-right: 1vw;
-    margin-top: auto;
-    width: 2vh;
-    height: 2vh;
-}
 
 .characterPortrait {
     border: 1px solid black;
@@ -132,26 +125,28 @@ html::-webkit-scrollbar {
 }
 
 #draftBoardContainer {
-    height: 75vh;
-    width: 59vw;
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-    margin-left: 5vw;
-    margin-right: 5vw;
+    height: 75%;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
     border: none;
     background: transparent;
 }
 
 .filtering {
-    width: 47vw;
+    width: 100%;
     display: flex;
     flex-flow: row wrap;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    gap: 1%;
+    margin: 1% 0;
+    height: 5%;
 }
 
 #searchBar {
-    margin: 1vh 1vw;
     height: clamp(20px, 2vh, 30px);
     width: clamp(200px, 20vw, 500px);
     border: 2px solid black;
@@ -160,12 +155,20 @@ html::-webkit-scrollbar {
     box-sizing: border-box;
 }
 
-.laneFilters {
+.laneFilters, .classFilters {
     height: clamp(20px, 2vh, 30px);
     width: clamp(100px, 7vw, 150px);
     display: flex;
     justify-content: space-around;
     align-items: center;
+}
+
+.laneFilters {
+    padding-left: 20px;
+}
+
+.classFilters {
+    padding-right: 20px;
 }
 
 .laneFilters img {
@@ -174,14 +177,6 @@ html::-webkit-scrollbar {
     cursor: pointer;
     padding: 2px;
     box-sizing: border-box;
-}
-
-.classFilters {
-    height: clamp(20px, 2vh, 30px);
-    width: clamp(100px, 7vw, 150px);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
 }
 
 .classFilters img {
@@ -197,8 +192,8 @@ html::-webkit-scrollbar {
 }
 
 .characterSelect {
-    height: 70vh;
-    width: 49vw;
+    height: 95%;
+    width: 100%;
     display: flex;
     flex-flow: row wrap;
     align-items: flex-start;
@@ -214,8 +209,8 @@ html::-webkit-scrollbar {
 }
 
 .draftCharacter {
-    margin: 1vh 0.8vw;
-    width: 70px;
+    margin: 2% 2%;
+    width: 9%;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -235,8 +230,9 @@ html::-webkit-scrollbar {
 
 /* The img tag itself has the characterPortrait class */
 .draftCharacter img.characterPortrait {
-    width: 70px;
-    height: 70px;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
     border: 1px solid rgb(255, 255, 255);
     position: relative;
     z-index: 1;
@@ -256,7 +252,7 @@ html::-webkit-scrollbar {
     padding: 0.2em 0;
     background-color: #333;
     color: white;
-    width: 70px;
+    width: 100%;
     text-align: center;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -284,13 +280,13 @@ html::-webkit-scrollbar {
 /* Team display styles */
 .characterSelection {
     flex: 1;
-    height: 15vh;
-    width: 18vw;
-    margin-top: 2vh;
+    height: 15%;
+    width: 90%;
+    margin-top: 2%;
     border: solid 3px black;
     display: flex;
     align-items: center;
-    max-height: 15vh;
+    max-height: 15%;
     overflow: hidden;
     display: flex;
     flex-direction: row;
@@ -309,16 +305,16 @@ html::-webkit-scrollbar {
 }
 
 .purpleSelection .characterPortrait {
-    width: 8vh;
-    height: 8vh;
+    width: auto;
+    height: 70%;
     object-fit: cover;
     box-sizing: border-box;
     aspect-ratio: 1/1;
 }
 
 .orangeSelection .characterPortrait {
-    width: 8vh;
-    height: 8vh;
+    width: auto;
+    height: 70%;
     object-fit: cover;
     box-sizing: border-box;
     aspect-ratio: 1/1;
@@ -422,15 +418,15 @@ html::-webkit-scrollbar {
 }
 
 #lockInContainer {
-    height: 6vh;
-    width: 59vw;
+    height: 6%;
+    width: 100%;
     display: flex;
     justify-content: center;
 }
 
 #lockInBTN {
-    height: 6vh;
-    width: 45vw;
+    height: 100%;
+    width: 80%;
     border-top-left-radius: 5vh;
     border-top-right-radius: 5vh;
     border-bottom-right-radius: 5vh;

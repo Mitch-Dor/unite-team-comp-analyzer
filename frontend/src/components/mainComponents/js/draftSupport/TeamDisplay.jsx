@@ -63,8 +63,8 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
     return (
         <>
             {setPosition ? ( /* This is the sandbox mode */
-                <div>
-                    <div id={`${team}Bans`}>
+                <>
+                    <div className="teamBans" id={`${team}Bans`}>
                         {["ban1", "ban2"].map((banPosition, index) => {
                             const currentBan = bans.find(ban => ban.position === banPosition);
                             return (
@@ -129,10 +129,10 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                             </div>
                         );
                     })}
-                </div>
+                </>
             ) : ( /* This is the normal mode */
                 <>
-                    <div id={`${team}Bans`}>
+                    <div className="teamBans" id={`${team}Bans`}>
                     {/* Create as many character portraits as there are picks but add blanks so there are 2 total */}
                     {[...bans, ...Array(2 - bans.length).fill(null)].map((pokemon, index) => {
                         return (
