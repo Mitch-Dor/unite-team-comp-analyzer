@@ -71,7 +71,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                 <div key={index} onClick={() => handleSetPosition(targetPokemon, team, banPosition)}>
                                     <img 
                                         className={`characterPortrait banDisplay ${targetPokemon ? 'selectable' : null}`} 
-                                        src={`/assets/Draft/headshots/${currentBan?.pokemon?.pokemon_name || ''}.png`} 
+                                        src={currentBan ? `/assets/Draft/headshots/${currentBan?.pokemon?.pokemon_name || ''}.png` : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'} 
                                     />
                                 </div>
                             );
@@ -117,11 +117,11 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                     team === 'purple' ? (
                                         <>
                                             <h3>Character</h3>
-                                            <img className={`characterPortrait`} />
+                                            <img className="characterPortrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
                                         </>
                                     ) : (
                                         <>
-                                            <img className={`characterPortrait`} />
+                                            <img className="characterPortrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
                                             <h3>Character</h3>
                                         </>
                                     )
@@ -143,7 +143,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                     </>
                                 ) : (
                                     <>
-                                        <img className="characterPortrait banDisplay"></img>
+                                        <img className="characterPortrait banDisplay" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
                                     </>
                                 )}
                             </div>
@@ -182,11 +182,11 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                 team === 'purple' ? (
                                     <>
                                         <h3>Character</h3>
-                                        <img className="characterPortrait" />
+                                        <img className="characterPortrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
                                     </>
                                 ) : (
                                     <>
-                                        <img className="characterPortrait" />
+                                        <img className="characterPortrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
                                         <h3>Character</h3>
                                     </>
                                 )

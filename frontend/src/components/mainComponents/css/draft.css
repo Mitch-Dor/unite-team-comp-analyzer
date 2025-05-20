@@ -280,13 +280,13 @@ html::-webkit-scrollbar {
 /* Team display styles */
 .characterSelection {
     flex: 1;
-    height: 15%;
+    height: 16%;
     width: 90%;
     margin-top: 2%;
     border: solid 3px black;
     display: flex;
     align-items: center;
-    max-height: 15%;
+    max-height: 16%;
     overflow: hidden;
     display: flex;
     flex-direction: row;
