@@ -24,6 +24,21 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
         const isBanned = bans.some(bannedPokemon => 
             bannedPokemon.pokemon_id && bannedPokemon.pokemon_id === pokemon.pokemon_id
         );
+
+        // Special cases where if a certain pokemon is in your team, enemy team, or banned, another pokemon is automatically unpickable
+        if (pokemon.pokemon_name === "Scyther" && (yourTeam.some(p => p.pokemon_name === "Scizor") || enemyTeam.some(p => p.pokemon_name === "Scizor") || bans.some(p => p.pokemon_name === "Scizor"))) {
+            return false;
+        } else if (pokemon.pokemon_name === "Scizor" && (yourTeam.some(p => p.pokemon_name === "Scyther") || enemyTeam.some(p => p.pokemon_name === "Scyther") || bans.some(p => p.pokemon_name === "Scyther"))) {
+            return false;
+        } else if (pokemon.pokemon_name === "Urshifu_SS" && (yourTeam.some(p => p.pokemon_name === "Urshifu_RS") || enemyTeam.some(p => p.pokemon_name === "Urshifu_RS") || bans.some(p => p.pokemon_name === "Urshifu_RS"))) {
+            return false;
+        } else if (pokemon.pokemon_name === "Urshifu_RS" && (yourTeam.some(p => p.pokemon_name === "Urshifu_SS") || enemyTeam.some(p => p.pokemon_name === "Urshifu_SS") || bans.some(p => p.pokemon_name === "Urshifu_SS"))) {
+            return false;
+        } else if (pokemon.pokemon_name === "Mewtwo_Y" && (yourTeam.some(p => p.pokemon_name === "Mewtwo_X") || enemyTeam.some(p => p.pokemon_name === "Mewtwo_X") || bans.some(p => p.pokemon_name === "Mewtwo_X"))) {
+            return false;
+        } else if (pokemon.pokemon_name === "Mewtwo_X" && (yourTeam.some(p => p.pokemon_name === "Mewtwo_Y") || enemyTeam.some(p => p.pokemon_name === "Mewtwo_Y") || bans.some(p => p.pokemon_name === "Mewtwo_Y"))) {
+            return false;
+        }
         
         // Return true if the pokemon is not in any of these collections
         return !inYourTeam && !inEnemyTeam && !isBanned;
@@ -51,6 +66,23 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
         // Helper to check if team already has this pokemon
         hasPokemon(pokemon) {
             return this.picks.some(p => p.pokemon_id === pokemon.pokemon_id);
+        }
+
+        // Helper to check if team already has this pokemon's adjacent pokemon
+        hasAdjacentPokemon(pokemon) {
+            if (pokemon.pokemon_name === "Scyther") {
+                return this.picks.some(p => p.pokemon_name === "Scizor");
+            } else if (pokemon.pokemon_name === "Scizor") {
+                return this.picks.some(p => p.pokemon_name === "Scyther");
+            } else if (pokemon.pokemon_name === "Urshifu_SS") {
+                return this.picks.some(p => p.pokemon_name === "Urshifu_RS");
+            } else if (pokemon.pokemon_name === "Urshifu_RS") {
+                return this.picks.some(p => p.pokemon_name === "Urshifu_SS");
+            } else if (pokemon.pokemon_name === "Mewtwo_Y") {
+                return this.picks.some(p => p.pokemon_name === "Mewtwo_X");
+            } else if (pokemon.pokemon_name === "Mewtwo_X") {
+                return this.picks.some(p => p.pokemon_name === "Mewtwo_Y");
+            }
         }
         
         // Create a new node with an additional pokemon
@@ -103,8 +135,38 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
 
     // Initialize the search with whatever is currently in your team or if your team is empty, add a node for every available pokemon
     if (yourTeamObjects.length > 0) {
-        const teamNode = new TeamNode(yourTeamObjects); // yourTeam is an array of pokemon names
-        open.push(teamNode);
+        // If your team has a pokemon that has an alternate form, create nodes for each combination of alternate forms
+        const alternateFormsMap = {
+            "Scyther": "Scizor",
+            "Scizor": "Scyther",
+            "Urshifu_SS": "Urshifu_RS",
+            "Urshifu_RS": "Urshifu_SS"
+        };
+
+        const generateCombinations = (team, index = 0) => {
+            if (index >= team.length) {
+                open.push(new TeamNode(team));
+                return;
+            }
+
+            const currentPokemon = team[index];
+            const alternateFormName = alternateFormsMap[currentPokemon.pokemon_name];
+
+            if (alternateFormName) {
+                const alternateForm = pokemonObjects.find(p => p.pokemon_name === alternateFormName);
+                if (alternateForm) {
+                    // Create a new team with the alternate form
+                    const newTeamWithAlt = [...team];
+                    newTeamWithAlt[index] = alternateForm;
+                    generateCombinations(newTeamWithAlt, index + 1);
+                }
+            }
+
+            // Continue with the current form
+            generateCombinations(team, index + 1);
+        };
+
+        generateCombinations(yourTeamObjects);
     } else {
         for (const pokemon of remainingPokemon) {
             const teamNode = new TeamNode([pokemon]);
@@ -141,7 +203,7 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
         // Go through every immediate candidate and computer heuristic (~50 candidates)
         for (const pokemon of remainingPokemon) {
             // Can't add a pokemon that is already in the team
-            if (!currNode.hasPokemon(pokemon)){
+            if (!currNode.hasPokemon(pokemon) && !currNode.hasAdjacentPokemon(pokemon)){
                 // Create the array with added pokemon
                 const newTeam = [...currNode.picks, pokemon];
                 const teamKey = newTeam.map(p => p.id).sort().join('|'); // Create team key in same way TeamNode would
