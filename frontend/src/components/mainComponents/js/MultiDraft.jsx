@@ -9,6 +9,8 @@ import Home from '../../sideComponents/js/Home.jsx';
 import RoomCreateJoin from './draftSupport/DraftRoomCreateJoin.jsx';
 import DraftAgain from './draftSupport/DraftAgain.jsx';
 import { genRandomPokemon } from './draftSupport/draftFunctions.js';
+import { IoIosChatboxes } from "react-icons/io";
+import { Filter } from 'bad-words';
 
 function MultiDraft() {
     const location = useLocation();
@@ -42,6 +44,9 @@ function MultiDraft() {
     const connectionRef = useRef(null);
     const isHostRef = useRef(false);
     const isConnectedRef = useRef(false);
+    const [showChat, setShowChat] = useState(true);
+    const [chat, setChat] = useState([]);
+    const [chatInput, setChatInput] = useState('');
 
     const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
 
@@ -341,6 +346,8 @@ function MultiDraft() {
                 } else if (data.type === 'userInfo') {
                     console.log('Received user info from peer:', data.user);
                     setOpposingUser(data.user);
+                } else if (data.type === 'chatMessage') {
+                    setChat(prevChat => [...prevChat, data.message]);
                 }
             });
         }
@@ -469,7 +476,7 @@ function MultiDraft() {
         if (targetPokemonRef.current !== null){
             actionPokemon = targetPokemonRef.current;
         } else if (stateRef.current.startsWith('team1Pick') || stateRef.current.startsWith('team2Pick')){
-            actionPokemon = genRandomPokemon();
+            actionPokemon = genRandomPokemon(pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, []);
         } else if (stateRef.current.startsWith('team1Ban') || stateRef.current.startsWith('team2Ban')){
             actionPokemon = none;
         }
@@ -683,6 +690,28 @@ function MultiDraft() {
         }
     }
 
+    function sendChatMessage(message){
+        if (isConnected && connectionRef.current && connectionRef.current.open) {
+            // Create a new filter instance
+            const filter = new Filter();
+            
+            // Filter the message
+            const filteredMessage = filter.clean(message);
+            
+            const constructedMessage = {
+                message: `${user ? user.user_name : isHostRef.current ? 'Host' : 'Guest'}: ${filteredMessage}`, 
+                user: user
+            };
+            
+            connectionRef.current.send({
+                type: 'chatMessage',
+                message: constructedMessage
+            });
+            // Also add the message to the chat array
+            setChat(prevChat => [...prevChat, constructedMessage]);
+        }
+    }
+
     return (
         <div id="draftContainer">
             {!draftStarted && (
@@ -700,6 +729,36 @@ function MultiDraft() {
                 <h4>Is Your Turn: {checkIsTurn() ? "Yes" : "No"} </h4>
                 <h4>Opposing User: {opposingUser ? opposingUser.user_name : "Unknown"}</h4>
             </div>
+            {isConnected && (
+                <div id="chatContainer" className={`${showChat ? 'full' : 'collapsed'}`}>
+                    {showChat && (
+                        <div id="chatMessages">
+                            {chat.map((message, index) => (
+                                <div key={index} className={`chatMessage ${message.user === user ? 'self' : 'opponent'}`}>
+                                    {message.message}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <div id="chatBar" className={`${showChat ? 'full' : 'collapsed'}`}>
+                        <button id="toggleChat" onClick={() => setShowChat(!showChat)}>
+                            <IoIosChatboxes className={`chatIcon ${showChat ? 'active' : 'inactive'}`} />
+                        </button>
+                        <input 
+                            type="text" 
+                            placeholder="Message" 
+                            value={chatInput} 
+                            onChange={(e) => setChatInput(e.target.value)} 
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    sendChatMessage(chatInput);
+                                    setChatInput('');
+                                }
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
