@@ -422,6 +422,7 @@ html::-webkit-scrollbar {
     width: 100%;
     display: flex;
     justify-content: center;
+    margin-bottom: 1%;
 }
 
 #lockInBTN {
@@ -747,7 +748,8 @@ html::-webkit-scrollbar {
     z-index: 1001;
 }
 
-#doneScreenBTN {
+.doneScreenBTN {
+    margin-top: 10px;
     background-color: #4CAF50;
     color: white;
     border: 2px solid #45a049;
@@ -758,7 +760,50 @@ html::-webkit-scrollbar {
     transition: all 0.3s ease;
 }
 
-#doneScreenBTN:hover {
+.doneScreenBTN:hover {
+    background-color: #45a049;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
+}
+
+#returnToRestartScreen {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    background-color: #333;
+    color: white;
+    border: 2px solid #000000;
+    height: 80px;
+    width: 200px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    animation: pulseHighlight 1.5s infinite alternate;
+}
+
+@keyframes pulseHighlight {
+    from {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    }
+    to {
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+    }
+}
+
+#returnToDraftAgain {
+    background-color: #4CAF50;
+    color: white;
+    border: 2px solid #45a049;
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#returnToDraftAgain:hover {
     background-color: #45a049;
     box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
 }
