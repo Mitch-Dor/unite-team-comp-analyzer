@@ -47,7 +47,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
             otherPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === 'Urshifu_SS');
         }
         if (otherPokemon){
-            if (settings && settings.disallowedCharacters && settings.disallowedCharacters.includes(otherPokemon)){
+            if (settings && settings.disallowedCharacters && settings.disallowedCharacters.includes(otherPokemon.pokemon_name)){
                 return null;
             } else {
                 return otherPokemon;

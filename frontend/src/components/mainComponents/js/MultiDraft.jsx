@@ -476,7 +476,7 @@ function MultiDraft() {
         if (targetPokemonRef.current !== null){
             actionPokemon = targetPokemonRef.current;
         } else if (stateRef.current.startsWith('team1Pick') || stateRef.current.startsWith('team2Pick')){
-            actionPokemon = genRandomPokemon(pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, []);
+            actionPokemon = genRandomPokemon(pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, settingsRef.current.disallowedCharacters);
         } else if (stateRef.current.startsWith('team1Ban') || stateRef.current.startsWith('team2Ban')){
             actionPokemon = none;
         }
