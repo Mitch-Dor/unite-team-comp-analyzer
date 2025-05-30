@@ -1,0 +1,86 @@
+INSERT INTO professional_players (player_id,player_name,other_names) VALUES
+	 (1,'symp',NULL),
+	 (2,'oblivion',NULL),
+	 (3,'pure',NULL),
+	 (4,'freaky',NULL),
+	 (5,'neon',NULL),
+	 (6,'SoupChef2',NULL),
+	 (7,'BroteinShake',NULL),
+	 (8,'nayeon',NULL),
+	 (9,'Scrublenaut',NULL),
+	 (10,'Gupiter',NULL);
+INSERT INTO professional_players (player_id,player_name,other_names) VALUES
+	 (11,'Overlord',NULL),
+	 (12,'Joey',NULL),
+	 (13,'otter',NULL),
+	 (14,'JL',NULL),
+	 (15,'Lutano',NULL),
+	 (16,'owo',NULL),
+	 (17,'Vinny256',NULL),
+	 (18,'RSG_Red',NULL),
+	 (19,'Ascha',NULL),
+	 (20,'Kolintang',NULL);
+INSERT INTO professional_players (player_id,player_name,other_names) VALUES
+	 (21,'Rollin',NULL),
+	 (22,'Kraitos',NULL),
+	 (23,'zugrug',NULL),
+	 (24,'Flareons',NULL),
+	 (25,'Machizzle','MACH<3LISA'),
+	 (26,'slash',NULL),
+	 (27,'BlackCH',NULL),
+	 (28,'EggN00b',NULL),
+	 (29,'OGwastaken',NULL),
+	 (30,'Duskrunner5',NULL);
+INSERT INTO professional_players (player_id,player_name,other_names) VALUES
+	 (31,'Kirtan','infAme'),
+	 (32,'Victorin',NULL),
+	 (33,'bits',NULL),
+	 (34,'Waterboy',NULL),
+	 (35,'Reckzz',NULL),
+	 (36,'Trainer',NULL),
+	 (37,'Yeat',NULL),
+	 (38,'Aznable',NULL),
+	 (39,'Metallic',NULL),
+	 (40,'Soby',NULL);
+INSERT INTO professional_players (player_id,player_name,other_names) VALUES
+	 (41,'Tyedye',NULL),
+	 (42,'Anon',NULL),
+	 (43,'Zelot','Zel0ot'),
+	 (44,'BlueberryGM',NULL),
+	 (45,'Clxsh',NULL),
+	 (46,'duckyloco',NULL),
+	 (47,'1',NULL),
+	 (48,'Fwii',NULL),
+	 (49,'Russs',NULL),
+	 (50,'Luis7a',NULL);
+INSERT INTO professional_players (player_id,player_name,other_names) VALUES
+	 (51,'Akeelo',NULL),
+	 (52,'SoSadSam',NULL),
+	 (53,'BoraReach',NULL),
+	 (54,'relyks',NULL),
+	 (55,'Gyro',NULL),
+	 (56,'vision_',NULL),
+	 (57,'Kruelty',NULL),
+	 (58,'ChiefX','Loveu'),
+	 (59,'rayyw','rhys#1fan<3'),
+	 (60,'slippyhead','ianwhysp');
+INSERT INTO professional_players (player_id,player_name,other_names) VALUES
+	 (61,'Regretz',NULL),
+	 (62,'Oogway',NULL),
+	 (63,'VinDiesel',NULL),
+	 (64,'kaysuff',NULL),
+	 (65,'Celestial',NULL),
+	 (66,'dispenza',NULL),
+	 (67,'Yardstick',NULL),
+	 (68,'Luniar',NULL),
+	 (69,'Stanleyfishy1x',NULL),
+	 (70,'Split',NULL);
+INSERT INTO professional_players (player_id,player_name,other_names) VALUES
+	 (71,'Brzy',NULL),
+	 (72,'Gannon',NULL),
+	 (73,'Kyriaos',NULL),
+	 (74,'Ryker',NULL),
+	 (75,'Smuglax',NULL),
+	 (76,'Liko',NULL),
+	 (77,'Wailord',NULL),
+	 (78,'Sentient Scarf',NULL);

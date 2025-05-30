@@ -1,6 +1,6 @@
 -- Table symbolizing the characters themselves
 create table playable_characters (
-    pokemon_id integer primary key AUTOINCREMENT not null,
+    pokemon_id integer primary key not null,
     pokemon_name text not null,
     pokemon_class text not null
 );
@@ -31,14 +31,14 @@ create table pokemon_attributes (
 );
 -- Table symbolizing moves that a pokemon can use
 create table pokemon_moves (
-    move_id integer primary key AUTOINCREMENT not null,
+    move_id integer primary key not null,
     move_name text not null,
     pokemon_id int not null,
     FOREIGN KEY (pokemon_id) REFERENCES playable_characters (pokemon_id)
 );
 -- Table symbolizing a comp a team drafted
 create table professional_comps (
-    comp_id integer primary key AUTOINCREMENT not null,
+    comp_id integer primary key not null,
     pokemon_1 int not null,
     pokemon_2 int not null,
     pokemon_3 int not null,
@@ -76,33 +76,33 @@ create table professional_comps (
 );
 -- A table symbolizing an event
 create table events (
-    event_id integer primary key AUTOINCREMENT not null,
+    event_id integer primary key not null,
     event_name text not null,
     event_date date not null,
     vod_url text not null
 );
 -- A table symbolizing a set of matches at a given event
 create table professional_sets (
-    set_id integer primary key AUTOINCREMENT not null,
+    set_id integer primary key not null,
     event_id int not null,
     set_descriptor text not null,
     FOREIGN KEY (event_id) REFERENCES events (event_id)
 );
 -- A table symbolizing professional players
 create table professional_players (
-    player_id integer primary key AUTOINCREMENT not null,
+    player_id integer primary key not null,
     player_name text not null,
     other_names text
 );
 -- A table symbolizing a professional team 
 create table professional_teams (
-    team_id integer primary key AUTOINCREMENT not null,
+    team_id integer primary key not null,
     team_name text not null,
     team_region text not null
 );
 -- A table symbolizing a match between two teams in a given set
 create table professional_matches (
-    match_id integer primary key AUTOINCREMENT not null,
+    match_id integer primary key not null,
     set_id int not null,
     team_1_comp_id int not null,
     team_2_comp_id int not null,

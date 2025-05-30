@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "bad-words": "^4.0.0"
+    "bad-words": "^4.0.0",
+    "pg": "^8.16.0"
   }
 }
