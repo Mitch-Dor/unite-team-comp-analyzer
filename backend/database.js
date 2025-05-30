@@ -31,8 +31,6 @@ const { Pool } = require('pg');
 // URL encode the connection string to handle special characters in the password
 const connectionString = process.env.DATABASE_URL;
 
-console.log(connectionString);
-
 const pool = new Pool({
     connectionString: connectionString,
     ssl: {

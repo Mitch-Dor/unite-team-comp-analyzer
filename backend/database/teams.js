@@ -14,13 +14,13 @@ class Teams {
       try {
         // Properly wait for the database result by wrapping it in a Promise
         const rawTraitData = await new Promise((resolve, reject) => {
-          this.db.all('select * from pokemon_attributes natural join playable_characters', (err, rows) => {
+          this.db.query('select * from pokemon_attributes natural join playable_characters', (err, res) => {
             if (err) {
               console.error('Database error:', err);
               reject(err);
             } else {
-              console.log('Retrieved trait data:', rows.length, 'records');
-              resolve(rows);
+              console.log('Retrieved trait data:', res.rows.length, 'records');
+              resolve(res.rows);
             }
           });
         });
@@ -205,12 +205,12 @@ class Teams {
         ORDER BY pm.match_id
         `;
         
-        this.db.all(sql, (err, rows) => {
+        this.db.query(sql, (err, res) => {
           if (err) {
             console.error("SQL Error:", err.message);
             reject(err);
           } else {
-            resolve(rows);
+            resolve(res.rows);
           }
         });
       });
@@ -220,12 +220,12 @@ class Teams {
     async getAllEvents() {
       return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM events';
-        this.db.all(sql, (err, rows) => { 
+        this.db.query(sql, (err, res) => { 
           if (err) {
             console.error("SQL Error:", err.message);
             reject(err);
           } else {
-            resolve(rows);
+            resolve(res.rows);
           }
         });
       });
@@ -235,12 +235,12 @@ class Teams {
     async getAllTeams() {
       return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM professional_teams';
-        this.db.all(sql, (err, rows) => {
+        this.db.query(sql, (err, res) => {
           if (err) {
             console.error("SQL Error:", err.message);
             reject(err);
           } else {
-            resolve(rows);
+            resolve(res.rows);
           }
         });
       });
@@ -250,12 +250,12 @@ class Teams {
     async getAllPlayers() {
       return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM professional_players';
-        this.db.all(sql, (err, rows) => {
+        this.db.query(sql, (err, res) => {
           if (err) {
             console.error("SQL Error:", err.message);
             reject(err);
           } else {
-            resolve(rows);
+            resolve(res.rows);
           }
         });
       });
@@ -265,12 +265,12 @@ class Teams {
     async getAllCharactersAndMoves() {
       return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM playable_characters natural join pokemon_moves';
-        this.db.all(sql, (err, rows) => {
+        this.db.query(sql, (err, res) => {
           if (err) {
             console.error("SQL Error:", err.message);
             reject(err);
           } else {
-            resolve(rows);
+            resolve(res.rows);
           }
         });
       });
@@ -279,8 +279,8 @@ class Teams {
     // Insert an event
     async insertEvent(name, date, vodUrl) {
       return new Promise((resolve, reject) => { 
-        const sql = 'INSERT INTO events (event_name, event_date, vod_url) VALUES (?, ?, ?)';
-        this.db.run(sql, [name, date, vodUrl], function(err) {
+        const sql = 'INSERT INTO events (event_name, event_date, vod_url) VALUES ($1, $2, $3)';
+        this.db.query(sql, [name, date, vodUrl], function(err) {
           if (err) {
             reject(err);
           } else {
@@ -294,8 +294,8 @@ class Teams {
     // Insert a team
     async insertTeam(name, region) {
       return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO professional_teams (team_name, team_region) VALUES (?, ?)';  
-        this.db.run(sql, [name, region], function(err) {
+        const sql = 'INSERT INTO professional_teams (team_name, team_region) VALUES ($1, $2)';  
+        this.db.query(sql, [name, region], function(err) {
           if (err) {
             reject(err);
           } else {
@@ -309,8 +309,8 @@ class Teams {
     // Insert a player
     async insertPlayer(name) {
       return new Promise((resolve, reject) => { 
-        const sql = 'INSERT INTO professional_players (player_name) VALUES (?)';
-        this.db.run(sql, [name], function(err) {
+        const sql = 'INSERT INTO professional_players (player_name) VALUES ($1)';
+        this.db.query(sql, [name], function(err) {
           if (err) {
             reject(err);
           } else {
@@ -328,8 +328,8 @@ class Teams {
         // Insert the set and its descriptor first
         const event_id = setMatches.event_id;
         const set_descriptor = setMatches.set_descriptor;
-        let sql = 'INSERT INTO professional_sets (event_id, set_descriptor) VALUES (?, ?)';
-        db.run(sql, [event_id, set_descriptor], function(err) {
+        let sql = 'INSERT INTO professional_sets (event_id, set_descriptor) VALUES ($1, $2)';
+        db.query(sql, [event_id, set_descriptor], function(err) {
           if (err) {
             reject(err);
             return;
@@ -348,8 +348,8 @@ class Teams {
             const team1Promise = new Promise((resolve, reject) => {
               const firstPick = team1.isFirstPick === true ? 1 : 0;
               const didWin = draft.winningTeam === 1 ? 1 : 0;
-              sql = 'INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick, did_win) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-              db.run(sql, [team1.pokemon[0], team1.pokemon[1], team1.pokemon[2], team1.pokemon[3], team1.pokemon[4], team1.pokemon_moves[0], team1.pokemon_moves[1], team1.pokemon_moves[2], team1.pokemon_moves[3], team1.pokemon_moves[4], team1.pokemon_moves[5], team1.pokemon_moves[6], team1.pokemon_moves[7], team1.pokemon_moves[8], team1.pokemon_moves[9], firstPick, didWin], function(err) {
+              sql = 'INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick, did_win) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)';
+              db.query(sql, [team1.pokemon[0], team1.pokemon[1], team1.pokemon[2], team1.pokemon[3], team1.pokemon[4], team1.pokemon_moves[0], team1.pokemon_moves[1], team1.pokemon_moves[2], team1.pokemon_moves[3], team1.pokemon_moves[4], team1.pokemon_moves[5], team1.pokemon_moves[6], team1.pokemon_moves[7], team1.pokemon_moves[8], team1.pokemon_moves[9], firstPick, didWin], function(err) {
                 if (err) reject(err);
                 else resolve(this.lastID);
               });
@@ -358,8 +358,8 @@ class Teams {
             const team2Promise = new Promise((resolve, reject) => {
               const firstPick2 = team2.isFirstPick === true ? 1 : 0;
               const didWin2 = draft.winningTeam === 2 ? 1 : 0;
-              sql = 'INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick, did_win) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-              db.run(sql, [team2.pokemon[0], team2.pokemon[1], team2.pokemon[2], team2.pokemon[3], team2.pokemon[4], team2.pokemon_moves[0], team2.pokemon_moves[1], team2.pokemon_moves[2], team2.pokemon_moves[3], team2.pokemon_moves[4], team2.pokemon_moves[5], team2.pokemon_moves[6], team2.pokemon_moves[7], team2.pokemon_moves[8], team2.pokemon_moves[9], firstPick2, didWin2], function(err) {
+              sql = 'INSERT INTO professional_comps (pokemon_1, pokemon_2, pokemon_3, pokemon_4, pokemon_5, pokemon_1_move_1, pokemon_1_move_2, pokemon_2_move_1, pokemon_2_move_2, pokemon_3_move_1, pokemon_3_move_2, pokemon_4_move_1, pokemon_4_move_2, pokemon_5_move_1, pokemon_5_move_2, first_pick, did_win) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)';
+              db.query(sql, [team2.pokemon[0], team2.pokemon[1], team2.pokemon[2], team2.pokemon[3], team2.pokemon[4], team2.pokemon_moves[0], team2.pokemon_moves[1], team2.pokemon_moves[2], team2.pokemon_moves[3], team2.pokemon_moves[4], team2.pokemon_moves[5], team2.pokemon_moves[6], team2.pokemon_moves[7], team2.pokemon_moves[8], team2.pokemon_moves[9], firstPick2, didWin2], function(err) {
                 if (err) reject(err);
                 else resolve(this.lastID);
               });
@@ -379,8 +379,8 @@ class Teams {
                 const team2 = setMatches.matches[i].team2;
                 
                 const matchPromise = new Promise((resolve, reject) => {
-                  sql = 'INSERT INTO professional_matches (set_id, team_1_comp_id, team_2_comp_id, team_1_ban_1, team_1_ban_2, team_2_ban_1, team_2_ban_2, team_1_player_1, team_1_player_2, team_1_player_3, team_1_player_4, team_1_player_5, team_2_player_1, team_2_player_2, team_2_player_3, team_2_player_4, team_2_player_5, team_1_id, team_2_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                  db.run(sql, [set_id, comp1ID, comp2ID, team1.bans[0], team1.bans[1], team2.bans[0], team2.bans[1], team1.players[0], team1.players[1], team1.players[2], team1.players[3], team1.players[4], team2.players[0], team2.players[1], team2.players[2], team2.players[3], team2.players[4], team1.team_id, team2.team_id], function(err) {
+                  sql = 'INSERT INTO professional_matches (set_id, team_1_comp_id, team_2_comp_id, team_1_ban_1, team_1_ban_2, team_2_ban_1, team_2_ban_2, team_1_player_1, team_1_player_2, team_1_player_3, team_1_player_4, team_1_player_5, team_2_player_1, team_2_player_2, team_2_player_3, team_2_player_4, team_2_player_5, team_1_id, team_2_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)';
+                  db.query(sql, [set_id, comp1ID, comp2ID, team1.bans[0], team1.bans[1], team2.bans[0], team2.bans[1], team1.players[0], team1.players[1], team1.players[2], team1.players[3], team1.players[4], team2.players[0], team2.players[1], team2.players[2], team2.players[3], team2.players[4], team1.team_id, team2.team_id], function(err) {
                     if (err) reject(err);
                     else resolve();
                   });
@@ -407,13 +407,13 @@ class Teams {
     async rateComp(comp) {
       // Properly wait for the database result by wrapping it in a Promise
       const rawTraitData = await new Promise((resolve, reject) => {
-        this.db.all('select * from pokemon_attributes natural join playable_characters', (err, rows) => {
+        this.db.query('select * from pokemon_attributes natural join playable_characters', (err, res) => {
           if (err) {
             console.error('Database error:', err);
             reject(err);
           } else {
-            console.log('Retrieved trait data:', rows.length, 'records');
-            resolve(rows);
+            console.log('Retrieved trait data:', res.rows.length, 'records');
+            resolve(res.rows);
           }
         });
       });
@@ -431,11 +431,11 @@ class Teams {
     async getAllTierListEntries() {
       return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM tier_list natural join playable_characters';
-        this.db.all(sql, (err, rows) => {
+        this.db.query(sql, (err, res) => {
           if (err) {
             reject(err);
           } else {
-            resolve(rows);
+            resolve(res.rows);
           }
         });
       });
@@ -445,19 +445,19 @@ class Teams {
     async insertTierListEntry(tierName, pokemonId) {
       // In one transaction, delete the entry containing the pokemon_id, then insert the new entry
       return new Promise((resolve, reject) => {
-        this.db.run('BEGIN TRANSACTION');
-        this.db.all('DELETE FROM tier_list WHERE pokemon_id = ?', [pokemonId], (err) => {
+        this.db.query('BEGIN TRANSACTION');
+        this.db.query('DELETE FROM tier_list WHERE pokemon_id = $1', [pokemonId], (err) => {
           if (err) {
             reject(err);
             return;
           }
           
-          const sql = 'INSERT INTO tier_list (tier_name, pokemon_id) VALUES (?, ?)';
-          this.db.run(sql, [tierName, pokemonId], (err) => {
+          const sql = 'INSERT INTO tier_list (tier_name, pokemon_id) VALUES ($1, $2)';
+          this.db.query(sql, [tierName, pokemonId], (err) => {
             if (err) { 
               reject(err);
             } else {
-              this.db.run('COMMIT', (err) => {
+              this.db.query('COMMIT', (err) => {
                 if (err) {
                   reject(err);
                 } else {
@@ -474,8 +474,8 @@ class Teams {
     async getAllVerifiedUsers() {
       return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM verified_users';
-        this.db.all(sql, (err, rows) => {
-          resolve(rows);
+        this.db.query(sql, (err, res) => {
+          resolve(res.rows);
         });
       });
     }
@@ -484,12 +484,12 @@ class Teams {
     async formatTierList() {
       // Get the tier list data
       const tierListData = await new Promise((resolve, reject) => {
-        this.db.all('SELECT * FROM tier_list', (err, rows) => {
+        this.db.query('SELECT * FROM tier_list', (err, res) => {
           if (err) {
             console.error('Database error:', err);
             reject(err);
           } else {
-            resolve(rows);
+            resolve(res.rows);
           }
         });
       });
