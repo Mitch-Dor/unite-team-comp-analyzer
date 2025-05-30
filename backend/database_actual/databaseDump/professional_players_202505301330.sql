@@ -25,14 +25,14 @@ INSERT INTO professional_players (player_name,other_names) VALUES
 	 ('Kraitos',NULL),
 	 ('zugrug',NULL),
 	 ('Flareons',NULL),
-	 ('Machizzle',NULL),
+	 ('Machizzle','MACH<3LISA'),
 	 ('slash',NULL),
 	 ('BlackCH',NULL),
 	 ('EggN00b',NULL),
 	 ('OGwastaken',NULL),
 	 ('Duskrunner5',NULL);
 INSERT INTO professional_players (player_name,other_names) VALUES
-	 ('Kirtan',NULL),
+	 ('Kirtan','infAme'),
 	 ('Victorin',NULL),
 	 ('bits',NULL),
 	 ('Waterboy',NULL),
@@ -51,7 +51,7 @@ INSERT INTO professional_players (player_name,other_names) VALUES
 	 ('duckyloco',NULL),
 	 ('1',NULL),
 	 ('Fwii',NULL),
-	 ('Russ',NULL),
+	 ('Russs',NULL),
 	 ('Luis7a',NULL);
 INSERT INTO professional_players (player_name,other_names) VALUES
 	 ('Akeelo',NULL),
@@ -62,4 +62,25 @@ INSERT INTO professional_players (player_name,other_names) VALUES
 	 ('vision_',NULL),
 	 ('Kruelty',NULL),
 	 ('ChiefX','Loveu'),
-	 ('rayyw','rhys#1fan<3');
+	 ('rayyw','rhys#1fan<3'),
+	 ('slippyhead','ianwhysp');
+INSERT INTO professional_players (player_name,other_names) VALUES
+	 ('Regretz',NULL),
+	 ('Oogway',NULL),
+	 ('VinDiesel',NULL),
+	 ('kaysuff',NULL),
+	 ('Celestial',NULL),
+	 ('dispenza',NULL),
+	 ('Yardstick',NULL),
+	 ('Luniar',NULL),
+	 ('Stanleyfishy1x',NULL),
+	 ('Split',NULL);
+INSERT INTO professional_players (player_name,other_names) VALUES
+	 ('Brzy',NULL),
+	 ('Gannon',NULL),
+	 ('Kyriaos',NULL),
+	 ('Ryker',NULL),
+	 ('Smuglax',NULL),
+	 ('Liko',NULL),
+	 ('Wailord',NULL),
+	 ('Sentient Scarf',NULL);
