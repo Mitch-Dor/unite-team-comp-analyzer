@@ -2,7 +2,7 @@
   "name": "unite-team-comp-analyzer",
   "scripts": {
     "start": "cd backend && npm start",
-    "heroku-postbuild": "cd frontend && npm install && npm run build && cd ../backend && npm install",
+    "heroku-postbuild": "export NODE_OPTIONS=--max_old_space_size=2048 && cd frontend && npm install && npm run build && cd ../backend && npm install",
     "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
   },
   "dependencies": {
