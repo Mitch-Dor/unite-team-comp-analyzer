@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Set up session - MUST be before passport initialization
 app.use(session({
-  secret: 'your_secret_key',
+  secret: process.env.GOOGLE_CLIENT_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // set to true if using https
