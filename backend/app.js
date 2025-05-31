@@ -21,9 +21,13 @@ const io = socketIo(server, {
   }
 });
 
-// Setup CORS - consider restricting to just your frontend origin for security
+// Setup CORS based on environment
+const corsOrigins = process.env.NODE_ENV === 'production' 
+  ? [process.env.HEROKU_APP_URL || 'https://unite-pro-0d311a8552a3.herokuapp.com'] 
+  : ['http://localhost:3000'];
+
 app.use(cors({
-  origin: 'http://localhost:3000', // Your frontend origin
+  origin: corsOrigins,
   credentials: true // Important for cookies/sessions with OAuth
 }));
 
@@ -110,5 +114,23 @@ require('./routes/teams.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/draftRoom.js')(app, database, io);
 require('./routes/auth.js')(app, database, passport);
 
+// Serve static files from the React frontend app in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
+  
+  // Handle React routing, return all requests to React app
+  app.get('*', function(req, res, next) {
+    // Skip API routes
+    if (req.path.startsWith('/api/') || 
+        req.path.startsWith('/auth/') || 
+        req.path === '/ping') {
+      return next();
+    }
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  });
+}
+
 // Start the server
-server.listen(3001, () => console.log("Backend Started On Port 3001"));
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => console.log(`Backend Started On Port ${PORT}`));

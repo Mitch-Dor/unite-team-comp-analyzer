@@ -1,1 +1,1 @@
-web: cd backend && npm start 
+web: export NODE_ENV=production && cd backend && npm start 
