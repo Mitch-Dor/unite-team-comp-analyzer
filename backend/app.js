@@ -41,7 +41,7 @@ app.use(session({
   secret: process.env.GOOGLE_CLIENT_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // set to true if using https
+  cookie: { secure: process.env.NODE_ENV === 'production' } // secure in production only
 }));
 
 // Initialize passport and session - MUST be after session middleware but before routes
