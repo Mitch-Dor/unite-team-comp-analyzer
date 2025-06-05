@@ -14,6 +14,8 @@ const session = require('express-session');
 
 const app = express();
 const server = http.createServer(app);
+// Set server timeout to 8 seconds
+server.timeout = 8000;
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -95,7 +97,9 @@ if (process.env.NODE_ENV === 'production') {
 
 const proxy = {
   target: process.env.NODE_ENV === 'production' ? process.env.HEROKU_APP_URL : 'http://localhost:3001',
-  changeOrigin: true
+  changeOrigin: true,
+  proxyTimeout: 8000, // 8 second timeout for proxy requests
+  timeout: 8000 // 8 second timeout for proxy connections
 };
 
 // Setup the proxy middleware
