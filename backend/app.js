@@ -124,11 +124,7 @@ if (process.env.NODE_ENV === 'production') {
         req.path === '/ping') {
       return next();
     }
-    const indexPath = path.join(__dirname, 'public', 'index.html');
-    console.log('Attempting to serve index.html from:', indexPath);
-    console.log('Current directory:', __dirname);
-    console.log('Directory contents:', require('fs').readdirSync(path.join(__dirname, 'public')));
-    res.sendFile(indexPath);
+    res.sendFile('index.html', {root: '../frontend/build'});
   });
 }
 
