@@ -83,9 +83,9 @@ passport.deserializeUser(async (id, done) => {
 
 // Serve static files from the React frontend app in production
 if (process.env.NODE_ENV === 'production') {
-  console.log('Serving static files from:', path.join(__dirname, '../public'));
+  console.log('Serving static files from:', path.join(__dirname, 'public'));
   // Serve any static files
-  app.use(express.static(path.join(__dirname, '../public')));
+  app.use(express.static(path.join(__dirname, 'public')));
 }
 
 const proxy = {
@@ -124,10 +124,10 @@ if (process.env.NODE_ENV === 'production') {
         req.path === '/ping') {
       return next();
     }
-    const indexPath = path.join(__dirname, '../public', 'index.html');
+    const indexPath = path.join(__dirname, 'public', 'index.html');
     console.log('Attempting to serve index.html from:', indexPath);
     console.log('Current directory:', __dirname);
-    console.log('Directory contents:', require('fs').readdirSync(path.join(__dirname, '../public')));
+    console.log('Directory contents:', require('fs').readdirSync(path.join(__dirname, 'public')));
     res.sendFile(indexPath);
   });
 }

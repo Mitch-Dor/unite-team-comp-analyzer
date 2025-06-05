@@ -8,11 +8,10 @@ echo "Current directory: $(pwd)"
 npm ci
 npm run build
 
-# Create a directory in the root that will persist
-cd ..
+# Copy build files to backend/public
+cd ../backend
 mkdir -p public
-cp -r frontend/build/* public/
+cp -r ../frontend/build/* public/
 
 # Install backend dependencies
-cd backend
 npm ci
