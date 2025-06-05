@@ -81,6 +81,13 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+// Serve static files from the React frontend app in production
+if (process.env.NODE_ENV === 'production') {
+  console.log('Serving static files from:', path.join(__dirname, 'frontend'));
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, 'frontend')));
+}
+
 const proxy = {
   target: 'http://localhost:3001',
   changeOrigin: true
@@ -89,12 +96,6 @@ const proxy = {
 // Setup the proxy middleware
 app.use('/api', createProxyMiddleware(proxy));
 app.use('/dev', createProxyMiddleware(proxy));
-
-// Basic route
-app.get('/', (req, res) => {
-  console.log("backend hit");
-  res.send('Hello World');
-});
 
 app.get('/ping', (req, res) => {
   console.log("backend hit");
@@ -114,12 +115,8 @@ require('./routes/teams.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/draftRoom.js')(app, database, io);
 require('./routes/auth.js')(app, database, passport);
 
-// Serve static files from the React frontend app in production
+// Handle React routing, return all requests to React app
 if (process.env.NODE_ENV === 'production') {
-  // Serve any static files
-  app.use(express.static(path.join(__dirname, 'frontend')));
-  
-  // Handle React routing, return all requests to React app
   app.get('*', function(req, res, next) {
     // Skip API routes
     if (req.path.startsWith('/api/') || 
@@ -127,6 +124,7 @@ if (process.env.NODE_ENV === 'production') {
         req.path === '/ping') {
       return next();
     }
+    console.log('Serving index.html for path:', req.path);
     res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
   });
 }
