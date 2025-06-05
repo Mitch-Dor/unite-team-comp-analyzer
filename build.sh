@@ -4,9 +4,9 @@ set -o errexit
 
 # Install frontend dependencies and build
 cd frontend
-npm install
+npm ci
 npm run build
 
 # Install backend dependencies
 cd ../backend
-npm install 
+npm ci 
