@@ -96,6 +96,10 @@ ls -la
 # remote: drwx------  2 u19767 dyno   4096 Jun  5 01:06 routes
 # remote: drwx------  2 u19767 dyno   4096 Jun  5 01:06 socket
 
+# Remove existing frontend directory if it exists
+rm -rf frontend
+
+# Create fresh frontend directory
 mkdir -p frontend
 echo "After creating frontend directory:"
 ls -la
@@ -116,6 +120,7 @@ ls -la
 # remote: drwx------  2 u19767 dyno   4096 Jun  5 01:06 socket
 
 # Copy frontend build files to backend/frontend
+echo "Copying files from $(pwd)/../frontend/build to $(pwd)/frontend"
 cp -r ../frontend/build/* frontend/
 echo "After copying - Frontend directory contents:"
 ls -la frontend
@@ -130,6 +135,14 @@ ls -la frontend
 # remote: -rw------- 1 u19767 dyno 9664 Jun  5 01:07 logo512.png
 # remote: -rw------- 1 u19767 dyno  492 Jun  5 01:07 manifest.json
 # remote: -rw------- 1 u19767 dyno   67 Jun  5 01:07 robots.txt
+
+# Verify index.html exists
+if [ -f "frontend/index.html" ]; then
+    echo "index.html exists in frontend directory"
+else
+    echo "ERROR: index.html not found in frontend directory"
+    exit 1
+fi
 
 # Install backend dependencies
 npm ci 
