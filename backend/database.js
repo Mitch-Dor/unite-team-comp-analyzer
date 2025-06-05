@@ -35,7 +35,19 @@ const pool = new Pool({
     connectionString: connectionString,
     ssl: {
         rejectUnauthorized: false // Required for some cloud PostgreSQL providers
-    }
+    },
+    // Add connection pool settings
+    max: 20, // Maximum number of clients in the pool
+    idleTimeoutMillis: 30000, // How long a client is allowed to remain idle before being closed
+    connectionTimeoutMillis: 2000, // How long to wait for a connection
+    maxUses: 7500, // Close a connection after it has been used this many times
+    // Add statement timeout to prevent long-running queries
+    statement_timeout: 30000 // 30 seconds
+});
+
+// Add error handling for the pool
+pool.on('error', (err, client) => {
+    console.error('Unexpected error on idle client', err);
 });
 
 // Test the connection

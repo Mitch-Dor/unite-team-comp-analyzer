@@ -120,14 +120,5 @@ require('./routes/teams.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/draftRoom.js')(app, database, io);
 require('./routes/auth.js')(app, database, passport);
 
-
-app.get('*', function(req, res, next) {
-  // Skip API routes
-  if (req.path.startsWith('/api/') || 
-      req.path.startsWith('/auth/') || 
-      req.path === '/ping') {
-    return next();
-  }
-  // Serve the frontend build
-  res.sendFile('index.html', {root: '../frontend/build'});
-});
+// Serve the frontend build
+app.get('*', (_, res) => res.sendFile('index.html', {root: '../frontend/build'}));
