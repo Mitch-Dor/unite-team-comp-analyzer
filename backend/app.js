@@ -124,6 +124,7 @@ if (process.env.NODE_ENV === 'production') {
         req.path === '/ping') {
       return next();
     }
+    console.log('Serving index.html for path:', req.path);
     const indexPath = path.join(__dirname, '../frontend/build', 'index.html');
     console.log('Attempting to serve index.html from:', indexPath);
     console.log('Current directory:', __dirname);
