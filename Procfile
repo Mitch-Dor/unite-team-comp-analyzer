@@ -1,2 +1,2 @@
 web: cd backend && npm start
-release: cd frontend && npm install && npm run build && cd ../backend && npm install 
+release: chmod +x build.sh && ./build.sh 
