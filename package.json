@@ -2,10 +2,11 @@
   "name": "unite-team-comp-analyzer",
   "scripts": {
     "start": "cd backend && npm start",
-    "heroku-postbuild": "export NODE_OPTIONS=--max_old_space_size=2048 && cd frontend && npm install && npm run build && cd ../backend && npm install",
+    "heroku-postbuild": "cross-env NODE_OPTIONS=--max_old_space_size=2048 cd frontend && npm install && npm run build && cd ../backend && npm install",
     "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^4.5.1",
     "bad-words": "^4.0.0",
     "pg": "^8.16.0"
   },
