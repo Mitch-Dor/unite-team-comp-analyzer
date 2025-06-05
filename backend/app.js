@@ -90,30 +90,11 @@ const proxy = {
 app.use('/api', createProxyMiddleware(proxy));
 app.use('/dev', createProxyMiddleware(proxy));
 
-// Serve static files from the React frontend app in production
-if (process.env.NODE_ENV === 'production') {
-  // Serve any static files
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
-  
-  // Handle React routing, return all requests to React app
-  app.get('*', function(req, res, next) {
-    // Skip API routes
-    if (req.path.startsWith('/api/') || 
-        req.path.startsWith('/auth/') || 
-        req.path === '/ping') {
-      return next();
-    }
-    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
-  });
-}
-
-// Basic route - only used in development
-if (process.env.NODE_ENV !== 'production') {
-  app.get('/', (req, res) => {
-    console.log("backend hit");
-    res.send('Hello World');
-  });
-}
+// Basic route
+app.get('/', (req, res) => {
+  console.log("backend hit");
+  res.send('Hello World');
+});
 
 app.get('/ping', (req, res) => {
   console.log("backend hit");
@@ -132,6 +113,23 @@ require('./routes/characters.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/teams.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/draftRoom.js')(app, database, io);
 require('./routes/auth.js')(app, database, passport);
+
+// Serve static files from the React frontend app in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  
+  // Handle React routing, return all requests to React app
+  app.get('*', function(req, res, next) {
+    // Skip API routes
+    if (req.path.startsWith('/api/') || 
+        req.path.startsWith('/auth/') || 
+        req.path === '/ping') {
+      return next();
+    }
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+  });
+}
 
 // Start the server
 const PORT = process.env.PORT || 3001;
