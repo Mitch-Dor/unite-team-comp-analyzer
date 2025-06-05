@@ -117,7 +117,7 @@ require('./routes/auth.js')(app, database, passport);
 // Serve static files from the React frontend app in production
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
-  app.use(express.static(path.join(__dirname, 'frontend/dist')));
+  app.use(express.static(path.join(__dirname, 'frontend')));
   
   // Handle React routing, return all requests to React app
   app.get('*', function(req, res, next) {
@@ -127,7 +127,7 @@ if (process.env.NODE_ENV === 'production') {
         req.path === '/ping') {
       return next();
     }
-    res.sendFile(path.join(__dirname, 'frontend/dist', 'index.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
   });
 }
 
