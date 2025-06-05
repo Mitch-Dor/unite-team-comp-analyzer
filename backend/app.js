@@ -94,7 +94,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const proxy = {
-  target: 'http://localhost:3001',
+  target: process.env.NODE_ENV === 'production' ? process.env.HEROKU_APP_URL : 'http://localhost:3001',
   changeOrigin: true
 };
 
