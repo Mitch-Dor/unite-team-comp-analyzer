@@ -2,7 +2,7 @@
 // Also just makes it easier to prevent typos and just change stuff as needed.
 
 // Pokemon
-const NAME_CONSTANTS = {
+export const NAME_CONSTANTS = {
     CINDERACE_NAME: 'Cinderace',
     GARCHOMP_NAME: 'Garchomp',
     GENGAR_NAME: 'Gengar',
@@ -79,7 +79,7 @@ const NAME_CONSTANTS = {
     SUICUNE_NAME: 'Suicune',
 }
 
-const MOVE_CONSTANTS = {
+export const MOVE_CONSTANTS = {
     // Moves
     CINDERACE_MOVE_1A_PYROBALL: 'Pyro Ball',
     CINDERACE_MOVE_1B_BLAZEKICK: 'Blaze Kick',
@@ -369,7 +369,7 @@ const MOVE_CONSTANTS = {
     SUICUNE_MOVE_1A_ICYWIND: 'Icy Wind',
 }
 
-const CLASS_CONSTANTS = {
+export const CLASS_CONSTANTS = {
     // Roles
     ATTACKER: 'Attacker',
     DEFENDER: 'Defender',
@@ -378,7 +378,7 @@ const CLASS_CONSTANTS = {
     SUPPORTER: 'Supporter',
 }
 
-const ATTRIBUTE_CONSTANTS = {
+export const ATTRIBUTE_CONSTANTS = {
     //// Attributes
     //// Split into good and bad attributes. Try to mimic the good attributes of known comps and minimize the bad attributes or cancel out the bad attributes.
     // General Attributes
@@ -417,17 +417,9 @@ const ATTRIBUTE_CONSTANTS = {
     FAST_RIP: 'Fast Rip',
 }   
 
-const constants = {
+export const constants = {
     ...NAME_CONSTANTS,
     ...MOVE_CONSTANTS,
     ...CLASS_CONSTANTS,
     ...ATTRIBUTE_CONSTANTS
-};
-
-module.exports = {
-    constants,
-    NAME_CONSTANTS,
-    MOVE_CONSTANTS,
-    CLASS_CONSTANTS,
-    ATTRIBUTE_CONSTANTS
 };

@@ -1,4 +1,4 @@
-const routes = {
+export const routes = {
     GET_ALL_DRAFT_INFO: '/GETallDraftInfo',
     GET_ALL_ATTRIBUTES: '/GETallCharacterAttributes',
     GET_SINGLE_ATTRIBUTES: '/GETsingleCharacterAttributes',
@@ -23,5 +23,3 @@ const routes = {
     GET_IS_VERIFIED_USER: '/GETisVerifiedUser',
     GET_IS_ADMIN: '/GETisAdmin'
 };
-
-module.exports = routes;

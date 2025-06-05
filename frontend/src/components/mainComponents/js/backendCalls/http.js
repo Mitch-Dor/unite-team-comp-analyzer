@@ -1,5 +1,5 @@
-const constants = require('../../../../common/naming_constants.js');
-const routes = require('../../../../common/route_constants.js');
+import { constants } from '../../../../common/naming_constants.js';
+import { routes } from '../../../../common/route_constants.js';
 
 // Function to fetch all character names and classes
 export async function fetchCharacterDraftInfo() {
