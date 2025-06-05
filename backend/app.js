@@ -21,6 +21,11 @@ const io = socketIo(server, {
   }
 });
 
+// Start the server
+const PORT = process.env.PORT || 3001;
+app.use(express.static(path.resolve(__dirname, '../frontend/build')));
+server.listen(PORT, () => console.log(`Backend Started On Port ${PORT}`));
+
 // Setup CORS based on environment
 const corsOrigins = process.env.NODE_ENV === 'production' 
   ? [process.env.HEROKU_APP_URL || 'https://unite-pro-0d311a8552a3.herokuapp.com'] 
@@ -114,10 +119,6 @@ require('./routes/characters.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/teams.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/draftRoom.js')(app, database, io);
 require('./routes/auth.js')(app, database, passport);
-
-// Start the server
-const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => console.log(`Backend Started On Port ${PORT}`));
 
 // Serve the frontend build
 app.get('*', (_, res) => res.sendFile('index.html', {root: '../frontend/build'}));
