@@ -21,6 +21,8 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'build', // Same output directory as CRA
+    outDir: path.resolve(__dirname, 'build'),
+    emptyOutDir: true,
+    sourcemap: false,
   },
 });
