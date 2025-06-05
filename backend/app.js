@@ -115,19 +115,9 @@ require('./routes/teams.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/draftRoom.js')(app, database, io);
 require('./routes/auth.js')(app, database, passport);
 
-// Handle React routing, return all requests to React app
-if (process.env.NODE_ENV === 'production') {
-  app.get('*', function(req, res, next) {
-    // Skip API routes
-    if (req.path.startsWith('/api/') || 
-        req.path.startsWith('/auth/') || 
-        req.path === '/ping') {
-      return next();
-    }
-    res.sendFile('index.html', {root: '../frontend/build'});
-  });
-}
-
 // Start the server
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => console.log(`Backend Started On Port ${PORT}`));
+
+// Serve the frontend build
+app.get('*', (_, res) => res.sendFile('index.html', {root: '../frontend/build'}));
