@@ -49,6 +49,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "heroku-postbuild": "cd frontend && npm ci && npm run build && cd ../backend && npm ci --production"
+  }
 }
