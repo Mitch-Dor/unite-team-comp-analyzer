@@ -1,9 +1,8 @@
 # How to Run
 
 ```
-npm install react-scripts --save
-[FROM frontend folder] npm start
-[FROM backed folder] npm start
+[FROM frontend folder] `npm install` `npm start`
+[FROM backed folder] `npm install` `npm start`
 ```
 
 ## Features
@@ -18,3 +17,10 @@ npm install react-scripts --save
 
 ### Additional Aspects
 - Google OAuth implemented to let certain known users change the database.
+
+
+# How To Put On Heroku
+
+- Push all edits to git.
+- `git push heroku master` to see edits on Heroku and build the website.
+- Make sure environment variables are correct on Heroku

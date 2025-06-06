@@ -1,7 +1,6 @@
-module.exports = function (app, database, passport) {
-    const frontendUrl = process.env.NODE_ENV === 'production' 
-        ? (process.env.HEROKU_APP_URL || 'https://unite-pro-0d311a8552a3.herokuapp.com')
-        : 'http://localhost:3000';
+module.exports = function (app, database, passport, node_env, app_url) {
+    const frontendUrl = node_env === 'production' 
+        ? app_url : 'http://localhost:3000';
 
     app.get('/auth/google', passport.authenticate('google', {
         scope: ['profile', 'email']
