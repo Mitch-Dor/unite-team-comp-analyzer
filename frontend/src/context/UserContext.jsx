@@ -1,5 +1,5 @@
 // Import for getting the current user through Google OAuth and passing that information as context to the app
-
+import { routes } from '../common/route_constants.js';
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
 const UserContext = createContext();
@@ -11,7 +11,7 @@ export function UserProvider({ children }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('/api/current_user', {
+        const response = await fetch(routes.CURRENT_USER, {
           method: 'GET',
           credentials: 'include',
           headers: {
