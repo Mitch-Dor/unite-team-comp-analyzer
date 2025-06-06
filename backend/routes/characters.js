@@ -49,6 +49,7 @@ module.exports = function (app, database, adminGoogleId) {
     });
 
     app.put('/GETcharacterStats', (req, res) => {
+        console.log("Routes");
         database.characters.getCharacterStats(req.body).then(data => {
             res.json(data);
         })

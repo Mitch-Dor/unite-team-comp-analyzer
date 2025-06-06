@@ -11,8 +11,12 @@ export function UserProvider({ children }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('/current_user', {
-          credentials: 'include'
+        const response = await fetch('/api/current_user', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          }
         });
         const userData = await response.json();
         setUser(userData);

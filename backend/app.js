@@ -14,8 +14,6 @@ const session = require('express-session');
 
 const app = express();
 const server = http.createServer(app);
-// Set server timeout to 8 seconds
-server.timeout = 8000;
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -95,25 +93,14 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'public')));
 }
 
-const proxy = {
-  target: process.env.NODE_ENV === 'production' ? process.env.HEROKU_APP_URL : 'http://localhost:3001',
-  changeOrigin: true,
-  proxyTimeout: 8000, // 8 second timeout for proxy requests
-  timeout: 8000 // 8 second timeout for proxy connections
-};
-
-// Setup the proxy middleware
-app.use('/api', createProxyMiddleware(proxy));
-app.use('/dev', createProxyMiddleware(proxy));
-
 app.get('/ping', (req, res) => {
   console.log("backend hit");
   res.json({message: 'Pong'});
 });
 
-app.use(express.static(
-  path.resolve(__dirname, "public")
-));
+// app.use(express.static(
+//   path.resolve(__dirname, "public")
+// ));
 
 // Socket.IO connection handler
 require('./socket/socketManager')(io);
@@ -125,4 +112,6 @@ require('./routes/draftRoom.js')(app, database, io);
 require('./routes/auth.js')(app, database, passport);
 
 // Serve the frontend build
-app.get('*', (_, res) => res.sendFile('index.html', {root: '../frontend/build'}));
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (_, res) => res.sendFile('index.html', {root: '../frontend/build'}));
+}
