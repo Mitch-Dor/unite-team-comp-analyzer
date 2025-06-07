@@ -29,5 +29,7 @@ export const routes = {
     POST_TIER_LIST_ENTRY: `${getBaseUrl()}/POSTtierListEntry`,
     GET_IS_VERIFIED_USER: `${getBaseUrl()}/GETisVerifiedUser`,
     GET_IS_ADMIN: `${getBaseUrl()}/GETisAdmin`,
-    CURRENT_USER: `${getBaseUrl()}/current_user`
+    CURRENT_USER: `${getBaseUrl()}/current_user`,
+    LOGOUT: `${getBaseUrl()}/logout`,
+    SIGN_IN: `${getBaseUrl()}/auth/google`
 };
