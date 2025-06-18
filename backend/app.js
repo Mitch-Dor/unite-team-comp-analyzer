@@ -109,7 +109,7 @@ require('./socket/socketManager')(io);
 require('./routes/characters.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/teams.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/draftRoom.js')(app, database, io);
-require('./routes/auth.js')(app, database, passport, process.env.NODE_ENV);
+require('./routes/auth.js')(app, database, passport, process.env.NODE_ENV, process.env.HEROKU_APP_URL);
 
 // Serve the frontend build
 if (process.env.NODE_ENV === 'production') {

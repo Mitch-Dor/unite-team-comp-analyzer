@@ -1,6 +1,6 @@
-module.exports = function (app, database, passport, node_env) {
+module.exports = function (app, database, passport, node_env, app_url) {
     const frontendUrl = node_env === 'production' 
-        ? '' : 'http://localhost:3000';
+        ? app_url : 'http://localhost:3000';
 
     app.get('/auth/google', passport.authenticate('google', {
         scope: ['profile', 'email']
