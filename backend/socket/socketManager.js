@@ -7,24 +7,24 @@ module.exports = function(io) {
   const rooms = new Map();
   
   io.on('connection', (socket) => {
-    console.log('New client connected:', socket.id);
+    // console.log('New client connected:', socket.id);
     
     // Handle room creation
     socket.on('create-room', (roomId) => {
-      console.log(`Room ${roomId} created by ${socket.id}`);
+      // console.log(`Room ${roomId} created by ${socket.id}`);
       
       // Initialize the room if it doesn't exist
       if (!rooms.has(roomId)) {
         rooms.set(roomId, new Set());
       }
 
-      console.log("1");
+      // console.log("1");
       
       // Join the room
       socket.join(roomId);
       rooms.get(roomId).add(socket.id);
 
-      console.log("2");
+      // console.log("2");
       
       // Notify the client that room was created successfully
       socket.emit('room-created', { roomId, creatorId: socket.id });
@@ -32,7 +32,7 @@ module.exports = function(io) {
     
     // Handle joining a room
     socket.on('join-room', (roomId) => {
-      console.log(`User ${socket.id} attempting to join room ${roomId}`);
+      // console.log(`User ${socket.id} attempting to join room ${roomId}`);
       
       // Check if the room exists
       if (!rooms.has(roomId)) {
@@ -69,18 +69,18 @@ module.exports = function(io) {
     
     // WebRTC Signaling
     socket.on('signal', ({ roomId, to, signal }) => {
-      console.log(`Signal from ${socket.id} in room ${roomId}`);
+      // console.log(`Signal from ${socket.id} in room ${roomId}`);
       
       // If 'to' is specified, send the signal to that specific client
       if (to) {
-        console.log(`Sending signal to specific client: ${to}`);
+        // console.log(`Sending signal to specific client: ${to}`);
         io.to(to).emit('signal', {
           from: socket.id,
           signal
         });
       } else {
         // Broadcast to all other clients in the room
-        console.log(`Broadcasting signal to all clients in room ${roomId} except sender`);
+        // console.log(`Broadcasting signal to all clients in room ${roomId} except sender`);
         socket.to(roomId).emit('signal', {
           from: socket.id,
           signal
@@ -100,7 +100,7 @@ module.exports = function(io) {
     
     // Handle disconnection
     socket.on('disconnect', () => {
-      console.log('Client disconnected:', socket.id);
+      // console.log('Client disconnected:', socket.id);
       
       // Find and remove user from all rooms they were in
       for (const [roomId, participants] of rooms.entries()) {
@@ -113,7 +113,7 @@ module.exports = function(io) {
           // If room is empty, remove it
           if (participants.size === 0) {
             rooms.delete(roomId);
-            console.log(`Room ${roomId} removed as it's empty`);
+            // console.log(`Room ${roomId} removed as it's empty`);
           }
         }
       }

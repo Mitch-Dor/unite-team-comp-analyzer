@@ -168,7 +168,6 @@ export async function insertEvent(name, date, vodUrl, userGoogleId) {
         })
     });
     const eventDataJson = await eventData.json();
-    console.log("Event ID: ", eventDataJson.id);
     return eventDataJson;
 }
 
@@ -265,7 +264,6 @@ export async function getRoomInfo(roomId) {
 
 // Function to fetch character stats based on query context
 export async function fetchCharacterStats(queryContext) {
-    console.log("Stats");
     const statsData = await fetch(routes.GET_CHARACTER_STATS, {
         method: 'PUT',
         credentials: 'include',
@@ -275,7 +273,6 @@ export async function fetchCharacterStats(queryContext) {
         body: JSON.stringify(queryContext)
     });
     const statsDataJson = await statsData.json();
-    console.log(statsDataJson);
     return statsDataJson;
 }
 

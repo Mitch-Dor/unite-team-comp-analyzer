@@ -8,7 +8,7 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
 
     useEffect(() => {
         if (joiningOrCreating === "create") {
-            console.log("Creating room");
+            // console.log("Creating room");
             createRoom();
         } 
     }, [joiningOrCreating]);

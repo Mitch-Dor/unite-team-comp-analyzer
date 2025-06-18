@@ -19,7 +19,7 @@ class Teams {
               console.error('Database error:', err);
               reject(err);
             } else {
-              console.log('Retrieved trait data:', res.rows.length, 'records');
+              // console.log('Retrieved trait data:', res.rows.length, 'records');
               resolve(res.rows);
             }
           });
@@ -412,7 +412,7 @@ class Teams {
             console.error('Database error:', err);
             reject(err);
           } else {
-            console.log('Retrieved trait data:', res.rows.length, 'records');
+            // console.log('Retrieved trait data:', res.rows.length, 'records');
             resolve(res.rows);
           }
         });

@@ -54,13 +54,13 @@ function MultiDraft() {
     // Update the ref whenever targetPokemon changes
     useEffect(() => {
         targetPokemonRef.current = targetPokemon;
-        console.log('targetPokemon changed:', targetPokemon);
+        // console.log('targetPokemon changed:', targetPokemon);
         // Send a message to the peer if it is the current user's turn to pick so we don't go in circles
-        console.log('stateRef.current:', stateRef.current);
-        console.log('isHostRef.current:', isHostRef.current);
+        // console.log('stateRef.current:', stateRef.current);
+        // console.log('isHostRef.current:', isHostRef.current);
         if (checkIsTurn()){
             if (targetPokemon !== null && isConnected && connectionRef.current && connectionRef.current.open) {
-                console.log('sending pokemon-selected to peer');
+                // console.log('sending pokemon-selected to peer');
                 sendDraftAction('pokemon-selected', { pokemon: targetPokemon.pokemon_name });
             }
         }
@@ -72,7 +72,7 @@ function MultiDraft() {
     }, []);
 
     useEffect(() => {
-        console.log('isHost1:', isHostRef.current);
+        // console.log('isHost1:', isHostRef.current);
     }, [isHostRef.current]);
 
     // Initialize socket connection
@@ -82,18 +82,18 @@ function MultiDraft() {
 
         // Socket event listeners
         newSocket.on('connect', () => {
-            console.log('Connected to socket server with ID:', newSocket.id);
+            // console.log('Connected to socket server with ID:', newSocket.id);
         });
 
         newSocket.on('room-created', (data) => {
-            console.log('Room created:', data);
+            // console.log('Room created:', data);
             roomIdRef.current = data.roomId;
             isHostRef.current = true;
             setConnectionStatus('Waiting for opponent...');
         });
 
         newSocket.on('user-joined', (data) => {
-            console.log('User joined:', data);
+            // console.log('User joined:', data);
             if (isHostRef.current) {
                 // If we're the host and someone joins, initiate the WebRTC connection
                 initiatePeerConnection();
@@ -102,12 +102,12 @@ function MultiDraft() {
         });
 
         newSocket.on('room-ready', (data) => {
-            console.log('Room is ready:', data);
+            // console.log('Room is ready:', data);
             setConnectionStatus('Room ready - Starting draft...');
         });
 
         newSocket.on('user-left', (data) => {
-            console.log('User left:', data);
+            // console.log('User left:', data);
             setConnectionStatus('Opponent disconnected');
             // Clean up peer connection if opponent leaves
             if (connectionRef.current) {
@@ -140,7 +140,7 @@ function MultiDraft() {
 
     // PeerJS connection handlers
     const initiatePeerConnection = () => {
-        console.log('Initiating PeerJS connection as host');
+        // console.log('Initiating PeerJS connection as host');
         // Create a new peer with random ID
         const peerId = 'host-' + Math.random().toString(36).substring(2, 8);
         
@@ -148,13 +148,13 @@ function MultiDraft() {
             const newPeer = new Peer(peerId);
             
             newPeer.on('open', (id) => {
-                console.log('Host PeerJS connection opened with ID:', id);
+                // console.log('Host PeerJS connection opened with ID:', id);
                 setIsConnected(true);
                 isConnectedRef.current = true;
                 
                 // Wait for incoming connection
                 newPeer.on('connection', (conn) => {
-                    console.log('Host received connection from peer:', conn);
+                    // console.log('Host received connection from peer:', conn);
                     
                     setupConnectionEvents(conn);
                     setConnection(conn);
@@ -163,7 +163,7 @@ function MultiDraft() {
                 
                 // Inform guests of the host's peer ID through the socket
                 if (socketRef.current && roomIdRef.current) {
-                    console.log('Sending peer ID to guests via socket:', id);
+                    // console.log('Sending peer ID to guests via socket:', id);
                     socketRef.current.emit('signal', {
                         roomId: roomIdRef.current,
                         to: null,
@@ -190,20 +190,20 @@ function MultiDraft() {
     useEffect(() => {
         if (socketRef.current) {
             socketRef.current.on('signal', (data) => {
-                console.log('Received signal:', data);
+                // console.log('Received signal:', data);
                 
                 // Handle PeerJS signaling
                 if (data.signal && data.signal.type === 'peer-id') {
-                    console.log('Received peer ID:', data.signal.peerId);
+                    // console.log('Received peer ID:', data.signal.peerId);
                     if (!isHostRef.current) {
-                        console.log('Client will connect to host with peer ID:', data.signal.peerId);
+                        // console.log('Client will connect to host with peer ID:', data.signal.peerId);
                         // If we're not the host, connect to the host using their peer ID
                         joinPeerConnection(data.signal.peerId);
                     } else {
-                        console.log('Host received own peer ID signal, ignoring');
+                        // console.log('Host received own peer ID signal, ignoring');
                     }
                 } else {
-                    console.log('Received non-peer-id signal:', data.signal);
+                    // console.log('Received non-peer-id signal:', data.signal);
                 }
             });
         }
@@ -217,20 +217,20 @@ function MultiDraft() {
 
     // Modify joinPeerConnection to have better debug logs and error handling
     const joinPeerConnection = (hostPeerId) => {
-        console.log('Joining PeerJS connection as guest to host with ID:', hostPeerId);
+        // console.log('Joining PeerJS connection as guest to host with ID:', hostPeerId);
         // Create a new peer with random ID
         const peerId = 'guest-' + Math.random().toString(36).substring(2, 8);
         const newPeer = new Peer(peerId);
         
         newPeer.on('open', (id) => {
-            console.log('Guest PeerJS connection opened with ID:', id);
+            // console.log('Guest PeerJS connection opened with ID:', id);
             
             // Connect to the host
             try {
-                console.log('Attempting to connect to host:', hostPeerId);
+                // console.log('Attempting to connect to host:', hostPeerId);
                 const conn = newPeer.connect(hostPeerId);
                 
-                console.log('Created connection object:', conn);
+                // console.log('Created connection object:', conn);
                 
                 // Important: Need to wait for 'open' event on the conn object
                 // The handler is set up in setupConnectionEvents
@@ -257,10 +257,10 @@ function MultiDraft() {
             return;
         }
         
-        console.log('Setting up connection events for connection:', conn);
+        // console.log('Setting up connection events for connection:', conn);
         
         conn.on('open', () => {
-            console.log('Connection to peer successfully established!');
+            // console.log('Connection to peer successfully established!');
             setIsConnected(true);
             isConnectedRef.current = true;
             setConnectionStatus('Connected to peer!');
@@ -284,7 +284,7 @@ function MultiDraft() {
                         user: user
                     });
                 }
-                console.log('Sent test message over peer connection');
+                // console.log('Sent test message over peer connection');
             } catch (err) {
                 console.error('Error sending test message:', err);
             }
@@ -292,7 +292,7 @@ function MultiDraft() {
         
         // Basic close and error handlers that don't depend on Pokemon data
         conn.on('close', () => {
-            console.log('Connection to peer closed');
+            // console.log('Connection to peer closed');
             setIsConnected(false);
             isConnectedRef.current = false;
             setConnectionStatus('Connection closed');
@@ -310,26 +310,26 @@ function MultiDraft() {
     // Set up the data listener once pokemonList is loaded so it has access to the loaded Pokemon list
     useEffect(() => {
         if (!loading && pokemonList.length > 0 && connectionRef.current) {
-            console.log('Setting up data listener now that Pokemon list is loaded');
+            // console.log('Setting up data listener now that Pokemon list is loaded');
             
             // Remove any existing data listener to avoid duplicates
             connectionRef.current.off('data');
             
             // Set up new data listener with access to the loaded Pokemon list
             connectionRef.current.on('data', (data) => {
-                console.log('Received message from peer:', data);
+                // console.log('Received message from peer:', data);
                 
                 // Handle different types of messages
                 if (data.type === 'draftAction') {
                     handleRemoteDraftAction(data.action, data.data);
                 } else if (data.type === 'targetPokemon') {
                     // Only update targetPokemon if it's different to avoid infinite loops
-                    console.log('targetPokemon:', targetPokemon);
-                    console.log('data.pokemon:', data.pokemon);
+                    // console.log('targetPokemon:', targetPokemon);
+                    // console.log('data.pokemon:', data.pokemon);
                     if (JSON.stringify(data.pokemon) !== JSON.stringify(targetPokemon?.pokemon_name) && data.pokemon !== null) {
-                        console.log('Received targetPokemon from peer:', data.pokemon);
+                        // console.log('Received targetPokemon from peer:', data.pokemon);
                         const fullPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === data.pokemon);
-                        console.log('fullPokemon:', fullPokemon);
+                        // console.log('fullPokemon:', fullPokemon);
                         setTargetPokemon(fullPokemon);
                     } else if (data.pokemon.pokemon_name === 'none'){
                         // Build the none pokemon (for a skipped ban)
@@ -337,15 +337,15 @@ function MultiDraft() {
                         setTargetPokemon(none);
                     }
                 } else if (data.type === 'connectionTest') {
-                    console.log('Connection test received:', data.message);
+                    // console.log('Connection test received:', data.message);
                 } else if (data.type === 'settings') {
-                    console.log('Received settings from peer:', data.settings);
+                    // console.log('Received settings from peer:', data.settings);
                     settingsRef.current = data.settings;
                     setSettings(data.settings); // This will trigger a re-render
                 } else if (data.type === 'draftStarted') {
                     setDraftStarted(true);
                 } else if (data.type === 'userInfo') {
-                    console.log('Received user info from peer:', data.user);
+                    // console.log('Received user info from peer:', data.user);
                     setOpposingUser(data.user);
                 } else if (data.type === 'chatMessage') {
                     setChat(prevChat => [...prevChat, data.message]);
@@ -356,29 +356,29 @@ function MultiDraft() {
 
     // Handle draft actions received from peer - modified to use current state
     const handleRemoteDraftAction = (action, data) => {
-        console.log('Handling remote draft action:', action, data);
+        // console.log('Handling remote draft action:', action, data);
         
         // "pokemon-selected" or "lock-in"
-        console.log(action);
-        console.log(data);
+        // console.log(action);
+        // console.log(data);
         switch (action) {
             case 'pokemon-selected':
-                console.log('pokemon-selected');
-                console.log(pokemonList);
+                // console.log('pokemon-selected');
+                // console.log(pokemonList);
                 let fullPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === data.pokemon);
                 if (!fullPokemon && data.pokemon === 'none'){
                     const none = {pokemon_name: 'none', pokemon_class: 'none'};
                     fullPokemon = none;
                 }
-                console.log('fullPokemon:', fullPokemon);
+                // console.log('fullPokemon:', fullPokemon);
                 setTargetPokemon(fullPokemon);
                 break;
             case 'lock-in':
-                console.log('lock-in');
+                // console.log('lock-in');
                 lockIn();
                 break;
             case 'restartDraft':
-                console.log('restartDraft');
+                // console.log('restartDraft');
                 draftAgain(false);
                 break;
             default:
@@ -395,7 +395,7 @@ function MultiDraft() {
                 data
             };
             connectionRef.current.send(message);
-            console.log('Sent draft action:', action, data);
+            // console.log('Sent draft action:', action, data);
         } else {
             console.warn('Cannot send draft action - connection not open');
         }
@@ -464,7 +464,7 @@ function MultiDraft() {
                     ranOutOfTime();
                 } else {
                     // The other player ran out of time, wait for their pick to be sent
-                    console.log('Waiting for other player to pick');
+                    // console.log('Waiting for other player to pick');
                 }
             }
         }
@@ -517,10 +517,10 @@ function MultiDraft() {
     }
 
     function lockIn(){
-        console.log('targetPokemonRef:', targetPokemonRef.current);
+        // console.log('targetPokemonRef:', targetPokemonRef.current);
         if(targetPokemonRef.current !== null){
             // Send lock-in action to peer if connected
-            console.log("try to lock in");
+            // console.log("try to lock in");
             
             // First check if it's appropriate for this user to make a lock-in
             const isTurn = checkIsTurn();
@@ -528,7 +528,7 @@ function MultiDraft() {
             // Send lock-in to peer when it's our turn
             if (isConnected && connectionRef.current && connectionRef.current.open) {
                 if (isTurn) {
-                    console.log('sending lock-in to peer');
+                    // console.log('sending lock-in to peer');
                     sendDraftAction('lock-in', { pokemon: targetPokemonRef.current.pokemon_name });
                 }
             }
@@ -564,7 +564,7 @@ function MultiDraft() {
     }
 
     function updatePokemonStatus(pokemon, newStatus) {
-        console.log("updatePokemonStatus:", pokemon, newStatus);
+        // console.log("updatePokemonStatus:", pokemon, newStatus);
         switch(newStatus) {
             case 'ban1':
                 updateTeam1Bans(prevBans => [...prevBans, pokemon]);
@@ -579,14 +579,14 @@ function MultiDraft() {
                 updateTeam2Picks(prevPicks => [...prevPicks, pokemon]);
                 break;
         }
-        console.log('stateRef.current:', stateRef.current);
+        // console.log('stateRef.current:', stateRef.current);
         // Move the draft to the next state
         const currentIndex = draftProgression.indexOf(stateRef.current);
-        console.log('currentIndex:', currentIndex);
-        console.log('draftProgression:', draftProgression);
+        // console.log('currentIndex:', currentIndex);
+        // console.log('draftProgression:', draftProgression);
         if (currentIndex >= 0 && currentIndex < draftProgression.length - 1) {
             const nextState = draftProgression[currentIndex + 1];
-            console.log('nextState:', nextState);
+            // console.log('nextState:', nextState);
             stateRef.current = nextState;
         }
         // Reset the targetPokemon
@@ -613,7 +613,7 @@ function MultiDraft() {
             // Create room in backend
             const response = await apiCreateRoom();
             const randomRoomId = response.roomId;
-            console.log('Room created response:', response);
+            // console.log('Room created response:', response);
             
             // Join the room in socket.io
             if (socketRef.current) {
@@ -666,7 +666,7 @@ function MultiDraft() {
 
     function updateSettings(newSettings){
         if (isHostRef.current){
-            console.log('updateSettings:', newSettings);
+            // console.log('updateSettings:', newSettings);
             settingsRef.current = newSettings;
             setSettings(newSettings); // This will trigger a re-render
             // Send settings to peer if connected

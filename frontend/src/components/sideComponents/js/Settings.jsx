@@ -13,7 +13,6 @@ function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft,
     }, []);
 
     function handleCharacterClick(character) {
-        console.log(characters.length, settings.disallowedCharacters.length, characters.length - settings.disallowedCharacters.length);
         // Check if character is already in disallowedCharacters
         if (settings.disallowedCharacters.includes(character)) {
             // If it is, remove it
