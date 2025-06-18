@@ -17,11 +17,16 @@
     "vite": "^6.3.5"
   },
   "devDependencies": {
+    "@eslint/js": "^9.29.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "cross-env": "^7.0.3",
+    "eslint": "^9.29.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.2.0",
     "source-map-explorer": "^2.5.3",
+    "typescript-eslint": "^8.34.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -29,7 +34,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "analyze": "vite-bundle-analyzer"
+    "analyze": "vite-bundle-analyzer",
+    "lint": "eslint ."
   },
   "proxy": "http://localhost:3001",
   "eslintConfig": {
