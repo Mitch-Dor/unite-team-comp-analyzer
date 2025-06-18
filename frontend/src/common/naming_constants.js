@@ -417,9 +417,17 @@ export const ATTRIBUTE_CONSTANTS = {
     FAST_RIP: 'Fast Rip',
 }   
 
+function localName() {
+    if (window.location.hostname === 'localhost') {
+        return 'http://localhost:3001';
+    }
+    return '';
+}
+
 export const constants = {
     ...NAME_CONSTANTS,
     ...MOVE_CONSTANTS,
     ...CLASS_CONSTANTS,
-    ...ATTRIBUTE_CONSTANTS
+    ...ATTRIBUTE_CONSTANTS,
+    WEBSITE_URL: localName()
 };

@@ -11,6 +11,7 @@ import DraftAgain from './draftSupport/DraftAgain.jsx';
 import { genRandomPokemon } from './draftSupport/draftFunctions.js';
 import { IoIosChatboxes } from "react-icons/io";
 import { Filter } from 'bad-words';
+import { constants } from '../../../common/naming_constants.js';
 
 function MultiDraft() {
     const location = useLocation();
@@ -76,7 +77,7 @@ function MultiDraft() {
 
     // Initialize socket connection
     useEffect(() => {
-        const newSocket = io('http://localhost:3001');
+        const newSocket = io(constants.WEBSITE_URL);
         socketRef.current = newSocket;
 
         // Socket event listeners
