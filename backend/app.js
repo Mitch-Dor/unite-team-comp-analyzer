@@ -11,6 +11,8 @@ const socketIo = require('socket.io');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 const app = express();
 const server = http.createServer(app);
@@ -41,17 +43,23 @@ app.use(express.json());
 // Add middleware to parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
-// Set up session - MUST be before passport initialization
-app.use(session({
-  secret: process.env.GOOGLE_CLIENT_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: process.env.NODE_ENV === 'production' } // secure in production only
-}));
+// session store and session config
+app.use(
+  session({
+    store: new (require('memorystore')(session))(),
+    secret: process.env.COOKIE_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 60000 * 60 * 2,
+    },
+  }),
+);
 
 // Initialize passport and session - MUST be after session middleware but before routes
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cookieParser(process.env.COOKIE_SECRET))
 
 // Initialize the Auth class
 const auth = database.auth;
