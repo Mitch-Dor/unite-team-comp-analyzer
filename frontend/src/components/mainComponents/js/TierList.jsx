@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../css/tierList.css';
 import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry, isAdmin } from './backendCalls/http.js';
+import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
 import Home from '../../sideComponents/js/Home.jsx';
 
 function setCookie(name, value, days = 7) {
@@ -38,6 +39,7 @@ function TierList() {
   });
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     async function fetchCharacterListing() {
@@ -98,6 +100,7 @@ function TierList() {
           }
         });
         setItems(newItems);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // If cookie is corrupted, ignore
       }
@@ -272,7 +275,14 @@ function TierList() {
       </div>
     )}
     <div id="tierListContainer">
-      <div className="tier-list-section">
+      <div className={`tier-list-section ${isExpanded !== false ? 'expanded' : ''}`}>
+        <button className="expandSection" onClick={() => {setIsExpanded(!isExpanded)}}>
+          {isExpanded ? (
+            <SlArrowLeft />
+          ) : (
+            <SlArrowRight />
+          )}
+        </button>
         {tiers.map(tier => (
           <div key={tier} className="tier-row">
             <div className="tier-label">{tier}</div>
@@ -301,7 +311,7 @@ function TierList() {
         ))}
       </div>
       
-      <div className="unassigned-section">
+      <div className={`unassigned-section ${isExpanded !== false ? 'shrunk' : ''}`}>
         {classSections.map(({ class: className, title }) => (
           <div key={className} className="class-section">
             <div className="class-section-title">{title}</div>

@@ -2,13 +2,12 @@
     display: flex;
     gap: 20px;
     padding: 20px;
-    max-width: 1600px;
-    margin: 0 auto;
-    height: calc(100vh - 40px); /* Full viewport height minus padding */
+    width: calc(100vw - 40px);
+    height: calc(100vh - 40px);
 }
 
 .tier-list-section {
-    flex: 1;
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -16,6 +15,43 @@
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
     min-height: 0; /* Important for Firefox */
+    position: relative;
+    /* Smoothly animate width and flex-basis changes */
+    transition: width 0.8s, flex-basis 0.8s;
+    width: 50%; /* Default width if not expanded */
+    flex-basis: 50%;
+}
+
+.tier-list-section.expanded {
+    width: calc(80% - 10px) !important;
+    flex: 0 0 calc(80% - 10px);
+    flex-basis: calc(80% - 10px);
+}
+
+.expandSection {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    /* Remove any default button styles if needed */
+    border: none;
+    cursor: pointer;
+}
+
+.expandSection svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    margin: 0;
+    object-fit: contain;
 }
 
 .tier-list-section::-webkit-scrollbar {
@@ -23,7 +59,7 @@
 }
 
 .unassigned-section {
-    flex: 1;
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -31,6 +67,16 @@
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
     min-height: 0; /* Important for Firefox */
+    /* Smoothly animate width and flex-basis changes */
+    transition: width 0.8s, flex-basis 0.8s;
+    width: calc(50% - 20px); /* Default width if not shrunk */
+    flex-basis: calc(50% - 20px);
+}
+
+.unassigned-section.shrunk {
+    width: calc(20% - 10px) !important;
+    flex: 0 0 calc(20% - 10px);
+    flex-basis: calc(20% - 10px);
 }
 
 .unassigned-section::-webkit-scrollbar {
