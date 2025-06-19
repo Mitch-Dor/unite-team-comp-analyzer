@@ -18,9 +18,12 @@
 ### Additional Aspects
 - Google OAuth implemented to let certain known users change the database.
 
-
 # How To Put On Heroku
 
 - Push all edits to git.
 - `git push heroku master` to see edits on Heroku and build the website.
 - Make sure environment variables are correct on Heroku
+
+## Other things
+
+- Run `npm run lint` in either frontend or backend to run linter.

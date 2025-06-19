@@ -7,6 +7,7 @@ const HoverInsights = ({ pokemon, idealTeam }) => {
             <p>Class: {pokemon.pokemon_class}</p>
             {idealTeam && (
                 <div className="idealTeamInsights">
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                     <p>AI's Ideal Team:</p>
                     <div className="idealTeamPokemonContainer">
                     {idealTeam && idealTeam.map((pokemon, index) => (

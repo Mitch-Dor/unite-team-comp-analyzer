@@ -101,11 +101,13 @@ function MultiDraft() {
             setConnectionStatus('User joined: ' + data.userId);
         });
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         newSocket.on('room-ready', (data) => {
             // console.log('Room is ready:', data);
             setConnectionStatus('Room ready - Starting draft...');
         });
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         newSocket.on('user-left', (data) => {
             // console.log('User left:', data);
             setConnectionStatus('Opponent disconnected');
@@ -222,6 +224,7 @@ function MultiDraft() {
         const peerId = 'guest-' + Math.random().toString(36).substring(2, 8);
         const newPeer = new Peer(peerId);
         
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         newPeer.on('open', (id) => {
             // console.log('Guest PeerJS connection opened with ID:', id);
             
