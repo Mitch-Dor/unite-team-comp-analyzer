@@ -4,6 +4,24 @@ import '../css/tierList.css';
 import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry, isAdmin } from './backendCalls/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
 
+function setCookie(name, value, days = 7) {
+  // Only store the IDs for each tier so the cookie isn't too big
+  const idsOnly = {};
+  Object.keys(value).forEach(tier => {
+    idsOnly[tier] = value[tier].map(item => item.id);
+  });
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  let formulated = name + '=' + encodeURIComponent(JSON.stringify(idsOnly)) + '; expires=' + expires + '; path=/';
+  document.cookie = formulated;
+}
+
+function getCookie(name) {
+  return document.cookie.split('; ').reduce((r, v) => {
+    const parts = v.split('=');
+    return parts[0] === name ? decodeURIComponent(parts[1]) : r
+  }, '');
+}
+
 function TierList() {
   const location = useLocation();
   const { user } = location.state || {};
@@ -52,7 +70,39 @@ function TierList() {
   }, [pokemonList, admin]);
 
   useEffect(() => {
-    if (pokemonList.length > 0) {
+    if (pokemonList.length === 0) return;
+    const savedTiers = getCookie('tierList');
+    if (savedTiers) {
+      try {
+        const idsByTier = JSON.parse(savedTiers);
+        // Reconstruct items with full pokemon objects
+        const newItems = {
+          S: [], A: [], B: [], C: [], D: [], E: [], F: [], unassigned: []
+        };
+        const assignedIds = new Set();
+        Object.keys(newItems).forEach(tier => {
+          if (idsByTier[tier]) {
+            newItems[tier] = idsByTier[tier].map(id => {
+              const poke = pokemonList.find(p => p.pokemon_id === id);
+              if (poke) {
+                assignedIds.add(id);
+                return {
+                  id: poke.pokemon_id,
+                  tier: tier,
+                  pokemon_name: poke.pokemon_name,
+                  pokemon_class: poke.pokemon_class
+                };
+              }
+              return null;
+            }).filter(Boolean);
+          }
+        });
+        setItems(newItems);
+      } catch (e) {
+        // If cookie is corrupted, ignore
+      }
+    } else {
+      // First time on tiers fully blank
       setItems(prevItems => ({
         ...prevItems,
         unassigned: pokemonList.map((pokemon) => ({
@@ -64,6 +114,12 @@ function TierList() {
       }));
     }
   }, [pokemonList]);
+
+  useEffect(() => {
+    if (items && Object.values(items).some(arr => arr.length > 0)) {
+      setCookie('tierList', items);
+    }
+  }, [items]);
 
   function setBackground(){
     const mainContainer = document.getElementById("mainContainer");
@@ -101,7 +157,7 @@ function TierList() {
       // Remove from source tier
       newItems[sourceTier] = newItems[sourceTier].filter(item => item.id !== itemData.id);
       // Add to target tier
-      newItems[targetTier] = [...newItems[targetTier], { ...itemData, tier: targetTier }];
+      newItems[targetTier] = [...newItems[targetTier], { ...itemData, tier: targetTier }]; 
       return newItems;
     });
 

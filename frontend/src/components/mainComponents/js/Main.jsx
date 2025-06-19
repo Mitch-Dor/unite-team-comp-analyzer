@@ -64,7 +64,7 @@ function Main() {
 
   function setTitle(){
     const titleContainer = document.getElementById("titleContainer");
-    const titleImage = "/assets/Title.png";
+    const titleImage = "/assets/Title2.png";
     if (titleContainer) {
       titleContainer.style.backgroundImage = `url(${titleImage})`;
       titleContainer.style.backgroundSize = "contain";
