@@ -73,7 +73,7 @@ function Main() {
     }
   }
 
-  function openCloseSettings (event) {
+  function openCloseSettings () {
     setSettingsActive(!settingsActive);
   }
 
@@ -110,7 +110,7 @@ function Main() {
                 <button id="comps" className="modeBTN bigBTNs" onClick={() => navigate('/comps', {state: {user: user}})}>Team Comps</button>
             </div>
             <div id="settingContainer">
-                <button id="settings" className="settingBTN bigBTNs" onClick={(e) => openCloseSettings(e)}>Draft Settings</button>
+                <button id="settings" className="settingBTN bigBTNs" onClick={() => openCloseSettings()}>Draft Settings</button>
             </div>
         </div>
         <div id="nametag">Created by Mitchell Dorward</div>

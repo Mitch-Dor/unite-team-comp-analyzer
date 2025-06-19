@@ -7,7 +7,8 @@
     "start": "node app.js",
     "dev": "nodemon -r dotenv/config app.js",
     "test": "jest",
-    "test-coverage": "jest --coverage"
+    "test-coverage": "jest --coverage",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
@@ -21,7 +22,6 @@
     "dotenv": "^16.5.0",
     "express": "^4.19.2",
     "express-session": "^1.18.1",
-    "http-proxy-middleware": "^3.0.0",
     "memorystore": "^1.6.7",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
@@ -29,6 +29,12 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.7"
+    "@babel/core": "^7.24.7",
+    "@eslint/js": "^9.29.0",
+    "eslint": "^9.29.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-security": "^3.0.1",
+    "globals": "^16.2.0"
   }
 }

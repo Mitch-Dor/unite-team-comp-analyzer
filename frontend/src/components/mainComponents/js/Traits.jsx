@@ -5,7 +5,6 @@ import { updateCharacterAttributes, fetchAllCharacterAttributes } from './backen
 import Home from '../../sideComponents/js/Home.jsx';
 
 function Traits() {
-  const [traitsData, setTraitsData] = useState([]);
   const [columnOptions, setColumnOptions] = useState({});
   const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -127,8 +126,7 @@ function Traits() {
         Object.keys(columnConfig).forEach(header => {
           options[header] = [...new Set(attributes.map(row => row[header]))].filter(Boolean);
         });
-        
-        setTraitsData(attributes);
+
         setColumnOptions(options);
         setTableData(attributes);
         setLoading(false);

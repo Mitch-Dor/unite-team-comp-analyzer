@@ -10,9 +10,7 @@ function Stats() {
     const [events, setEvents] = useState([]);
     const [teams, setTeams] = useState([]);
     const [players, setPlayers] = useState([]);
-    const [charactersAndMoves, setCharactersAndMoves] = useState([]);
     const [regions, setRegions] = useState([]);
-    const [characters, setCharacters] = useState([]);
     const [data, setData] = useState([]);
     const [orderBy, setOrderBy] = useState("all");
     const [moveData, setMoveData] = useState([]);
@@ -31,13 +29,10 @@ function Stats() {
             
                 // Get unique pokemon_name and pokemon_id combinations
                 const uniquePokemon = [...new Set(fetchedCharactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str)); 
-                setCharacters(uniquePokemon);
                 // Sort all in alphabetical order
                 setEvents(fetchedEvents.sort((a, b) => a.event_name.localeCompare(b.event_name)));
                 setTeams(fetchedTeams.sort((a, b) => a.team_name.localeCompare(b.team_name)));
                 setPlayers(fetchedPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name)));
-                // Doesn't need to be sorted. Is already in order of creation / proper move order
-                setCharactersAndMoves(fetchedCharactersAndMoves);
                 // Cumulate all the moves for each character
                 const cumulativeMoves = [];
                 for (const character of uniquePokemon) {
@@ -90,8 +85,7 @@ function Stats() {
             mainContainer.style.backgroundSize = "cover";
             mainContainer.style.backgroundPosition = "center";
             mainContainer.style.backgroundAttachment = "fixed";
-            } else {
-            }
+            } 
         }, 0);
     }, []);
 

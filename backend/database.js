@@ -40,7 +40,7 @@ const pool = new Pool({
 
 // Add error handling for the pool
 pool.on('error', (err, client) => {
-    console.error('Unexpected error on idle client', err);
+    console.error(`Unexpected error on idle client ${client}`, err);
 });
 
 // Test the connection

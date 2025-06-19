@@ -25,7 +25,6 @@ function SingleDraft() {
     const targetPokemonRef = useRef(null); // Ref to track the latest targetPokemon
     const timerRef = useRef(null); // Ref to store the timer timeout ID
     const aiPickTimeoutRef = useRef(null);
-    const aiPickTimeoutRef2 = useRef(null);
     const aiBanTimeoutRef = useRef(null);
     const [disallowedCharacters, updateDisallowedCharacters] = useState([]);
     const [idealTeams1, updateIdealTeams1] = useState([]);
@@ -485,7 +484,7 @@ function SingleDraft() {
         {stateRef.current === 'done' && (
             <DraftAgain draftAgain={draftAgain} />
         )}
-        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
+        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
         <Home />
     </div>
   );

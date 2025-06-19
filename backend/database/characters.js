@@ -1119,7 +1119,7 @@ class Characters {
             if (err) {
               console.error("SQL Error in moveStats:", err.message);
               // Resolve with empty array instead of rejecting to avoid failing the entire function
-              resolve([]);
+              reject();
             } else {
               resolve(res.rows);
             }
@@ -1127,7 +1127,7 @@ class Characters {
         } catch (error) {
           console.error("Function error in moveStats:", error.message);
           // Resolve with empty array instead of rejecting
-          resolve([]);
+          reject();
         }
       });
 

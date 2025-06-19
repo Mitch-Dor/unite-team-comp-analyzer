@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
 import CustomDropdown from './CustomDropdown';
 import { formatSet } from '../Comps';
@@ -319,6 +319,12 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
 
         function checkNull(data, field, i) {
             if (data === null || data === undefined || data === "") {
+                if (i === undefined) {
+                     // Add the field to the error message
+                    error += "\n" + field;
+                    errorCount++;
+                    return "null";
+                }
                 // Add the field to the error message
                 if (i === 0) {
                     // Error in event data
@@ -334,16 +340,6 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             }
             return data;
         }
-        function checkNull(data, field) {
-            if (data === null || data === undefined || data === "") {
-                // Add the field to the error message
-                error += "\n" + field;
-                errorCount++;
-                return "null";
-            }
-            return data;
-        }
-
     }
     
     const resetAllForms = () => {
@@ -721,7 +717,6 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
             <div className="team-comp">
                 {/* Pokemon / Players */}
                 <CharacterPlayer 
-                    resetKey={resetKey}
                     character={pokemon1} 
                     move1={pokemon1move1} 
                     move2={pokemon1move2} 
@@ -735,7 +730,6 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
-                    resetKey={resetKey}
                     character={pokemon2} 
                     move1={pokemon2move1} 
                     move2={pokemon2move2} 
@@ -749,7 +743,6 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
-                    resetKey={resetKey}
                     character={pokemon3} 
                     move1={pokemon3move1} 
                     move2={pokemon3move2} 
@@ -763,7 +756,6 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
-                    resetKey={resetKey}
                     character={pokemon4} 
                     move1={pokemon4move1} 
                     move2={pokemon4move2} 
@@ -777,7 +769,6 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     unavailableCharacters={unavailableCharacters}
                 />
                 <CharacterPlayer 
-                    resetKey={resetKey}
                     character={pokemon5} 
                     move1={pokemon5move1} 
                     move2={pokemon5move2} 
@@ -796,7 +787,7 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
 }
 
 // Character and player insertion form for a comp (Used in SetInsertion)
-function CharacterPlayer({ resetKey, character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer, charactersAndMoves, players, unavailableCharacters }) {
+function CharacterPlayer({ character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer, charactersAndMoves, players, unavailableCharacters }) {
     // Get available moves for the selected character
     const getPokemonMoves = (pokemonName) => {
         if (!pokemonName) return [];

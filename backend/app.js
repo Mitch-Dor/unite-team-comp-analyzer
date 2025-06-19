@@ -4,7 +4,6 @@ require('dotenv').config();
 const express = require("express");
 const path = require("path");
 const database = require('./database.js');
-const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require("cors");
 const http = require('http');
 const socketIo = require('socket.io');
@@ -60,6 +59,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser(process.env.COOKIE_SECRET))
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 // Initialize the Auth class
 const auth = database.auth;

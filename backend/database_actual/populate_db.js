@@ -285,7 +285,7 @@ function populate_db(db) {
                 }
 
                 if (pokemon1_id === null || pokemon2_id === null || pokemon3_id === null || pokemon4_id === null || pokemon5_id === null) {
-                    throw new Error(`Pokemon ID not found for ${pokemon.name}`);
+                    throw new Error(`Pokemon ID not found for some pokemon in 1-5.`);
                 }
             
                 if (p1m1_id === null || p1m2_id === null || p2m1_id === null || p2m2_id === null || p3m1_id === null || p3m2_id === null || p4m1_id === null || p4m2_id === null || p5m1_id === null || p5m2_id === null) {
@@ -320,7 +320,7 @@ function populate_db(db) {
                 }
 
                 if (pokemon6_id === null || pokemon7_id === null || pokemon8_id === null || pokemon9_id === null || pokemon10_id === null) {
-                    throw new Error(`Pokemon ID not found for ${pokemon.name}`);
+                    throw new Error(`Pokemon ID not found for some pokemon in 6-10.`);
                 }
             
                 if (p6m1_id === null || p6m2_id === null || p7m1_id === null || p7m2_id === null || p8m1_id === null || p8m2_id === null || p9m1_id === null || p9m2_id === null || p10m1_id === null || p10m2_id === null) {
@@ -362,7 +362,7 @@ function populate_db(db) {
         return new Promise((resolve, reject) => {
             // Check for special cases first
             if (!moveName || pokemonId === null) {
-                return resolve(null); // Or handle as appropriate for your app
+                reject();
             }
 
             if (moveName === "MEW_ALL_MOVES") {
@@ -375,7 +375,7 @@ function populate_db(db) {
             const match = moveName.match(/'(.*)'/);
             if (!match) {
                 console.log(`Could not extract move name from: ${moveName}`);
-                return resolve(null); // Or handle differently
+                reject();
             }
             
             const refinedMoveName = match[1];
@@ -594,6 +594,7 @@ function populate_db(db) {
                 (err, row) => {
                     if (err) {
                         console.log(`Error getting player ID: ${err.message}`);
+                        reject();
                     }
                     resolve(row ? row.player_id : null);
                 }
@@ -609,6 +610,7 @@ function populate_db(db) {
                 (err, row) => {
                     if (err) {
                         console.log(`Error getting team ID: ${err.message}`);
+                        reject();
                     }
                     resolve(row ? row.team_id : null);
                 }

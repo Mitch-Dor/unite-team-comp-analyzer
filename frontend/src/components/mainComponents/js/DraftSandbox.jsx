@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
-import { fetchCharacterDraftInfo, runAStarAlgorithm } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo } from './backendCalls/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
-import Settings from '../../sideComponents/js/Settings.jsx';
 import '../css/draft.css';
 
 function DraftSandbox() {

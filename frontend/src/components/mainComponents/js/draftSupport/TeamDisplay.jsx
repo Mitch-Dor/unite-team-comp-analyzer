@@ -215,7 +215,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                     <div id="hoverDiv" style={ side === 'purple' ? 
                         { top: hoveredIndex === 4 ? hoverPosition.y - 100 : hoverPosition.y, left: hoverPosition.x } : 
                         { top: hoveredIndex === 4 ? hoverPosition.y - 100 : hoverPosition.y, right: `calc(100vw - ${hoverPosition.x}px + 80px)` }} >
-                        <HoverInsights pokemon={hoveredPokemon} index={hoveredIndex} idealTeam={idealTeams && idealTeams[hoveredIndex] ? idealTeams[hoveredIndex] : null} />
+                        <HoverInsights pokemon={hoveredPokemon} idealTeam={idealTeams && idealTeams[hoveredIndex] ? idealTeams[hoveredIndex] : null} />
                     </div>
                 )}
             </>

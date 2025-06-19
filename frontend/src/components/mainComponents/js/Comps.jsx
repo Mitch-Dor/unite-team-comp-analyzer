@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import '../css/comps.css';
 import { fetchAllComps, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, isVerifiedUser } from './backendCalls/http';
 import SubmitSetModal from './compSupport/SubmitSetModal';
-import MatchDisplay from './compSupport/MatchDisplay';
 import CompsSorting from './compSupport/CompsSorting';
 import SetDisplay from './compSupport/SetDisplay';
 import { useLocation } from 'react-router-dom';
@@ -165,7 +164,7 @@ function Comps() {
       <div id="compsContainer">
         <div className="comps-list">
           <h1 className="page-title">Team Compositions</h1>
-          <CompsSorting events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} compsData={compsData} setCompsData={setCompsData} setFilteredComps={setFilteredComps} />
+          <CompsSorting events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} compsData={compsData} setFilteredComps={setFilteredComps} />
           { filteredComps && filteredComps.length > 0 ? filteredComps.map((set, index) => (
             <SetDisplay key={index} set={set} />
           )) : (

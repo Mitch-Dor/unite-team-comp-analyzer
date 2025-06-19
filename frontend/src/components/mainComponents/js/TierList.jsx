@@ -55,7 +55,7 @@ function TierList() {
     if (pokemonList.length > 0) {
       setItems(prevItems => ({
         ...prevItems,
-        unassigned: pokemonList.map((pokemon, index) => ({
+        unassigned: pokemonList.map((pokemon) => ({
           id: pokemon.pokemon_id,
           tier: 'unassigned',
           pokemon_name: pokemon.pokemon_name,
@@ -185,29 +185,26 @@ function TierList() {
 
   async function emptyTiers() {
     if (pokemonList.length > 0) {
-      setItems(prevItems => {
-        // Create a new state object with empty tier arrays
-        const newItems = {
-          S: [],
-          A: [],
-          B: [],
-          C: [],
-          D: [],
-          E: [],
-          F: [],
-          unassigned: []
-        };
-        
-        // Move all pokemon to unassigned
-        newItems.unassigned = pokemonList.map(pokemon => ({
-          id: pokemon.pokemon_id,
-          tier: 'unassigned',
-          pokemon_name: pokemon.pokemon_name,
-          pokemon_class: pokemon.pokemon_class
-        }));
-        
-        return newItems;
-      });
+      // Set every pokemon to unassigned and then set that to items
+      const newItems = {
+        S: [],
+        A: [],
+        B: [],
+        C: [],
+        D: [],
+        E: [],
+        F: [],
+        unassigned: []
+      };
+      
+      // Move all pokemon to unassigned
+      newItems.unassigned = pokemonList.map(pokemon => ({
+        id: pokemon.pokemon_id,
+        tier: 'unassigned',
+        pokemon_name: pokemon.pokemon_name,
+        pokemon_class: pokemon.pokemon_class
+      }));
+      setItems(newItems);
     }
   }
 

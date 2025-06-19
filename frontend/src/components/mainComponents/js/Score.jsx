@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchAllCharactersAndMoves, fetchAllCharacterAttributes, rateComp } from './backendCalls/http.js';
+import { fetchAllCharacterAttributes, rateComp } from './backendCalls/http.js';
 import TraitDisplay from './scoreSupport/TraitDisplay.jsx';
 import Home from '../../sideComponents/js/Home.jsx';
 import '../css/score.css';
@@ -40,7 +40,6 @@ function Score() {
             mainContainer.style.backgroundSize = "cover";
             mainContainer.style.backgroundPosition = "center";
             mainContainer.style.backgroundAttachment = "fixed";
-            } else {
             }
         }, 0);
     }, []);

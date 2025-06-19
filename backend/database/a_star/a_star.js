@@ -335,7 +335,7 @@ function heuristic_synergy_score(yourTeam){
     }
 
     // Having different play styles is bad
-    Object.entries(attrCounts.playStyle).forEach(([style, count]) => {
+    Object.entries(attrCounts.playStyle).forEach(([_style, count]) => { // _ to make linter ignore it
         if (count > 0 && count < 2){
             totalPoints += 5
         }
@@ -530,11 +530,11 @@ function countAttributes(data) {
         Object.keys(categories).forEach(key => {
             if (Array.isArray(entry.attributes[key])) {
                 entry.attributes[key].forEach(value => {
-                    if (categories[key].hasOwnProperty(value)) {
+                    if (Object.prototype.hasOwnProperty.call(categories[key], value)) {
                         categories[key][value]++;
                     }
                 });
-            } else if (entry.attributes[key] && categories[key].hasOwnProperty(entry.attributes[key])) {
+            } else if (entry.attributes[key] && Object.prototype.hasOwnProperty.call(categories[key], entry.attributes[key])) {
                 categories[key][entry.attributes[key]]++;
             }
         });

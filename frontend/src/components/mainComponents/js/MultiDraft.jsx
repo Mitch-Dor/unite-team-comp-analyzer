@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
-import { fetchCharacterDraftInfo, runAStarAlgorithm, createRoom as apiCreateRoom, getAllRooms, getRoomInfo } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo, createRoom as apiCreateRoom } from './backendCalls/http.js';
 import '../css/draft.css';
 import { Peer } from 'peerjs';
 import io from 'socket.io-client';
@@ -17,7 +17,7 @@ function MultiDraft() {
     const location = useLocation();
     const user = location.state.user;
     const [opposingUser, setOpposingUser] = useState(null);
-    const [numUsers, setNumUsers] = useState(2);
+    const numUsers = 2;
     const settingsRef = useRef({...location.state.settings, firstUser: 1});
     const [settings, setSettings] = useState({...location.state.settings, firstUser: 1});
     const [draftStarted, setDraftStarted] = useState(false);
@@ -362,7 +362,7 @@ function MultiDraft() {
         // console.log(action);
         // console.log(data);
         switch (action) {
-            case 'pokemon-selected':
+            case 'pokemon-selected': {
                 // console.log('pokemon-selected');
                 // console.log(pokemonList);
                 let fullPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === data.pokemon);
@@ -372,6 +372,7 @@ function MultiDraft() {
                 }
                 // console.log('fullPokemon:', fullPokemon);
                 setTargetPokemon(fullPokemon);
+                }
                 break;
             case 'lock-in':
                 // console.log('lock-in');
@@ -721,7 +722,7 @@ function MultiDraft() {
             {stateRef.current === 'done' && (
                 <DraftAgain draftAgain={draftAgain} />
             )}
-            <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} updatePokemonStatus={updatePokemonStatus} draftProgression={draftProgression} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
+            <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
             <Home />
             <div id="roomInfoDisplay">
                 <h4>Room ID: {roomIdRef.current}</h4>

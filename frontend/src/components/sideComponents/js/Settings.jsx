@@ -3,7 +3,7 @@ import { fetchCharacterDraftInfo } from '../../mainComponents/js/backendCalls/ht
 import { BiQuestionMark } from "react-icons/bi";
 import '../css/settings.css';
 
-function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft, isConnected, joinCreate, firstUser, setFirstUser }) {
+function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft, isConnected, joinCreate }) {
     const [characters, setCharacters] = useState([]);
 
     useEffect(() => {

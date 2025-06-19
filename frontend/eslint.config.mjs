@@ -6,6 +6,20 @@ import { defineConfig } from "eslint/config";
 
 
 export default defineConfig([
+  {
+    ignores: [
+      "**/*.test.*",  // Ignore all .test.js/.ts/.jsx/.tsx/etc.
+      "build/**",     // Ignore everything inside the build/ folder
+    ],
+  },
+  {
+    files: ["vite.config.*"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
   { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },
   { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], languageOptions: { globals: globals.browser } },
   tseslint.configs.recommended,
@@ -13,7 +27,8 @@ export default defineConfig([
     ...pluginReact.configs.flat.recommended,
     rules: {
       ...pluginReact.configs.flat.recommended.rules,
-      'react/prop-types': 'off', // 👈 disable the rule here
+      'react/prop-types': 'off', 
+      'react/react-in-jsx-scope': 'off',
     },
   },
 ]);

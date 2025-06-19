@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import CustomDropdown from "./CustomDropdown";
 import Home from "../../../sideComponents/js/Home";
 
-function CompsSorting({ events, teams, players, charactersAndMoves, compsData, setCompsData, setFilteredComps }) {
+function CompsSorting({ events, teams, players, charactersAndMoves, compsData, setFilteredComps }) {
     const [regions, setRegions] = useState([]);
     const [characters, setCharacters] = useState([]);
-    const [baseData, setBaseData] = useState(compsData);
+    const baseData = compsData;
     const [eventFilter, setEventFilter] = useState("");
     const [characterFilter, setCharacterFilter] = useState("");
     const [regionFilter, setRegionFilter] = useState("");

@@ -475,7 +475,12 @@ class Teams {
       return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM verified_users';
         this.db.query(sql, (err, res) => {
-          resolve(res.rows);
+          if (err) {
+            console.error('Could not fetch verified users.');
+            reject(err);
+          } else {
+            resolve(res.rows);
+          }
         });
       });
     }

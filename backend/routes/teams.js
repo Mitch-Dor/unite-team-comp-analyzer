@@ -194,7 +194,7 @@ module.exports = function (app, database, adminGoogleId) {
 
     app.put('/GETisVerifiedUser', (req, res) => {
         checkVerifiedUser(req.body.userGoogleId)
-            .then(isVerified => {
+            .then(() => {
                 res.json(true);
             })
             .catch(error => {
