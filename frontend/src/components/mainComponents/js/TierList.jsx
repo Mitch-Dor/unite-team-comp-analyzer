@@ -40,6 +40,7 @@ function TierList() {
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [tiers, setTiers] = useState(['S', 'A', 'B', 'C', 'D', 'E', 'F']);
 
   useEffect(() => {
     async function fetchCharacterListing() {
@@ -169,7 +170,6 @@ function TierList() {
     }
   };
 
-  const tiers = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
   const classSections = [
     { class: 'Attacker', title: 'Attackers' },
     { class: 'Speedster', title: 'Speedsters' },
@@ -285,7 +285,7 @@ function TierList() {
         </button>
         {tiers.map(tier => (
           <div key={tier} className="tier-row">
-            <div className="tier-label">{tier}</div>
+            <div className="tier-label" contentEditable="true" suppressContentEditableWarning>{tier}</div>
             <div
               className="tier-content"
               onDragOver={handleDragOver}
