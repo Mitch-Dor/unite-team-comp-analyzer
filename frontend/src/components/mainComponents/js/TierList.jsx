@@ -6,21 +6,36 @@ import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
 import Home from '../../sideComponents/js/Home.jsx';
 
 function setCookie(name, value, days = 7) {
-  // Only store the IDs for each tier so the cookie isn't too big
-  const idsOnly = {};
-  Object.keys(value).forEach(tier => {
-    idsOnly[tier] = value[tier].map(item => item.id);
-  });
-  const expires = new Date(Date.now() + days * 864e5).toUTCString();
-  let formulated = name + '=' + encodeURIComponent(JSON.stringify(idsOnly)) + '; expires=' + expires + '; path=/';
-  document.cookie = formulated;
+  if (name === 'tierList') {
+    // Only store the IDs for each tier so the cookie isn't too big
+    const idsOnly = {};
+    Object.keys(value).forEach(tier => {
+      idsOnly[tier] = value[tier].map(item => item.id);
+    });
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    let formulated = name + '=' + encodeURIComponent(JSON.stringify(idsOnly)) + '; expires=' + expires + '; path=/';
+    document.cookie = formulated;
+  } else if (name === 'tierNames') {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    let formulated = name + '=' + encodeURIComponent(JSON.stringify(value)) + '; expires=' + expires + '; path=/';
+    document.cookie = formulated;
+  }
 }
 
 function getCookie(name) {
-  return document.cookie.split('; ').reduce((r, v) => {
-    const parts = v.split('=');
-    return parts[0] === name ? decodeURIComponent(parts[1]) : r
-  }, '');
+  if (name === 'tierList') {
+    // Decoding Object
+    return document.cookie.split('; ').reduce((r, v) => {
+      const parts = v.split('=');
+      return parts[0] === name ? decodeURIComponent(parts[1]) : r
+    }, '');
+  } else if (name === 'tierNames') {
+    // Decoding Array
+    return document.cookie.split('; ').reduce((r, v) => {
+      const parts = v.split('=');
+      return parts[0] === name ? JSON.parse(decodeURIComponent(parts[1])) : r
+    }, '');
+  }
 }
 
 function TierList() {
@@ -40,7 +55,8 @@ function TierList() {
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [tiers, setTiers] = useState(['S', 'A', 'B', 'C', 'D', 'E', 'F']);
+  const tiers = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
+  const [customNameTiers, setCustomNameTiers] = useState(['S', 'A', 'B', 'C', 'D', 'E', 'F']);
 
   useEffect(() => {
     async function fetchCharacterListing() {
@@ -50,6 +66,11 @@ function TierList() {
         } catch (error) {
             console.error("Error fetching Pokemon Data:", error);
         }
+    }
+
+    const tierNames = getCookie('tierNames');
+    if (tierNames) {
+      setCustomNameTiers(tierNames);
     }
 
     fetchCharacterListing();
@@ -124,6 +145,10 @@ function TierList() {
       setCookie('tierList', items);
     }
   }, [items]);
+
+  useEffect(() => {
+    setCookie('tierNames', customNameTiers);
+  }, [customNameTiers]);
 
   function setBackground(){
     const mainContainer = document.getElementById("mainContainer");
@@ -267,6 +292,8 @@ function TierList() {
     }
   }
 
+  console.log(customNameTiers);
+
   return (
     <div id="mainContainer">
     {admin && (
@@ -283,9 +310,9 @@ function TierList() {
             <SlArrowRight />
           )}
         </button>
-        {tiers.map(tier => (
+        {tiers.map((tier, index) => (
           <div key={tier} className="tier-row">
-            <div className="tier-label" contentEditable="true" suppressContentEditableWarning>{tier}</div>
+            <div className="tier-label" contentEditable="true" suppressContentEditableWarning onBlur={(e) => {setCustomNameTiers(prevTiers => prevTiers.map((t, i) => i === index ? e.target.textContent : t))}}>{customNameTiers[index] === tier ? tier : customNameTiers[index]}</div>
             <div
               className="tier-content"
               onDragOver={handleDragOver}
