@@ -647,7 +647,6 @@
     align-items: center;
     justify-content: space-between;
     overflow: hidden;
-    font-size: 10px;
 }
 
 .dropdown-button:disabled {
@@ -693,6 +692,14 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 0.45rem;
+    text-overflow: clip;
+}
+
+@media (min-width: 1024px) {
+    .selected-option {
+        font-size: 0.8rem;
+    }
 }
 
 .dropdown-icon {
@@ -775,35 +782,6 @@
     font-size: 14px;
 }
 
-/* Add !important to force these styles */
-.comps-sorting-dropdown-container #sorting-pokemon-dropdown,
-#sorting-pokemon-dropdown {
-    width: 100% !important;
-    font-size: 14px !important;
-    height: 40px !important;
-}
-
-.comps-sorting-dropdown-container #sorting-pokemon-dropdown .dropdown-button,
-#sorting-pokemon-dropdown .dropdown-button {
-    height: 40px !important;
-    min-height: 40px !important;
-    padding: 8px !important;
-    font-size: 14px !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    align-items: center !important;
-}
-
-.comps-sorting-dropdown-container #sorting-pokemon-dropdown .selected-option,
-#sorting-pokemon-dropdown .selected-option {
-    font-size: 14px !important; 
-}
-
-.comps-sorting-dropdown-container #sorting-pokemon-dropdown .dropdown-option,
-#sorting-pokemon-dropdown .dropdown-option {
-    font-size: 14px !important;
-    padding: 10px 8px !important;
-}
 
 /* Responsive adjustments for sorting container */
 @media (max-width: 1024px) {

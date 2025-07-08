@@ -292,8 +292,6 @@ function TierList() {
     }
   }
 
-  console.log(customNameTiers);
-
   return (
     <div id="mainContainer">
     {admin && (
