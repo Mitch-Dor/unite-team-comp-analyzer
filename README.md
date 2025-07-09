@@ -27,3 +27,12 @@
 ## Other things
 
 - Run `npm run lint` in either frontend or backend to run linter.
+
+#### How To Add A New Pokemon:
+
+- Add headshot asset
+- Add move assets
+- Add to playable_characters table in db editor
+- Add to pokemon_moves table in db editor
+- Add to pokemon_attributes in web app using admin
+- Add to tier_list in web app using admin
