@@ -135,6 +135,19 @@
     align-content: flex-start; /* Align items to the top */
 }
 
+.tier-content.selectable {
+    cursor: pointer;
+    border: 3px solid gold;
+    box-shadow: 0 0 10px gold;
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        box-shadow: 0 0 5px gold;
+    }
+}
+
 .draggable-item {
     width: 30px;
     height: 30px;

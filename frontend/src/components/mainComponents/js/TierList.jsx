@@ -57,6 +57,7 @@ function TierList() {
   const [isExpanded, setIsExpanded] = useState(false);
   const tiers = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
   const [customNameTiers, setCustomNameTiers] = useState(['S', 'A', 'B', 'C', 'D', 'E', 'F']);
+  const [selectedPokemon, setSelectedPokemon] = useState();
 
   useEffect(() => {
     async function fetchCharacterListing() {
@@ -292,6 +293,28 @@ function TierList() {
     }
   }
 
+  function handleClickPokemon(targetTier) {
+    // Assign selected pokemon to this tier and then clear selected pokemon
+    const itemData = selectedPokemon;
+    setSelectedPokemon();
+    const sourceTier = itemData.tier;
+    
+    if (sourceTier === targetTier) return;
+
+    setItems(prevItems => {
+      const newItems = { ...prevItems };
+      // Remove from source tier
+      newItems[sourceTier] = newItems[sourceTier].filter(item => item.id !== itemData.id);
+      // Add to target tier
+      newItems[targetTier] = [...newItems[targetTier], { ...itemData, tier: targetTier }]; 
+      return newItems;
+    });
+
+    if (admin) {
+      insertTierListEntry(targetTier, itemData.id, user.user_google_id);
+    }
+  }
+
   return (
     <div id="mainContainer">
     {admin && (
@@ -312,10 +335,11 @@ function TierList() {
           <div key={tier} className="tier-row">
             <div className="tier-label" contentEditable="true" suppressContentEditableWarning onBlur={(e) => {setCustomNameTiers(prevTiers => prevTiers.map((t, i) => i === index ? e.target.textContent : t))}}>{customNameTiers[index] === tier ? tier : customNameTiers[index]}</div>
             <div
-              className="tier-content"
+              className={`tier-content ${selectedPokemon && selectedPokemon.tier==="unassigned" ? "selectable" : ""}`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, tier)}
+              onClick={() => {handleClickPokemon(tier)}}
             >
               {items[tier].map(item => (
                 <div
@@ -323,6 +347,9 @@ function TierList() {
                   className={`draggable-item ${item.pokemon_class}`}
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
+                  onClick={(e) => {e.stopPropagation(); // prevent event from reaching parent so it doesn't reset selectedPokemon
+                    setSelectedPokemon(item)
+                  }}
                 >
                   <img 
                     src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
@@ -341,10 +368,11 @@ function TierList() {
           <div key={className} className="class-section">
             <div className="class-section-title">{title}</div>
             <div
-              className="tier-content"
+              className={`tier-content ${selectedPokemon && selectedPokemon.tier!=="unassigned" ? "selectable" : ""}`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, 'unassigned')}
+              onClick={() => {handleClickPokemon('unassigned')}}
             >
               {getUnassignedByClass(className).map(item => (
                 <div
@@ -352,6 +380,7 @@ function TierList() {
                   className={`draggable-item ${item.pokemon_class}`}
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
+                  onClick={() => {setSelectedPokemon(item)}}
                 >
                   <img 
                     src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
