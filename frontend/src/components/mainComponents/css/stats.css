@@ -13,8 +13,8 @@ h3 {
 }
 
 #filterContainer {
-    width: 70%;
-    height: 90%;
+    width: 100%;
+    height: 70%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -37,8 +37,19 @@ h3 {
     border: 1px solid #555;
     background-color: #333;
     color: white;
-    font-size: 14px;
+    font-size: 0.5rem;
     max-height: 40px;
+    width: 25%;
+}
+
+#orderingContainer select{
+    width: auto;
+}
+
+@media (min-width: 1024px) {
+    #filterContainer select, #orderingContainer select, #filterContainer input[type="date"] {
+        font-size: 0.875rem;
+    }
 }
 
 /* Make the little calendar icon white */
@@ -48,8 +59,8 @@ h3 {
 }
 
 #orderingContainer {
-    width: 20%;
-    height: 90%;
+    width: 100%;
+    height: 20%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -65,8 +76,19 @@ h3 {
     text-decoration: none;
 }
 
+@media (min-width: 1024px) {
+    #orderingContainer {
+        width: 20%;
+        height: 90%;
+    }
+    #filterContainer {
+        width: 70%;
+        height: 90%;
+    }
+}
+
 #statsContainer {
-    height: 65%;
+    height: 55%;
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -80,13 +102,19 @@ h3 {
     margin: 5px;
 }
 
+@media (min-width: 1024px) {
+    #statsContainer {
+        height: 65%;
+    }
+}
+
 #statsContainer::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
 }
 
 #headerContainer {
     width: 100%;
-    height: 25%;
+    height: 35%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -94,6 +122,13 @@ h3 {
     margin: 5px;
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.6);
+    flex-flow: row wrap;
+}
+
+@media (min-width: 1024px) {
+    #headerContainer {
+        height: 25%;
+    }
 }
 
 #headerContainer h1 {

@@ -92,7 +92,6 @@ function Stats() {
   return (
     <div id="mainContainer">
         <div id="headerContainer">
-            <h1>Stats</h1>
             <StatsOrdering setOrderBy={setOrderBy} />
             <StatsSorting events={events} teams={teams} players={players} regions={regions} setData={setData} moveData={moveData} />
         </div>
