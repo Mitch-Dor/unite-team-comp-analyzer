@@ -35,4 +35,4 @@
 - Add to playable_characters table in db editor
 - Add to pokemon_moves table in db editor
 - Add to pokemon_attributes in db editor
-- Add to tier_list in web app using admin
+- Add to tier_list in db editor
