@@ -380,7 +380,9 @@ function TierList() {
                   className={`draggable-item ${item.pokemon_class}`}
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
-                  onClick={() => {setSelectedPokemon(item)}}
+                  onClick={(e) => {e.stopPropagation(); // prevent event from reaching parent so it doesn't reset selectedPokemon
+                    setSelectedPokemon(item)
+                  }}
                 >
                   <img 
                     src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
