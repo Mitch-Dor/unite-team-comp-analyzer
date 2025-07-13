@@ -105,7 +105,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                         <>
                                             <h3>{currentPick.pokemon.pokemon_name}</h3>
                                             {relatedPick && (
-                                                <button className="switchButton" onClick={() => switchSpecialCase(currentPick, relatedPick, pickPosition)}>
+                                                <button className="switchButton" onClick={(e) => {e.stopPropagation(); switchSpecialCase(currentPick, relatedPick, pickPosition);}}>
                                                     <GoArrowSwitch />
                                                 </button>
                                             )}
@@ -123,7 +123,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                                 alt={currentPick.pokemon.pokemon_name}  
                                             />
                                             {relatedPick && (
-                                                <button className="switchButton" onClick={() => switchSpecialCase(currentPick, relatedPick, pickPosition)}>
+                                                <button className="switchButton" onClick={(e) => {e.stopPropagation(); switchSpecialCase(currentPick, relatedPick, pickPosition);}}>
                                                     <GoArrowSwitch />
                                                 </button>
                                             )}
@@ -178,7 +178,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                     <>
                                         <h3>{pokemon.pokemon_name}</h3>
                                         {relatedPick && (
-                                            <button className="switchButton" onClick={() => switchSpecialCase(pokemon, relatedPick)}>
+                                            <button className="switchButton" onClick={(e) => {e.stopPropagation(); switchSpecialCase(pokemon, relatedPick);}}>
                                                 <GoArrowSwitch />
                                             </button>
                                         )}
@@ -188,7 +188,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                     <>
                                         <img className={`characterPortrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} onMouseEnter={(e) => handleMouseEnter(e, pokemon, index)} onMouseLeave={handleMouseLeave} />
                                         {relatedPick && (
-                                            <button className="switchButton" onClick={() => switchSpecialCase(pokemon, relatedPick)}>
+                                            <button className="switchButton" onClick={(e) => {e.stopPropagation(); switchSpecialCase(pokemon, relatedPick);}}>
                                                 <GoArrowSwitch />
                                             </button>
                                         )}
