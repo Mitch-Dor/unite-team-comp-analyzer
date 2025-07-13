@@ -327,10 +327,16 @@ html::-webkit-scrollbar {
     writing-mode: vertical-rl;
 }
 
+@media (max-width: 1024px) {
+    .orangeSelection.characterSelection h3 {
+        rotate: 180deg;
+    }
+}
+
 /* Tablet and up */
 @media (min-width: 768px) {
     .characterSelection h3 {
-        font-size: 1rem;
+        font-size: 0.8rem;
     }
 }
 
