@@ -1,4 +1,4 @@
-function CompDisplay({ match, teamData, teamNumber }) {
+function CompDisplay({ match, teamData, teamNumber, hasAdvanced }) {
     const firstPickNumbers = [1, 4, 5, 8, 9];
     const secondPickNumbers = [2, 3, 6, 7, 10];
 
@@ -29,7 +29,8 @@ function CompDisplay({ match, teamData, teamNumber }) {
             
             <div className="team-comp">
             {teamData.pokemon.map((pokemon, i) => (
-                <div key={i} className="draft-row">
+                <>
+                <div className="draft-row" key={i}>
                     <div className="draft-row-number-headshot-container">
                         <div className="draft-number">{teamData.firstPick === true ? firstPickNumbers[i] : secondPickNumbers[i]}</div>
                         <img 
@@ -55,6 +56,18 @@ function CompDisplay({ match, teamData, teamNumber }) {
                     </div>
                     <div className="player-name" title={teamData.players[i] || '—'}>{teamData.players[i] || '—'}</div>
                 </div>
+                {hasAdvanced &&
+                    <div className="stats-row">
+                        <div className="statNumber kills">{teamData.pokemon_data[i][0]}</div>
+                        <div className="statNumber assists">{teamData.pokemon_data[i][1]}</div>
+                        <div className="statNumber scored">{teamData.pokemon_data[i][2]}</div>
+                        <div className="statBar dealt">{teamData.pokemon_data[i][3]}</div>
+                        <div className="statBar taken">{teamData.pokemon_data[i][4]}</div>
+                        <div className="statBar healed">{teamData.pokemon_data[i][5]}</div>
+                        <div className={`positionIndicator ${teamData.pokemon_data[i][6]}`}></div>
+                    </div>
+                }
+                </>
             ))}
             </div>
         </div>

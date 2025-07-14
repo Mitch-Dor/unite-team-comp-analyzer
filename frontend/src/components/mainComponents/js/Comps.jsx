@@ -62,10 +62,16 @@ function Comps() {
   useEffect(() => {
     fetchAllComps().then(data => {
       let formattedData = [];
-      console.log(data);
       for (const comp of data) {
         const team1Data = {
           pokemon: [comp.team1_pokemon1, comp.team1_pokemon2, comp.team1_pokemon3, comp.team1_pokemon4, comp.team1_pokemon5],
+          pokemon_data: [
+          [comp.team1_pokemon1_kills, comp.team1_pokemon1_assists, comp.team1_pokemon1_scored, comp.team1_pokemon1_dealt, comp.team1_pokemon1_taken, comp.team1_pokemon1_healed, comp.team1_pokemon1_position],
+          [comp.team1_pokemon2_kills, comp.team1_pokemon2_assists, comp.team1_pokemon2_scored, comp.team1_pokemon2_dealt, comp.team1_pokemon2_taken, comp.team1_pokemon2_healed, comp.team1_pokemon2_position],
+          [comp.team1_pokemon3_kills, comp.team1_pokemon3_assists, comp.team1_pokemon3_scored, comp.team1_pokemon3_dealt, comp.team1_pokemon3_taken, comp.team1_pokemon3_healed, comp.team1_pokemon3_position],
+          [comp.team1_pokemon4_kills, comp.team1_pokemon4_assists, comp.team1_pokemon4_scored, comp.team1_pokemon4_dealt, comp.team1_pokemon4_taken, comp.team1_pokemon4_healed, comp.team1_pokemon4_position],
+          [comp.team1_pokemon5_kills, comp.team1_pokemon5_assists, comp.team1_pokemon5_scored, comp.team1_pokemon5_dealt, comp.team1_pokemon5_taken, comp.team1_pokemon5_healed, comp.team1_pokemon5_position],
+          ],
           pokemon_moves: [comp.team1_pokemon1_move1, comp.team1_pokemon1_move2, comp.team1_pokemon2_move1, comp.team1_pokemon2_move2, comp.team1_pokemon3_move1, comp.team1_pokemon3_move2, comp.team1_pokemon4_move1, comp.team1_pokemon4_move2, comp.team1_pokemon5_move1, comp.team1_pokemon5_move2],
           bans: [comp.team1_ban1, comp.team1_ban2],
           name: comp.team1_name,
@@ -75,6 +81,13 @@ function Comps() {
         }
         const team2Data = {
           pokemon: [comp.team2_pokemon1, comp.team2_pokemon2, comp.team2_pokemon3, comp.team2_pokemon4, comp.team2_pokemon5],
+          pokemon_data: [
+          [comp.team2_pokemon1_kills, comp.team2_pokemon1_assists, comp.team2_pokemon1_scored, comp.team2_pokemon1_dealt, comp.team2_pokemon1_taken, comp.team2_pokemon1_healed, comp.team2_pokemon1_position],
+          [comp.team2_pokemon2_kills, comp.team2_pokemon2_assists, comp.team2_pokemon2_scored, comp.team2_pokemon2_dealt, comp.team2_pokemon2_taken, comp.team2_pokemon2_healed, comp.team2_pokemon2_position],
+          [comp.team2_pokemon3_kills, comp.team2_pokemon3_assists, comp.team2_pokemon3_scored, comp.team2_pokemon3_dealt, comp.team2_pokemon3_taken, comp.team2_pokemon3_healed, comp.team2_pokemon3_position],
+          [comp.team2_pokemon4_kills, comp.team2_pokemon4_assists, comp.team2_pokemon4_scored, comp.team2_pokemon4_dealt, comp.team2_pokemon4_taken, comp.team2_pokemon4_healed, comp.team2_pokemon4_position],
+          [comp.team2_pokemon5_kills, comp.team2_pokemon5_assists, comp.team2_pokemon5_scored, comp.team2_pokemon5_dealt, comp.team2_pokemon5_taken, comp.team2_pokemon5_healed, comp.team2_pokemon5_position],
+          ],
           pokemon_moves: [comp.team2_pokemon1_move1, comp.team2_pokemon1_move2, comp.team2_pokemon2_move1, comp.team2_pokemon2_move2, comp.team2_pokemon3_move1, comp.team2_pokemon3_move2, comp.team2_pokemon4_move1, comp.team2_pokemon4_move2, comp.team2_pokemon5_move1, comp.team2_pokemon5_move2],
           bans: [comp.team2_ban1, comp.team2_ban2],
           name: comp.team2_name,
@@ -90,7 +103,8 @@ function Comps() {
           matchDate: comp.event_date,
           set_description: comp.set_descriptor,
           vod: comp.vod_url,
-          set_id: comp.set_id
+          set_id: comp.set_id,
+          has_advanced_data: team1Data.pokemon_data[0][3] ? true : false // This is damage dealt. You're never gonna have a comp match where you deal 0 damage so this is safe to check. If one data point is present, they all are.
         }
         formattedData.push(finalData);
       }
