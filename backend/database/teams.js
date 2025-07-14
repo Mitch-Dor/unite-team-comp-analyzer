@@ -90,6 +90,80 @@ class Teams {
           m2_8.move_name AS team2_pokemon4_move2,
           m2_9.move_name AS team2_pokemon5_move1,
           m2_10.move_name AS team2_pokemon5_move2,
+
+          -- Team 1 Performance
+          pope1_1.kills AS team1_pokemon1_kills,
+          pope1_1.assists AS team1_pokemon1_assists,
+          pope1_1.damage_dealt AS team1_pokemon1_dealt,
+          pope1_1.damage_taken AS team1_pokemon1_taken,
+          pope1_1.damage_healed AS team1_pokemon1_healed,
+          pope1_1.points_scored AS team1_pokemon1_scored,
+          pope1_1.position_played AS team1_pokemon1_position,
+          pope1_2.kills AS team1_pokemon2_kills,
+          pope1_2.assists AS team1_pokemon2_assists,
+          pope1_2.damage_dealt AS team1_pokemon2_dealt,
+          pope1_2.damage_taken AS team1_pokemon2_taken,
+          pope1_2.damage_healed AS team1_pokemon2_healed,
+          pope1_2.points_scored AS team1_pokemon2_scored,
+          pope1_2.position_played AS team1_pokemon2_position,
+          pope1_3.kills AS team1_pokemon3_kills,
+          pope1_3.assists AS team1_pokemon3_assists,
+          pope1_3.damage_dealt AS team1_pokemon3_dealt,
+          pope1_3.damage_taken AS team1_pokemon3_taken,
+          pope1_3.damage_healed AS team1_pokemon3_healed,
+          pope1_3.points_scored AS team1_pokemon3_scored,
+          pope1_3.position_played AS team1_pokemon3_position,
+          pope1_4.kills AS team1_pokemon4_kills,
+          pope1_4.assists AS team1_pokemon4_assists,
+          pope1_4.damage_dealt AS team1_pokemon4_dealt,
+          pope1_4.damage_taken AS team1_pokemon4_taken,
+          pope1_4.damage_healed AS team1_pokemon4_healed,
+          pope1_4.points_scored AS team1_pokemon4_scored,
+          pope1_4.position_played AS team1_pokemon4_position,
+          pope1_5.kills AS team1_pokemon5_kills,
+          pope1_5.assists AS team1_pokemon5_assists,
+          pope1_5.damage_dealt AS team1_pokemon5_dealt,
+          pope1_5.damage_taken AS team1_pokemon5_taken,
+          pope1_5.damage_healed AS team1_pokemon5_healed,
+          pope1_5.points_scored AS team1_pokemon5_scored,
+          pope1_5.position_played AS team1_pokemon5_position,
+
+          -- Team 2 Performance
+          pope2_1.kills AS team2_pokemon1_kills,
+          pope2_1.assists AS team2_pokemon1_assists,
+          pope2_1.damage_dealt AS team2_pokemon1_dealt,
+          pope2_1.damage_taken AS team2_pokemon1_taken,
+          pope2_1.damage_healed AS team2_pokemon1_healed,
+          pope2_1.points_scored AS team2_pokemon1_scored,
+          pope2_1.position_played AS team2_pokemon1_position,
+          pope2_2.kills AS team2_pokemon2_kills,
+          pope2_2.assists AS team2_pokemon2_assists,
+          pope2_2.damage_dealt AS team2_pokemon2_dealt,
+          pope2_2.damage_taken AS team2_pokemon2_taken,
+          pope2_2.damage_healed AS team2_pokemon2_healed,
+          pope2_2.points_scored AS team2_pokemon2_scored,
+          pope2_2.position_played AS team2_pokemon2_position,
+          pope2_3.kills AS team2_pokemon3_kills,
+          pope2_3.assists AS team2_pokemon3_assists,
+          pope2_3.damage_dealt AS team2_pokemon3_dealt,
+          pope2_3.damage_taken AS team2_pokemon3_taken,
+          pope2_3.damage_healed AS team2_pokemon3_healed,
+          pope2_3.points_scored AS team2_pokemon3_scored,
+          pope2_3.position_played AS team2_pokemon3_position,
+          pope2_4.kills AS team2_pokemon4_kills,
+          pope2_4.assists AS team2_pokemon4_assists,
+          pope2_4.damage_dealt AS team2_pokemon4_dealt,
+          pope2_4.damage_taken AS team2_pokemon4_taken,
+          pope2_4.damage_healed AS team2_pokemon4_healed,
+          pope2_4.points_scored AS team2_pokemon4_scored,
+          pope2_4.position_played AS team2_pokemon4_position,
+          pope2_5.kills AS team2_pokemon5_kills,
+          pope2_5.assists AS team2_pokemon5_assists,
+          pope2_5.damage_dealt AS team2_pokemon5_dealt,
+          pope2_5.damage_taken AS team2_pokemon5_taken,
+          pope2_5.damage_healed AS team2_pokemon5_healed,
+          pope2_5.points_scored AS team2_pokemon5_scored,
+          pope2_5.position_played AS team2_pokemon5_position,
           
           -- Team 1 Players
           CASE WHEN pp1_1.other_names IS NULL OR pp1_1.other_names = '' THEN pp1_1.player_name ELSE pp1_1.player_name || ' (' || pp1_1.other_names || ')' END AS team1_player1,
@@ -201,7 +275,19 @@ class Teams {
         JOIN playable_characters ban1_2 ON pm.team_1_ban_2 = ban1_2.pokemon_id
         JOIN playable_characters ban2_1 ON pm.team_2_ban_1 = ban2_1.pokemon_id
         JOIN playable_characters ban2_2 ON pm.team_2_ban_2 = ban2_2.pokemon_id
-        
+
+        -- Performance
+        LEFT JOIN pokemon_performance pope1_1 ON (pope1_1.comp_id = pc1.comp_id OR pope1_1.comp_id = pc2.comp_id) AND (pope1_1.pokemon_id = pc1.pokemon_1)
+        LEFT JOIN pokemon_performance pope1_2 ON (pope1_2.comp_id = pc1.comp_id OR pope1_2.comp_id = pc2.comp_id) AND (pope1_2.pokemon_id = pc1.pokemon_2)
+        LEFT JOIN pokemon_performance pope1_3 ON (pope1_3.comp_id = pc1.comp_id OR pope1_3.comp_id = pc2.comp_id) AND (pope1_3.pokemon_id = pc1.pokemon_3)
+        LEFT JOIN pokemon_performance pope1_4 ON (pope1_4.comp_id = pc1.comp_id OR pope1_4.comp_id = pc2.comp_id) AND (pope1_4.pokemon_id = pc1.pokemon_4)
+        LEFT JOIN pokemon_performance pope1_5 ON (pope1_5.comp_id = pc1.comp_id OR pope1_5.comp_id = pc2.comp_id) AND (pope1_5.pokemon_id = pc1.pokemon_5)
+        LEFT JOIN pokemon_performance pope2_1 ON (pope2_1.comp_id = pc1.comp_id OR pope2_1.comp_id = pc2.comp_id) AND (pope2_1.pokemon_id = pc2.pokemon_1)
+        LEFT JOIN pokemon_performance pope2_2 ON (pope2_2.comp_id = pc1.comp_id OR pope2_2.comp_id = pc2.comp_id) AND (pope2_2.pokemon_id = pc2.pokemon_2)
+        LEFT JOIN pokemon_performance pope2_3 ON (pope2_3.comp_id = pc1.comp_id OR pope2_3.comp_id = pc2.comp_id) AND (pope2_3.pokemon_id = pc2.pokemon_3)
+        LEFT JOIN pokemon_performance pope2_4 ON (pope2_4.comp_id = pc1.comp_id OR pope2_4.comp_id = pc2.comp_id) AND (pope2_4.pokemon_id = pc2.pokemon_4)
+        LEFT JOIN pokemon_performance pope2_5 ON (pope2_5.comp_id = pc1.comp_id OR pope2_5.comp_id = pc2.comp_id) AND (pope2_5.pokemon_id = pc2.pokemon_5)
+
         ORDER BY pm.match_id
         `;
         

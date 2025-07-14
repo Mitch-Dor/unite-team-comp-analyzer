@@ -62,6 +62,7 @@ function Comps() {
   useEffect(() => {
     fetchAllComps().then(data => {
       let formattedData = [];
+      console.log(data);
       for (const comp of data) {
         const team1Data = {
           pokemon: [comp.team1_pokemon1, comp.team1_pokemon2, comp.team1_pokemon3, comp.team1_pokemon4, comp.team1_pokemon5],
