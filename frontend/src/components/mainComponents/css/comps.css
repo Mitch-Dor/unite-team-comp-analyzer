@@ -687,6 +687,12 @@
     width: 45%;
 }
 
+.character-player-stat-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .set-character-player {
     display: flex;
     flex-direction: row;
@@ -710,13 +716,28 @@
     width: 25%;
 }
 
+.stat-inputs-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    padding-bottom: 10px;
+}
+
+input.stat-input {
+    width: 7%;
+}
+
+select.stat-input {
+    width: 18%;
+}
+
 .match-winner-dropdown {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    padding-bottom: 90px;
-    padding-top: 90px;
+    padding-bottom: 30px;
+    padding-top: 10px;
 }
 
 .set-comp-content {

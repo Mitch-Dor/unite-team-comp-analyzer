@@ -457,7 +457,7 @@ class Teams {
           // Wait for all comps to be inserted
           Promise.all(compPromises)
             .then(compIds => {
-              // Now insert all matches
+              // Now insert all matches & if applicable, stat data
               const matchPromises = [];
               for (let i = 0; i < setMatches.matches.length; i++) {
                 const [comp1ID, comp2ID] = compIds[i];
@@ -473,6 +473,27 @@ class Teams {
                 });
                 
                 matchPromises.push(matchPromise);
+
+                if (setMatches.matches[i].hasAdvancedData) {
+                  for (let j = 0; j < 5; j++){
+                    team1Pokemon = team1.pokemon[j];
+                    team2Pokemon = team2.pokemon[j];
+                    const statPromiseT1 = new Promise((resolve, reject) => {
+                      sql = 'INSERT INTO pokemon_performance (comp_id, pokemon_id, kills, assists, damage_dealt, damage_taken, damage_healed, points_scored, position_played) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
+                      db.query(sql, [comp1ID, team1Pokemon, team1.pokemon_data[j][0], team1.pokemon_data[j][1], team1.pokemon_data[j][2], team1.pokemon_data[j][3], team1.pokemon_data[j][4], team1.pokemon_data[j][5], team1.pokemon_data[j][6]], function(err) {
+                        if (err) reject(err);
+                        else resolve();
+                      });
+                    });
+                    const statPromiseT3 = new Promise((resolve, reject) => {
+                      sql = 'INSERT INTO pokemon_performance (comp_id, pokemon_id, kills, assists, damage_dealt, damage_taken, damage_healed, points_scored, position_played) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
+                      db.query(sql, [comp2ID, team2Pokemon, team2.pokemon_data[j][0], team2.pokemon_data[j][1], team2.pokemon_data[j][2], team2.pokemon_data[j][3], team2.pokemon_data[j][4], team2.pokemon_data[j][5], team2.pokemon_data[j][6]], function(err) {
+                        if (err) reject(err);
+                        else resolve();
+                      });
+                    });
+                  }
+                }
               }
               
               // Wait for all matches to be inserted

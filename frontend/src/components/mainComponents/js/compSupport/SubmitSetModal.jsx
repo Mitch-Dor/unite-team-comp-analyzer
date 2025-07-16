@@ -105,7 +105,8 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                         bans: [checkNull(matchData.team1[2]?.pokemon_name, "team1Ban1", i), checkNull(matchData.team1[3]?.pokemon_name, "team1Ban2", i)],
                         pokemon: [checkNull(matchData.team1[4]?.pokemon_name, "team1Pokemon1", i), checkNull(matchData.team1[5]?.pokemon_name, "team1Pokemon2", i), checkNull(matchData.team1[6]?.pokemon_name, "team1Pokemon3", i), checkNull(matchData.team1[7]?.pokemon_name, "team1Pokemon4", i), checkNull(matchData.team1[8]?.pokemon_name, "team1Pokemon5", i)],
                         pokemon_moves: [checkNull(matchData.team1[9]?.move_name, "team1Pokemon1Move1", i), checkNull(matchData.team1[10]?.move_name, "team1Pokemon1Move2", i), checkNull(matchData.team1[11]?.move_name, "team1Pokemon2Move1", i), checkNull(matchData.team1[12]?.move_name, "team1Pokemon2Move2", i), checkNull(matchData.team1[13]?.move_name, "team1Pokemon3Move1", i), checkNull(matchData.team1[14]?.move_name, "team1Pokemon3Move2", i), checkNull(matchData.team1[15]?.move_name, "team1Pokemon4Move1", i), checkNull(matchData.team1[16]?.move_name, "team1Pokemon4Move2", i), checkNull(matchData.team1[17]?.move_name, "team1Pokemon5Move1", i), checkNull(matchData.team1[18]?.move_name, "team1Pokemon5Move2", i)],
-                        players: [checkNull(matchData.team1[19]?.player_name, "team1Player1", i), checkNull(matchData.team1[20]?.player_name, "team1Player2", i), checkNull(matchData.team1[21]?.player_name, "team1Player3", i), checkNull(matchData.team1[22]?.player_name, "team1Player4", i), checkNull(matchData.team1[23]?.player_name, "team1Player5", i)]
+                        players: [checkNull(matchData.team1[19]?.player_name, "team1Player1", i), checkNull(matchData.team1[20]?.player_name, "team1Player2", i), checkNull(matchData.team1[21]?.player_name, "team1Player3", i), checkNull(matchData.team1[22]?.player_name, "team1Player4", i), checkNull(matchData.team1[23]?.player_name, "team1Player5", i)],
+                        pokemon_data: checkStats([matchData.team1[24], matchData.team1[25], matchData.team1[26], matchData.team1[27], matchData.team1[28]])
                     }
                     let team2Data = {
                         name: checkNull(matchData.team2[0]?.team_name, "team2TeamName", i),
@@ -114,7 +115,8 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                         bans: [checkNull(matchData.team2[2]?.pokemon_name, "team2Ban1", i), checkNull(matchData.team2[3]?.pokemon_name, "team2Ban2", i)],
                         pokemon: [checkNull(matchData.team2[4]?.pokemon_name, "team2Pokemon1", i), checkNull(matchData.team2[5]?.pokemon_name, "team2Pokemon2", i), checkNull(matchData.team2[6]?.pokemon_name, "team2Pokemon3", i), checkNull(matchData.team2[7]?.pokemon_name, "team2Pokemon4", i), checkNull(matchData.team2[8]?.pokemon_name, "team2Pokemon5", i)],
                         pokemon_moves: [checkNull(matchData.team2[9]?.move_name, "team2Pokemon1Move1", i), checkNull(matchData.team2[10]?.move_name, "team2Pokemon1Move2", i), checkNull(matchData.team2[11]?.move_name, "team2Pokemon2Move1", i), checkNull(matchData.team2[12]?.move_name, "team2Pokemon2Move2", i), checkNull(matchData.team2[13]?.move_name, "team2Pokemon3Move1", i), checkNull(matchData.team2[14]?.move_name, "team2Pokemon3Move2", i), checkNull(matchData.team2[15]?.move_name, "team2Pokemon4Move1", i), checkNull(matchData.team2[16]?.move_name, "team2Pokemon4Move2", i), checkNull(matchData.team2[17]?.move_name, "team2Pokemon5Move1", i), checkNull(matchData.team2[18]?.move_name, "team2Pokemon5Move2", i)],
-                        players: [checkNull(matchData.team2[19]?.player_name, "team2Player1", i), checkNull(matchData.team2[20]?.player_name, "team2Player2", i), checkNull(matchData.team2[21]?.player_name, "team2Player3", i), checkNull(matchData.team2[22]?.player_name, "team2Player4", i), checkNull(matchData.team2[23]?.player_name, "team2Player5", i)]
+                        players: [checkNull(matchData.team2[19]?.player_name, "team2Player1", i), checkNull(matchData.team2[20]?.player_name, "team2Player2", i), checkNull(matchData.team2[21]?.player_name, "team2Player3", i), checkNull(matchData.team2[22]?.player_name, "team2Player4", i), checkNull(matchData.team2[23]?.player_name, "team2Player5", i)],
+                        pokemon_data: checkStats([matchData.team2[24], matchData.team2[25], matchData.team2[26], matchData.team2[27], matchData.team2[28]])
                     }
                     checkNull(matchData.winner, "winner", i);
 
@@ -149,7 +151,8 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                         event: checkNull(setInsertion[5]?.event_name, "eventName", 0), 
                         matchDate: checkNull(setInsertion[5]?.event_date, "eventDate", 0), 
                         set_description: checkNull(setInsertion[6], "setDescriptor", 0), 
-                        vod: checkNull(setInsertion[5]?.vod_url, "vodUrl", 0)
+                        vod: checkNull(setInsertion[5]?.vod_url, "vodUrl", 0),
+                        has_advanced_data: team1Data.pokemon_data[0][3] ? true : false
                     });
                     i++;
                 }
@@ -176,7 +179,8 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                             bans: [match[0][2]?.pokemon_id, match[0][3]?.pokemon_id],
                             pokemon: [match[0][4]?.pokemon_id, match[0][5]?.pokemon_id, match[0][6]?.pokemon_id, match[0][7]?.pokemon_id, match[0][8]?.pokemon_id],
                             pokemon_moves: [match[0][9]?.move_id, match[0][10]?.move_id, match[0][11]?.move_id, match[0][12]?.move_id, match[0][13]?.move_id, match[0][14]?.move_id, match[0][15]?.move_id, match[0][16]?.move_id, match[0][17]?.move_id, match[0][18]?.move_id],
-                            players: [match[0][19]?.player_id, match[0][20]?.player_id, match[0][21]?.player_id, match[0][22]?.player_id, match[0][23]?.player_id]
+                            players: [match[0][19]?.player_id, match[0][20]?.player_id, match[0][21]?.player_id, match[0][22]?.player_id, match[0][23]?.player_id],
+                            pokemon_data: checkStats([matchData.team1[24], matchData.team1[25], matchData.team1[26], matchData.team1[27], matchData.team1[28]])
                         },
                         team2: {
                             team_id: match[1][0].team_id,
@@ -184,9 +188,11 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                             bans: [match[1][2]?.pokemon_id, match[1][3]?.pokemon_id],
                             pokemon: [match[1][4]?.pokemon_id, match[1][5]?.pokemon_id, match[1][6]?.pokemon_id, match[1][7]?.pokemon_id, match[1][8]?.pokemon_id],
                             pokemon_moves: [match[1][9]?.move_id, match[1][10]?.move_id, match[1][11]?.move_id, match[1][12]?.move_id, match[1][13]?.move_id, match[1][14]?.move_id, match[1][15]?.move_id, match[1][16]?.move_id, match[1][17]?.move_id, match[1][18]?.move_id],
-                            players: [match[1][19]?.player_id, match[1][20]?.player_id, match[1][21]?.player_id, match[1][22]?.player_id, match[1][23]?.player_id]
+                            players: [match[1][19]?.player_id, match[1][20]?.player_id, match[1][21]?.player_id, match[1][22]?.player_id, match[1][23]?.player_id],
+                            pokemon_data: checkStats([matchData.team2[24], matchData.team2[25], matchData.team2[26], matchData.team2[27], matchData.team2[28]])
                         },
-                        winningTeam: parseInt(match[2])
+                        winningTeam: parseInt(match[2]),
+                        hasAdvancedData: matchData.team1[24].dealt ? true : false
                     }
                     matchData.push(thisMatch);
                 }
@@ -340,6 +346,63 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             }
             return data;
         }
+    }
+
+    function checkStats(data) {
+        allNull = true;
+        allFilled = true;
+        let returnArray = [];
+        for (let i = 0; i < 5; i++) {
+            statArray = [];
+            if (data[i].kills !== null) {
+                allNull = false;
+            } else {
+                allFilled = false;
+            }
+            statArray.push(data[i].kills);
+            if (data[i].assists !== null) {
+                allNull = false;
+            } else {
+                allFilled = false;
+            }
+            statArray.push(data[i].assists);
+            if (data[i].scored !== null) {
+                allNull = false;
+            } else {
+                allFilled = false;
+            }
+            statArray.push(data[i].scored);
+            if (data[i].dealt !== null) {
+                allNull = false;
+            } else {
+                allFilled = false;
+            }
+            statArray.push(data[i].dealt);
+            if (data[i].taken !== null) {
+                allNull = false;
+            } else {
+                allFilled = false;
+            }
+            statArray.push(data[i].taken);
+            if (data[i].healed !== null) {
+                allNull = false;
+            } else {
+                allFilled = false;
+            }
+            statArray.push(data[i].healed);
+            if (data[i].positionPlayed !== null) {
+                allNull = false;
+            } else {
+                allFilled = false;
+            }
+            statArray.push(data[i].positionPlayed);
+            returnArray.push(statArray);
+        }
+        if (!allFilled && !allNull) {
+            errorCount += 1;
+            error += "Stat data missing.";
+        }
+        return returnArray;
     }
     
     const resetAllForms = () => {
@@ -606,6 +669,11 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
     const [player3, setPlayer3] = useState(null);
     const [player4, setPlayer4] = useState(null);
     const [player5, setPlayer5] = useState(null);
+    const [p1stats, setP1Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
+    const [p2stats, setP2Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
+    const [p3stats, setP3Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
+    const [p4stats, setP4Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
+    const [p5stats, setP5Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
 
     const resetForm = () => {
         setSelectedTeam(null);
@@ -632,15 +700,20 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
         setPlayer3(null);
         setPlayer4(null);
         setPlayer5(null);
+        setP1Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
+        setP2Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
+        setP3Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
+        setP4Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
+        setP5Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
     };
 
     useEffect(() => {
         if (selectedTeam) {
-            setComp([selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+            setComp([selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5, p1stats, p2stats, p3stats, p4stats, p5stats]);
         } else {
-            setComp([null, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+            setComp([null, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5, p1stats, p2stats, p3stats, p4stats, p5stats]);
         }
-    }, [selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5]);
+    }, [selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5, p1stats, p2stats, p3stats, p4stats, p5stats]);
 
     useEffect(() => {
         resetForm();
@@ -721,10 +794,12 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     move1={pokemon1move1} 
                     move2={pokemon1move2} 
                     player={player1} 
+                    stats={p1stats}
                     setCharacter={setPokemon1} 
                     setMove1={setPokemon1Move1} 
                     setMove2={setPokemon1Move2} 
                     setPlayer={setPlayer1}
+                    setStats={setP1Stats}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
                     unavailableCharacters={unavailableCharacters}
@@ -734,10 +809,12 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     move1={pokemon2move1} 
                     move2={pokemon2move2} 
                     player={player2} 
+                    stats={p2stats}
                     setCharacter={setPokemon2} 
                     setMove1={setPokemon2Move1} 
                     setMove2={setPokemon2Move2} 
                     setPlayer={setPlayer2}
+                    setStats={setP2Stats}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
                     unavailableCharacters={unavailableCharacters}
@@ -747,10 +824,12 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     move1={pokemon3move1} 
                     move2={pokemon3move2} 
                     player={player3} 
+                    stats={p3stats}
                     setCharacter={setPokemon3} 
                     setMove1={setPokemon3Move1} 
                     setMove2={setPokemon3Move2} 
                     setPlayer={setPlayer3}
+                    setStats={setP3Stats}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
                     unavailableCharacters={unavailableCharacters}
@@ -760,10 +839,12 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     move1={pokemon4move1} 
                     move2={pokemon4move2} 
                     player={player4} 
+                    stats={p4stats}
                     setCharacter={setPokemon4} 
                     setMove1={setPokemon4Move1} 
                     setMove2={setPokemon4Move2} 
                     setPlayer={setPlayer4}
+                    setStats={setP4Stats}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
                     unavailableCharacters={unavailableCharacters}
@@ -773,10 +854,12 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     move1={pokemon5move1} 
                     move2={pokemon5move2} 
                     player={player5} 
+                    stats={p5stats}
                     setCharacter={setPokemon5} 
                     setMove1={setPokemon5Move1} 
                     setMove2={setPokemon5Move2} 
                     setPlayer={setPlayer5}
+                    setStats={setP5Stats}
                     charactersAndMoves={charactersAndMoves}
                     players={players}
                     unavailableCharacters={unavailableCharacters}
@@ -787,7 +870,7 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
 }
 
 // Character and player insertion form for a comp (Used in SetInsertion)
-function CharacterPlayer({ character, move1, move2, player, setCharacter, setMove1, setMove2, setPlayer, charactersAndMoves, players, unavailableCharacters }) {
+function CharacterPlayer({ character, move1, move2, player, stats, setCharacter, setMove1, setMove2, setPlayer, setStats, charactersAndMoves, players, unavailableCharacters }) {
     // Get available moves for the selected character
     const getPokemonMoves = (pokemonName) => {
         if (!pokemonName) return [];
@@ -809,48 +892,65 @@ function CharacterPlayer({ character, move1, move2, player, setCharacter, setMov
     );
     
     return (
-        <div className="set-character-player">
-            {/* Character Dropdown */}
-            <CustomDropdown
-                value={character}
-                onChange={(value) => {
-                    setCharacter(value);
-                    setMove1(null);
-                    setMove2(null);
-                }}
-                options={filteredUniquePokemon}
-                placeholder="Character Select"
-                path="/assets/Draft/headshots"
-            />
-            {/* Move 1 Dropdown */}
-            <CustomDropdown
-                value={move1}
-                onChange={setMove1}
-                options={availableMoves}
-                placeholder="Move 1 Select"
-                disabled={!character}   
-                path="/assets/Draft/moves"
-                character_name={character ? character.pokemon_name : character}  
-            />
-            {/* Move 2 Dropdown */}
-            <CustomDropdown
-                value={move2}
-                onChange={setMove2}
-                options={availableMoves}
-                placeholder="Move 2 Select"
-                disabled={!character}   
-                path="/assets/Draft/moves"
-                character_name={character ? character.pokemon_name : character}  
-            />
-            {/* Player Dropdown */}
-            <select value={player ? JSON.stringify(player) : ""} onChange={(e) => setPlayer(JSON.parse(e.target.value))}>
-                <option value="">Player Select</option>
-                {players.map(player => (
-                    <option key={player.player_id} value={JSON.stringify({player_id: player.player_id, player_name: player.player_name})}>
-                        {player.player_name}
-                    </option>
-                ))}
-            </select>
+        <div className="character-player-stat-container">
+            <div className="set-character-player">
+                {/* Character Dropdown */}
+                <CustomDropdown
+                    value={character}
+                    onChange={(value) => {
+                        setCharacter(value);
+                        setMove1(null);
+                        setMove2(null);
+                    }}
+                    options={filteredUniquePokemon}
+                    placeholder="Character Select"
+                    path="/assets/Draft/headshots"
+                />
+                {/* Move 1 Dropdown */}
+                <CustomDropdown
+                    value={move1}
+                    onChange={setMove1}
+                    options={availableMoves}
+                    placeholder="Move 1 Select"
+                    disabled={!character}   
+                    path="/assets/Draft/moves"
+                    character_name={character ? character.pokemon_name : character}  
+                />
+                {/* Move 2 Dropdown */}
+                <CustomDropdown
+                    value={move2}
+                    onChange={setMove2}
+                    options={availableMoves}
+                    placeholder="Move 2 Select"
+                    disabled={!character}   
+                    path="/assets/Draft/moves"
+                    character_name={character ? character.pokemon_name : character}  
+                />
+                {/* Player Dropdown */}
+                <select value={player ? JSON.stringify(player) : ""} onChange={(e) => setPlayer(JSON.parse(e.target.value))}>
+                    <option value="">Player Select</option>
+                    {players.map(player => (
+                        <option key={player.player_id} value={JSON.stringify({player_id: player.player_id, player_name: player.player_name})}>
+                            {player.player_name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <div className="stat-inputs-container">
+                <input className="stat-input" type="number" placeholder="kills" value={stats.kills} onChange={(e) => setStats(prev => ({ ...prev, kills: Number(e.target.value) }))}></input>
+                <input className="stat-input" type="number" placeholder="assists" value={stats.assists} onChange={(e) => setStats(prev => ({ ...prev, assists: Number(e.target.value) }))}></input>
+                <input className="stat-input" type="number" placeholder="scored" value={stats.scored} onChange={(e) => setStats(prev => ({ ...prev, scored: Number(e.target.value) }))}></input>
+                <input className="stat-input" type="number" placeholder="dealt" value={stats.dealt} onChange={(e) => setStats(prev => ({ ...prev, dealt: Number(e.target.value) }))}></input>
+                <input className="stat-input" type="number" placeholder="taken" value={stats.taken} onChange={(e) => setStats(prev => ({ ...prev, taken: Number(e.target.value) }))}></input>
+                <input className="stat-input" type="number" placeholder="healed" value={stats.healed} onChange={(e) => setStats(prev => ({ ...prev, healed: Number(e.target.value) }))}></input>
+                <select className="stat-input" value={stats.positionPlayed} onChange={(e) => setStats(prev => ({ ...prev, positionPlayed: e.target.value }))}>
+                    <option value="TopCarry">Top Carry</option>
+                    <option value="EXPShareTop">Top EXP Share</option>
+                    <option value="JungleCarry">Jungle Carry</option>
+                    <option value="BotCarry">Bot Carry</option>
+                    <option value="EXPShareBot">Bot EXP Share</option>
+                </select>
+            </div>
         </div>
     )
 }
