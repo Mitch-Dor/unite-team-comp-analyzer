@@ -49,6 +49,23 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                 break;
         }
 
+        function checkNotDefaultMatch(match) {
+            for (let j=0; j<2; j++){
+                for(let i=0; i<24; i++){
+                    if (i === 1 && match[j][i] !== false) {
+                        return true;
+                    }
+                    if(match[j][i] !== null && i !== 1){
+                        return true;
+                    }
+                }
+            }
+            if(match[3] !== null){
+                return false;
+            }
+            return false;
+        }
+
         function setCheck() {
             // Check if setInsertion exists and has the required length
             if (!setInsertion || setInsertion.length < 7) {
@@ -65,7 +82,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             // Format the data in a way that's easy to insert into the comps page and do null checks
             for (let j = 0; j < 5; j++) {
                 const match = setInsertion[j];
-                if (match !== null) {
+                if (checkNotDefaultMatch(match)) {
                     let matchData = {
                         team1: match[0],
                         team2: match[1],
@@ -106,7 +123,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                         pokemon: [checkNull(matchData.team1[4]?.pokemon_name, "team1Pokemon1", i), checkNull(matchData.team1[5]?.pokemon_name, "team1Pokemon2", i), checkNull(matchData.team1[6]?.pokemon_name, "team1Pokemon3", i), checkNull(matchData.team1[7]?.pokemon_name, "team1Pokemon4", i), checkNull(matchData.team1[8]?.pokemon_name, "team1Pokemon5", i)],
                         pokemon_moves: [checkNull(matchData.team1[9]?.move_name, "team1Pokemon1Move1", i), checkNull(matchData.team1[10]?.move_name, "team1Pokemon1Move2", i), checkNull(matchData.team1[11]?.move_name, "team1Pokemon2Move1", i), checkNull(matchData.team1[12]?.move_name, "team1Pokemon2Move2", i), checkNull(matchData.team1[13]?.move_name, "team1Pokemon3Move1", i), checkNull(matchData.team1[14]?.move_name, "team1Pokemon3Move2", i), checkNull(matchData.team1[15]?.move_name, "team1Pokemon4Move1", i), checkNull(matchData.team1[16]?.move_name, "team1Pokemon4Move2", i), checkNull(matchData.team1[17]?.move_name, "team1Pokemon5Move1", i), checkNull(matchData.team1[18]?.move_name, "team1Pokemon5Move2", i)],
                         players: [checkNull(matchData.team1[19]?.player_name, "team1Player1", i), checkNull(matchData.team1[20]?.player_name, "team1Player2", i), checkNull(matchData.team1[21]?.player_name, "team1Player3", i), checkNull(matchData.team1[22]?.player_name, "team1Player4", i), checkNull(matchData.team1[23]?.player_name, "team1Player5", i)],
-                        pokemon_data: checkStats([matchData.team1[24], matchData.team1[25], matchData.team1[26], matchData.team1[27], matchData.team1[28]])
+                        pokemon_data: checkStats([matchData.team1[24], matchData.team1[25], matchData.team1[26], matchData.team1[27], matchData.team1[28]], j, 1)
                     }
                     let team2Data = {
                         name: checkNull(matchData.team2[0]?.team_name, "team2TeamName", i),
@@ -116,7 +133,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                         pokemon: [checkNull(matchData.team2[4]?.pokemon_name, "team2Pokemon1", i), checkNull(matchData.team2[5]?.pokemon_name, "team2Pokemon2", i), checkNull(matchData.team2[6]?.pokemon_name, "team2Pokemon3", i), checkNull(matchData.team2[7]?.pokemon_name, "team2Pokemon4", i), checkNull(matchData.team2[8]?.pokemon_name, "team2Pokemon5", i)],
                         pokemon_moves: [checkNull(matchData.team2[9]?.move_name, "team2Pokemon1Move1", i), checkNull(matchData.team2[10]?.move_name, "team2Pokemon1Move2", i), checkNull(matchData.team2[11]?.move_name, "team2Pokemon2Move1", i), checkNull(matchData.team2[12]?.move_name, "team2Pokemon2Move2", i), checkNull(matchData.team2[13]?.move_name, "team2Pokemon3Move1", i), checkNull(matchData.team2[14]?.move_name, "team2Pokemon3Move2", i), checkNull(matchData.team2[15]?.move_name, "team2Pokemon4Move1", i), checkNull(matchData.team2[16]?.move_name, "team2Pokemon4Move2", i), checkNull(matchData.team2[17]?.move_name, "team2Pokemon5Move1", i), checkNull(matchData.team2[18]?.move_name, "team2Pokemon5Move2", i)],
                         players: [checkNull(matchData.team2[19]?.player_name, "team2Player1", i), checkNull(matchData.team2[20]?.player_name, "team2Player2", i), checkNull(matchData.team2[21]?.player_name, "team2Player3", i), checkNull(matchData.team2[22]?.player_name, "team2Player4", i), checkNull(matchData.team2[23]?.player_name, "team2Player5", i)],
-                        pokemon_data: checkStats([matchData.team2[24], matchData.team2[25], matchData.team2[26], matchData.team2[27], matchData.team2[28]])
+                        pokemon_data: checkStats([matchData.team2[24], matchData.team2[25], matchData.team2[26], matchData.team2[27], matchData.team2[28]], j, 2)
                     }
                     checkNull(matchData.winner, "winner", i);
 
@@ -171,7 +188,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             let matchData = [];
             for (let j = 0; j < 5; j++) {
                 const match = setInsertion[j];
-                if (match !== null) {
+                if (checkNotDefaultMatch(match)) {
                     const thisMatch = {
                         team1: {
                             team_id: match[0][0].team_id,
@@ -180,7 +197,7 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                             pokemon: [match[0][4]?.pokemon_id, match[0][5]?.pokemon_id, match[0][6]?.pokemon_id, match[0][7]?.pokemon_id, match[0][8]?.pokemon_id],
                             pokemon_moves: [match[0][9]?.move_id, match[0][10]?.move_id, match[0][11]?.move_id, match[0][12]?.move_id, match[0][13]?.move_id, match[0][14]?.move_id, match[0][15]?.move_id, match[0][16]?.move_id, match[0][17]?.move_id, match[0][18]?.move_id],
                             players: [match[0][19]?.player_id, match[0][20]?.player_id, match[0][21]?.player_id, match[0][22]?.player_id, match[0][23]?.player_id],
-                            pokemon_data: checkStats([matchData.team1[24], matchData.team1[25], matchData.team1[26], matchData.team1[27], matchData.team1[28]])
+                            pokemon_data: checkStats([match[0][24], match[0][25], match[0][26], match[0][27], match[0][28]])
                         },
                         team2: {
                             team_id: match[1][0].team_id,
@@ -189,10 +206,10 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
                             pokemon: [match[1][4]?.pokemon_id, match[1][5]?.pokemon_id, match[1][6]?.pokemon_id, match[1][7]?.pokemon_id, match[1][8]?.pokemon_id],
                             pokemon_moves: [match[1][9]?.move_id, match[1][10]?.move_id, match[1][11]?.move_id, match[1][12]?.move_id, match[1][13]?.move_id, match[1][14]?.move_id, match[1][15]?.move_id, match[1][16]?.move_id, match[1][17]?.move_id, match[1][18]?.move_id],
                             players: [match[1][19]?.player_id, match[1][20]?.player_id, match[1][21]?.player_id, match[1][22]?.player_id, match[1][23]?.player_id],
-                            pokemon_data: checkStats([matchData.team2[24], matchData.team2[25], matchData.team2[26], matchData.team2[27], matchData.team2[28]])
+                            pokemon_data: checkStats([match[1][24], match[1][25], match[1][26], match[1][27], match[1][28]])
                         },
                         winningTeam: parseInt(match[2]),
-                        hasAdvancedData: matchData.team1[24].dealt ? true : false
+                        hasAdvancedData: match[0][24].dealt ? true : false
                     }
                     matchData.push(thisMatch);
                 }
@@ -346,63 +363,63 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             }
             return data;
         }
-    }
-
-    function checkStats(data) {
-        allNull = true;
-        allFilled = true;
-        let returnArray = [];
-        for (let i = 0; i < 5; i++) {
-            statArray = [];
-            if (data[i].kills !== null) {
-                allNull = false;
-            } else {
-                allFilled = false;
+    
+        function checkStats(data, match, team) {
+            let allNull = true;
+            let allFilled = true;
+            let returnArray = [];
+            for (let i = 0; i < 5; i++) {
+                let statArray = [];
+                if (data[i].kills !== null && data[i].kills !== "" && data[i].kills !== NaN) {
+                    allNull = false;
+                } else {
+                    allFilled = false;
+                }
+                statArray.push(data[i].kills);
+                if (data[i].assists !== null && data[i].assists !== "" && data[i].assists !== NaN) {
+                    allNull = false;
+                } else {
+                    allFilled = false;
+                }
+                statArray.push(data[i].assists);
+                if (data[i].scored !== null && data[i].scored !== "" && data[i].scored !== NaN) {
+                    allNull = false;
+                } else {
+                    allFilled = false;
+                }
+                statArray.push(data[i].scored);
+                if (data[i].dealt !== null && data[i].dealt !== "" && data[i].dealt !== NaN) {
+                    allNull = false;
+                } else {
+                    allFilled = false;
+                }
+                statArray.push(data[i].dealt);
+                if (data[i].taken !== null && data[i].taken !== "" && data[i].taken !== NaN) {
+                    allNull = false;
+                } else {
+                    allFilled = false;
+                }
+                statArray.push(data[i].taken);
+                if (data[i].healed !== null && data[i].healed !== "" && data[i].healed !== NaN) {
+                    allNull = false;
+                } else {
+                    allFilled = false;
+                }
+                statArray.push(data[i].healed);
+                if (data[i].positionPlayed !== null && data[i].positionPlayed !== "") {
+                    allNull = false;
+                } else {
+                    allFilled = false;
+                }
+                statArray.push(data[i].positionPlayed);
+                returnArray.push(statArray);
             }
-            statArray.push(data[i].kills);
-            if (data[i].assists !== null) {
-                allNull = false;
-            } else {
-                allFilled = false;
+            if (!allFilled && !allNull) {
+                errorCount += 1;
+                error += `Stat data missing from match ${match} team ${team}.`;
             }
-            statArray.push(data[i].assists);
-            if (data[i].scored !== null) {
-                allNull = false;
-            } else {
-                allFilled = false;
-            }
-            statArray.push(data[i].scored);
-            if (data[i].dealt !== null) {
-                allNull = false;
-            } else {
-                allFilled = false;
-            }
-            statArray.push(data[i].dealt);
-            if (data[i].taken !== null) {
-                allNull = false;
-            } else {
-                allFilled = false;
-            }
-            statArray.push(data[i].taken);
-            if (data[i].healed !== null) {
-                allNull = false;
-            } else {
-                allFilled = false;
-            }
-            statArray.push(data[i].healed);
-            if (data[i].positionPlayed !== null) {
-                allNull = false;
-            } else {
-                allFilled = false;
-            }
-            statArray.push(data[i].positionPlayed);
-            returnArray.push(statArray);
+            return returnArray;
         }
-        if (!allFilled && !allNull) {
-            errorCount += 1;
-            error += "Stat data missing.";
-        }
-        return returnArray;
     }
     
     const resetAllForms = () => {
@@ -937,13 +954,14 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
                 </select>
             </div>
             <div className="stat-inputs-container">
-                <input className="stat-input" type="number" placeholder="kills" value={stats.kills} onChange={(e) => setStats(prev => ({ ...prev, kills: Number(e.target.value) }))}></input>
-                <input className="stat-input" type="number" placeholder="assists" value={stats.assists} onChange={(e) => setStats(prev => ({ ...prev, assists: Number(e.target.value) }))}></input>
-                <input className="stat-input" type="number" placeholder="scored" value={stats.scored} onChange={(e) => setStats(prev => ({ ...prev, scored: Number(e.target.value) }))}></input>
-                <input className="stat-input" type="number" placeholder="dealt" value={stats.dealt} onChange={(e) => setStats(prev => ({ ...prev, dealt: Number(e.target.value) }))}></input>
-                <input className="stat-input" type="number" placeholder="taken" value={stats.taken} onChange={(e) => setStats(prev => ({ ...prev, taken: Number(e.target.value) }))}></input>
-                <input className="stat-input" type="number" placeholder="healed" value={stats.healed} onChange={(e) => setStats(prev => ({ ...prev, healed: Number(e.target.value) }))}></input>
-                <select className="stat-input" value={stats.positionPlayed} onChange={(e) => setStats(prev => ({ ...prev, positionPlayed: e.target.value }))}>
+                <input className="stat-input" type="text" placeholder="kills" value={stats.kills ?? ""} onChange={(e) => setStats(prev => ({ ...prev, kills: e.target.value ? Number(e.target.value) : null }))}></input>
+                <input className="stat-input" type="text" placeholder="assists" value={stats.assists ?? ""} onChange={(e) => setStats(prev => ({ ...prev, assists: e.target.value ? Number(e.target.value) : null }))}></input>
+                <input className="stat-input" type="text" placeholder="scored" value={stats.scored ?? ""} onChange={(e) => setStats(prev => ({ ...prev, scored: e.target.value ? Number(e.target.value) : null }))}></input>
+                <input className="stat-input" type="text" placeholder="dealt" value={stats.dealt ?? ""} onChange={(e) => setStats(prev => ({ ...prev, dealt: e.target.value ? Number(e.target.value) : null }))}></input>
+                <input className="stat-input" type="text" placeholder="taken" value={stats.taken ?? ""} onChange={(e) => setStats(prev => ({ ...prev, taken: e.target.value ? Number(e.target.value) : null }))}></input>
+                <input className="stat-input" type="text" placeholder="healed" value={stats.healed ?? ""} onChange={(e) => setStats(prev => ({ ...prev, healed: e.target.value ? Number(e.target.value) : null }))}></input>
+                <select className="stat-input" value={stats.positionPlayed ?? ""} onChange={(e) => setStats(prev => ({ ...prev, positionPlayed: e.target.value }))}>
+                    <option value="">Role</option>
                     <option value="TopCarry">Top Carry</option>
                     <option value="EXPShareTop">Top EXP Share</option>
                     <option value="JungleCarry">Jungle Carry</option>

@@ -36,3 +36,45 @@
 - Add to pokemon_moves table in db editor
 - Add to pokemon_attributes in db editor
 - Add to tier_list in db editor
+
+#### Setting Up The DB:
+
+- Run all the SQL to create and populate tables
+- You may need to specially select settings to get certain ID's to auto increment and set their starting value correctly.
+    - Set up auto-increment in the settings of whatever DB is being used.
+    - Set starting value using:
+```
+SELECT SETVAL(
+  pg_get_serial_sequence('events', 'event_id'),
+  (SELECT MAX(event_id) FROM events)
+);
+```
+```
+SELECT SETVAL(
+  pg_get_serial_sequence('professional_comps', 'comp_id'),
+  (SELECT MAX(comp_id) FROM professional_comps)
+);
+```
+```
+SELECT SETVAL(
+  pg_get_serial_sequence('professional_matches', 'match_id'),
+  (SELECT MAX(match_id) FROM professional_matches)
+);
+```
+```
+SELECT SETVAL(
+  pg_get_serial_sequence('professional_players', 'player_id'),
+  (SELECT MAX(player_id) FROM professional_players)
+);
+```
+```
+SELECT SETVAL(
+  pg_get_serial_sequence('professional_sets', 'set_id'),
+  (SELECT MAX(set_id) FROM professional_sets)
+);
+```
+SELECT SETVAL(
+  pg_get_serial_sequence('professional_teams', 'team_id'),
+  (SELECT MAX(team_id) FROM professional_teams)
+);
+```

@@ -725,6 +725,7 @@
 
 input.stat-input {
     width: 7%;
+    font-size: 10px;
 }
 
 select.stat-input {
@@ -736,8 +737,8 @@ select.stat-input {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    padding-bottom: 30px;
-    padding-top: 10px;
+    padding-bottom: 60px;
+    padding-top: 60px;
 }
 
 .set-comp-content {
