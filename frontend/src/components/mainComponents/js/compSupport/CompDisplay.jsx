@@ -1,4 +1,4 @@
-function CompDisplay({ match, teamData, teamNumber, hasAdvanced }) {
+function CompDisplay({ match, teamData, teamNumber, hasAdvanced, advancedDataMode }) {
     const firstPickNumbers = [1, 4, 5, 8, 9];
     const secondPickNumbers = [2, 3, 6, 7, 10];
     const totalDealt = teamData.pokemon_data[0][3] + teamData.pokemon_data[1][3] + teamData.pokemon_data[2][3] + teamData.pokemon_data[3][3] + teamData.pokemon_data[4][3];
@@ -59,7 +59,7 @@ function CompDisplay({ match, teamData, teamNumber, hasAdvanced }) {
                     </div>
                     <div className="player-name" title={teamData.players[i] || '—'}>{teamData.players[i] || '—'}</div>
                 </div>
-                {hasAdvanced &&
+                {hasAdvanced && advancedDataMode &&
                     <div className="stats-row">
                         <div className="statNumber kills">{teamData.pokemon_data[i][0]}</div>
                         <div className="statNumber assists">{teamData.pokemon_data[i][1]}</div>

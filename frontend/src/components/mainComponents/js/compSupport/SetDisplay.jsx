@@ -1,6 +1,6 @@
 import MatchDisplay from './MatchDisplay';
 
-function SetDisplay({ set }) {
+function SetDisplay({ set, advancedDataMode }) {
 
     return (
         <div className="set-card">
@@ -25,7 +25,7 @@ function SetDisplay({ set }) {
             <div className="set-content">
             {set.matches.map((match, index) => (
                 <div key={index} className="set-match-container">
-                    <MatchDisplay match={match} />
+                    <MatchDisplay match={match} advancedDataMode={advancedDataMode} />
                 </div>
             ))}
             </div>

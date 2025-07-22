@@ -965,7 +965,7 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
                     <option value="TopCarry">Top Carry</option>
                     <option value="EXPShareTop">Top EXP Share</option>
                     <option value="JungleCarry">Jungle Carry</option>
-                    <option value="BotCarry">Bot Carry</option>
+                    <option value="BottomCarry">Bot Carry</option>
                     <option value="EXPShareBot">Bot EXP Share</option>
                 </select>
             </div>

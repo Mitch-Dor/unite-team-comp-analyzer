@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CustomDropdown from "./CustomDropdown";
 import Home from "../../../sideComponents/js/Home";
 
-function CompsSorting({ events, teams, players, charactersAndMoves, compsData, setFilteredComps }) {
+function CompsSorting({ events, teams, players, charactersAndMoves, compsData, setFilteredComps, advancedDataMode, setAdvancedDataMode }) {
     const [regions, setRegions] = useState([]);
     const [characters, setCharacters] = useState([]);
     const baseData = compsData;
@@ -109,6 +109,10 @@ function CompsSorting({ events, teams, players, charactersAndMoves, compsData, s
               <option key={index} value={player.player_name}>{player.player_name}</option>
               ))}
           </select>
+          <label className="advancedDataCheckbox" title="Advanced Data Mode (Damage Dealt, Taken, Healed, Kills, etc.)">
+            <input type="checkbox" checked={advancedDataMode} onChange={() => setAdvancedDataMode(prev => !prev)} />
+            <span className="slider"></span>
+          </label>
         </div>
         <Home />
       </div>

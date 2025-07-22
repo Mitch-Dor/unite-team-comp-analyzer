@@ -58,6 +58,7 @@ function Comps() {
   const [filteredComps, setFilteredComps] = useState([]);
   const { user } = useLocation().state || {};
   const [verifiedUser, setVerifiedUser] = useState(false);
+  const [advancedDataMode, setAdvancedDataMode] = useState(false);
 
   useEffect(() => {
     fetchAllComps().then(data => {
@@ -179,9 +180,9 @@ function Comps() {
       <div id="compsContainer">
         <div className="comps-list">
           <h1 className="page-title">Team Compositions</h1>
-          <CompsSorting events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} compsData={compsData} setFilteredComps={setFilteredComps} />
+          <CompsSorting events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} compsData={compsData} setFilteredComps={setFilteredComps} advancedDataMode={advancedDataMode} setAdvancedDataMode={setAdvancedDataMode} />
           { filteredComps && filteredComps.length > 0 ? filteredComps.map((set, index) => (
-            <SetDisplay key={index} set={set} />
+            <SetDisplay key={index} set={set} advancedDataMode={advancedDataMode} />
           )) : (
             <div className="no-matches-found">No matches found</div>
           )}
