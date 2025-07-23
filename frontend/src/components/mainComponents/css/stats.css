@@ -104,7 +104,7 @@ h3 {
 
 @media (min-width: 1024px) {
     #statsContainer {
-        height: 65%;
+        height: 60%;
     }
 }
 
@@ -245,4 +245,50 @@ h3 {
     color: white;
     font-size: 14px;
     max-height: 40px;
+}
+
+#modeSelection {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    height: 5%;
+    display: flex;
+    align-items: center;
+    position: relative; /* Needed for absolute positioning of the underline */
+}
+
+.modeSelector {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.7rem;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: font-size 0.3s;
+}
+
+.modeSelector.selected {
+    font-size: 0.85rem;
+}
+
+@media (min-width: 1024px) {
+    .modeSelector {
+        font-size: 1.5rem;
+    }
+    .modeSelector.selected {
+        font-size: 1.8rem;
+    }
+}
+
+.underline {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    width: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: transform 0.3s ease;
 }

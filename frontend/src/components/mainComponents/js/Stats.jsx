@@ -14,6 +14,7 @@ function Stats() {
     const [data, setData] = useState([]);
     const [orderBy, setOrderBy] = useState("all");
     const [moveData, setMoveData] = useState([]);
+    const [mode, setMode] = useState("draftMode"); // draftMode / battleMode
 
     useEffect(() => {
         async function fetchAllData() {
@@ -91,51 +92,67 @@ function Stats() {
 
   return (
     <div id="mainContainer">
-        <div id="headerContainer">
-            <StatsOrdering setOrderBy={setOrderBy} />
-            <StatsSorting events={events} teams={teams} players={players} regions={regions} setData={setData} moveData={moveData} />
+        <div id="modeSelection">
+            <div className={`modeSelector ${mode === "draftMode" ? 'selected' : ''}`} onClick={() => setMode("draftMode")}>Draft Stats</div>
+            <div className={`modeSelector ${mode === "battleMode" ? 'selected' : ''}`} onClick={() => setMode("battleMode")}>Battle Stats</div>
+            {/* Underline element, moves left/right based on selected mode */}
+            <div className="underline" style={{ transform: mode === "draftMode" ? "translateX(0%)" : "translateX(100%)" }}/>
         </div>
-        <div id="statsContainer">
-            {data.length > 0 ? (
-                <div className="stats-table-container">
-                    <div className="charts-grid">
-                        {data
-                            .sort((a, b) => {
-                                if (orderBy === "ban") return b.ban_rate - a.ban_rate;
-                                if (orderBy === "pick") return b.pick_rate - a.pick_rate;
-                                if (orderBy === "presence") return b.presence - a.presence;
-                                if (orderBy === "win") return b.win_rate - a.win_rate;
-                                if (orderBy === "pickOrder") {
-                                    const round1Diff = b.pick_round_1 - a.pick_round_1;
-                                    if (round1Diff !== 0) return round1Diff;
-                                    const round2Diff = b.pick_round_2 - a.pick_round_2;
-                                    if (round2Diff !== 0) return round2Diff;
-                                    const round3Diff = b.pick_round_3 - a.pick_round_3;
-                                    if (round3Diff !== 0) return round3Diff;
-                                    const round4Diff = b.pick_round_4 - a.pick_round_4;
-                                    if (round4Diff !== 0) return round4Diff;
-                                    const round5Diff = b.pick_round_5 - a.pick_round_5;
-                                    if (round5Diff !== 0) return round5Diff;
-                                    return b.pick_round_6 - a.pick_round_6;
+        {mode === "draftMode" ? (
+            <>
+                {/* Draft Mode */}
+                <div id="headerContainer">
+                    <StatsOrdering setOrderBy={setOrderBy} />
+                    <StatsSorting events={events} teams={teams} players={players} regions={regions} setData={setData} moveData={moveData} />
+                </div>
+                <div id="statsContainer">
+                    {data.length > 0 ? (
+                        <div className="stats-table-container">
+                            <div className="charts-grid">
+                                {data
+                                    .sort((a, b) => {
+                                        if (orderBy === "ban") return b.ban_rate - a.ban_rate;
+                                        if (orderBy === "pick") return b.pick_rate - a.pick_rate;
+                                        if (orderBy === "presence") return b.presence - a.presence;
+                                        if (orderBy === "win") return b.win_rate - a.win_rate;
+                                        if (orderBy === "pickOrder") {
+                                            const round1Diff = b.pick_round_1 - a.pick_round_1;
+                                            if (round1Diff !== 0) return round1Diff;
+                                            const round2Diff = b.pick_round_2 - a.pick_round_2;
+                                            if (round2Diff !== 0) return round2Diff;
+                                            const round3Diff = b.pick_round_3 - a.pick_round_3;
+                                            if (round3Diff !== 0) return round3Diff;
+                                            const round4Diff = b.pick_round_4 - a.pick_round_4;
+                                            if (round4Diff !== 0) return round4Diff;
+                                            const round5Diff = b.pick_round_5 - a.pick_round_5;
+                                            if (round5Diff !== 0) return round5Diff;
+                                            return b.pick_round_6 - a.pick_round_6;
+                                        }
+                                        // Default sort by presence
+                                        return b.presence - a.presence;
+                                    })
+                                    .map((character, index) => (
+                                        <div key={index} className="chart-item">
+                                            <img src={`/assets/Draft/headshots/${character.pokemon_name}.png`} alt={character.pokemon_name} className="stats-graph-pokemon-icon" />
+                                            <StatsBarChart data={character} orderBy={orderBy} />
+                                        </div>
+                                    ))
                                 }
-                                // Default sort by presence
-                                return b.presence - a.presence;
-                            })
-                            .map((character, index) => (
-                                <div key={index} className="chart-item">
-                                    <img src={`/assets/Draft/headshots/${character.pokemon_name}.png`} alt={character.pokemon_name} className="stats-graph-pokemon-icon" />
-                                    <StatsBarChart data={character} orderBy={orderBy} />
-                                </div>
-                            ))
-                        }
-                    </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="no-data-message">
+                            <p>No valid data found. Please change your filters.</p>
+                        </div>
+                    )}
                 </div>
-            ) : (
-                <div className="no-data-message">
-                    <p>No valid data found. Please change your filters.</p>
-                </div>
-            )}
-        </div>
+            </>
+        ) : (
+            <>
+            {/* Battle Mode */}
+
+            </>
+        )}
         <Home />
     </div>
   );
