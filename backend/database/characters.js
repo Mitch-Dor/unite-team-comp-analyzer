@@ -1147,6 +1147,41 @@ class Characters {
 
       return pickBanStats;
     } 
+
+    // Get battle stats
+    async getBattleStats(queryContext) {
+      return await new Promise((resolve, reject) => {
+        try {
+          const { minKills = 0, minAssists = 0, minDealt = 0, minTaken = 0, minHealed = 0, minScored = 0, pokemon, move1, move2 } = queryContext;
+
+          let whereClause = "WHERE (kills >= $1) AND (assists >= $2) AND (damage_dealt >= $3) AND (damage_taken >= $4) AND (damage_healed >= $5) AND (points_scored >= $6)";
+          let parameters = [minKills, minAssists, minDealt, minTaken, minHealed, minScored]
+          
+          if(pokemon) {
+            whereClause += ` AND (pokemon_id = $${parameters.length + 1})`;
+            parameters.push(pokemon);
+          }
+          
+          let sql = `SELECT pokemon_id as pokemon_id, AVG(kills) as mean_kills, AVG(assists) as mean_assists, AVG(damage_dealt) as mean_dealt, AVG(damage_taken) as mean_taken, AVG(damage_healed) as mean_healed, AVG(points_scored) as mean_scored, SUM((position_played = 'TopCarry')::int) AS num_times_top, SUM((position_played = 'EXPShareTop')::int) AS num_times_exp_share_top, SUM((position_played = 'JungleCarry')::int) AS num_times_jungle, SUM((position_played = 'BotCarry')::int) AS num_times_bot, SUM((position_played = 'EXPShareBot')::int) AS num_times_bot_exp_share
+                       FROM pokemon_performance 
+                       ${whereClause}
+                       GROUP BY pokemon_id`;
+
+          this.db.query(sql, parameters, (err, res) => {
+            if (err) {
+              console.error("SQL Error in moveStats:", err.message);
+              // Resolve with empty array instead of rejecting to avoid failing the entire function
+              reject(err);
+            } else {
+              resolve(res.rows);
+            }
+          })
+        } catch (error) {
+          console.error("Error getting battle stats ", error);
+          reject(error);
+        }
+      });
+    }
 }
 
 module.exports = Characters;

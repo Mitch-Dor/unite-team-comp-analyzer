@@ -24,6 +24,7 @@ export const routes = {
     GET_ROOMS: `${getBaseUrl()}/GETrooms`,
     GET_ROOM_INFO: `${getBaseUrl()}/GETrooms/`,
     GET_CHARACTER_STATS: `${getBaseUrl()}/GETcharacterStats`,
+    GET_BATTLE_STATS: `${getBaseUrl()}/GETbattleStats`,
     GET_RATE_COMP: `${getBaseUrl()}/GETrateComp`,
     GET_TIER_LIST: `${getBaseUrl()}/GETtierList`,
     POST_TIER_LIST_ENTRY: `${getBaseUrl()}/POSTtierListEntry`,

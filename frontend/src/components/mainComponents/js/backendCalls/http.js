@@ -356,3 +356,16 @@ export async function isAdmin(userGoogleId) {
     return responseJson;
 }
 
+// Function to fetch Battle Data based on a query
+export async function fetchBattleStats(queryContext) {
+    const statsData = await fetch(routes.GET_BATTLE_STATS, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(queryContext)
+    });
+    const statsDataJson = await statsData.json();
+    return statsDataJson;
+}
