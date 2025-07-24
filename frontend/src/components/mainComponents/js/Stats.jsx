@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves } from './backendCalls/http.js';
 import StatsOrdering from './statSupport/StatsOrdering.jsx';
-import StatsSorting from './statSupport/StatsSorting.jsx';
-import StatsBarChart from './statSupport/StatsBarChart.jsx';
+import DraftStatsSorting from './statSupport/DraftStatsSorting.jsx';
+import DraftStatsBarChart from './statSupport/DraftStatsBarChart.jsx';
+import BattleStatsSorting from './statSupport/BattleStatsSorting.jsx';
+//import BattleStatsBarChart from './statSupport/BattleStatsBarChart.jsx';
 import Home from '../../sideComponents/js/Home.jsx';
 import '../css/stats.css';
 
@@ -11,9 +13,13 @@ function Stats() {
     const [teams, setTeams] = useState([]);
     const [players, setPlayers] = useState([]);
     const [regions, setRegions] = useState([]);
-    const [data, setData] = useState([]);
-    const [orderBy, setOrderBy] = useState("all");
+    const [allPokemon, setAllPokemon] = useState([]);
     const [moveData, setMoveData] = useState([]);
+    const [rawMoveData, setRawMoveData] = useState([]);
+    const [draftData, setDraftData] = useState([]);
+    const [draftOrderBy, setDraftOrderBy] = useState("all");
+    const [battleData, setBattleData] = useState([]);
+    const [battleOrderBy, setBattleOrderBy] = useState("all");
     const [mode, setMode] = useState("draftMode"); // draftMode / battleMode
 
     useEffect(() => {
@@ -30,14 +36,17 @@ function Stats() {
             
                 // Get unique pokemon_name and pokemon_id combinations
                 const uniquePokemon = [...new Set(fetchedCharactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str)); 
+                setAllPokemon(uniquePokemon);
                 // Sort all in alphabetical order
                 setEvents(fetchedEvents.sort((a, b) => a.event_name.localeCompare(b.event_name)));
                 setTeams(fetchedTeams.sort((a, b) => a.team_name.localeCompare(b.team_name)));
                 setPlayers(fetchedPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name)));
                 // Cumulate all the moves for each character
                 const cumulativeMoves = [];
+                const rawMovesData = [];
                 for (const character of uniquePokemon) {
                     const characterMoves = fetchedCharactersAndMoves.filter(move => move.pokemon_name === character.pokemon_name);
+                    rawMovesData.push(characterMoves);
                     const moveObj = {
                         pokemon_name: character.pokemon_name,
                         move_1_1: characterMoves[0].move_name,
@@ -71,6 +80,7 @@ function Stats() {
                     }
                     cumulativeMoves.push(moveObj);
                 }
+                setRawMoveData(rawMovesData);
                 setMoveData(cumulativeMoves);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -102,20 +112,20 @@ function Stats() {
             <>
                 {/* Draft Mode */}
                 <div id="headerContainer">
-                    <StatsOrdering setOrderBy={setOrderBy} />
-                    <StatsSorting events={events} teams={teams} players={players} regions={regions} setData={setData} moveData={moveData} />
+                    <StatsOrdering setOrderBy={setDraftOrderBy} orderingArray={[{value: 'all', title: 'All Stats'}, {value: 'ban', title: 'Ban Rate'}, {value: 'pick', title: 'Pick Rate'}, {value: 'presence', title: 'Presence'}, {value: 'win', title: 'Win Rate'}, {value: 'pickOrder', title: 'Pick Order'}]} />
+                    <DraftStatsSorting events={events} teams={teams} players={players} regions={regions} setData={setDraftData} moveData={moveData} />
                 </div>
                 <div id="statsContainer">
-                    {data.length > 0 ? (
+                    {draftData.length > 0 ? (
                         <div className="stats-table-container">
                             <div className="charts-grid">
-                                {data
+                                {draftData
                                     .sort((a, b) => {
-                                        if (orderBy === "ban") return b.ban_rate - a.ban_rate;
-                                        if (orderBy === "pick") return b.pick_rate - a.pick_rate;
-                                        if (orderBy === "presence") return b.presence - a.presence;
-                                        if (orderBy === "win") return b.win_rate - a.win_rate;
-                                        if (orderBy === "pickOrder") {
+                                        if (draftOrderBy === "ban") return b.ban_rate - a.ban_rate;
+                                        if (draftOrderBy === "pick") return b.pick_rate - a.pick_rate;
+                                        if (draftOrderBy === "presence") return b.presence - a.presence;
+                                        if (draftOrderBy === "win") return b.win_rate - a.win_rate;
+                                        if (draftOrderBy === "pickOrder") {
                                             const round1Diff = b.pick_round_1 - a.pick_round_1;
                                             if (round1Diff !== 0) return round1Diff;
                                             const round2Diff = b.pick_round_2 - a.pick_round_2;
@@ -134,7 +144,7 @@ function Stats() {
                                     .map((character, index) => (
                                         <div key={index} className="chart-item">
                                             <img src={`/assets/Draft/headshots/${character.pokemon_name}.png`} alt={character.pokemon_name} className="stats-graph-pokemon-icon" />
-                                            <StatsBarChart data={character} orderBy={orderBy} />
+                                            <DraftStatsBarChart data={character} orderBy={draftOrderBy} />
                                         </div>
                                     ))
                                 }
@@ -149,8 +159,11 @@ function Stats() {
             </>
         ) : (
             <>
-            {/* Battle Mode */}
-
+                {/* Battle Mode */}
+                <div id="headerContainer">
+                    <StatsOrdering setOrderBy={setBattleOrderBy} orderingArray={[{value: 'all', title: 'All Stats'}, {value: 'kills', title: 'Kills'}, {value: 'assists', title: 'Assists'}, {value: 'dealt', title: 'Damage Dealt'}, {value: 'taken', title: 'Damage Taken'}, {value: 'healed', title: 'Damage Healed'}, {value: 'points', title: 'Points Scored'}]} />
+                    <BattleStatsSorting  setData={setBattleData} moveData={rawMoveData} allPokemon={allPokemon} />
+                </div>
             </>
         )}
         <Home />

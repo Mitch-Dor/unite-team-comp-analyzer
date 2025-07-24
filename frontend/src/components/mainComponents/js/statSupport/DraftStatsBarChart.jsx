@@ -20,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-function StatsBarChart({ data, orderBy }) {
+function DraftStatsBarChart({ data, orderBy }) {
   const [showPokemonData, setShowPokemonData] = useState(false);
   
   return (
@@ -391,4 +391,4 @@ function PokemonDataChart({ data, setShowPokemonData }) {
   );
 }
 
-export default StatsBarChart;
+export default DraftStatsBarChart;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchCharacterStats } from '../backendCalls/http.js';
 
-function StatsSorting({ events, teams, players, regions, setData, moveData }) {
+function DraftStatsSorting({ events, teams, players, regions, setData, moveData }) {
     const [selectedEvent, setSelectedEvent] = useState("");
     const [selectedRegion, setSelectedRegion] = useState("");
     const [selectedTeam, setSelectedTeam] = useState("");
@@ -112,4 +112,4 @@ function StatsSorting({ events, teams, players, regions, setData, moveData }) {
     )
 }
 
-export default StatsSorting;
+export default DraftStatsSorting;
