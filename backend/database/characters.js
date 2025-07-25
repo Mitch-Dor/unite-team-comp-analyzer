@@ -1152,7 +1152,7 @@ class Characters {
     async getOverallBattleStats() {
       return await new Promise((resolve, reject) => {
         try {
-          let sql = `SELECT pokemon_id, pokemon_name, AVG(kills) as mean_kills, AVG(assists) as mean_assists, AVG(damage_dealt) as mean_dealt, AVG(damage_taken) as mean_taken, AVG(damage_healed) as mean_healed, AVG(points_scored) as mean_scored, SUM((position_played = 'TopCarry')::int) AS num_times_top, SUM((position_played = 'EXPShareTop')::int) AS num_times_exp_share_top, SUM((position_played = 'JungleCarry')::int) AS num_times_jungle, SUM((position_played = 'BotCarry')::int) AS num_times_bot, SUM((position_played = 'EXPShareBot')::int) AS num_times_bot_exp_share
+          let sql = `SELECT pokemon_id, pokemon_name, AVG(kills) as mean_kills, AVG(assists) as mean_assists, AVG(damage_dealt) as mean_dealt, AVG(damage_taken) as mean_taken, AVG(damage_healed) as mean_healed, AVG(points_scored) as mean_scored, SUM((position_played = 'TopCarry')::int) AS num_times_top, SUM((position_played = 'EXPShareTop')::int) AS num_times_exp_share_top, SUM((position_played = 'JungleCarry')::int) AS num_times_jungle, SUM((position_played = 'BotCarry')::int) AS num_times_bot, SUM((position_played = 'EXPShareBot')::int) AS num_times_exp_share_bot
                        FROM pokemon_performance NATURAL JOIN playable_characters
                        GROUP BY pokemon_id, pokemon_name`;
 

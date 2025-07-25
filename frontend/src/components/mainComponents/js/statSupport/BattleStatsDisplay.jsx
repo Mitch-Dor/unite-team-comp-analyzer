@@ -39,8 +39,95 @@ function AllPokemonChart({ data, orderBy, totalData }) {
   let chartData = {};
   
   if (orderBy === 'all') {
+    console.log(data);
+    const numDataPoints = data.num_times_top + data.num_times_exp_share_top + data.num_times_jungle + data.num_times_bot + data.num_times_exp_share_bot;
+    console.log(numDataPoints);
+    chartData = {
+      labels: ['Top Carry', 'Top EXP Share', 'Jungle Carry', 'Bot Carry', 'Bot EXP Share'], // x-axis
+      datasets: [
+      {
+        label: 'Stats',
+        data: [((data.num_times_top/numDataPoints)*100).toFixed(2), ((data.num_times_exp_share_top/numDataPoints)*100).toFixed(2), ((data.num_times_jungle/numDataPoints)*100).toFixed(2), ((data.num_times_bot/numDataPoints)*100).toFixed(2), ((data.num_times_exp_share_bot/numDataPoints)*100).toFixed(2)],
+        backgroundColor:  ['rgba(255, 99, 132, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(175, 75, 209, 0.6)'],
+        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)', 'rgba(175, 75, 209, 1)'],
+        borderWidth: 1,
+      },
+    ],
+  }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false, // Hide legend to save space
+      },
+      title: {
+        display: true,
+        text: 'Positions Picked',
+        font: {
+          size: 16,
+          weight: 'bold',
+        },
+        padding: {
+          top: 10,
+          bottom: 10
+        }
+      },
+      tooltip: { // When hovering over a bar, this is the hover box.
+        bodyFont: {
+          size: 10 // Making the tooltip text smaller
+        },
+        max: 100,
+        callbacks: {
+          label: function(context) {
+            switch(context.label) {
+              case 'Top Carry':
+                return `${context.dataset.label}: ${context.raw}% (${data.num_times_top})`;
+              case 'Top EXP Share':
+                return `${context.dataset.label}: ${context.raw}% (${data.num_times_exp_share_top})`;
+              case 'Jungle Carry':
+                return `${context.dataset.label}: ${context.raw}% (${data.num_times_jungle})`;
+              case 'Bot Carry':
+                return `${context.dataset.label}: ${context.raw}% (${data.num_times_bot})`;
+              case 'Bot EXP Share':
+                return `${context.dataset.label}: ${context.raw}% (${data.num_times_exp_share_bot})`;
+              default:
+                return `${context.dataset.label}: ${context.raw}%`;
+            }
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'category',
+        ticks: {
+          font: {
+            size: 11
+          }
+        }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { // y axis labels
+          callback: function(value) {
+            return value; 
+          },
+        }
+      },
+    },
+    barPercentage: 0.85,
+    categoryPercentage: 0.85,
+  };
     return (
-      <div></div>
+      <div>
+        <div style={{ height: '100%', width: '100%', overflowX: 'auto' }}>
+          <div style={{ minWidth: `${totalData.length * 60}px` }}> {/* 60px per bar, adjust as needed */}
+            <Bar data={chartData} options={options} />
+          </div>
+        </div>
+      </div>
     )
   } else {
     chartData = {
@@ -165,7 +252,7 @@ function AllPokemonChart({ data, orderBy, totalData }) {
   };
 
   return (
-    <div style={{ height: '250px', width: '100%', overflowX: 'auto' }}>
+    <div style={{ height: '100%', width: '100%', overflowX: 'auto' }}>
       <div style={{ minWidth: `${totalData.length * 60}px` }}> {/* 60px per bar, adjust as needed */}
         <Bar data={chartData} options={options} />
       </div>

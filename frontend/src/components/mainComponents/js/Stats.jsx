@@ -118,6 +118,13 @@ function Stats() {
         }
     }, [battleMode]);
 
+    useEffect(() => {
+        setBattleOrderBy("all");
+        setKeyPokemon(null);
+        setDraftOrderBy("all");
+        setBattleMode("allPokemon");
+    }, [mode]);
+
   return (
     <div id="mainContainer">
         <div id="modeSelection">
@@ -216,7 +223,9 @@ function Stats() {
                                                             return a.pokemon_id - b.pokemon_id;
                                                         })
                                                         .map((character, index) => (
-                                                            <BattleStatsDisplay character={character} mode={battleMode} orderBy={battleOrderBy} totalData={battleData}></BattleStatsDisplay>
+                                                            <div key={index}>
+                                                                <BattleStatsDisplay character={character} mode={battleMode} orderBy={battleOrderBy} totalData={battleData}></BattleStatsDisplay>
+                                                            </div>
                                                         ))
                                                     }
                                                 </>
