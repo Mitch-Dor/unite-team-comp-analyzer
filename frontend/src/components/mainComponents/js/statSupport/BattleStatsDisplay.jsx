@@ -20,99 +20,84 @@ ChartJS.register(
   Legend
 );
 
-function DraftStatsBarChart({ data, orderBy }) {
-  const [showPokemonData, setShowPokemonData] = useState(false);
-  
+function BattleStatsDisplay({ character, match, mode, orderBy, totalData }) {
+  console.log(character, match, mode, orderBy, totalData);
   return (
     <>
-      {!showPokemonData && <BaseDataChart data={data} orderBy={orderBy} setShowPokemonData={setShowPokemonData} />}
-      {showPokemonData && <PokemonDataChart data={data} setShowPokemonData={setShowPokemonData} />}
+      {mode === 'allPokemon' && <AllPokemonChart data={character} orderBy={orderBy} totalData={totalData} />}
+      {mode === 'individual' && <MatchDisplaysChart data={match} />}
     </>
   );
 }
 
-function BaseDataChart({ data, orderBy, setShowPokemonData }) {
-  const chartData = {
-    labels: (() => { // x-axis labels
-      switch(orderBy) {
-        case 'ban':
-          return ['Ban Rate'];
-        case 'pick':
-          return ['Pick Rate'];
-        case 'presence':
-          return ['Presence'];
-        case 'win':
-          return ['Win Rate'];
-        case 'pickOrder':
-          return ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6'];
-        default:
-          return ['Ban Rate', 'Pick Rate', 'Presence', 'Win Rate'];
-      }
-    })(),
-    datasets: [
+// By default display an individual little square per pokemon with:
+  // kills, assists, and score as numbers.
+  // dealt, taken, healed as white text on colored bars
+  // number of times picked in each role as a bar chart
+// When orderBy is not "all", make it one long graph the user can scroll down that has just that value shown on a bar graph 
+function AllPokemonChart({ data, orderBy, totalData }) {
+  let chartData = {};
+  
+  if (orderBy === 'all') {
+    return (
+      <div></div>
+    )
+  } else {
+    chartData = {
+      labels: totalData.map(char => char.pokemon_name), // x-axis labels (pokemon names)
+      datasets: [
       {
         label: 'Stats',
         data: (() => { // Data itself in each bar
           switch(orderBy) {
-            case 'ban':
-              return [data.ban_rate];
-            case 'pick':
-              return [data.pick_rate];
-            case 'presence':
-              return [data.presence];
-            case 'win':
-              return [data.win_rate];
-            case 'pickOrder':
-              return [((data.pick_round_1 / data.picks) * 100.0).toFixed(1), ((data.pick_round_2 / data.picks) * 100.0).toFixed(1), ((data.pick_round_3 / data.picks) * 100.0).toFixed(1), ((data.pick_round_4 / data.picks) * 100.0).toFixed(1), ((data.pick_round_5 / data.picks) * 100.0).toFixed(1), ((data.pick_round_6 / data.picks) * 100.0).toFixed(1)];
+            case 'kills':
+              return totalData.map(char => char.mean_kills);
+            case 'assists':
+              return totalData.map(char => char.mean_assists);
+            case 'scored':
+              return totalData.map(char => char.mean_scored);
+            case 'dealt':
+              return totalData.map(char => char.mean_dealt);
+            case 'taken':
+              return totalData.map(char => char.mean_taken);
+            case 'healed':
+              return totalData.map(char => char.mean_healed);
             default:
-              return [data.ban_rate, data.pick_rate, data.presence, data.win_rate];
+              return [];
           }
         })(),
-        backgroundColor: (() => { // Color of each bar
-          switch(orderBy) {
-            case 'ban':
-              return ['rgba(255, 99, 132, 0.6)'];
-            case 'pick':
-              return ['rgba(54, 162, 235, 0.6)'];
-            case 'presence':
-              return ['rgba(255, 206, 86, 0.6)'];
-            case 'win':
-              return ['rgba(75, 192, 192, 0.6)'];
-            case 'pickOrder':
-              return ['rgba(192, 75, 161, 0.6)'];
-            default:
-              return [
-                'rgba(255, 99, 132, 0.6)',  // Red for Ban Rate
-                'rgba(54, 162, 235, 0.6)',  // Blue for Pick Rate
-                'rgba(255, 206, 86, 0.6)',  // Yellow for Presence
-                'rgba(75, 192, 192, 0.6)'  // Green for Win Rate
-              ];
-          }
+        backgroundColor: (() => {
+          const color = (() => {
+            switch(orderBy) {
+              case 'kills': return 'rgba(255, 99, 132, 0.6)';
+              case 'assists': return 'rgba(54, 162, 235, 0.6)';
+              case 'scored': return 'rgba(255, 206, 86, 0.6)';
+              case 'dealt': return 'rgba(255, 99, 132, 0.6)';
+              case 'taken': return 'rgba(54, 162, 235, 0.6)';
+              case 'healed': return 'rgba(75, 192, 192, 0.6)';
+              default: return 'rgba(255, 99, 132, 0.6)';
+            }
+          })();
+          return totalData.map(() => color); // repeat the color for each bar
         })(),
-        borderColor: (() => { // Border color of each bar
-          switch(orderBy) {
-            case 'ban':
-              return ['rgba(255, 99, 132, 1)'];
-            case 'pick':
-              return ['rgba(54, 162, 235, 1)'];
-            case 'presence':
-              return ['rgba(255, 206, 86, 1)'];
-            case 'win':
-              return ['rgba(75, 192, 192, 1)'];
-            case 'pickOrder':
-              return ['rgba(192, 75, 161, 0.6)'];
-            default:
-              return [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)'
-              ];
-          }
+        borderColor: (() => {
+          const color = (() => {
+            switch(orderBy) {
+              case 'kills': return 'rgba(255, 99, 132, 1)';
+              case 'assists': return 'rgba(54, 162, 235, 1)';
+              case 'scored': return 'rgba(255, 206, 86, 1)';
+              case 'dealt': return 'rgba(255, 99, 132, 1)';
+              case 'taken': return 'rgba(54, 162, 235, 1)';
+              case 'healed': return 'rgba(75, 192, 192, 1)';
+              default: return 'rgba(255, 99, 132, 1)';
+            }
+          })();
+          return totalData.map(() => color); // repeat the color for each bar
         })(),
         borderWidth: 1,
       },
     ],
+  }
   };
 
   const options = {
@@ -124,7 +109,7 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
       },
       title: {
         display: true,
-        text: data.pokemon_name,
+        text: totalData.map(char => char.pokemon_name),
         font: {
           size: 16,
           weight: 'bold',
@@ -138,37 +123,12 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
         bodyFont: {
           size: 10 // Making the tooltip text smaller
         },
-        callbacks: orderBy !== "pickOrder" ? {
+        callbacks: {
           label: function(context) {
             switch(context.label) {
-              case "Ban Rate":
-                return `${context.label}: ${data.bans} bans over ${data.total_matches} total matches (${context.raw}%)`;
-              case "Pick Rate":
-                return `${context.label}: ${data.picks} picks over ${data.total_matches} total matches (${context.raw}%)`;
-              case "Presence":
-                return `${context.label}: ${parseInt(data.picks, 10) + parseInt(data.bans, 10)} picks/bans over ${data.total_matches} total matches (${context.raw}%)`;
-              case "Win Rate":
-                return `${context.label}: ${data.wins} wins over ${data.picks} total picks (${context.raw}%)`;
               default:
-                return `${context.dataset.label}: ${context.raw}%`;
+                return `${context.dataset.label}: ${context.raw}`;
             }
-          }
-        } : {
-          label: function(context) {
-            const roundMap = {
-              'Round 1': { count: data.pick_round_1, label: 'round 1' },
-              'Round 2': { count: data.pick_round_2, label: 'round 2' },
-              'Round 3': { count: data.pick_round_3, label: 'round 3' },
-              'Round 4': { count: data.pick_round_4, label: 'round 4' },
-              'Round 5': { count: data.pick_round_5, label: 'round 5' },
-              'Round 6': { count: data.pick_round_6, label: 'round 6' },
-            };
-            
-            const roundInfo = roundMap[context.label];
-            if (roundInfo) {
-              return `${context.label}: ${roundInfo.count} ${roundInfo.label} picks over ${data.picks} total picks (${context.raw}%)`;
-            }
-            return `${context.dataset.label}: ${context.raw}`;
           }
         }
       }
@@ -187,7 +147,7 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
         max: 100,
         ticks: { // y axis labels
           callback: function(value) {
-            return value + '%'; // Add percentage sign
+            return value; 
           },
         }
       },
@@ -197,13 +157,17 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
   };
 
   return (
-    <div style={{ height: '250px', width: '100%' }} onClick={() => setShowPokemonData(true)}>
-      <Bar data={chartData} options={options} />
+    <div style={{ height: '250px', width: '100%', overflowX: 'auto' }}>
+      <div style={{ minWidth: `${totalData.length * 60}px` }}> {/* 60px per bar, adjust as needed */}
+        <Bar data={chartData} options={options} />
+      </div>
     </div>
   );
 }
 
-function PokemonDataChart({ data, setShowPokemonData }) {
+// Display comps the pokemon appeared in that match the criteria. The comp is displayed with each team, their pokemon, 
+// and their moves represented with just the featured Pokemon having its data like kills listed with it. There must be a link to the VOD containing the match for VOD review.
+function MatchDisplaysChart({ data }) {
   const chartData = {
     labels: (() => {
       const baseLabels = ['Ban Rate', 'Pick Rate', 'Presence', 'Win Rate', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6'];
@@ -391,4 +355,4 @@ function PokemonDataChart({ data, setShowPokemonData }) {
   );
 }
 
-export default DraftStatsBarChart;
+export default BattleStatsDisplay;
