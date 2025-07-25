@@ -1149,27 +1149,71 @@ class Characters {
     } 
 
     // Get battle stats
-    async getBattleStats(queryContext) {
+    async getOverallBattleStats() {
       return await new Promise((resolve, reject) => {
         try {
-          const { minKills = 0, minAssists = 0, minDealt = 0, minTaken = 0, minHealed = 0, minScored = 0, pokemon, move1, move2 } = queryContext;
+          let sql = `SELECT pokemon_id, pokemon_name, AVG(kills) as mean_kills, AVG(assists) as mean_assists, AVG(damage_dealt) as mean_dealt, AVG(damage_taken) as mean_taken, AVG(damage_healed) as mean_healed, AVG(points_scored) as mean_scored, SUM((position_played = 'TopCarry')::int) AS num_times_top, SUM((position_played = 'EXPShareTop')::int) AS num_times_exp_share_top, SUM((position_played = 'JungleCarry')::int) AS num_times_jungle, SUM((position_played = 'BotCarry')::int) AS num_times_bot, SUM((position_played = 'EXPShareBot')::int) AS num_times_bot_exp_share
+                       FROM pokemon_performance NATURAL JOIN playable_characters
+                       GROUP BY pokemon_id, pokemon_name`;
 
-          let whereClause = "WHERE (kills >= $1) AND (assists >= $2) AND (damage_dealt >= $3) AND (damage_taken >= $4) AND (damage_healed >= $5) AND (points_scored >= $6)";
+          this.db.query(sql, (err, res) => {
+            if (err) {
+              console.error("SQL Error in overall battle stats:", err.message);
+              // Resolve with empty array instead of rejecting to avoid failing the entire function
+              reject(err);
+            } else {
+              resolve(res.rows);
+            }
+          })
+        } catch (error) {
+          console.error("Error getting battle stats ", error);
+          reject(error);
+        }
+      });
+    }
+
+    // Get battle stats
+    async getIndividualBattleStats(queryContext) {
+      return await new Promise((resolve, reject) => {
+        try {
+          const { minKills = 0, minAssists = 0, minDealt = 0, minTaken = 0, minHealed = 0, minScored = 0, lane, pokemon, move1, move2 } = queryContext;
+
+          let whereClause = "WHERE (pp.kills >= $1) AND (pp.assists >= $2) AND (pp.damage_dealt >= $3) AND (pp.damage_taken >= $4) AND (pp.damage_healed >= $5) AND (pp.points_scored >= $6)";
           let parameters = [minKills, minAssists, minDealt, minTaken, minHealed, minScored]
           
+          if(lane !== "any") {
+            whereClause += ` AND (pp.position_played = $${parameters.length + 1})`;
+            parameters.push(lane);
+          }
+
           if(pokemon) {
-            whereClause += ` AND (pokemon_id = $${parameters.length + 1})`;
+            whereClause += ` AND (pp.pokemon_id = $${parameters.length + 1})`;
             parameters.push(pokemon);
           }
+
+          if(move1) {
+            whereClause += ` AND (pc.pokemon_1_move_1 = $${parameters.length + 1} OR pc.pokemon_1_move_2 = $${parameters.length + 2} OR pc.pokemon_2_move_1 = $${parameters.length + 3} OR pc.pokemon_2_move_2 = $${parameters.length + 4} OR pc.pokemon_3_move_1 = $${parameters.length + 5} OR pc.pokemon_3_move_2 = $${parameters.length + 6} OR pc.pokemon_4_move_1 = $${parameters.length + 7} OR pc.pokemon_4_move_2 = $${parameters.length + 8} OR pc.pokemon_5_move_1 = $${parameters.length + 9} OR pc.pokemon_5_move_2 = $${parameters.length + 10})`
+            for(let i=0; i<10; i++){
+              parameters.push(move1);
+            }
+          }
+
+          if(move2) {
+            whereClause += ` AND (pc.pokemon_1_move_1 = $${parameters.length + 1} OR pc.pokemon_1_move_2 = $${parameters.length + 2} OR pc.pokemon_2_move_1 = $${parameters.length + 3} OR pc.pokemon_2_move_2 = $${parameters.length + 4} OR pc.pokemon_3_move_1 = $${parameters.length + 5} OR pc.pokemon_3_move_2 = $${parameters.length + 6} OR pc.pokemon_4_move_1 = $${parameters.length + 7} OR pc.pokemon_4_move_2 = $${parameters.length + 8} OR pc.pokemon_5_move_1 = $${parameters.length + 9} OR pc.pokemon_5_move_2 = $${parameters.length + 10})`
+            for(let i=0; i<10; i++){
+              parameters.push(move2);
+            }
+          }
           
-          let sql = `SELECT pokemon_id as pokemon_id, AVG(kills) as mean_kills, AVG(assists) as mean_assists, AVG(damage_dealt) as mean_dealt, AVG(damage_taken) as mean_taken, AVG(damage_healed) as mean_healed, AVG(points_scored) as mean_scored, SUM((position_played = 'TopCarry')::int) AS num_times_top, SUM((position_played = 'EXPShareTop')::int) AS num_times_exp_share_top, SUM((position_played = 'JungleCarry')::int) AS num_times_jungle, SUM((position_played = 'BotCarry')::int) AS num_times_bot, SUM((position_played = 'EXPShareBot')::int) AS num_times_bot_exp_share
-                       FROM pokemon_performance 
-                       ${whereClause}
-                       GROUP BY pokemon_id`;
+          // Select comp data to display relevant comps
+          
+          let sql = `SELECT pp.kills as kills, pp.assists as assists, pp.damage_dealt as dealt, pp.damage_taken as taken, pp.damage_healed as healed, pp.points_scored as scored, pp.position_played as position, pp.pokemon_id as key_pokemon, pc.pokemon_1 as pokemon1_1, pc.pokemon_1_move_1 as pokemon1_1_move_1, pc.pokemon_1_move_2 as pokemon1_1_move_2, pc.pokemon_2 as pokemon1_2, pc.pokemon_2_move_1 as pokemon1_2_move_1, pc.pokemon_2_move_2 as pokemon1_2_move_2, pc.pokemon_3 as pokemon1_3, pc.pokemon_3_move_1 as pokemon1_3_move_1, pc.pokemon_3_move_2 as pokemon1_3_move_2, pc.pokemon_4 as pokemon1_4, pc.pokemon_4_move_1 as pokemon1_4_move_1, pc.pokemon_4_move_2 as pokemon1_4_move_2, pc.pokemon_5 as pokemon1_5, pc.pokemon_5_move_1 as pokemon1_5_move_1, pc.pokemon_5_move_2 as pokemon1_5_move_2, pc2.pokemon_1 as pokemon2_1, pc2.pokemon_1_move_1 as pokemon2_1_move_1, pc2.pokemon_1_move_2 as pokemon2_1_move_2, pc2.pokemon_2 as pokemon2_2, pc2.pokemon_2_move_1 as pokemon2_2_move_1, pc2.pokemon_2_move_2 as pokemon2_2_move_2, pc2.pokemon_3 as pokemon2_3, pc2.pokemon_3_move_1 as pokemon2_3_move_1, pc2.pokemon_3_move_2 as pokemon2_3_move_2, pc2.pokemon_4 as pokemon2_4, pc2.pokemon_4_move_1 as pokemon2_4_move_1, pc2.pokemon_4_move_2 as pokemon2_4_move_2, pc2.pokemon_5 as pokemon2_5, pc2.pokemon_5_move_1 as pokemon2_5_move_1, pc2.pokemon_5_move_2 as pokemon2_5_move_2
+                       FROM pokemon_performance pp LEFT JOIN professional_comps pc ON pp.comp_id = pc.comp_id LEFT JOIN professional_matches pm ON (pm.team_1_comp_id = pp.comp_id OR pm.team_2_comp_id = pp.comp_id) LEFT JOIN professional_comps pc2 ON ((pc2.comp_id = pm.team_1_comp_id AND pc.comp_id != pm.team_1_comp_id) OR (pc2.comp_id = pm.team_2_comp_id AND pc.comp_id != pm.team_2_comp_id))
+                       ${whereClause}`;
 
           this.db.query(sql, parameters, (err, res) => {
             if (err) {
-              console.error("SQL Error in moveStats:", err.message);
+              console.error("SQL Error in individual battle stats:", err.message);
               // Resolve with empty array instead of rejecting to avoid failing the entire function
               reject(err);
             } else {

@@ -356,9 +356,22 @@ export async function isAdmin(userGoogleId) {
     return responseJson;
 }
 
-// Function to fetch Battle Data based on a query
-export async function fetchBattleStats(queryContext) {
-    const statsData = await fetch(routes.GET_BATTLE_STATS, {
+// Function to fetch summarized Battle Data for all pokemon
+export async function fetchOverallBattleStats() {
+    const statsData = await fetch(routes.GET_OVERALL_BATTLE_STATS, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const statsDataJson = await statsData.json();
+    return statsDataJson;
+}
+
+// Function to fetch Battle Data for a specific character based on a query
+export async function fetchIndividualBattleStats(queryContext) {
+    const statsData = await fetch(routes.GET_INDIVIDUAL_BATTLE_STATS, {
         method: 'PUT',
         credentials: 'include',
         headers: {

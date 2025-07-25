@@ -1,4 +1,4 @@
-function StatsOrdering({ setOrderBy, orderingArray }) {
+function StatsOrdering({ setOrderBy, orderingArray, setBattleMode }) {
     
     return (
         <div id="orderingContainer">
@@ -18,6 +18,12 @@ function StatsOrdering({ setOrderBy, orderingArray }) {
                 Date: Limits the search to events that happened within the specified time range.
                 ">?
                 </div>
+            )}
+            {orderingArray[1].value==='kills' && (
+                <select name="battleMode" onChange={(e) => setBattleMode(e.target.value)}>
+                    <option value='allPokemon'>All Pokemon</option>
+                    <option value='individual'>Individual</option>
+                </select>
             )}
             <select name="orderBy" id="orderBy" onChange={(e) => setOrderBy(e.target.value)}>
                 {orderingArray.map((element) => (

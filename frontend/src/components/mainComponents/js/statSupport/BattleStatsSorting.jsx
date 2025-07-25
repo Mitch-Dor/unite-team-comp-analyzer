@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CustomDropdown from '../compSupport/CustomDropdown';
-import { fetchBattleStats } from '../backendCalls/http.js';
+import { fetchIndividualBattleStats } from '../backendCalls/http.js';
 
 function BattleStatsSorting({ setData, moveData, allPokemon }) {
     const [minKills, setMinKills] = useState(0);
@@ -9,6 +9,7 @@ function BattleStatsSorting({ setData, moveData, allPokemon }) {
     const [minTaken, setMinTaken] = useState(0);
     const [minHealed, setMinHealed] = useState(0);
     const [minScored, setMinScored] = useState(0);
+    const [lane, setLane] = useState("any");
     const [pokemon, setPokemon] = useState(null);
     const [move1, setMove1] = useState(null);
     const [move2, setMove2] = useState(null);
@@ -22,21 +23,24 @@ function BattleStatsSorting({ setData, moveData, allPokemon }) {
             minTaken: minTaken,
             minHealed: minHealed,
             minScored: minScored,
+            lane: lane,
             pokemon: pokemon ? pokemon.pokemon_id : null,
             move1: move1 ? move1.move_id : null,
             move2: move2 ? move2.move_id : null
         }
 
-        fetchBattleStats(queryContext)
-            .then(data => {
-                // Process the data without modifying moveData directly
-                console.log(data);
-            })
-            .catch(error => {
-                console.error("Error fetching battle stats:", error);
-        });
+        if (pokemon){
+            fetchIndividualBattleStats(queryContext)
+                .then(data => {
+                    console.log(data);
+                    setData(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching battle stats:", error);
+            });
+        }
 
-    }, [minKills, minAssists, minDealt, minTaken, minHealed, minScored, pokemon, move1, move2]);
+    }, [minKills, minAssists, minDealt, minTaken, minHealed, minScored, lane, pokemon, move1, move2]);
 
     function lesserMoveData (pokemonName) {
         const availableMoves = pokemon ? moveData.find(move => move[0].pokemon_name === pokemonName) : null;
@@ -62,6 +66,14 @@ function BattleStatsSorting({ setData, moveData, allPokemon }) {
                 <input id="minDealt" type="number" placeholder='Min Dealt' onChange={(e) => setMinDealt(e.target.value)}></input> 
                 <input id="minTaken" type="number" placeholder='Min Taken' onChange={(e) => setMinTaken(e.target.value)}></input> 
                 <input id="minHealed" type="number" placeholder='Min Healed' onChange={(e) => setMinHealed(e.target.value)}></input> 
+                <select id="laneSelect" value={lane} onChange={(e) => setLane(e.target.value)}>
+                    <option value="any">Lane Select (Any)</option>
+                    <option value="TopCarry">Top Carry</option>
+                    <option value="EXPShareTop">EXP Share Top</option>
+                    <option value="JungleCarry">Jungle Carry</option>
+                    <option value="BottomCarry">Bot Carry</option>
+                    <option value="EXPShareBot">EXP Share Bot</option>
+                </select>
             </div>
             <div className="filter-row">
                 {/* Character Dropdown */}

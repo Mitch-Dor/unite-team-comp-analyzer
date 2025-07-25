@@ -58,8 +58,18 @@ module.exports = function (app, database, adminGoogleId) {
         });
     });
 
-    app.put('/GETbattleStats', (req, res) => {
-        database.characters.getBattleStats(req.body).then(data => {
+    app.get('/GEToverallBattleStats', (req, res) => {
+        database.characters.getOverallBattleStats().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching character stats:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.put('/GETindividualBattleStats', (req, res) => {
+        database.characters.getIndividualBattleStats(req.body).then(data => {
             res.json(data);
         })
         .catch(error => {

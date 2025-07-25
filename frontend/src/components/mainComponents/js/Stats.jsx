@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves } from './backendCalls/http.js';
+import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, fetchOverallBattleStats } from './backendCalls/http.js';
 import StatsOrdering from './statSupport/StatsOrdering.jsx';
 import DraftStatsSorting from './statSupport/DraftStatsSorting.jsx';
 import DraftStatsBarChart from './statSupport/DraftStatsBarChart.jsx';
 import BattleStatsSorting from './statSupport/BattleStatsSorting.jsx';
-//import BattleStatsBarChart from './statSupport/BattleStatsBarChart.jsx';
+import BattleStatsDispplay from './statSupport/BattleStatsDisplay.jsx';
 import Home from '../../sideComponents/js/Home.jsx';
 import '../css/stats.css';
 
@@ -20,6 +20,9 @@ function Stats() {
     const [draftOrderBy, setDraftOrderBy] = useState("all");
     const [battleData, setBattleData] = useState([]);
     const [battleOrderBy, setBattleOrderBy] = useState("all");
+    const [overallBattleData, setOverallBattleData] = useState([]);
+    const [battleMode, setBattleMode] = useState("allPokemon");
+    const [keyPokemon, setKeyPokemon] = useState(null);
     const [mode, setMode] = useState("draftMode"); // draftMode / battleMode
 
     useEffect(() => {
@@ -82,6 +85,10 @@ function Stats() {
                 }
                 setRawMoveData(rawMovesData);
                 setMoveData(cumulativeMoves);
+
+                const fetchedOverallBattleData = await fetchOverallBattleStats();
+                console.log(fetchedOverallBattleData);
+                setOverallBattleData(fetchedOverallBattleData);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -99,6 +106,17 @@ function Stats() {
             } 
         }, 0);
     }, []);
+
+    useEffect(() => {
+        setBattleOrderBy("all");
+        setKeyPokemon(null);
+
+        if(battleMode==='allPokemon') {
+            setBattleData(overallBattleData);
+        } else {
+            setBattleData([]);
+        }
+    }, [battleMode]);
 
   return (
     <div id="mainContainer">
@@ -161,8 +179,67 @@ function Stats() {
             <>
                 {/* Battle Mode */}
                 <div id="headerContainer">
-                    <StatsOrdering setOrderBy={setBattleOrderBy} orderingArray={[{value: 'all', title: 'All Stats'}, {value: 'kills', title: 'Kills'}, {value: 'assists', title: 'Assists'}, {value: 'dealt', title: 'Damage Dealt'}, {value: 'taken', title: 'Damage Taken'}, {value: 'healed', title: 'Damage Healed'}, {value: 'points', title: 'Points Scored'}]} />
-                    <BattleStatsSorting  setData={setBattleData} moveData={rawMoveData} allPokemon={allPokemon} />
+                    <StatsOrdering setOrderBy={setBattleOrderBy} orderingArray={[{value: 'all', title: 'All Stats'}, {value: 'kills', title: 'Kills'}, {value: 'assists', title: 'Assists'}, {value: 'dealt', title: 'Damage Dealt'}, {value: 'taken', title: 'Damage Taken'}, {value: 'healed', title: 'Damage Healed'}, {value: 'points', title: 'Points Scored'}]} setBattleMode={setBattleMode} />
+                    {battleMode ===  "individual" && (
+                        <BattleStatsSorting setData={setBattleData} moveData={rawMoveData} allPokemon={allPokemon} keyPokemon={keyPokemon} />
+                    )}
+                </div>
+                <div id="statsContainer">
+                    {!keyPokemon && battleMode === 'individual' ? (
+                        <div className="no-data-message">
+                            <p>Select A Pokemon To View Data.</p>
+                        </div>
+                    ) : (
+                        <>
+                        {battleData.length > 0 ? (
+                            <div className="stats-table-container">
+                                <div className="charts-grid">
+                                    {battleMode === 'allPokemon' ? (
+                                        <>
+                                            {battleData
+                                                .sort((a, b) => {
+                                                    if (battleOrderBy === "kills") return b.mean_kills - a.mean_kills;
+                                                    if (battleOrderBy === "assists") return b.mean_assists - a.mean_assists;
+                                                    if (battleOrderBy === "dealt") return b.mean_dealt - a.mean_dealt;
+                                                    if (battleOrderBy === "taken") return b.mean_taken - a.mean_taken;
+                                                    if (battleOrderBy === "healed") return b.mean_healed - a.mean_healed;
+                                                    if (battleOrderBy === "points") return b.mean_scored - a.mean_scored;
+                                                    // Default sort by release date
+                                                    return a.pokemon_id - b.pokemon_id;
+                                                })
+                                                .map((character, index) => (
+                                                    <BattleStatsDisplay character={character} mode={battleMode}></BattleStatsDisplay>
+                                                ))
+                                            }
+                                        </>
+                                    ) : (
+                                        <>
+                                            {battleData
+                                                .sort((a, b) => {
+                                                    if (battleOrderBy === "kills") return b.kills - a.kills;
+                                                    if (battleOrderBy === "assists") return b.assists - a.assists;
+                                                    if (battleOrderBy === "dealt") return b.dealt - a.dealt;
+                                                    if (battleOrderBy === "taken") return b.taken - a.taken;
+                                                    if (battleOrderBy === "healed") return b.healed - a.healed;
+                                                    if (battleOrderBy === "points") return b.scored - a.scored;
+                                                    // Default sort by dealt
+                                                    return a.dealt - b.dealt;
+                                                })
+                                                .map((match, index) => (
+                                                    <BattleStatsDisplay match={match} mode={battleMode}></BattleStatsDisplay>
+                                                ))
+                                            }
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="no-data-message">
+                                <p>No valid data found. Please change your filters.</p>
+                            </div>
+                        )}
+                        </>
+                    )}
                 </div>
             </>
         )}
