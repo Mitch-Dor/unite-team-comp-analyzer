@@ -54,7 +54,7 @@ function AllPokemonChart({ data, orderBy, totalData }) {
               return totalData.map(char => char.mean_kills);
             case 'assists':
               return totalData.map(char => char.mean_assists);
-            case 'scored':
+            case 'points':
               return totalData.map(char => char.mean_scored);
             case 'dealt':
               return totalData.map(char => char.mean_dealt);
@@ -71,7 +71,7 @@ function AllPokemonChart({ data, orderBy, totalData }) {
             switch(orderBy) {
               case 'kills': return 'rgba(255, 99, 132, 0.6)';
               case 'assists': return 'rgba(54, 162, 235, 0.6)';
-              case 'scored': return 'rgba(255, 206, 86, 0.6)';
+              case 'points': return 'rgba(255, 206, 86, 0.6)';
               case 'dealt': return 'rgba(255, 99, 132, 0.6)';
               case 'taken': return 'rgba(54, 162, 235, 0.6)';
               case 'healed': return 'rgba(75, 192, 192, 0.6)';
@@ -85,7 +85,7 @@ function AllPokemonChart({ data, orderBy, totalData }) {
             switch(orderBy) {
               case 'kills': return 'rgba(255, 99, 132, 1)';
               case 'assists': return 'rgba(54, 162, 235, 1)';
-              case 'scored': return 'rgba(255, 206, 86, 1)';
+              case 'points': return 'rgba(255, 206, 86, 1)';
               case 'dealt': return 'rgba(255, 99, 132, 1)';
               case 'taken': return 'rgba(54, 162, 235, 1)';
               case 'healed': return 'rgba(75, 192, 192, 1)';
@@ -109,7 +109,16 @@ function AllPokemonChart({ data, orderBy, totalData }) {
       },
       title: {
         display: true,
-        text: orderBy,
+        text: (() => {
+          switch(orderBy) {
+            case 'kills': return 'Kills';
+            case 'assists': return 'Assists';
+            case 'points': return 'Points Scored';
+            case 'dealt': return 'Damage Dealt';
+            case 'taken': return 'Damage Taken';
+            case 'healed': return 'Damage Healed';
+          }
+        }),
         font: {
           size: 16,
           weight: 'bold',
@@ -144,7 +153,6 @@ function AllPokemonChart({ data, orderBy, totalData }) {
       },
       y: {
         beginAtZero: true,
-        max: 100,
         ticks: { // y axis labels
           callback: function(value) {
             return value; 
