@@ -109,7 +109,7 @@ function AllPokemonChart({ data, orderBy, totalData }) {
       },
       title: {
         display: true,
-        text: totalData.map(char => char.pokemon_name),
+        text: orderBy,
         font: {
           size: 16,
           weight: 'bold',
