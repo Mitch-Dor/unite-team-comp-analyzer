@@ -118,27 +118,35 @@ function AllPokemonChart({ data, orderBy, totalData }) {
   };
     return (
       <div className="allPokemonAllStatsDisplay">
+        <div className="headshotAndNameRow">
+          <img 
+            src={`/assets/Draft/headshots/${data.pokemon_name}.png`} 
+            alt={data.pokemon_name} 
+            className="pokemon-icon"
+          />
+          <div>{data.pokemon_name}</div>
+        </div>
         <div className="killsAssistsScoredDisplay">
-          <div className="statNumber kills">{parseInt(data.mean_kills).toFixed(2)}</div>
-          <div className="statNumber assists">{parseInt(data.mean_assists).toFixed(2)}</div>
-          <div className="statNumber scored">{parseInt(data.mean_scored).toFixed(2)}</div>
+          <div className="statNumber kills">{parseFloat(data.mean_kills).toFixed(2)}</div>
+          <div className="statNumber assists">{parseFloat(data.mean_assists).toFixed(2)}</div>
+          <div className="statNumber scored">{parseFloat(data.mean_scored).toFixed(2)}</div>
         </div>
         <div className="dealtTakenHealedDisplay">
           <div className="statBar dealt">
             <div className="statBarFill red" style={{width: '100%'}}></div>
-            <span>{parseInt(data.mean_dealt).toFixed(2)}</span>
+            <span>{parseFloat(data.mean_dealt).toFixed(2)}</span>
           </div>
           <div className="statBar taken">
             <div className="statBarFill blue" style={{width: '100%'}}></div>
-            <span>{parseInt(data.mean_taken).toFixed(2)}</span>
+            <span>{parseFloat(data.mean_taken).toFixed(2)}</span>
           </div>
           <div className="statBar healed">
             <div className="statBarFill green" style={{width: '100%'}}></div>
-            <span>{parseInt(data.mean_healed).toFixed(2)}</span>
+            <span>{parseFloat(data.mean_healed).toFixed(2)}</span>
           </div>
         </div>
-        <div style={{ height: '100%', width: '300px', backgroundColor: 'white', borderRadius: '5px', padding: '8px' }}>
-          <div style={{ minWidth: `60px` }}> {/* 60px per bar, adjust as needed */}
+        <div style={{ height: '100%', width: '284px', backgroundColor: 'white', borderRadius: '5px', padding: '8px' }}>
+          <div style={{ minWidth: `50px` }}> {/* 60px per bar, adjust as needed */}
             <Bar data={chartData} options={options} />
           </div>
         </div>
@@ -295,8 +303,6 @@ function MatchDisplaysChart({ data }) {
   ];
 
   const keyPokemon = { name: data.key_pokemon, kills: data.kills, assists: data.assists, scored: data.scored, dealt: data.dealt, taken: data.taken, healed: data.healed, position: data.position }
-
-  console.log(team1, team2, keyPokemon);
 
   return (
   <div>

@@ -296,7 +296,7 @@ h3 {
 .allPokemonAllStatsDisplay {
     display: flex;
     flex-direction: column;
-    width: 316px;
+    width: 300px;
     background-color: rgba(101, 101, 101, 0.5);
     padding: 10px;
     border-radius: 10px;
@@ -307,3 +307,28 @@ h3 {
     justify-content: space-between;
     padding: 4px 8px;
 }
+
+.headshotAndNameRow {
+    display: flex;
+    justify-content: space-around;
+    padding: 4px 8px;
+    color: white;
+}
+
+@keyframes borderPulse {
+  0% {
+    border-color: white;
+  }
+  50% {
+    border-color: black;
+  }
+  100% {
+    border-color: white;
+  }
+}
+
+#battleModeSelector {
+  border: 4px solid white; /* starting border */
+  animation: borderPulse 3s infinite;
+}
+

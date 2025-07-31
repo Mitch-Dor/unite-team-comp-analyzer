@@ -20,7 +20,7 @@ function StatsOrdering({ setOrderBy, orderingArray, setBattleMode }) {
                 </div>
             )}
             {orderingArray[1].value==='kills' && (
-                <select name="battleMode" onChange={(e) => setBattleMode(e.target.value)}>
+                <select name="battleMode" id="battleModeSelector" onChange={(e) => setBattleMode(e.target.value)}>
                     <option value='allPokemon'>All Pokemon</option>
                     <option value='individual'>Individual</option>
                 </select>
