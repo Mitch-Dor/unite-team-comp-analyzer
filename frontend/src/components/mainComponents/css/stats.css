@@ -292,3 +292,18 @@ h3 {
     background-color: rgba(255, 255, 255, 0.8);
     transition: transform 0.3s ease;
 }
+
+.allPokemonAllStatsDisplay {
+    display: flex;
+    flex-direction: column;
+    width: 316px;
+    background-color: rgba(101, 101, 101, 0.5);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.killsAssistsScoredDisplay, .dealtTakenHealedDisplay, .keyPokemonStats {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 8px;
+}

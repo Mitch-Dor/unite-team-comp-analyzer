@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CustomDropdown from '../compSupport/CustomDropdown';
 import { fetchIndividualBattleStats } from '../backendCalls/http.js';
 
-function BattleStatsSorting({ setData, moveData, allPokemon }) {
+function BattleStatsSorting({ setData, moveData, allPokemon, setKeyPokemon }) {
     const [minKills, setMinKills] = useState(0);
     const [minAssists, setMinAssists] = useState(0);
     const [minDealt, setMinDealt] = useState(0);
@@ -58,14 +58,14 @@ function BattleStatsSorting({ setData, moveData, allPokemon }) {
         <div id="filterContainer">
             <h3>Filters</h3>
             <div className="filter-row">
-                <input id="minKills" type="number" placeholder='Min Kills' onChange={(e) => setMinKills(e.target.value)}></input> 
-                <input id="minAssists" type="number" placeholder='Min Assists' onChange={(e) => setMinAssists(e.target.value)}></input> 
-                <input id="minScored" type="number" placeholder='Min Scored' onChange={(e) => setMinScored(e.target.value)}></input> 
+                <input id="minKills" type="number" placeholder='Min Kills' onChange={(e) => e.target.value ? setMinKills(e.target.value) : setMinKills(0)}></input> 
+                <input id="minAssists" type="number" placeholder='Min Assists' onChange={(e) => e.target.value ? setMinAssists(e.target.value) : setMinAssists(0)}></input> 
+                <input id="minScored" type="number" placeholder='Min Scored' onChange={(e) => e.target.value ? setMinScored(e.target.value) : setMinScored(0)}></input> 
             </div>
             <div className="filter-row">
-                <input id="minDealt" type="number" placeholder='Min Dealt' onChange={(e) => setMinDealt(e.target.value)}></input> 
-                <input id="minTaken" type="number" placeholder='Min Taken' onChange={(e) => setMinTaken(e.target.value)}></input> 
-                <input id="minHealed" type="number" placeholder='Min Healed' onChange={(e) => setMinHealed(e.target.value)}></input> 
+                <input id="minDealt" type="number" placeholder='Min Dealt' onChange={(e) => e.target.value ? setMinDealt(e.target.value) : setMinDealt(0)}></input> 
+                <input id="minTaken" type="number" placeholder='Min Taken' onChange={(e) => e.target.value ? setMinTaken(e.target.value) : setMinTaken(0)}></input> 
+                <input id="minHealed" type="number" placeholder='Min Healed' onChange={(e) => e.target.value ? setMinHealed(e.target.value) : setMinHealed(0)}></input> 
                 <select id="laneSelect" value={lane} onChange={(e) => setLane(e.target.value)}>
                     <option value="any">Lane Select (Any)</option>
                     <option value="TopCarry">Top Carry</option>
@@ -81,6 +81,7 @@ function BattleStatsSorting({ setData, moveData, allPokemon }) {
                     value={pokemon}
                     onChange={(value) => {
                         setPokemon(value);
+                        setKeyPokemon(value);
                         setMove1(null);
                         setMove2(null);
                     }}

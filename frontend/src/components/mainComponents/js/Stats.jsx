@@ -188,14 +188,45 @@ function Stats() {
                 <div id="headerContainer">
                     <StatsOrdering setOrderBy={setBattleOrderBy} orderingArray={[{value: 'all', title: 'All Stats'}, {value: 'kills', title: 'Kills'}, {value: 'assists', title: 'Assists'}, {value: 'dealt', title: 'Damage Dealt'}, {value: 'taken', title: 'Damage Taken'}, {value: 'healed', title: 'Damage Healed'}, {value: 'points', title: 'Points Scored'}]} setBattleMode={setBattleMode} />
                     {battleMode ===  "individual" && (
-                        <BattleStatsSorting setData={setBattleData} moveData={rawMoveData} allPokemon={allPokemon} keyPokemon={keyPokemon} />
+                        <BattleStatsSorting setData={setBattleData} moveData={rawMoveData} allPokemon={allPokemon} setKeyPokemon={setKeyPokemon} />
                     )}
                 </div>
                 <div id="statsContainer">
-                    {!keyPokemon && battleMode === 'individual' ? (
-                        <div className="no-data-message">
-                            <p>Select A Pokemon To View Data.</p>
-                        </div>
+                    {battleMode === 'individual' ? (
+                        <>
+                            {!keyPokemon ? (
+                                <div className="no-data-message">
+                                    <p>Select A Pokemon To View Data.</p>
+                                </div>
+                            ) : (
+                                <>
+                                    {battleData.length > 0 ? (
+                                        <>
+                                            {battleData
+                                                .slice() // clone so you don't mutate state
+                                                .sort((a, b) => {
+                                                if (battleOrderBy === "kills") return b.kills - a.kills;
+                                                if (battleOrderBy === "assists") return b.assists - a.assists;
+                                                if (battleOrderBy === "dealt") return b.dealt - a.dealt;
+                                                if (battleOrderBy === "taken") return b.taken - a.taken;
+                                                if (battleOrderBy === "healed") return b.healed - a.healed;
+                                                if (battleOrderBy === "points") return b.scored - a.scored;
+                                                return 0; // fallback
+                                                })
+                                                .map((match, idx) => (
+                                                    <BattleStatsDisplay key={idx} match={match} mode={battleMode} />
+                                                ))
+                                            }
+                                        </>
+                                    ) : (
+                                        <div className="no-data-message">
+                                            <p>No Data Found.</p>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                            
+                        </>
                     ) : (
                         <>
                         {battleData.length > 0 ? (

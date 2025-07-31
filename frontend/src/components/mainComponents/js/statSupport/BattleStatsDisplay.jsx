@@ -21,7 +21,6 @@ ChartJS.register(
 );
 
 function BattleStatsDisplay({ character, match, mode, orderBy, totalData }) {
-  console.log(character, match, mode, orderBy, totalData);
   return (
     <>
       {mode === 'allPokemon' && <AllPokemonChart data={character} orderBy={orderBy} totalData={totalData} />}
@@ -37,11 +36,8 @@ function BattleStatsDisplay({ character, match, mode, orderBy, totalData }) {
 // When orderBy is not "all", make it one long graph the user can scroll down that has just that value shown on a bar graph 
 function AllPokemonChart({ data, orderBy, totalData }) {
   let chartData = {};
-  
   if (orderBy === 'all') {
-    console.log(data);
-    const numDataPoints = data.num_times_top + data.num_times_exp_share_top + data.num_times_jungle + data.num_times_bot + data.num_times_exp_share_bot;
-    console.log(numDataPoints);
+    const numDataPoints = parseInt(data.num_times_top) + parseInt(data.num_times_exp_share_top) + parseInt(data.num_times_jungle) + parseInt(data.num_times_bot) + parseInt(data.num_times_exp_share_bot);
     chartData = {
       labels: ['Top Carry', 'Top EXP Share', 'Jungle Carry', 'Bot Carry', 'Bot EXP Share'], // x-axis
       datasets: [
@@ -78,7 +74,6 @@ function AllPokemonChart({ data, orderBy, totalData }) {
         bodyFont: {
           size: 10 // Making the tooltip text smaller
         },
-        max: 100,
         callbacks: {
           label: function(context) {
             switch(context.label) {
@@ -110,9 +105,10 @@ function AllPokemonChart({ data, orderBy, totalData }) {
       },
       y: {
         beginAtZero: true,
+        max: 100, // Set max to 100
         ticks: { // y axis labels
           callback: function(value) {
-            return value; 
+            return value + '%'; // Add percentage sign
           },
         }
       },
@@ -121,9 +117,28 @@ function AllPokemonChart({ data, orderBy, totalData }) {
     categoryPercentage: 0.85,
   };
     return (
-      <div>
-        <div style={{ height: '100%', width: '100%', overflowX: 'auto' }}>
-          <div style={{ minWidth: `${totalData.length * 60}px` }}> {/* 60px per bar, adjust as needed */}
+      <div className="allPokemonAllStatsDisplay">
+        <div className="killsAssistsScoredDisplay">
+          <div className="statNumber kills">{parseInt(data.mean_kills).toFixed(2)}</div>
+          <div className="statNumber assists">{parseInt(data.mean_assists).toFixed(2)}</div>
+          <div className="statNumber scored">{parseInt(data.mean_scored).toFixed(2)}</div>
+        </div>
+        <div className="dealtTakenHealedDisplay">
+          <div className="statBar dealt">
+            <div className="statBarFill red" style={{width: '100%'}}></div>
+            <span>{parseInt(data.mean_dealt).toFixed(2)}</span>
+          </div>
+          <div className="statBar taken">
+            <div className="statBarFill blue" style={{width: '100%'}}></div>
+            <span>{parseInt(data.mean_taken).toFixed(2)}</span>
+          </div>
+          <div className="statBar healed">
+            <div className="statBarFill green" style={{width: '100%'}}></div>
+            <span>{parseInt(data.mean_healed).toFixed(2)}</span>
+          </div>
+        </div>
+        <div style={{ height: '100%', width: '300px', backgroundColor: 'white', borderRadius: '5px', padding: '8px' }}>
+          <div style={{ minWidth: `60px` }}> {/* 60px per bar, adjust as needed */}
             <Bar data={chartData} options={options} />
           </div>
         </div>
@@ -263,191 +278,120 @@ function AllPokemonChart({ data, orderBy, totalData }) {
 // Display comps the pokemon appeared in that match the criteria. The comp is displayed with each team, their pokemon, 
 // and their moves represented with just the featured Pokemon having its data like kills listed with it. There must be a link to the VOD containing the match for VOD review.
 function MatchDisplaysChart({ data }) {
-  const chartData = {
-    labels: (() => {
-      const baseLabels = ['Ban Rate', 'Pick Rate', 'Presence', 'Win Rate', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6'];
-      
-      // Add moveset labels only if they exist
-      if (data.movesets && data.movesets.length > 0) {
-        for (let i = 0; i < data.movesets.length; i++) {
-          const moveset = data.movesets[i];
-          if (moveset) {
-            baseLabels.push(`Pick Rate ${moveset.move_1} + ${moveset.move_2}`);
-            baseLabels.push(`Win Rate ${moveset.move_1} + ${moveset.move_2}`);
-          }
-        }
-      }
-      
-      return baseLabels;
-    })(),
-    datasets: [
-      {
-        label: 'Stats',
-        data: (() => {
-          const baseData = [
-            data.ban_rate, 
-            data.pick_rate, 
-            data.presence, 
-            data.win_rate,
-           ((data.pick_round_1 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_2 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_3 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_4 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_5 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_6 / data.picks) * 100).toFixed(1)
-          ];
-          
-          // Add moveset data only if they exist
-          if (data.movesets && data.movesets.length > 0) {
-            for (let i = 0; i < data.movesets.length; i++) {
-              const moveset = data.movesets[i];
-              if (moveset) {
-                // Calculate pick rate for this moveset
-                const pickRate = data.picks > 0 ? 
-                  parseFloat(((moveset.requested_usages / data.picks) * 100).toFixed(1)) : 0;
-                
-                // Calculate win rate for this moveset
-                const winRate = moveset.requested_usages > 0 ? 
-                  parseFloat(((moveset.requested_wins / moveset.requested_usages) * 100).toFixed(1)) : 0;
-                
-                baseData.push(pickRate);
-                baseData.push(winRate);
-              }
-            }
-          }
-          
-          return baseData;
-        })(),
-        backgroundColor: (() => {
-          const colors = [
-            'rgba(255, 99, 132, 0.6)',  // Ban Rate
-            'rgba(54, 162, 235, 0.6)',  // Pick Rate
-            'rgba(255, 206, 86, 0.6)',  // Presence
-            'rgba(75, 192, 192, 0.6)',  // Win Rate
-            'rgba(192, 75, 161, 0.6)',  // Round 1
-            'rgba(192, 75, 161, 0.6)',  // Round 2
-            'rgba(192, 75, 161, 0.6)',  // Round 3
-            'rgba(192, 75, 161, 0.6)',  // Round 4
-            'rgba(192, 75, 161, 0.6)',  // Round 5
-            'rgba(192, 75, 161, 0.6)'   // Round 6
-          ];
-          
-          // Add colors for movesets
-          if (data.movesets && data.movesets.length > 0) {
-            for (let i = 0; i < data.movesets.length; i++) {
-              if (data.movesets[i]) {
-                // Add two colors for each moveset (pick rate and win rate)
-                colors.push('rgba(153, 102, 255, 0.6)');
-                colors.push('rgba(255, 159, 64, 0.6)');
-              }
-            }
-          }
-          
-          return colors;
-        })(),
-        borderColor: [],
-        borderWidth: 1,
-      },
-    ],
-  };
+  const team1 = [
+    { name: data.pokemon1_1, move_1: data.pokemon1_1_move_1, move_2: data.pokemon1_1_move_2 },
+    { name: data.pokemon1_2, move_1: data.pokemon1_2_move_1, move_2: data.pokemon1_2_move_2 },
+    { name: data.pokemon1_3, move_1: data.pokemon1_3_move_1, move_2: data.pokemon1_3_move_2 },
+    { name: data.pokemon1_4, move_1: data.pokemon1_4_move_1, move_2: data.pokemon1_4_move_2 },
+    { name: data.pokemon1_5, move_1: data.pokemon1_5_move_1, move_2: data.pokemon1_5_move_2 }
+  ];
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false, // Hide legend to save space
-      },
-      title: {
-        display: true,
-        text: data.pokemon_name,
-        font: {
-          size: 16,
-          weight: 'bold',
-        },
-        padding: {
-          top: 10,
-          bottom: 10
-        }
-      },
-      tooltip: { // When hovering over a bar, this is the hover box.
-        bodyFont: {
-          size: 8 // Making the tooltip text smaller to fit all the data with movesets
-        },
-        callbacks: {
-          label: function(context) {
-            switch(context.label) {
-              case "Ban Rate":
-                return `${context.label}: ${data.bans} bans over ${data.total_matches} total matches (${context.raw}%)`;
-              case "Pick Rate":
-                return `${context.label}: ${data.picks} picks over ${data.total_matches} total matches (${context.raw}%)`;
-              case "Presence":
-                return `${context.label}: ${parseInt(data.picks, 10) + parseInt(data.bans, 10)} picks/bans over ${data.total_matches} total matches (${context.raw}%)`;
-              case "Win Rate":
-                return `${context.label}: ${data.wins} wins over ${data.picks} total picks (${context.raw}%)`;
-              case "Round 1":
-                return `${context.label}: ${data.pick_round_1} round 1 picks over ${data.picks} total picks (${context.raw}%)`;
-              case "Round 2":
-                return `${context.label}: ${data.pick_round_2} round 2 picks over ${data.picks} total picks (${context.raw}%)`;
-              case "Round 3":
-                return `${context.label}: ${data.pick_round_3} round 3 picks over ${data.picks} total picks (${context.raw}%)`;
-              case "Round 4":
-                return `${context.label}: ${data.pick_round_4} round 4 picks over ${data.picks} total picks (${context.raw}%)`;
-              case "Round 5":
-                return `${context.label}: ${data.pick_round_5} round 5 picks over ${data.picks} total picks (${context.raw}%)`;
-              case "Round 6":
-                return `${context.label}: ${data.pick_round_6} round 6 picks over ${data.picks} total picks (${context.raw}%)`;
-              default:
-                // Check if this is a moveset tooltip
-                if (context.label.startsWith('Pick Rate ')) {
-                  // Find the moveset data
-                  const moveName = context.label.replace('Pick Rate ', '');
-                  const movesetData = data.movesets.find(m => `${m.move_1} + ${m.move_2}` === moveName);
-                  if (movesetData) {
-                    return `${context.label}: ${movesetData.requested_usages} picks over ${data.picks} total picks (${context.raw}%)`;
-                  }
-                } else if (context.label.startsWith('Win Rate ')) {
-                  // Find the moveset data
-                  const moveName = context.label.replace('Win Rate ', '');
-                  const movesetData = data.movesets.find(m => `${m.move_1} + ${m.move_2}` === moveName);
-                  if (movesetData) {
-                    return `${context.label}: ${movesetData.requested_wins} wins over ${movesetData.requested_usages} picks (${context.raw}%)`;
-                  }
-                }
-                return `${context.label}: ${context.raw}%`;
-            }
-          }
-        }
-      }
-    },
-    scales: {
-      x: {
-        type: 'category',
-        ticks: {
-          font: {
-            size: 7
-          }
-        }
-      },
-      y: {
-        beginAtZero: true,
-        max: 100, // Set max to 100
-        ticks: { // y axis labels
-          callback: function(value) {
-            return value + '%'; // Add percentage sign
-          },
-        }
-      },
-    },
-    barPercentage: 0.85,
-    categoryPercentage: 0.85,
-  };
+  const team2 = [
+    { name: data.pokemon2_1, move_1: data.pokemon2_1_move_1, move_2: data.pokemon2_1_move_2 },
+    { name: data.pokemon2_2, move_1: data.pokemon2_2_move_1, move_2: data.pokemon2_2_move_2 },
+    { name: data.pokemon2_3, move_1: data.pokemon2_3_move_1, move_2: data.pokemon2_3_move_2 },
+    { name: data.pokemon2_4, move_1: data.pokemon2_4_move_1, move_2: data.pokemon2_4_move_2 },
+    { name: data.pokemon2_5, move_1: data.pokemon2_5_move_1, move_2: data.pokemon2_5_move_2 }
+  ];
+
+  const keyPokemon = { name: data.key_pokemon, kills: data.kills, assists: data.assists, scored: data.scored, dealt: data.dealt, taken: data.taken, healed: data.healed, position: data.position }
+
+  console.log(team1, team2, keyPokemon);
 
   return (
-    <div style={{ height: '250px', width: '100%' }} onClick={() => setShowPokemonData(false)}>
-      <Bar data={chartData} options={options} />
+  <div>
+    <div className="comp-card">
+      <div className="comp-content">
+        <div className="team-comp" style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
+          <div className="draft-row">
+            <div className="base-data">
+              {team1.map((pokemon, i) => {
+                return (
+                  <div className="draft-row-number-headshot-container" key={i}>
+                    <img 
+                      src={`/assets/Draft/headshots/${pokemon.name}.png`} 
+                      alt={pokemon.name} 
+                      className="pokemon-icon"
+                    />
+                    <div className="pokemon-name">
+                      {pokemon.name}
+                      <div className="move-icons">
+                        <img 
+                          src={`/assets/Draft/moves/${pokemon.name}_${pokemon.move_1.replace(/ /g, '_')}.png`}
+                          alt={pokemon.move_1}
+                          className="move-icon"
+                        />
+                        <img 
+                          src={`/assets/Draft/moves/${pokemon.name}_${pokemon.move_2.replace(/ /g, '_')}.png`}
+                          alt={pokemon.move_2}
+                          className="move-icon"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="draft-row">
+            <div className="base-data">
+              {team2.map((pokemon, i) => {
+                return (
+                  <div className="draft-row-number-headshot-container" key={i}>
+                    <img 
+                      src={`/assets/Draft/headshots/${pokemon.name}.png`} 
+                      alt={pokemon.name} 
+                      className="pokemon-icon"
+                    />
+                    <div className="pokemon-name">
+                      {pokemon.name}
+                      <div className="move-icons">
+                        <img 
+                          src={`/assets/Draft/moves/${pokemon.name}_${pokemon.move_1.replace(/ /g, '_')}.png`}
+                          alt={pokemon.move_1}
+                          className="move-icon"
+                        />
+                        <img 
+                          src={`/assets/Draft/moves/${pokemon.name}_${pokemon.move_2.replace(/ /g, '_')}.png`}
+                          alt={pokemon.move_2}
+                          className="move-icon"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="keyPokemonStats">
+            <img 
+              src={`/assets/Draft/headshots/${keyPokemon.name}.png`} 
+              alt={keyPokemon.name} 
+              className="pokemon-icon"
+            />
+            <div className="statNumber kills">{keyPokemon.kills}</div>
+            <div className="statNumber assists">{keyPokemon.assists}</div>
+            <div className="statNumber scored">{keyPokemon.scored}</div>
+            <div className="statBar dealt">
+              <div className="statBarFill red" style={{width: '100%'}}></div>
+              <span>{keyPokemon.dealt}</span>
+            </div>
+            <div className="statBar taken">
+              <div className="statBarFill blue" style={{width: '100%'}}></div>
+              <span>{keyPokemon.taken}</span>
+            </div>
+            <div className="statBar healed">
+              <div className="statBarFill green" style={{width: '100%'}}></div>
+              <span>{keyPokemon.healed}</span>
+            </div>
+            <div className={`positionIndicator ${keyPokemon.position}`}></div>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default BattleStatsDisplay;

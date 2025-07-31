@@ -1152,7 +1152,7 @@ class Characters {
     async getOverallBattleStats() {
       return await new Promise((resolve, reject) => {
         try {
-          let sql = `SELECT pokemon_id, pokemon_name, AVG(kills) as mean_kills, AVG(assists) as mean_assists, AVG(damage_dealt) as mean_dealt, AVG(damage_taken) as mean_taken, AVG(damage_healed) as mean_healed, AVG(points_scored) as mean_scored, SUM((position_played = 'TopCarry')::int) AS num_times_top, SUM((position_played = 'EXPShareTop')::int) AS num_times_exp_share_top, SUM((position_played = 'JungleCarry')::int) AS num_times_jungle, SUM((position_played = 'BotCarry')::int) AS num_times_bot, SUM((position_played = 'EXPShareBot')::int) AS num_times_exp_share_bot
+          let sql = `SELECT pokemon_id, pokemon_name, AVG(kills) as mean_kills, AVG(assists) as mean_assists, AVG(damage_dealt) as mean_dealt, AVG(damage_taken) as mean_taken, AVG(damage_healed) as mean_healed, AVG(points_scored) as mean_scored, SUM((position_played = 'TopCarry')::int) AS num_times_top, SUM((position_played = 'EXPShareTop')::int) AS num_times_exp_share_top, SUM((position_played = 'JungleCarry')::int) AS num_times_jungle, SUM((position_played = 'BottomCarry')::int) AS num_times_bot, SUM((position_played = 'EXPShareBot')::int) AS num_times_exp_share_bot
                        FROM pokemon_performance NATURAL JOIN playable_characters
                        GROUP BY pokemon_id, pokemon_name`;
 
@@ -1207,9 +1207,112 @@ class Characters {
           
           // Select comp data to display relevant comps
           
-          let sql = `SELECT pp.kills as kills, pp.assists as assists, pp.damage_dealt as dealt, pp.damage_taken as taken, pp.damage_healed as healed, pp.points_scored as scored, pp.position_played as position, pp.pokemon_id as key_pokemon, pc.pokemon_1 as pokemon1_1, pc.pokemon_1_move_1 as pokemon1_1_move_1, pc.pokemon_1_move_2 as pokemon1_1_move_2, pc.pokemon_2 as pokemon1_2, pc.pokemon_2_move_1 as pokemon1_2_move_1, pc.pokemon_2_move_2 as pokemon1_2_move_2, pc.pokemon_3 as pokemon1_3, pc.pokemon_3_move_1 as pokemon1_3_move_1, pc.pokemon_3_move_2 as pokemon1_3_move_2, pc.pokemon_4 as pokemon1_4, pc.pokemon_4_move_1 as pokemon1_4_move_1, pc.pokemon_4_move_2 as pokemon1_4_move_2, pc.pokemon_5 as pokemon1_5, pc.pokemon_5_move_1 as pokemon1_5_move_1, pc.pokemon_5_move_2 as pokemon1_5_move_2, pc2.pokemon_1 as pokemon2_1, pc2.pokemon_1_move_1 as pokemon2_1_move_1, pc2.pokemon_1_move_2 as pokemon2_1_move_2, pc2.pokemon_2 as pokemon2_2, pc2.pokemon_2_move_1 as pokemon2_2_move_1, pc2.pokemon_2_move_2 as pokemon2_2_move_2, pc2.pokemon_3 as pokemon2_3, pc2.pokemon_3_move_1 as pokemon2_3_move_1, pc2.pokemon_3_move_2 as pokemon2_3_move_2, pc2.pokemon_4 as pokemon2_4, pc2.pokemon_4_move_1 as pokemon2_4_move_1, pc2.pokemon_4_move_2 as pokemon2_4_move_2, pc2.pokemon_5 as pokemon2_5, pc2.pokemon_5_move_1 as pokemon2_5_move_1, pc2.pokemon_5_move_2 as pokemon2_5_move_2
-                       FROM pokemon_performance pp LEFT JOIN professional_comps pc ON pp.comp_id = pc.comp_id LEFT JOIN professional_matches pm ON (pm.team_1_comp_id = pp.comp_id OR pm.team_2_comp_id = pp.comp_id) LEFT JOIN professional_comps pc2 ON ((pc2.comp_id = pm.team_1_comp_id AND pc.comp_id != pm.team_1_comp_id) OR (pc2.comp_id = pm.team_2_comp_id AND pc.comp_id != pm.team_2_comp_id))
-                       ${whereClause}`;
+          let sql = `SELECT 
+                      pp.kills as kills, 
+                      pp.assists as assists, 
+                      pp.damage_dealt as dealt, 
+                      pp.damage_taken as taken, 
+                      pp.damage_healed as healed, 
+                      pp.points_scored as scored, 
+                      pp.position_played as position, 
+                      pc_key.pokemon_name as key_pokemon,
+
+                      -- Team 1 Pokémon and Moves (from pc)
+                      p1_1.pokemon_name as pokemon1_1,
+                      p1_1_m1.move_name as pokemon1_1_move_1,
+                      p1_1_m2.move_name as pokemon1_1_move_2,
+
+                      p1_2.pokemon_name as pokemon1_2,
+                      p1_2_m1.move_name as pokemon1_2_move_1,
+                      p1_2_m2.move_name as pokemon1_2_move_2,
+
+                      p1_3.pokemon_name as pokemon1_3,
+                      p1_3_m1.move_name as pokemon1_3_move_1,
+                      p1_3_m2.move_name as pokemon1_3_move_2,
+
+                      p1_4.pokemon_name as pokemon1_4,
+                      p1_4_m1.move_name as pokemon1_4_move_1,
+                      p1_4_m2.move_name as pokemon1_4_move_2,
+
+                      p1_5.pokemon_name as pokemon1_5,
+                      p1_5_m1.move_name as pokemon1_5_move_1,
+                      p1_5_m2.move_name as pokemon1_5_move_2,
+
+                      -- Team 2 Pokémon and Moves (from pc2)
+                      p2_1.pokemon_name as pokemon2_1,
+                      p2_1_m1.move_name as pokemon2_1_move_1,
+                      p2_1_m2.move_name as pokemon2_1_move_2,
+
+                      p2_2.pokemon_name as pokemon2_2,
+                      p2_2_m1.move_name as pokemon2_2_move_1,
+                      p2_2_m2.move_name as pokemon2_2_move_2,
+
+                      p2_3.pokemon_name as pokemon2_3,
+                      p2_3_m1.move_name as pokemon2_3_move_1,
+                      p2_3_m2.move_name as pokemon2_3_move_2,
+
+                      p2_4.pokemon_name as pokemon2_4,
+                      p2_4_m1.move_name as pokemon2_4_move_1,
+                      p2_4_m2.move_name as pokemon2_4_move_2,
+
+                      p2_5.pokemon_name as pokemon2_5,
+                      p2_5_m1.move_name as pokemon2_5_move_1,
+                      p2_5_m2.move_name as pokemon2_5_move_2
+
+                    FROM pokemon_performance pp
+                    LEFT JOIN professional_comps pc ON pp.comp_id = pc.comp_id
+                    LEFT JOIN professional_matches pm ON (pm.team_1_comp_id = pp.comp_id OR pm.team_2_comp_id = pp.comp_id)
+                    LEFT JOIN professional_comps pc2 ON (
+                      (pc2.comp_id = pm.team_1_comp_id AND pc.comp_id != pm.team_1_comp_id) OR 
+                      (pc2.comp_id = pm.team_2_comp_id AND pc.comp_id != pm.team_2_comp_id)
+                    )
+
+                    -- Team 1 Pokémon and Moves
+                    LEFT JOIN playable_characters p1_1 ON p1_1.pokemon_id = pc.pokemon_1
+                    LEFT JOIN pokemon_moves p1_1_m1 ON p1_1_m1.move_id = pc.pokemon_1_move_1
+                    LEFT JOIN pokemon_moves p1_1_m2 ON p1_1_m2.move_id = pc.pokemon_1_move_2
+
+                    LEFT JOIN playable_characters p1_2 ON p1_2.pokemon_id = pc.pokemon_2
+                    LEFT JOIN pokemon_moves p1_2_m1 ON p1_2_m1.move_id = pc.pokemon_2_move_1
+                    LEFT JOIN pokemon_moves p1_2_m2 ON p1_2_m2.move_id = pc.pokemon_2_move_2
+
+                    LEFT JOIN playable_characters p1_3 ON p1_3.pokemon_id = pc.pokemon_3
+                    LEFT JOIN pokemon_moves p1_3_m1 ON p1_3_m1.move_id = pc.pokemon_3_move_1
+                    LEFT JOIN pokemon_moves p1_3_m2 ON p1_3_m2.move_id = pc.pokemon_3_move_2
+
+                    LEFT JOIN playable_characters p1_4 ON p1_4.pokemon_id = pc.pokemon_4
+                    LEFT JOIN pokemon_moves p1_4_m1 ON p1_4_m1.move_id = pc.pokemon_4_move_1
+                    LEFT JOIN pokemon_moves p1_4_m2 ON p1_4_m2.move_id = pc.pokemon_4_move_2
+
+                    LEFT JOIN playable_characters p1_5 ON p1_5.pokemon_id = pc.pokemon_5
+                    LEFT JOIN pokemon_moves p1_5_m1 ON p1_5_m1.move_id = pc.pokemon_5_move_1
+                    LEFT JOIN pokemon_moves p1_5_m2 ON p1_5_m2.move_id = pc.pokemon_5_move_2
+
+                    -- Team 2 Pokémon and Moves
+                    LEFT JOIN playable_characters p2_1 ON p2_1.pokemon_id = pc2.pokemon_1
+                    LEFT JOIN pokemon_moves p2_1_m1 ON p2_1_m1.move_id = pc2.pokemon_1_move_1
+                    LEFT JOIN pokemon_moves p2_1_m2 ON p2_1_m2.move_id = pc2.pokemon_1_move_2
+
+                    LEFT JOIN playable_characters p2_2 ON p2_2.pokemon_id = pc2.pokemon_2
+                    LEFT JOIN pokemon_moves p2_2_m1 ON p2_2_m1.move_id = pc2.pokemon_2_move_1
+                    LEFT JOIN pokemon_moves p2_2_m2 ON p2_2_m2.move_id = pc2.pokemon_2_move_2
+
+                    LEFT JOIN playable_characters p2_3 ON p2_3.pokemon_id = pc2.pokemon_3
+                    LEFT JOIN pokemon_moves p2_3_m1 ON p2_3_m1.move_id = pc2.pokemon_3_move_1
+                    LEFT JOIN pokemon_moves p2_3_m2 ON p2_3_m2.move_id = pc2.pokemon_3_move_2
+
+                    LEFT JOIN playable_characters p2_4 ON p2_4.pokemon_id = pc2.pokemon_4
+                    LEFT JOIN pokemon_moves p2_4_m1 ON p2_4_m1.move_id = pc2.pokemon_4_move_1
+                    LEFT JOIN pokemon_moves p2_4_m2 ON p2_4_m2.move_id = pc2.pokemon_4_move_2
+
+                    LEFT JOIN playable_characters p2_5 ON p2_5.pokemon_id = pc2.pokemon_5
+                    LEFT JOIN pokemon_moves p2_5_m1 ON p2_5_m1.move_id = pc2.pokemon_5_move_1
+                    LEFT JOIN pokemon_moves p2_5_m2 ON p2_5_m2.move_id = pc2.pokemon_5_move_2
+
+                    LEFT JOIN playable_characters pc_key ON pp.pokemon_id = pc_key.pokemon_id
+
+                    ${whereClause};
+                    `;
 
           this.db.query(sql, parameters, (err, res) => {
             if (err) {
