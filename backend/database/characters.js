@@ -1216,6 +1216,7 @@ class Characters {
                       pp.points_scored as scored, 
                       pp.position_played as position, 
                       pc_key.pokemon_name as key_pokemon,
+                      e.vod_url as vod_url,
 
                       -- Team 1 Pokémon and Moves (from pc)
                       p1_1.pokemon_name as pokemon1_1,
@@ -1309,10 +1310,15 @@ class Characters {
                     LEFT JOIN pokemon_moves p2_5_m1 ON p2_5_m1.move_id = pc2.pokemon_5_move_1
                     LEFT JOIN pokemon_moves p2_5_m2 ON p2_5_m2.move_id = pc2.pokemon_5_move_2
 
+                    -- Key Pokemon + VOD
                     LEFT JOIN playable_characters pc_key ON pp.pokemon_id = pc_key.pokemon_id
+                    LEFT JOIN professional_sets ps ON ps.set_id = pm.set_id
+                    LEFT JOIN events e ON e.event_id = ps.event_id
 
                     ${whereClause};
                     `;
+
+                    // match --> set --> event to get VOD
 
           this.db.query(sql, parameters, (err, res) => {
             if (err) {

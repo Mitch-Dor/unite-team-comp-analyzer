@@ -304,6 +304,8 @@ function MatchDisplaysChart({ data }) {
 
   const keyPokemon = { name: data.key_pokemon, kills: data.kills, assists: data.assists, scored: data.scored, dealt: data.dealt, taken: data.taken, healed: data.healed, position: data.position }
 
+  const vod_url = data.vod_url;
+
   return (
   <div>
     <div className="comp-card">
@@ -391,6 +393,11 @@ function MatchDisplaysChart({ data }) {
               <span>{keyPokemon.healed}</span>
             </div>
             <div className={`positionIndicator ${keyPokemon.position}`}></div>
+            <div className="event-vod" style={{paddingLeft: '0', height: '100%'}}>
+              <a href={vod_url} target="_blank" rel="noopener noreferrer">
+                <img src="/assets/icons/youtube.png" alt="VOD" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
