@@ -4,6 +4,7 @@ import { fetchAllComps, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAll
 import SubmitSetModal from './compSupport/SubmitSetModal';
 import CompsSorting from './compSupport/CompsSorting';
 import SetDisplay from './compSupport/SetDisplay';
+import Disclaimer from '../../sideComponents/js/Disclaimer';
 import { useLocation } from 'react-router-dom';
 
 export function formatSet(formattedData) {
@@ -178,9 +179,8 @@ function Comps() {
     <div id="mainContainer" className="main-container">
       {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCompsData={setCompsData} compsData={compsData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} user={user} />}
       <div id="compsContainer">
+        <CompsSorting events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} compsData={compsData} setFilteredComps={setFilteredComps} advancedDataMode={advancedDataMode} setAdvancedDataMode={setAdvancedDataMode} />
         <div className="comps-list">
-          <h1 className="page-title">Team Compositions</h1>
-          <CompsSorting events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} compsData={compsData} setFilteredComps={setFilteredComps} advancedDataMode={advancedDataMode} setAdvancedDataMode={setAdvancedDataMode} />
           { filteredComps && filteredComps.length > 0 ? filteredComps.map((set, index) => (
             <SetDisplay key={index} set={set} advancedDataMode={advancedDataMode} />
           )) : (
@@ -188,8 +188,10 @@ function Comps() {
           )}
         </div>
       </div>
-      {verifiedUser && (
+      {verifiedUser ? (
         <div id="open-set-submit-form" className="open-set-submit-form" onClick={() => {setShowSubmitForm(true); setFilteredComps(compsData)}}>+</div>
+      ) : (
+        <Disclaimer />
       )}
     </div>
   );

@@ -924,6 +924,7 @@ select.stat-input {
     padding: 20px;
     box-sizing: border-box;
     margin-bottom: 20px;
+    margin-top: 10px;
 }
 
 .comps-sorting-container h3 {

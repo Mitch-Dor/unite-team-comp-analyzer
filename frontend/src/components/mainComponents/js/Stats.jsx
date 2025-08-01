@@ -6,6 +6,7 @@ import DraftStatsBarChart from './statSupport/DraftStatsBarChart.jsx';
 import BattleStatsSorting from './statSupport/BattleStatsSorting.jsx';
 import BattleStatsDisplay from './statSupport/BattleStatsDisplay.jsx';
 import Home from '../../sideComponents/js/Home.jsx';
+import Disclaimer from '../../sideComponents/js/Disclaimer.jsx';
 import '../css/stats.css';
 
 function Stats() {
@@ -294,6 +295,7 @@ function Stats() {
             </>
         )}
         <Home />
+        <Disclaimer />
     </div>
   );
 }
