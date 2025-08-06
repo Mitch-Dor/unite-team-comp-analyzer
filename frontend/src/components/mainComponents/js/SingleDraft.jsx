@@ -313,10 +313,10 @@ function SingleDraft() {
             }
             
             // Fallback to random selection if no valid recommendation
-            return genRandomPokemon();
+            return genRandomPokemon(pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, disallowedCharacters);
         } catch (error) {
             console.error("Error in AI pick:", error);
-            return genRandomPokemon();
+            return genRandomPokemon(pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, disallowedCharacters);
         }
     }
 
@@ -352,7 +352,7 @@ function SingleDraft() {
             if (targetPokemonRef.current !== null){
                 actionPokemon = targetPokemonRef.current;
             } else if (stateRef.current.startsWith('team1Pick') || stateRef.current.startsWith('team2Pick')){
-                actionPokemon = genRandomPokemon();
+                actionPokemon = genRandomPokemon(pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, disallowedCharacters);
             } else if (stateRef.current.startsWith('team1Ban') || stateRef.current.startsWith('team2Ban')){
                 actionPokemon = none;
             }
