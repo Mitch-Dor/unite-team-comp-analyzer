@@ -22,10 +22,10 @@ ChartJS.register(
 
 function BattleStatsDisplay({ character, match, mode, orderBy, totalData }) {
   return (
-    <>
+    <div className="indivBattleStatItems">
       {mode === 'allPokemon' && <AllPokemonChart data={character} orderBy={orderBy} totalData={totalData} />}
       {mode === 'individual' && <MatchDisplaysChart data={match} />}
-    </>
+    </div>
   );
 }
 
@@ -134,15 +134,15 @@ function AllPokemonChart({ data, orderBy, totalData }) {
         <div className="dealtTakenHealedDisplay">
           <div className="statBar dealt">
             <div className="statBarFill red" style={{width: '100%'}}></div>
-            <span>{parseFloat(data.mean_dealt).toFixed(2)}</span>
+            <span className="indivStatBarText">{parseFloat(data.mean_dealt).toFixed(2)}</span>
           </div>
           <div className="statBar taken">
             <div className="statBarFill blue" style={{width: '100%'}}></div>
-            <span>{parseFloat(data.mean_taken).toFixed(2)}</span>
+            <span className="indivStatBarText">{parseFloat(data.mean_taken).toFixed(2)}</span>
           </div>
           <div className="statBar healed">
             <div className="statBarFill green" style={{width: '100%'}}></div>
-            <span>{parseFloat(data.mean_healed).toFixed(2)}</span>
+            <span className="indivStatBarText">{parseFloat(data.mean_healed).toFixed(2)}</span>
           </div>
         </div>
         <div style={{ height: '100%', width: '284px', backgroundColor: 'white', borderRadius: '5px', padding: '8px' }}>
@@ -393,7 +393,7 @@ function MatchDisplaysChart({ data }) {
               <span>{keyPokemon.healed}</span>
             </div>
             <div className={`positionIndicator ${keyPokemon.position}`}></div>
-            <div className="event-vod" style={{paddingLeft: '0', height: '100%'}}>
+            <div className="event-vod" style={{paddingLeft: '0', height: '34px'}}>
               <a href={vod_url} target="_blank" rel="noopener noreferrer">
                 <img src="/assets/icons/youtube.png" alt="VOD" />
               </a>

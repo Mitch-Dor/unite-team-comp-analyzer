@@ -31,6 +31,10 @@ h3 {
     align-items: center;
 }
 
+.filter-row input {
+    width: 20%;
+}
+
 #filterContainer select, #orderingContainer select, #filterContainer input[type="date"] {
     padding: 8px 10px;
     border-radius: 5px;
@@ -306,6 +310,7 @@ h3 {
     display: flex;
     justify-content: space-between;
     padding: 4px 8px;
+    color: white;
 }
 
 .headshotAndNameRow {
@@ -332,3 +337,24 @@ h3 {
   animation: borderPulse 3s infinite;
 }
 
+.statBar span {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.indivStatBarText {
+    font-size: 0.75rem;
+}
+
+.indivBattleStatItems {
+    display: flex;
+    justify-content: center;
+}
+
+.comp-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
