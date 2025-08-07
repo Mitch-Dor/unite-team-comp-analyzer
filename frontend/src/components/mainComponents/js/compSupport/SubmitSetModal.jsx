@@ -370,37 +370,37 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
             let returnArray = [];
             for (let i = 0; i < 5; i++) {
                 let statArray = [];
-                if (data[i].kills !== null && data[i].kills !== "" && data[i].kills !== NaN) {
+                if (data[i].kills !== null && data[i].kills !== "" && !Number.isNaN(data[i].kills)) {
                     allNull = false;
                 } else {
                     allFilled = false;
                 }
                 statArray.push(data[i].kills);
-                if (data[i].assists !== null && data[i].assists !== "" && data[i].assists !== NaN) {
+                if (data[i].assists !== null && data[i].assists !== "" && !Number.isNaN(data[i].assists)) {
                     allNull = false;
                 } else {
                     allFilled = false;
                 }
                 statArray.push(data[i].assists);
-                if (data[i].scored !== null && data[i].scored !== "" && data[i].scored !== NaN) {
+                if (data[i].scored !== null && data[i].scored !== "" && !Number.isNaN(data[i].scored)) {
                     allNull = false;
                 } else {
                     allFilled = false;
                 }
                 statArray.push(data[i].scored);
-                if (data[i].dealt !== null && data[i].dealt !== "" && data[i].dealt !== NaN) {
+                if (data[i].dealt !== null && data[i].dealt !== "" && !Number.isNaN(data[i].dealt)) {
                     allNull = false;
                 } else {
                     allFilled = false;
                 }
                 statArray.push(data[i].dealt);
-                if (data[i].taken !== null && data[i].taken !== "" && data[i].taken !== NaN) {
+                if (data[i].taken !== null && data[i].taken !== "" && !Number.isNaN(data[i].taken)) {
                     allNull = false;
                 } else {
                     allFilled = false;
                 }
                 statArray.push(data[i].taken);
-                if (data[i].healed !== null && data[i].healed !== "" && data[i].healed !== NaN) {
+                if (data[i].healed !== null && data[i].healed !== "" && !Number.isNaN(data[i].healed)) {
                     allNull = false;
                 } else {
                     allFilled = false;
