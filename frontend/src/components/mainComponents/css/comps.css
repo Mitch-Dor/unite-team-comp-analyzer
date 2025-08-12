@@ -374,15 +374,15 @@
 }
 
 .statNumber.kills {
-    background-image: url('assets/icons/kills.png');
+    background-image: url('/assets/icons/kills.png');
 }
 
 .statNumber.assists {
-    background-image: url('assets/icons/assists.png');
+    background-image: url('/assets/icons/assists.png');
 }
 
 .statNumber.scored {
-    background-image: url('assets/icons/score.png');
+    background-image: url('/assets/icons/score.png');
 }
 
 .statBar {
@@ -431,23 +431,23 @@
 }
 
 .positionIndicator.TopCarry {
-    background-image: url('assets/Draft/filterIcons/top.png');
+    background-image: url('/assets/Draft/filterIcons/top.png');
 }
 
 .positionIndicator.EXPShareTop {
-    background-image: url('assets/Draft/filterIcons/EXPShareTop.png');
+    background-image: url('/assets/Draft/filterIcons/EXPShareTop.png');
 }
 
 .positionIndicator.BottomCarry {
-    background-image: url('assets/Draft/filterIcons/bot.png');
+    background-image: url('/assets/Draft/filterIcons/bot.png');
 }
 
 .positionIndicator.JungleCarry {
-    background-image: url('assets/Draft/filterIcons/jungle.png');
+    background-image: url('/assets/Draft/filterIcons/jungle.png');
 }
 
 .positionIndicator.EXPShareBot {
-    background-image: url('assets/Draft/filterIcons/EXPShareBot.png');
+    background-image: url('/assets/Draft/filterIcons/EXPShareBot.png');
 }
 
 .comp-footer {
