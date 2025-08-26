@@ -75,7 +75,6 @@ function TierList() {
     }
 
     fetchCharacterListing();
-    setBackground();
   }, []); 
 
   useEffect(() => {
@@ -150,15 +149,6 @@ function TierList() {
   useEffect(() => {
     setCookie('tierNames', customNameTiers);
   }, [customNameTiers]);
-
-  function setBackground(){
-    const mainContainer = document.getElementById("mainContainer");
-    if (mainContainer) {
-      mainContainer.style.backgroundImage = `url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png")`;
-      mainContainer.style.backgroundSize = "cover";
-      mainContainer.style.backgroundRepeat = "repeat-x";
-    }
-  }
 
   const handleDragStart = (e, item) => {
     e.dataTransfer.setData('text/plain', JSON.stringify(item));

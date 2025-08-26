@@ -141,21 +141,6 @@ function Traits() {
     fetchAttributes();
   }, []);
 
-  useEffect(() => {
-    // Use setTimeout to ensure DOM is ready
-    setTimeout(() => {
-      const mainContainer = document.getElementById("mainContainer");
-      if (mainContainer) {
-        mainContainer.style.backgroundImage = `url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png")`;
-      } else {
-        if (!loading){
-          // If the page is still loading mainContainer is expected to not be found
-          console.error("mainContainer not found");
-        }
-      }
-    }, 0);
-  }, [loading]);
-
   const handleCellChange = (rowIndex, column, value) => {
     setTableData(prevData => {
       const newData = [...prevData];

@@ -4,6 +4,12 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
+    background-image: url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow: hidden;
 }
 
 h3 {

@@ -153,24 +153,6 @@ function Comps() {
     setFilteredComps(compsData);
   }, [compsData]);
 
-  useEffect(() => {
-    // Use setTimeout to ensure DOM is ready
-    setTimeout(() => {
-      const mainContainer = document.getElementById("mainContainer");
-      if (mainContainer) {
-        mainContainer.style.backgroundImage = `url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png")`;
-        mainContainer.style.backgroundSize = "cover";
-        mainContainer.style.backgroundPosition = "center";
-        mainContainer.style.backgroundAttachment = "fixed";
-      } else {
-        if (!loading) {
-          // If the page is still loading mainContainer is expected to not be found
-          console.error("mainContainer not found");
-        }
-      }
-    }, 0);
-  }, [loading]);
-
   if (loading) {
     return <div className="loading-container">Loading...</div>;
   }

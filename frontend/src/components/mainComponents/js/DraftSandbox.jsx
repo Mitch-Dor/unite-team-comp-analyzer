@@ -29,17 +29,7 @@ function DraftSandbox() {
         }
 
         fetchCharacterListing(); // Call the fetch function to populate pokemonList
-        setBackground();
     }, []); // Empty dependency array ensures this runs once when the component mounts
-
-    function setBackground(){
-        const mainContainer = document.getElementById("root");
-        if (mainContainer) {
-            let backgroundPath = "/assets/Draft/Background.png";
-            mainContainer.style.backgroundImage = `url(${backgroundPath})`;
-            mainContainer.style.backgroundSize = "cover";
-        }
-    }
 
     function setPosition(pokemon, team, position){
         if (!pokemon){

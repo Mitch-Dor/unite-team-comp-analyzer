@@ -72,7 +72,6 @@ function SingleDraft() {
 
         fetchCharacterListing(); // Call the fetch function to populate pokemonList
         fetchTierList();
-        setBackground();
         updateDisallowedCharacters(settings.disallowedCharacters);
     }, []); // Empty dependency array ensures this runs once when the component mounts
 
@@ -446,15 +445,6 @@ function SingleDraft() {
         // Reset the targetPokemon
         setTargetPokemon(null);
     };
-
-    function setBackground(){
-        const mainContainer = document.getElementById("root");
-        if (mainContainer) {
-            let backgroundPath = "/assets/Draft/Background.png";
-            mainContainer.style.backgroundImage = `url(${backgroundPath})`;
-            mainContainer.style.backgroundSize = "cover";
-        }
-    }
 
     // Loading message while we're waiting on pokemonList
     if (loading) {

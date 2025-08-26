@@ -95,17 +95,6 @@ function Stats() {
             }
         }
         fetchAllData();
-
-        // Use setTimeout to ensure DOM is ready
-        setTimeout(() => {
-            const mainContainer = document.getElementById("mainContainer");
-            if (mainContainer) {
-            mainContainer.style.backgroundImage = `url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png")`;
-            mainContainer.style.backgroundSize = "cover";
-            mainContainer.style.backgroundPosition = "center";
-            mainContainer.style.backgroundAttachment = "fixed";
-            } 
-        }, 0);
     }, []);
 
     useEffect(() => {
