@@ -294,8 +294,8 @@ html::-webkit-scrollbar {
 /* Team display styles */
 .characterSelection {
     flex: 1;
-    height: 16%;
-    width: 90%;
+    height: calc(16% - 6px);
+    width: calc(90% - 3px);
     margin-top: 2%;
     border: solid 3px black;
     display: flex;
