@@ -23,7 +23,7 @@ html::-webkit-scrollbar {
 
 #middlePartsContainer {
     height: 100%;
-    width: 59vw;
+    width: 55%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -60,7 +60,6 @@ html::-webkit-scrollbar {
     width: 100%;
     height: 4%;
     display: flex;
-    justify-content: space-around;
 }
 
 .teamBans#purpleBans { 
