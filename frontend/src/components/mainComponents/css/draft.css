@@ -57,25 +57,10 @@ html::-webkit-scrollbar {
 }
 
 .teamBans { 
-    width: 100%;
+    width: 65%;
     height: 4%;
     display: flex;
-}
-
-.teamBans#purpleBans { 
-    justify-content: flex-start;
-}
-
-.teamBans#purpleBans div { 
-    margin-left: 10px;
-}
-
-.teamBans#orangeBans { 
-    justify-content: flex-end;
-}
-
-.teamBans#orangeBans div { 
-    margin-right: 10px;
+    justify-content: space-around;
 }
 
 .banDisplay {
