@@ -382,3 +382,15 @@ export async function fetchIndividualBattleStats(queryContext) {
     const statsDataJson = await statsData.json();
     return statsDataJson;
 }
+
+export async function fetchAllInsights() { 
+    const insightData = await fetch(routes.GET_ALL_INSIGHTS, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const insightDataJson = await insightData.json();
+    return insightDataJson;
+}

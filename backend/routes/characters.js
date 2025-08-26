@@ -77,4 +77,14 @@ module.exports = function (app, database, adminGoogleId) {
             res.sendStatus(401);
         });
     });
+
+    app.get('/GETallInsights', (req, res) => {
+        database.characters.getAllInsights().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching insights:', error);
+            res.sendStatus(401);
+        });
+    });
 };

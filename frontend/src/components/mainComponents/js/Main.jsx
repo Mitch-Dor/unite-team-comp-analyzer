@@ -102,7 +102,7 @@ function Main() {
             </div>
             <div id="AdditionalFeaturesContainer">
                 <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list', {state: {user: user}})}>Tier List</button>
-                <button id="compScoreBTN" className="modeBTN bigBTNs" onClick={() => navigate('/score-a-comp')}>Score A Comp</button>
+                <button id="compScoreBTN" className="modeBTN bigBTNs" onClick={() => navigate('/insights')}>Insights</button>
                 <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
                 {admin && (
                   <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits', {state: {user: user}})}>Traits</button>

@@ -1335,6 +1335,19 @@ class Characters {
         }
       });
     }
+
+    async getAllInsights() {
+      return new Promise((resolve, reject) => {
+        this.db.query('select * from pokemon_insights', (err, res) => {
+          if (err) {
+            console.error(err.message);
+            reject(err);
+          } else {
+            resolve(res.rows);
+          }
+        });
+      });
+    }
 }
 
 module.exports = Characters;
