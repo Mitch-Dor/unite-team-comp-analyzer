@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../css/tierList.css';
+import '../css/classBackgrounds.css';
 import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry, isAdmin } from './backendCalls/http.js';
 import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
 import Home from '../../sideComponents/js/Home.jsx';

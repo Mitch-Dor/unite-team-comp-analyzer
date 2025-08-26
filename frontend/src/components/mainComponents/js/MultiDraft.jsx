@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
 import { fetchCharacterDraftInfo, createRoom as apiCreateRoom } from './backendCalls/http.js';
 import '../css/draft.css';
+import '../css/classBackgrounds.css';
 import { Peer } from 'peerjs';
 import io from 'socket.io-client';
 import Home from '../../sideComponents/js/Home.jsx';

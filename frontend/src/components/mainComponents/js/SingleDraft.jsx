@@ -5,6 +5,7 @@ import { fetchCharacterDraftInfo, runAStarAlgorithm, fetchAllTierListEntries } f
 import Home from '../../sideComponents/js/Home.jsx';
 import Settings from '../../sideComponents/js/Settings.jsx';
 import '../css/draft.css';
+import '../css/classBackgrounds.css';
 import DraftAgain from './draftSupport/DraftAgain.jsx';
 import { genRandomPokemon, checkIfSpecialCase } from './draftSupport/draftFunctions.js';
 

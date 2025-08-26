@@ -3,6 +3,7 @@ import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
 import { fetchCharacterDraftInfo } from './backendCalls/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
 import '../css/draft.css';
+import '../css/classBackgrounds.css';
 
 function DraftSandbox() {
     const [pokemonList, updatePokemonList] = useState([]);
