@@ -36,6 +36,7 @@
 - Add to pokemon_moves table in db editor
 - Add to pokemon_attributes in db editor
 - Add to tier_list in db editor
+- As soon as players have an understanding: Add to pokemon_insights in db editor
 
 #### Setting Up The DB:
 
