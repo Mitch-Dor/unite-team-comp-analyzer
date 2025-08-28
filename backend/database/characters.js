@@ -10,7 +10,7 @@ class Characters {
     // ID, Name, Class, img link
     async getAllCharacterDraftInformation(){
       return new Promise((resolve, reject) => {
-        this.db.query('SELECT pokemon_id, pokemon_name, pokemon_class, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry, release_order, pokedex_number FROM playable_characters NATURAL JOIN pokemon_attributes ORDER BY pokedex_number', (err, res) => {
+        this.db.query('SELECT pokemon_id, pokemon_name, pokemon_class, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry, release_date, pokedex_number FROM playable_characters NATURAL JOIN pokemon_attributes ORDER BY pokedex_number', (err, res) => {
           if (err) {
             console.error(err.message);
             reject(err);

@@ -66,9 +66,15 @@ const Filtering = ({ pokemonList, updateFilteredList, updatePokemonList }) => {
     const doReorder = (orderBy) => {
         let sortedArray = [...pokemonList]; // Deep copy
         if (orderBy === "pokedex") {
-            sortedArray.sort((a, b) => (a.pokedex_number - b.pokedex_number))
+            sortedArray.sort((a, b) => (a.pokedex_number - b.pokedex_number));
         } else if (orderBy === "release") {
-            sortedArray.sort((a, b) => (a.release_order - b.release_order))
+            sortedArray.sort((a, b) => {
+                const diff = new Date(a.release_date) - new Date(b.release_date);
+                if (diff !== 0) {
+                    return diff; // primary sort: release_date
+                }
+                return a.pokemon_id - b.pokemon_id; // secondary sort: pokemon_id
+            });
         }
         updatePokemonList(sortedArray);
     }
