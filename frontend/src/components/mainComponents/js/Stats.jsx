@@ -25,6 +25,7 @@ function Stats() {
     const [battleMode, setBattleMode] = useState("allPokemon");
     const [keyPokemon, setKeyPokemon] = useState(null);
     const [mode, setMode] = useState("draftMode"); // draftMode / battleMode
+    const [popUpText, setPopUpText] = useState("");
 
     useEffect(() => {
         async function fetchAllData() {
@@ -39,7 +40,7 @@ function Stats() {
                 setRegions(fetchedRegions.sort((a, b) => a.localeCompare(b)));
             
                 // Get unique pokemon_name and pokemon_id combinations
-                const uniquePokemon = [...new Set(fetchedCharactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str)); 
+                const uniquePokemon = [...new Set(fetchedCharactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id, release_date: new Date(char.release_date)})))].map(str => JSON.parse(str)); 
                 setAllPokemon(uniquePokemon);
                 // Sort all in alphabetical order
                 setEvents(fetchedEvents.sort((a, b) => a.event_name.localeCompare(b.event_name)));
@@ -117,6 +118,11 @@ function Stats() {
 
   return (
     <div id="mainContainer">
+        {popUpText && (
+            <div className="popUpCover" onClick={() => {setPopUpText("")}}>
+                <div className="popUpTextPortion" onClick={(e) => e.stopPropagation()}>{popUpText}</div>
+            </div>
+        )}
         <div id="modeSelection">
             <div className={`modeSelector ${mode === "draftMode" ? 'selected' : ''}`} onClick={() => setMode("draftMode")}>Draft Stats</div>
             <div className={`modeSelector ${mode === "battleMode" ? 'selected' : ''}`} onClick={() => setMode("battleMode")}>Battle Stats</div>
@@ -127,8 +133,8 @@ function Stats() {
             <>
                 {/* Draft Mode */}
                 <div id="headerContainer">
-                    <StatsOrdering setOrderBy={setDraftOrderBy} orderingArray={[{value: 'all', title: 'All Stats'}, {value: 'ban', title: 'Ban Rate'}, {value: 'pick', title: 'Pick Rate'}, {value: 'presence', title: 'Presence'}, {value: 'win', title: 'Win Rate'}, {value: 'pickOrder', title: 'Pick Order'}]} />
-                    <DraftStatsSorting events={events} teams={teams} players={players} regions={regions} setData={setDraftData} moveData={moveData} />
+                    <StatsOrdering setOrderBy={setDraftOrderBy} orderingArray={[{value: 'all', title: 'All Stats'}, {value: 'ban', title: 'Ban Rate'}, {value: 'pick', title: 'Pick Rate'}, {value: 'presence', title: 'Presence'}, {value: 'win', title: 'Win Rate'}, {value: 'pickOrder', title: 'Pick Order'}]} setPopUpText={setPopUpText} />
+                    <DraftStatsSorting events={events} teams={teams} players={players} regions={regions} setData={setDraftData} moveData={moveData} allPokemon={allPokemon} setPopUpText={setPopUpText} />
                 </div>
                 <div id="statsContainer">
                     {draftData.length > 0 ? (
@@ -241,7 +247,11 @@ function Stats() {
                                                     {battleData
                                                         .sort((a, b) => {
                                                             // Default sort by release date
-                                                            return a.pokemon_id - b.pokemon_id;
+                                                            const diff = new Date(a.release_date) - new Date(b.release_date);
+                                                            if (diff !== 0) {
+                                                                return diff; // primary sort: release_date
+                                                            }
+                                                            return a.pokemon_id - b.pokemon_id; // secondary sort: pokemon_id
                                                         })
                                                         .map((character, index) => (
                                                             <div key={index}>

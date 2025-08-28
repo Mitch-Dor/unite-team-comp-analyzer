@@ -1,22 +1,22 @@
-function StatsOrdering({ setOrderBy, orderingArray, setBattleMode }) {
+function StatsOrdering({ setOrderBy, orderingArray, setBattleMode, setPopUpText }) {
     
     return (
         <div id="orderingContainer">
             <h3>Order By</h3>
             {orderingArray[1].value==='ban' && (
-                <div id="orderInfo" title="
-                Filter descriptions:
+                <div className="infoHover" onClick={() => {setPopUpText(`
+Filter descriptions:
 
-                Player: Cuts all picks to picks played specifically by that player. Bans are any bans made by the team the player was on.
+Player: Cuts all picks to picks played specifically by that player. Bans are any bans made by the team the player was on.
 
-                Team: Cuts all picks to picks played by that team. Bans are any bans made by that team.
+Team: Cuts all picks to picks played by that team. Bans are any bans made by that team.
 
-                Region: Cuts all picks to picks made by teams belonging to that region. Bans are any bans made by a team belonging to that region.
+Region: Cuts all picks to picks made by teams belonging to that region. Bans are any bans made by a team belonging to that region.
 
-                Event: Cuts all picks and bans to picks/bans that happened at that particular event.
+Event: Cuts all picks and bans to picks/bans that happened at that particular event.
 
-                Date: Limits the search to events that happened within the specified time range.
-                ">?
+Date: Limits the search to events that happened within the specified time range.
+                `)}}>?
                 </div>
             )}
             {orderingArray[1].value==='kills' && (
