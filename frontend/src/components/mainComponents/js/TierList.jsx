@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../css/tierList.css';
 import '../css/classBackgrounds.css';
 import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry, isAdmin } from './backendCalls/http.js';
 import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
+import { FaFilePdf } from "react-icons/fa";
 import Home from '../../sideComponents/js/Home.jsx';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 function setCookie(name, value, days = 7) {
   if (name === 'tierList') {
@@ -59,6 +62,7 @@ function TierList() {
   const tiers = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
   const [customNameTiers, setCustomNameTiers] = useState(['S', 'A', 'B', 'C', 'D', 'E', 'F']);
   const [selectedPokemon, setSelectedPokemon] = useState();
+  const assignedRef = useRef(null);
 
   useEffect(() => {
     async function fetchCharacterListing() {
@@ -306,6 +310,64 @@ function TierList() {
     }
   }
 
+  const handleExportPDF = async () => {
+  const input = assignedRef.current;
+  if (!input) return;
+
+  const canvas = await html2canvas(input, {
+    scale: 2,
+    useCORS: true,
+    scrollX: 0,
+    scrollY: -window.scrollY,
+    windowWidth: input.scrollWidth,
+    windowHeight: input.scrollHeight,
+    backgroundColor: null
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+  // Load background image
+  const background = new Image();
+  background.src = "/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png";
+  background.crossOrigin = "anonymous"; // Needed if using external URLs
+
+  background.onload = () => {
+    let heightLeft = pdfHeight;
+    let position = 0;
+
+    while (heightLeft > 0) {
+      // Draw background first
+      pdf.addImage(
+        background,
+        "PNG",
+        0,
+        0,
+        pdfWidth,
+        pdf.internal.pageSize.getHeight()
+      );
+
+      // Draw main content on top
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+
+      heightLeft -= pdf.internal.pageSize.getHeight();
+      position -= pdf.internal.pageSize.getHeight();
+
+      if (heightLeft > 0) {
+        pdf.addPage();
+      }
+    }
+
+    // Open print dialog instead of saving
+    pdf.autoPrint();
+    window.open(pdf.output("bloburl"), "_blank");
+  };
+};
+
+
   return (
     <div id="mainContainer">
     {admin && (
@@ -314,7 +376,10 @@ function TierList() {
       </div>
     )}
     <div id="tierListContainer">
-      <div className={`tier-list-section ${isExpanded !== false ? 'expanded' : ''}`}>
+      <div ref={assignedRef} className={`tier-list-section ${isExpanded !== false ? 'expanded' : ''}`}>
+        <button className="exportToPDF" onClick={handleExportPDF}>
+          <FaFilePdf className="icon" />
+        </button>
         <button className="expandSection" onClick={() => {setIsExpanded(!isExpanded)}}>
           {isExpanded ? (
             <SlArrowLeft />
