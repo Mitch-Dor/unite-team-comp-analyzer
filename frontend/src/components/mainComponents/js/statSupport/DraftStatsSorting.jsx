@@ -69,7 +69,7 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
                     <option value="after">After</option>
                 </select>
                 <input id="dateSelect" type="date" onChange={(e) => setSelectedDate(e.target.value)}></input> 
-                <div className="infoHover" onClick={ () => {setPopUpText(`For most relevant stats on a particular Pokemon, use after [RELEASE DATE], in the settings using the release dates provided:\n\n ${allPokemon
+                <div className="infoHover" onClick={ () => {setPopUpText(`For most relevant stats on a particular Pokemon (because total matches by default may include matches from before the Pokemon was released), use \'after [RELEASE DATE]\', in the settings using the release dates provided:\n\n ${allPokemon
                     .map((char) => {const date = new Date(char.release_date);
                     return `${char.pokemon_name}: ${date.toLocaleDateString('en-US', {
                         year: 'numeric',
