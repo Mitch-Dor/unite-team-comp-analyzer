@@ -10,7 +10,7 @@ class Characters {
     // ID, Name, Class, img link
     async getAllCharacterDraftInformation(){
       return new Promise((resolve, reject) => {
-        this.db.query('SELECT pokemon_id, pokemon_name, pokemon_class, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry FROM playable_characters NATURAL JOIN pokemon_attributes', (err, res) => {
+        this.db.query('SELECT pokemon_id, pokemon_name, pokemon_class, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry, release_order, pokedex_number FROM playable_characters NATURAL JOIN pokemon_attributes ORDER BY pokedex_number', (err, res) => {
           if (err) {
             console.error(err.message);
             reject(err);
@@ -24,7 +24,7 @@ class Characters {
     // pokemon_name, early_game, mid_game, late_game, mobility, range, bulk, damage, damage_type, damage_affect, cc, play_style, classification, other_attr, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry, best_lane, assumed_move_1, assumed_move_2
     async getIndividualCharacterTraits(name){
       return new Promise((resolve, reject) => {
-        this.db.query('select * from playable_attributes where pokemon_name = $1', [name], (err, res) => {
+        this.db.query('select * from pokemon_attributes where pokemon_name = $1 ORDER BY pokedex_number', [name], (err, res) => {
           if (err) {
             console.error(err.message);
             reject(err);
@@ -38,7 +38,7 @@ class Characters {
     // pokemon_name, early_game, mid_game, late_game, mobility, range, bulk, damage, damage_type, damage_affect, cc, play_style, classification, other_attr, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry, best_lane, assumed_move_1, assumed_move_2
     async getAllCharacterAttributes(){
       return new Promise((resolve, reject) => {
-        this.db.query('select * from pokemon_attributes natural join playable_characters', (err, res) => {
+        this.db.query('select * from pokemon_attributes natural join playable_characters ORDER BY pokedex_number', (err, res) => {
           if (err) {
             console.error(err.message);
             reject(err);

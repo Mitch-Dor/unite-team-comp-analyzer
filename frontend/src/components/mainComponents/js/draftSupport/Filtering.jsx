@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
-const Filtering = ({ pokemonList, updateFilteredList }) => {
+const Filtering = ({ pokemonList, updateFilteredList, updatePokemonList }) => {
     const [laneFilters, updateLaneFilters] = useState([]);
     const [classFilter, updateClassFilter] = useState("");
     const [searchTerm, setSearchTerm] = useState('');
 
     const possibleLanes = ["top", "jungle", "bot", "EXPShare"];
     const possibleClasses = ["all_rounder", "supporter", "speedster", "attacker", "defender"];
+    const orderByFilters = ["pokedex", "release"];
 
     useEffect(() => {
         applyFilters();
-    }, [laneFilters, classFilter, searchTerm]);
+    }, [laneFilters, classFilter, searchTerm, pokemonList]);
 
     const applyFilters = () => {
         // First filter by the search bar
@@ -62,26 +63,47 @@ const Filtering = ({ pokemonList, updateFilteredList }) => {
         }
     }
 
+    const doReorder = (orderBy) => {
+        let sortedArray = [...pokemonList]; // Deep copy
+        if (orderBy === "pokedex") {
+            sortedArray.sort((a, b) => (a.pokedex_number - b.pokedex_number))
+        } else if (orderBy === "release") {
+            sortedArray.sort((a, b) => (a.release_order - b.release_order))
+        }
+        updatePokemonList(sortedArray);
+    }
+
     return (
         <div className="filtering">
-            <div className="laneFilters">
-                {possibleLanes.map((lane, index) => {
-                    return (
-                        <div key={"lane"+index} >
-                            <img title={`${lane}`} src={`./assets/Draft/filterIcons/${lane}.png`} className={`filterIcon ${laneFilters.includes(lane) ? 'active' : ''}`} onClick={() => {doUpdateLaneFilters(lane)}}></img>
-                        </div>
-                    );
-                })}
+            <div className="filterRow">
+                <div className="laneFilters">
+                    {possibleLanes.map((lane, index) => {
+                        return (
+                            <div key={"lane"+index} >
+                                <img title={`${lane}`} src={`./assets/Draft/filterIcons/${lane}.png`} className={`filterIcon ${laneFilters.includes(lane) ? 'active' : ''}`} onClick={() => {doUpdateLaneFilters(lane)}}></img>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="classFilters">
+                    {possibleClasses.map((charClass, index) => {
+                        return (
+                            <div key={"class"+index} >
+                                <img title={`${charClass}`} src={`./assets/Draft/filterIcons/${charClass}.png`} className={`filterIcon ${classFilter === charClass ? 'active' : ''}`} onClick={() => {doUpdateClassFilter(charClass)}}></img>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-            <input type="text" id="searchBar" placeholder="Search..." onChange={(e) => setSearchTerm(e.target.value)}></input>
-            <div className="classFilters">
-                {possibleClasses.map((charClass, index) => {
-                    return (
-                        <div key={"class"+index} >
-                            <img title={`${charClass}`} src={`./assets/Draft/filterIcons/${charClass}.png`} className={`filterIcon ${classFilter === charClass ? 'active' : ''}`} onClick={() => {doUpdateClassFilter(charClass)}}></img>
-                        </div>
-                    );
-                })}
+            <div className="filterRow">
+                <input type="text" id="searchBar" placeholder="Search..." onChange={(e) => setSearchTerm(e.target.value)}></input>
+                <select className="orderByFilters" onChange={(e) => doReorder(e.target.value)}>
+                    {orderByFilters.map((orderByFilter, index) => {
+                        return (
+                            <option key={orderByFilter} value={orderByFilter}>{orderByFilter}</option>
+                        )
+                    })}
+                </select>
             </div>
         </div>
     );

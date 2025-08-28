@@ -12,7 +12,7 @@ html::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
 }
 
-.mainContainer {
+#root {
     height: 100vh;
     width: 100vw;
     display: flex;
@@ -34,6 +34,7 @@ html::-webkit-scrollbar {
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 #middlePartsContainer {
@@ -154,31 +155,45 @@ html::-webkit-scrollbar {
 .filtering {
     width: 100%;
     display: flex;
-    flex-flow: row wrap;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 5%;
+    height: 10%;
+}
+
+.filterRow {
+    width: calc(100% - 40px);
+    height: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
 }
 
 #searchBar {
-    height: 20px;
-    width: 40%;
+    height: 100%;
+    max-height: 20px;
+    width: 60%;
     border: 2px solid black;
     font-size: clamp(0.8rem, 1vw, 1.2rem);
     padding: 0 0.5em;
     box-sizing: border-box;
 }
 
+.orderByFilters {
+    height: 100%;
+    max-height: 20px;
+    width: 30%;
+    font-size: 8px;
+}
+
 .laneFilters, .classFilters {
-    height: 20px;
-    width: 20%;
+    height: 100%;
+    max-height: 20px;
+    width: 30%;
     display: flex;
     justify-content: space-around;
     align-items: center;
-}
-
-.classFilters {
-    padding-right: 20px;
 }
 
 .laneFilters img {
@@ -202,7 +217,7 @@ html::-webkit-scrollbar {
 }
 
 .characterSelect {
-    height: 95%;
+    height: 90%;
     width: 100%;
     display: flex;
     flex-flow: row wrap;
@@ -237,6 +252,9 @@ html::-webkit-scrollbar {
     }
     .draftCharacter h4 {
         font-size: 0.875rem;
+    }
+    .orderByFilters {
+        font-size: 12px;
     }
 }
 

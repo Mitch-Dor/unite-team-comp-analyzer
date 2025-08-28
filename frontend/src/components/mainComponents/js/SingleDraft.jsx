@@ -475,7 +475,7 @@ function SingleDraft() {
         {stateRef.current === 'done' && (
             <DraftAgain draftAgain={draftAgain} />
         )}
-        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
+        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updatePokemonList={updatePokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
         <Home />
     </div>
   );
