@@ -6,6 +6,7 @@ import Home from '../../sideComponents/js/Home.jsx';
 
 function Traits() {
   const [columnOptions, setColumnOptions] = useState({});
+  const [hiddenColumns, setHiddenColumns] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,15 @@ function Traits() {
     can_bottom_lane_carry: { width: '130px' },
     best_lane: { width: '130px' },
     assumed_move_1: { width: '150px' },
-    assumed_move_2: { width: '150px' }
+    assumed_move_2: { width: '150px' },
+    early_spike: { width: '100px' },
+    ult_level: { width: '100px' },
+    key_spike: { width: '100px' },
+    laning_phase: { width: '100px' },
+    "8_50_to_7_30": { width: "100px" },
+    "7_30_to_6_30": { width: "100px" },
+    "6_30_to_4": { width: "100px" },
+    "4_to_end": { width: "100px" }
   };
 
   // Function to get class for pokemon_name based on pokemon_class
@@ -112,6 +121,20 @@ function Traits() {
       if (value === "Assist") return 'text-supporter';
     }
 
+    // 1-10
+    if (column === 'laning_phase' || column === '8_50_to_7_30' || column === '7_30_to_6_30' || column === '6_30_to_4' || column === '4_to_end') {
+      if (parseInt(value) <= 3) return 'text-attacker';
+      if (parseInt(value) <= 7) return 'text-supporter';
+      if (parseInt(value) <= 10) return 'text-defender';
+    }
+
+    // Levels (1-15)
+    if (column === 'early_spike' || column === 'ult_level' || column === 'key_spike') {
+      if (parseInt(value) <= 5) return 'text-attacker';
+      if (parseInt(value) <= 9) return 'text-supporter';
+      if (parseInt(value) <= 15) return 'text-defender';
+    }
+
     return 'text-none';
   };
 
@@ -153,6 +176,18 @@ function Traits() {
     });
   };
 
+  function handleHidingUnhidingColumn(column) {
+    setHiddenColumns((prev) => {
+      if (prev.includes(column)) {
+        // remove column
+        return prev.filter((col) => col !== column);
+      } else {
+        // add column
+        return [...prev, column];
+      }
+    });
+  }
+
   const filteredData = tableData.filter(row => 
     Object.values(row).some(value => 
       value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -167,6 +202,16 @@ function Traits() {
 
   return (
     <div id="mainContainer" className="main-container">
+      <div id="traitsFilterContainer">
+        {columns.map((column) => {
+          return (
+            <div className="columnSelector">
+              <input name={column} type="checkbox" checked={!hiddenColumns.includes(column)} onChange={() => {handleHidingUnhidingColumn(column)}}></input>
+              <label htmlFor={column}>{column}</label>
+            </div>
+          );
+        })}
+      </div>
       <div id="traitsContainer">
         <div className="search-container">
           <input
@@ -182,9 +227,13 @@ function Traits() {
             <thead>
               <tr>
                 {columns.map(column => (
-                  <th key={column} style={{ width: columnConfig[column].width }}>
-                    {column}
-                  </th>
+                  <>
+                  {!hiddenColumns.includes(column) &&
+                    <th key={column} style={{ width: columnConfig[column].width }}>
+                      {column}
+                    </th>
+                  }
+                  </>
                 ))}
               </tr>
             </thead>
@@ -192,22 +241,26 @@ function Traits() {
               {filteredData.map((row, rowIndex) => (
                 <tr key={rowIndex}>
                   {columns.map(column => (
-                    <td key={column}>
-                      <div className="select-wrapper">
-                        <select
-                          value={row[column] || ''}
-                          onChange={(e) => handleCellChange(rowIndex, column, e.target.value)}
-                          className={getTextClass(column, row[column], row)}
-                        >
-                          <option value=""></option>
-                          {columnOptions[column]?.map(option => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </td>
+                    <>
+                    {!hiddenColumns.includes(column) &&
+                      <td key={column}>
+                        <div className="select-wrapper">
+                          <select
+                            value={row[column] || ''}
+                            onChange={(e) => handleCellChange(rowIndex, column, e.target.value)}
+                            className={getTextClass(column, row[column], row)}
+                          >
+                            <option value=""></option>
+                            {columnOptions[column]?.map(option => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </td>
+                    }
+                    </>
                   ))}
                 </tr>
               ))}

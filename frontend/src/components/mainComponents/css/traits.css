@@ -13,10 +13,32 @@
     overflow: hidden;
 }
 
+#traitsFilterContainer {
+    height: calc(10% - 20px);
+    width: calc(100% - 40px);
+    margin: 10px;
+    padding: 10px;
+    background-color: rgba(26, 26, 26, 0.9);
+    border-radius: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.columnSelector {
+    background-color:rgba(26, 26, 26, 0.9);
+    border-radius: 5px;
+    padding: 3px;
+    margin-right: 10px;
+}
+
 #traitsContainer {
     padding: 20px;
     width: 100%;
-    height: calc(100vh - 40px);
+    height: calc(90% - 40px);
     display: flex;
     flex-direction: column;
     overflow: hidden;
