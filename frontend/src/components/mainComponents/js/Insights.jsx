@@ -23,7 +23,6 @@ export default function Inights() {
                 setCharacters(uniquePokemon);
                 const fetchedInsights = await fetchAllInsights();
                 setInsights(fetchedInsights);
-                console.log(fetchedInsights);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }

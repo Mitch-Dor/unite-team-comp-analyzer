@@ -144,10 +144,39 @@ function Traits() {
       try {
         const attributes = await fetchAllCharacterAttributes();
         
+        // Headers that should always have options 1–15
+        const fifteenHeaders = new Set([
+          "early_spike",
+          "ult_level",
+          "key_spike"
+        ]);
+
+        // Headers that should always have options 1–10
+        const tenHeaders = new Set([
+          "laning_phase",
+          "8_50_to_7_30",
+          "7_30_to_6_30",
+          "6_30_to_4",
+          "4_to_end"
+        ]);
+
         // Generate column options from attributes data
         const options = {};
         Object.keys(columnConfig).forEach(header => {
-          options[header] = [...new Set(attributes.map(row => row[header]))].filter(Boolean);
+          if (fifteenHeaders.has(header)) {
+            // Always force 1–15
+            options[header] = Array.from({ length: 15 }, (_, i) => i + 1);
+          } else if (tenHeaders.has(header)) {
+            // Always force 1–10
+            options[header] = Array.from({ length: 10 }, (_, i) => i + 1);
+          } else {
+            // Collect from attributes, sort alphabetically
+            const values = [...new Set(attributes.map(row => row[header]))]
+              .filter(Boolean)
+              .sort((a, b) => String(a).localeCompare(String(b)));
+
+            options[header] = values;
+          }
         });
 
         setColumnOptions(options);
@@ -205,7 +234,7 @@ function Traits() {
       <div id="traitsFilterContainer">
         {columns.map((column) => {
           return (
-            <div className="columnSelector">
+            <div className="columnSelector" key={column}>
               <input name={column} type="checkbox" checked={!hiddenColumns.includes(column)} onChange={() => {handleHidingUnhidingColumn(column)}}></input>
               <label htmlFor={column}>{column}</label>
             </div>
@@ -226,23 +255,18 @@ function Traits() {
           <table className="traits-table">
             <thead>
               <tr>
-                {columns.map(column => (
-                  <>
-                  {!hiddenColumns.includes(column) &&
+                {columns.map((column) => !hiddenColumns.includes(column) ? (
                     <th key={column} style={{ width: columnConfig[column].width }}>
                       {column}
                     </th>
-                  }
-                  </>
-                ))}
+                  ) : null
+                )}
               </tr>
             </thead>
             <tbody>
               {filteredData.map((row, rowIndex) => (
                 <tr key={rowIndex}>
-                  {columns.map(column => (
-                    <>
-                    {!hiddenColumns.includes(column) &&
+                  {columns.map(column => !hiddenColumns.includes(column) ? (
                       <td key={column}>
                         <div className="select-wrapper">
                           <select
@@ -259,9 +283,8 @@ function Traits() {
                           </select>
                         </div>
                       </td>
-                    }
-                    </>
-                  ))}
+                  ) : null
+                  )}
                 </tr>
               ))}
             </tbody>
