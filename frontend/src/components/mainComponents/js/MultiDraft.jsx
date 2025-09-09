@@ -50,7 +50,7 @@ function MultiDraft() {
     const [chat, setChat] = useState([]);
     const [chatInput, setChatInput] = useState('');
 
-    const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
+    const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Ban3', 'team2Ban3', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
 
     // Update the ref whenever targetPokemon changes
     useEffect(() => {
@@ -538,32 +538,15 @@ function MultiDraft() {
             }
             
             // Always process the lock-in locally regardless of who's turn it is
-            switch (stateRef.current) {
-                case 'team1Ban1':
-                case 'team1Ban2':
-                    updatePokemonStatus(targetPokemonRef.current, 'ban1');
-                    break;
-                case 'team2Ban1':
-                case 'team2Ban2':
-                    updatePokemonStatus(targetPokemonRef.current, 'ban2');
-                    break;
-                case 'team1Pick1':
-                case 'team1Pick2':
-                case 'team1Pick3':
-                case 'team1Pick4':
-                case 'team1Pick5':
-                    updatePokemonStatus(targetPokemonRef.current, 'team1');
-                    break;
-                case 'team2Pick1':
-                case 'team2Pick2':
-                case 'team2Pick3':
-                case 'team2Pick4':
-                case 'team2Pick5':
-                    updatePokemonStatus(targetPokemonRef.current, 'team2');
-                    break;
-                default:
-                    console.error('Unhandled draft state:', stateRef.current);
-            }
+            if (stateRef.current.startsWith('team1Ban')) {
+                updatePokemonStatus(targetPokemonRef.current, 'ban1');
+            } else if (stateRef.current.startsWith('team2Ban')) {
+                updatePokemonStatus(targetPokemonRef.current, 'ban2');
+            } else if (stateRef.current.startsWith('team1Pick')) {
+                updatePokemonStatus(targetPokemonRef.current, 'team1');
+            } else if (stateRef.current.startsWith('team2Pick')) {
+                updatePokemonStatus(targetPokemonRef.current, 'team2');
+            } 
         }
     }
 

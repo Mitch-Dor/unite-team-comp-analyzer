@@ -251,6 +251,14 @@ class Pokemon {
             assumedMove1: data.assumed_move_1,
             assumedMove2: data.assumed_move_2,
             class: data.pokemon_class,
+            earlySpike: data.early_spike,
+            ultLevel: data.ult_level,
+            keySpike: data.key_spike,
+            laningPhase: data.laning_phase,
+            "8_50_to_7_30": data["8_50_to_7_30"],
+            "7_30_to_6_30": data["7_30_to_6_30"],
+            "6_30_to_4": data["6_30_to_4"],
+            "4_to_end": data["4_to_end"],
         };
     }
 }

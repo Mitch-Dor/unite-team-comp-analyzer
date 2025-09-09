@@ -37,7 +37,7 @@ function SingleDraft() {
         targetPokemonRef.current = targetPokemon;
     }, [targetPokemon]);
 
-    const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
+    const draftProgression = ['team1Ban1', 'team2Ban1', 'team1Ban2', 'team2Ban2', 'team1Ban3', 'team2Ban3', 'team1Pick1', 'team2Pick1', 'team2Pick2', 'team1Pick2', 'team1Pick3', 'team2Pick3', 'team2Pick4', 'team1Pick4', 'team1Pick5', 'team2Pick5', 'done'];
     const firstTurns = ['team1Pick1', 'team2Pick1', 'team1Pick2', 'team2Pick3', 'team1Pick4', 'team2Pick5']
     
     // Populates pokemonList with the return data from fetchCharacterDraftInfo() like name, class, id (status is initialized to none but will be changed to team1, team2, ban1, or ban2 to know where to place it and to gray it out) when the component first mounts.
@@ -357,31 +357,16 @@ function SingleDraft() {
                 actionPokemon = none;
             }
             // Perform the action based on the current state
-            switch (stateRef.current) {
-                case 'team1Ban1':
-                case 'team1Ban2':
-                    updatePokemonStatus(actionPokemon, 'ban1');
-                    break;
-                case 'team2Ban1':
-                case 'team2Ban2':
-                    updatePokemonStatus(actionPokemon, 'ban2');
-                    break;
-                case 'team1Pick1':
-                case 'team1Pick2':
-                case 'team1Pick3':
-                case 'team1Pick4':
-                case 'team1Pick5':
-                    updatePokemonStatus(actionPokemon, 'team1');
-                    break;
-                case 'team2Pick1':
-                case 'team2Pick2':
-                case 'team2Pick3':
-                case 'team2Pick4':
-                case 'team2Pick5':
-                    updatePokemonStatus(actionPokemon, 'team2');
-                    break;
-                default:
-                    console.error('Unhandled draft state:', stateRef.current);
+            if (stateRef.current.startsWith('team1Ban')) {
+                updatePokemonStatus(targetPokemon, 'ban1');
+            } else if (stateRef.current.startsWith('team2Ban')) {
+                updatePokemonStatus(targetPokemon, 'ban2');
+            } else if (stateRef.current.startsWith('team1Pick')) {
+                updatePokemonStatus(targetPokemon, 'team1');
+            } else if (stateRef.current.startsWith('team2Pick')) {
+                updatePokemonStatus(targetPokemon, 'team2');
+            } else {
+                console.error("No matching state");
             }
         } else {
             console.warn('Draft is already at the final state or invalid state.');
@@ -394,32 +379,18 @@ function SingleDraft() {
             return;
         }
         
-        switch (stateRef.current) {
-            case 'team1Ban1':
-            case 'team1Ban2':
-                updatePokemonStatus(targetPokemon, 'ban1');
-                break;
-            case 'team2Ban1':
-            case 'team2Ban2':
-                updatePokemonStatus(targetPokemon, 'ban2');
-                break;
-            case 'team1Pick1':
-            case 'team1Pick2':
-            case 'team1Pick3':
-            case 'team1Pick4':
-            case 'team1Pick5':
-                updatePokemonStatus(targetPokemon, 'team1');
-                break;
-            case 'team2Pick1':
-            case 'team2Pick2':
-            case 'team2Pick3':
-            case 'team2Pick4':
-            case 'team2Pick5':
-                updatePokemonStatus(targetPokemon, 'team2');
-                break;
-            default:
-                console.error('Unhandled draft state:', stateRef.current);
+        if (stateRef.current.startsWith('team1Ban')) {
+            updatePokemonStatus(targetPokemon, 'ban1');
+        } else if (stateRef.current.startsWith('team2Ban')) {
+            updatePokemonStatus(targetPokemon, 'ban2');
+        } else if (stateRef.current.startsWith('team1Pick')) {
+            updatePokemonStatus(targetPokemon, 'team1');
+        } else if (stateRef.current.startsWith('team2Pick')) {
+            updatePokemonStatus(targetPokemon, 'team2');
+        } else {
+            console.error("No matching state");
         }
+
     }
 
     function updatePokemonStatus(pokemon, newStatus) {
