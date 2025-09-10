@@ -8,10 +8,6 @@ function checkIfSpecialCase(pokemon, team1Bans, team2Bans, team1Picks, team2Pick
         return true;
     } else if (pokemon.pokemon_name === 'Scizor' && (team1Bans.some(ban => ban.pokemon_name === 'Scyther') || team2Bans.some(ban => ban.pokemon_name === 'Scyther') || team1Picks.some(pick => pick.pokemon_name === 'Scyther') || team2Picks.some(pick => pick.pokemon_name === 'Scyther'))) {
         return true;
-    } else if (pokemon.pokemon_name === 'Mewtwo_Y' && (team1Bans.some(ban => ban.pokemon_name === 'Mewtwo_X') || team2Bans.some(ban => ban.pokemon_name === 'Mewtwo_X') || team1Picks.some(pick => pick.pokemon_name === 'Mewtwo_X') || team2Picks.some(pick => pick.pokemon_name === 'Mewtwo_X'))) {
-        return true;
-    } else if (pokemon.pokemon_name === 'Mewtwo_X' && (team1Bans.some(ban => ban.pokemon_name === 'Mewtwo_Y') || team2Bans.some(ban => ban.pokemon_name === 'Mewtwo_Y') || team1Picks.some(pick => pick.pokemon_name === 'Mewtwo_Y') || team2Picks.some(pick => pick.pokemon_name === 'Mewtwo_Y'))) {
-        return true;
     } else if (pokemon.pokemon_name === 'Urshifu_SS' && (team1Bans.some(ban => ban.pokemon_name === 'Urshifu_RS') || team2Bans.some(ban => ban.pokemon_name === 'Urshifu_RS') || team1Picks.some(pick => pick.pokemon_name === 'Urshifu_RS') || team2Picks.some(pick => pick.pokemon_name === 'Urshifu_RS'))) {
         return true;
     } else if (pokemon.pokemon_name === 'Urshifu_RS' && (team1Bans.some(ban => ban.pokemon_name === 'Urshifu_SS') || team2Bans.some(ban => ban.pokemon_name === 'Urshifu_SS') || team1Picks.some(pick => pick.pokemon_name === 'Urshifu_SS') || team2Picks.some(pick => pick.pokemon_name === 'Urshifu_SS') )) {

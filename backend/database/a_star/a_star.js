@@ -34,11 +34,7 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
             return false;
         } else if (pokemon.pokemon_name === "Urshifu_RS" && (yourTeam.some(p => p.pokemon_name === "Urshifu_SS") || enemyTeam.some(p => p.pokemon_name === "Urshifu_SS") || bans.some(p => p.pokemon_name === "Urshifu_SS"))) {
             return false;
-        } else if (pokemon.pokemon_name === "Mewtwo_Y" && (yourTeam.some(p => p.pokemon_name === "Mewtwo_X") || enemyTeam.some(p => p.pokemon_name === "Mewtwo_X") || bans.some(p => p.pokemon_name === "Mewtwo_X"))) {
-            return false;
-        } else if (pokemon.pokemon_name === "Mewtwo_X" && (yourTeam.some(p => p.pokemon_name === "Mewtwo_Y") || enemyTeam.some(p => p.pokemon_name === "Mewtwo_Y") || bans.some(p => p.pokemon_name === "Mewtwo_Y"))) {
-            return false;
-        }
+        } 
         
         // Return true if the pokemon is not in any of these collections
         return !inYourTeam && !inEnemyTeam && !isBanned;
@@ -78,10 +74,6 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
                 return this.picks.some(p => p.pokemon_name === "Urshifu_RS");
             } else if (pokemon.pokemon_name === "Urshifu_RS") {
                 return this.picks.some(p => p.pokemon_name === "Urshifu_SS");
-            } else if (pokemon.pokemon_name === "Mewtwo_Y") {
-                return this.picks.some(p => p.pokemon_name === "Mewtwo_X");
-            } else if (pokemon.pokemon_name === "Mewtwo_X") {
-                return this.picks.some(p => p.pokemon_name === "Mewtwo_Y");
             }
         }
         

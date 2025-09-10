@@ -16,16 +16,6 @@ const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Pick
                     specialCaseUnavailable = true;
                 }
                 break;
-            case 'Mewtwo_Y':
-                if (team1Bans.some(item => item.pokemon_name === 'Mewtwo_X' || (item.pokemon && item.pokemon.pokemon_name === 'Mewtwo_X')) || team2Bans.some(item => item.pokemon_name === 'Mewtwo_X' || (item.pokemon && item.pokemon.pokemon_name === 'Mewtwo_X')) || team1Picks.some(item => item.pokemon_name === 'Mewtwo_X' || (item.pokemon && item.pokemon.pokemon_name === 'Mewtwo_X')) || team2Picks.some(item => item.pokemon_name === 'Mewtwo_X' || (item.pokemon && item.pokemon.pokemon_name === 'Mewtwo_X'))){
-                    specialCaseUnavailable = true;
-                }
-                break;
-            case 'Mewtwo_X':
-                if (team1Bans.some(item => item.pokemon_name === 'Mewtwo_Y' || (item.pokemon && item.pokemon.pokemon_name === 'Mewtwo_Y')) || team2Bans.some(item => item.pokemon_name === 'Mewtwo_Y' || (item.pokemon && item.pokemon.pokemon_name === 'Mewtwo_Y')) || team1Picks.some(item => item.pokemon_name === 'Mewtwo_Y' || (item.pokemon && item.pokemon.pokemon_name === 'Mewtwo_Y')) || team2Picks.some(item => item.pokemon_name === 'Mewtwo_Y' || (item.pokemon && item.pokemon.pokemon_name === 'Mewtwo_Y'))){
-                    specialCaseUnavailable = true;
-                }
-                break;
             case 'Urshifu_SS':
                 if (team1Bans.some(item => item.pokemon_name === 'Urshifu_RS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_RS')) || team2Bans.some(item => item.pokemon_name === 'Urshifu_RS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_RS')) || team1Picks.some(item => item.pokemon_name === 'Urshifu_RS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_RS')) || team2Picks.some(item => item.pokemon_name === 'Urshifu_RS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_RS'))){
                     specialCaseUnavailable = true;
