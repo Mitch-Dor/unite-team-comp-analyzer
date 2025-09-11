@@ -456,25 +456,25 @@ class Teams {
           
           // Wait for all comps to be inserted
           Promise.all(compPromises)
-            .then(compIds => {
-              // Now insert all matches & if applicable, stat data
-              const matchPromises = [];
+            .then(async (compIds) => {
+              // Now insert matches sequentially to maintain order
               for (let i = 0; i < setMatches.matches.length; i++) {
                 const [comp1ID, comp2ID] = compIds[i];
                 const team1 = setMatches.matches[i].team1;
                 const team2 = setMatches.matches[i].team2;
                 
-                const matchPromise = new Promise((resolve, reject) => {
+                // Insert match sequentially
+                await new Promise((resolve, reject) => {
                   sql = 'INSERT INTO professional_matches (set_id, team_1_comp_id, team_2_comp_id, team_1_ban_1, team_1_ban_2, team_2_ban_1, team_2_ban_2, team_1_player_1, team_1_player_2, team_1_player_3, team_1_player_4, team_1_player_5, team_2_player_1, team_2_player_2, team_2_player_3, team_2_player_4, team_2_player_5, team_1_id, team_2_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)';
                   db.query(sql, [set_id, comp1ID, comp2ID, team1.bans[0], team1.bans[1], team2.bans[0], team2.bans[1], team1.players[0], team1.players[1], team1.players[2], team1.players[3], team1.players[4], team2.players[0], team2.players[1], team2.players[2], team2.players[3], team2.players[4], team1.team_id, team2.team_id], function(err) {
                     if (err) reject(err);
                     else resolve();
                   });
                 });
-                
-                matchPromises.push(matchPromise);
 
+                // Insert performance data if available
                 if (setMatches.matches[i].hasAdvancedData) {
+                  const performancePromises = [];
                   for (let j = 0; j < 5; j++){
                     let team1Pokemon = team1.pokemon[j];
                     let team2Pokemon = team2.pokemon[j];
@@ -485,19 +485,19 @@ class Teams {
                         else resolve();
                       });
                     });
-                    const statPromiseT3 = new Promise((resolve, reject) => {
+                    const statPromiseT2 = new Promise((resolve, reject) => {
                       sql = 'INSERT INTO pokemon_performance (comp_id, pokemon_id, kills, assists, points_scored, damage_dealt, damage_taken, damage_healed, position_played) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
                       db.query(sql, [comp2ID, team2Pokemon, team2.pokemon_data[j][0], team2.pokemon_data[j][1], team2.pokemon_data[j][2], team2.pokemon_data[j][3], team2.pokemon_data[j][4], team2.pokemon_data[j][5], team2.pokemon_data[j][6]], function(err) {
                         if (err) reject(err);
                         else resolve();
                       });
                     });
+                    performancePromises.push(statPromiseT1, statPromiseT2);
                   }
+                  // Wait for all performance data for this match to be inserted
+                  await Promise.all(performancePromises);
                 }
               }
-              
-              // Wait for all matches to be inserted
-              return Promise.all(matchPromises);
             })
             .then(() => {
               // All operations completed successfully

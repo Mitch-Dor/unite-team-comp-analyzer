@@ -106,6 +106,7 @@ function Comps() {
           set_description: comp.set_descriptor,
           vod: comp.vod_url,
           set_id: comp.set_id,
+          match_id: comp.match_id,
           has_advanced_data: team1Data.pokemon_data[0][3] ? true : false // This is damage dealt. You're never gonna have a comp match where you deal 0 damage so this is safe to check. If one data point is present, they all are.
         }
         formattedData.push(finalData);
