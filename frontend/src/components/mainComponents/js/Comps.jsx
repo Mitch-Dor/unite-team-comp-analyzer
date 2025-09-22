@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/comps.css';
-import { fetchAllComps, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, isVerifiedUser } from './backendCalls/http';
+import { fetchAllComps, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, isVerifiedUser, fetchAllCompsTest } from './backendCalls/http';
 import SubmitSetModal from './compSupport/SubmitSetModal';
 import CompsSorting from './compSupport/CompsSorting';
 import SetDisplay from './compSupport/SetDisplay';
@@ -132,6 +132,10 @@ function Comps() {
             console.error("Error fetching data:", error);
         }
     }
+
+    fetchAllCompsTest().then(data => {
+      console.log(data);
+    });
 
     // Fetch all data to prepopulate dropdowns
     fetchAllData();

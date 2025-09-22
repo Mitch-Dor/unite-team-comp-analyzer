@@ -118,6 +118,7 @@ require('./socket/socketManager')(io);
 // Routes - load AFTER all middleware is set up
 require('./routes/characters.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/teams.js')(app, database, process.env.ADMIN_GOOGLE_ID);
+require('./routes/comps.js')(app, database, process.env.ADMIN_GOOGLE_ID);
 require('./routes/draftRoom.js')(app, database, io);
 require('./routes/auth.js')(app, database, passport, process.env.NODE_ENV, process.env.HEROKU_APP_URL);
 

@@ -64,3 +64,7 @@ exports.teams = teams;
 const Auth = require('./database/auth');
 const auth = new Auth(pool);
 exports.auth = auth;
+
+const Comps = require('./database/comps');
+const comps = new Comps(pool);
+exports.comps = comps;

@@ -34,5 +34,6 @@ export const routes = {
     CURRENT_USER: `${getBaseUrl()}/current_user`,
     LOGOUT: `${getBaseUrl()}/logout`,
     SIGN_IN: `${getBaseUrl()}/auth/google`,
-    GET_ALL_INSIGHTS: `${getBaseUrl()}/GETallInsights`
+    GET_ALL_INSIGHTS: `${getBaseUrl()}/GETallInsights`,
+    GET_ALL_COMPS_TEST: `${getBaseUrl()}/GETComps`
 };

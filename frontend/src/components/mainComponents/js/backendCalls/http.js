@@ -394,3 +394,16 @@ export async function fetchAllInsights() {
     const insightDataJson = await insightData.json();
     return insightDataJson;
 }
+
+// Function to fetch all comps
+export async function fetchAllCompsTest() {
+    const compData = await fetch(routes.GET_ALL_COMPS_TEST, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const compDataJson = await compData.json();
+    return compDataJson;
+}
