@@ -623,11 +623,36 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
             </div>
             {/* Match Winner Dropdown */}
             <div className="match-winner-dropdown">
-                <select value={{team_id: match.match_winner_id, team_name: match.match_winner_text} ?? ""} onChange={(e) => setMatch({...match, match_winner_id: e.target.value.team_id, match_winner_text: e.target.value.team_name})}>
-                    <option value="">Winner Select</option>
-                    <option value={pickedTeams.team1}>{pickedTeams.team1.team_name}</option>
-                    <option value={pickedTeams.team2}>{pickedTeams.team2.team_name}</option>
-                </select>
+            <select
+                value={
+                match.match_winner_id
+                    ? JSON.stringify({
+                        team_id: match.match_winner_id,
+                        team_name: match.match_winner_text,
+                    })
+                    : ""
+                }
+                onChange={(e) => {
+                if (!e.target.value) {
+                    setMatch({ ...match, match_winner_id: "", match_winner_text: "" });
+                    return;
+                }
+                const team = JSON.parse(e.target.value);
+                setMatch({
+                    ...match,
+                    match_winner_id: team.team_id,
+                    match_winner_text: team.team_name,
+                });
+                }}
+            >
+                <option value="">Winner Select</option>
+                <option value={JSON.stringify(pickedTeams.team1)}>
+                {pickedTeams.team1.team_name}
+                </option>
+                <option value={JSON.stringify(pickedTeams.team2)}>
+                {pickedTeams.team2.team_name}
+                </option>
+            </select>
             </div>
         </div>
     )
@@ -651,20 +676,37 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
     );
 
     useEffect(() => {
-        
+        setMatch({...match, [compNumber === 1 ? "team1_bans" : "team2_bans"]: bans, [compNumber === 1 ? "team1_picks" : "team2_picks"]: picks});
     }, [bans, picks]);
 
     return (
         <div id="comp-insertion">
             <div className="set-team-header">
                 {/* Team Name Dropdown */}
-                <select value={compNumber === 1 ? (match.team1_name ? match.team1_name : "") : (match.team2_name ? match.team2_name : "")} onChange={(e) => { setMatch({...match, [compNumber === 1 ? "team1_id" : "team2_id"]: e.target.value.team_id, [compNumber === 1 ? "team1_name" : "team2_name"]: e.target.value.team_name, [compNumber === 1 ? "team1_region" : "team2_region"]: e.target.value.team_region}); }}>
-                    <option value="">Select Team</option>
-                    {teams.map(team => (
-                        <option key={team.team_id} value={team}>
-                            {team.team_name}
-                        </option>
-                    ))}
+                <select
+                value={compNumber === 1 
+                    ? JSON.stringify({ team_id: match.team1_id, team_name: match.team1_name, team_region: match.team1_region }) 
+                    : JSON.stringify({ team_id: match.team2_id, team_name: match.team2_name, team_region: match.team2_region })
+                }
+                onChange={(e) => {
+                    const team = JSON.parse(e.target.value);
+                    setMatch({
+                    ...match,
+                    [compNumber === 1 ? "team1_id" : "team2_id"]: team.team_id,
+                    [compNumber === 1 ? "team1_name" : "team2_name"]: team.team_name,
+                    [compNumber === 1 ? "team1_region" : "team2_region"]: team.team_region,
+                    });
+                }}
+                >
+                <option value="">Select Team</option>
+                {teams.map(team => (
+                    <option 
+                    key={team.team_id} 
+                    value={JSON.stringify(team)}
+                    >
+                    {team.team_name}
+                    </option>
+                ))}
                 </select>
                 {/* Team Region (Read-only) */}
                 <div className="team-region-display">
@@ -684,14 +726,12 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                     <input 
                         type="checkbox" 
                         checked={(firstPickSelected === 2 && compNumber === 1) || (firstPickSelected === 3 && compNumber === 2)} 
-                        disabled={firstPickSelected !== 1}
+                        disabled={(firstPickSelected !== 1 && (firstPickSelected === 2 && compNumber === 2)) || (firstPickSelected !== 1 && (firstPickSelected === 3 && compNumber === 1))}
                         onChange={(e) => { 
-                            if (firstPickSelected === 1) {
-                                !e.target.checked 
-                                    ? setFirstPickSelected(1) /* Was Selected, Unselected (None Selected) */ 
-                                    : compNumber === 1 
-                                        ? setFirstPickSelected(2) /* Team 1 is FP */ 
-                                        : setFirstPickSelected(3) /* Team 2 is FP */ 
+                            if (e.target.checked) {
+                                setFirstPickSelected(compNumber === 1 ? 2 : 3);
+                            } else {
+                                setFirstPickSelected(1); // Unselects first pick
                             }
                         }} 
                     />
@@ -699,12 +739,11 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
             </div>
             <div className="set-team-bans">
                 {/* Bans Dropdowns */}
-                {[1, 2, 3].map((banPosition) => (
+                {[0, 1, 2].map((banPosition) => (
                     <CustomDropdown
                         key={banPosition}
                         value={ {pokemon_id: bans[banPosition]?.pokemon_id, pokemon_name: bans[banPosition]?.pokemon_name} ?? { pokemon_id: "", pokemon_name: "" } }
-                        onChange={e => {
-                            const value = e.target.value;
+                        onChange={value => {
                             setBans(prevBans => {
                                 const newBans = [...prevBans];
                                 newBans[banPosition] = {
@@ -724,7 +763,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
             </div>
             <div className="team-comp">
                 {/* Pokemon / Players */}
-                {[1, 2, 3, 4, 5].map((pickNumber) => (
+                {[0, 1, 2, 3, 4].map((pickNumber) => (
                     <CharacterPlayer 
                         key={pickNumber}
                         character={ {pokemon_id: picks[pickNumber]?.pokemon_id, pokemon_name: picks[pickNumber]?.pokemon_name} ?? { pokemon_id: "", pokemon_name: "" } } 
@@ -740,8 +779,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                             taken: picks[pickNumber]?.taken ?? "",
                             position_played: picks[pickNumber]?.position_played ?? ""
                         }}
-                        setCharacter={e => {
-                            const value = e.target.value;
+                        setCharacter={value => {
                             setPicks(prevPicks => {
                                 const newPicks = [...prevPicks];
                                 newPicks[pickNumber] = {
@@ -752,8 +790,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                                 return newPicks;
                             });
                         }}
-                        setMove1={e => {
-                            const value = e.target.value;
+                        setMove1={value => {
                             setPicks(prevPicks => {
                                 const newPicks = [...prevPicks];
                                 newPicks[pickNumber] = {
@@ -764,8 +801,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                                 return newPicks;
                             });
                         }}
-                        setMove2={e => {
-                            const value = e.target.value;
+                        setMove2={value => {
                             setPicks(prevPicks => {
                                 const newPicks = [...prevPicks];
                                 newPicks[pickNumber] = {
@@ -776,8 +812,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                                 return newPicks;
                             });
                         }}
-                        setPlayer={e => {
-                            const value = e.target.value;
+                        setPlayer={value => {
                             setPicks(prevPicks => {
                                 const newPicks = [...prevPicks];
                                 newPicks[pickNumber] = {
@@ -789,19 +824,12 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                                 return newPicks;
                             });
                         }}
-                        setStats={e => {
-                            const value = e.target.value;
+                        setStats={(value, stat) => {
                             setPicks(prevPicks => {
                                 const newPicks = [...prevPicks];
                                 newPicks[pickNumber] = {
                                     ...newPicks[pickNumber],
-                                    assists: value.assists,
-                                    dealt: value.dealt,
-                                    kills: value.kills,
-                                    healed: value.healed,
-                                    scored: value.scored,
-                                    taken: value.taken,
-                                    position_played: value.position_played
+                                    [stat]: value
                                 };
                                 return newPicks;
                             });
@@ -846,8 +874,8 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
                     value={character}
                     onChange={(value) => {
                         setCharacter(value);
-                        setMove1(null);
-                        setMove2(null);
+                        setMove1({ move_id: "", move_name: "" });
+                        setMove2({ move_id: "", move_name: "" });
                     }}
                     options={filteredUniquePokemon}
                     placeholder="Character Select"
@@ -884,13 +912,13 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
                 </select>
             </div>
             <div className="stat-inputs-container">
-                <input className="stat-input" type="text" placeholder="kills" value={stats.kills ?? ""} onChange={(e) => setStats(prev => ({ ...prev, kills: e.target.value ? Number(e.target.value) : null }))}></input>
-                <input className="stat-input" type="text" placeholder="assists" value={stats.assists ?? ""} onChange={(e) => setStats(prev => ({ ...prev, assists: e.target.value ? Number(e.target.value) : null }))}></input>
-                <input className="stat-input" type="text" placeholder="scored" value={stats.scored ?? ""} onChange={(e) => setStats(prev => ({ ...prev, scored: e.target.value ? Number(e.target.value) : null }))}></input>
-                <input className="stat-input" type="text" placeholder="dealt" value={stats.dealt ?? ""} onChange={(e) => setStats(prev => ({ ...prev, dealt: e.target.value ? Number(e.target.value) : null }))}></input>
-                <input className="stat-input" type="text" placeholder="taken" value={stats.taken ?? ""} onChange={(e) => setStats(prev => ({ ...prev, taken: e.target.value ? Number(e.target.value) : null }))}></input>
-                <input className="stat-input" type="text" placeholder="healed" value={stats.healed ?? ""} onChange={(e) => setStats(prev => ({ ...prev, healed: e.target.value ? Number(e.target.value) : null }))}></input>
-                <select className="stat-input" value={stats.positionPlayed ?? ""} onChange={(e) => setStats(prev => ({ ...prev, positionPlayed: e.target.value }))}>
+                <input className="stat-input" type="text" placeholder="kills" value={stats.kills ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "kills")}></input>
+                <input className="stat-input" type="text" placeholder="assists" value={stats.assists ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "assists")}></input>
+                <input className="stat-input" type="text" placeholder="scored" value={stats.scored ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "scored")}></input>
+                <input className="stat-input" type="text" placeholder="dealt" value={stats.dealt ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "dealt")}></input>
+                <input className="stat-input" type="text" placeholder="taken" value={stats.taken ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "taken")}></input>
+                <input className="stat-input" type="text" placeholder="healed" value={stats.healed ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "healed")}></input>
+                <select className="stat-input" value={stats.position_played ?? ""} onChange={(e) => setStats(e.target.value, "position_played")}>
                     <option value="">Role</option>
                     <option value="TopCarry">Top Carry</option>
                     <option value="EXPShareTop">Top EXP Share</option>
