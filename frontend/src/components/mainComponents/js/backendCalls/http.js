@@ -44,8 +44,8 @@ export async function fetchCharacterAttributes(name) {
 }
 
 // Function to update a single character's attributes
-export async function updateCharacterAttributes(pokemonId, traits, userGoogleId) {
-    const characterAttributeData = await fetch(routes.PUT_CHARACTER_ATTRIBUTES, {
+export async function updateCharacterAttribute(pokemonId, column, value) {
+    const characterAttributeData = await fetch(routes.PUT_CHARACTER_ATTRIBUTE, {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -53,8 +53,8 @@ export async function updateCharacterAttributes(pokemonId, traits, userGoogleId)
         },
         body: JSON.stringify({
             pokemonId: pokemonId,
-            traits: traits,
-            userGoogleId: userGoogleId
+            column: column,
+            value: value
         })
     });
     const characterAttributeDataJson = await characterAttributeData.json();
@@ -81,8 +81,8 @@ export async function runAStarAlgorithm(targetTeam, opposingTeam, bans) {
 }
 
 // Function to fetch all comps
-export async function fetchAllComps() {
-    const compData = await fetch(routes.GET_ALL_COMPS, {
+export async function fetchAllSets() {
+    const compData = await fetch(routes.GET_ALL_SETS, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -262,8 +262,8 @@ export async function getRoomInfo(roomId) {
 }
 
 // Function to fetch character stats based on query context
-export async function fetchCharacterStats(queryContext) {
-    const statsData = await fetch(routes.GET_CHARACTER_STATS, {
+export async function fetchDraftStats(queryContext) {
+    const statsData = await fetch(routes.GET_DRAFT_STATS, {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -325,35 +325,33 @@ export async function insertTierListEntry(tierName, pokemonId, googleId) {
 }
 
 // Function to check if a user is verified
-export async function isVerifiedUser(userGoogleId) {
+export async function isVerifiedUser() {
     const response = await fetch(routes.GET_IS_VERIFIED_USER, {
-        method: 'PUT',
+        method: 'GET',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            userGoogleId: userGoogleId
-        })
+        }
     });
-    const responseJson = await response.json();
-    return responseJson;
+    if (response.status === 401) {
+        return false;
+    }
+    return true;
 }
 
 // Function to check if a user is an admin
-export async function isAdmin(userGoogleId) {
+export async function isAdmin() {
     const response = await fetch(routes.GET_IS_ADMIN, {
-        method: 'PUT',
+        method: 'GET',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            userGoogleId: userGoogleId
-        })
+        }
     });
-    const responseJson = await response.json();
-    return responseJson;
+    if (response.status === 401) {
+        return false;
+    }
+    return true;
 }
 
 // Function to fetch summarized Battle Data for all pokemon
@@ -393,17 +391,4 @@ export async function fetchAllInsights() {
     });
     const insightDataJson = await insightData.json();
     return insightDataJson;
-}
-
-// Function to fetch all comps
-export async function fetchAllCompsTest() {
-    const compData = await fetch(routes.GET_ALL_COMPS_TEST, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
-    const compDataJson = await compData.json();
-    return compDataJson;
 }

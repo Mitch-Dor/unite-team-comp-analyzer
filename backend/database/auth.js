@@ -7,6 +7,8 @@ class Auth {
       this.db = db;
     }
 
+    //// OAUTH ////
+
     async signIn(googleId, name, email) {
         return new Promise((resolve, reject) => {
             this.db.query('SELECT * FROM users WHERE user_google_id = $1', [googleId], (err, res) => {
@@ -43,6 +45,22 @@ class Auth {
                     resolve(null);
                 }
             });
+        });
+    }
+
+    //// VERIFIED USERS ////
+
+    async getAllVerifiedUsers() {
+        return new Promise((resolve, reject) => {
+            const sql = 'SELECT * FROM verified_users';
+            this.db.query(sql, (err, res) => {
+            if (err) {
+                console.error('Could not fetch verified users.');
+                reject(err);
+            } else {
+                resolve(res.rows);
+            }
+          });
         });
     }
 }

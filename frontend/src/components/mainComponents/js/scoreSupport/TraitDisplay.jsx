@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CustomDropdown from '../compSupport/CustomDropdown.jsx';
+import CustomDropdown from '../proMatchSupport/CustomDropdown.jsx';
 
 function TraitDisplay({ characters, charactersAndTraits, character, setSelectedCharacter }) {
     const [traits, setTraits] = useState([]);

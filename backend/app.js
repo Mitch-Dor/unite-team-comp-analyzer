@@ -12,6 +12,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const middleware = require('./middleware.js');
 
 const app = express();
 const server = http.createServer(app);
@@ -108,19 +109,17 @@ app.get('/ping', (req, res) => {
   res.json({message: 'Pong'});
 });
 
-// app.use(express.static(
-//   path.resolve(__dirname, "public")
-// ));
-
 // Socket.IO connection handler
 require('./socket/socketManager')(io);
 
 // Routes - load AFTER all middleware is set up
-require('./routes/characters.js')(app, database, process.env.ADMIN_GOOGLE_ID);
-require('./routes/teams.js')(app, database, process.env.ADMIN_GOOGLE_ID);
-require('./routes/comps.js')(app, database, process.env.ADMIN_GOOGLE_ID);
-require('./routes/draftRoom.js')(app, database, io);
-require('./routes/auth.js')(app, database, passport, process.env.NODE_ENV, process.env.HEROKU_APP_URL);
+require('./routes/ai.js')(app, middleware, database);
+require('./routes/auth.js')(app, middleware, database, passport, process.env.NODE_ENV, process.env.HEROKU_APP_URL);
+require('./routes/comps.js')(app, middleware, database);
+require('./routes/draftRoom.js')(app, middleware, database, io);
+require('./routes/pokemon.js')(app, middleware, database);
+require('./routes/proLeague.js')(app, middleware, database);
+require('./routes/stats.js')(app, middleware, database);
 
 // Serve the frontend build
 if (process.env.NODE_ENV === 'production') {

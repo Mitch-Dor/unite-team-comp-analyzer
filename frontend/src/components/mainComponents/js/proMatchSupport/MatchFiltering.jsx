@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import CustomDropdown from "./CustomDropdown";
 import Home from "../../../sideComponents/js/Home";
 
-function CompsSorting({ events, teams, players, charactersAndMoves, compsData, setFilteredComps, advancedDataMode, setAdvancedDataMode }) {
+function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, setFilteredData, advancedDataMode, setAdvancedDataMode }) {
     const [regions, setRegions] = useState([]);
     const [characters, setCharacters] = useState([]);
-    const baseData = compsData;
+    const baseData = coreData;
     const [eventFilter, setEventFilter] = useState("");
     const [characterFilter, setCharacterFilter] = useState("");
     const [regionFilter, setRegionFilter] = useState("");
@@ -34,14 +34,14 @@ function CompsSorting({ events, teams, players, charactersAndMoves, compsData, s
     }, [charactersAndMoves, teams]);
   
     function filterComps() {
-      const filteredComps = baseData.map(set => {
-        // Filter matches within each set
+      const filteredData = baseData.map(set => {
+        // Filter through matches in sets
         const filteredMatches = set.matches.filter(comp => {
-          return (eventFilter === defaultEvent || comp.event === eventFilter)
-            && (characterFilter === defaultCharacter || comp.team1.pokemon.includes(characterFilter.pokemon_name) || comp.team2.pokemon.includes(characterFilter.pokemon_name))
-            && (regionFilter === defaultRegion || comp.team1.region === regionFilter || comp.team2.region === regionFilter)
-            && (teamFilter === defaultTeam || comp.team1.name === teamFilter || comp.team2.name === teamFilter)
-            && (playerFilter === defaultPlayer || comp.team1.players.includes(playerFilter) || comp.team2.players.includes(playerFilter));
+          return (eventFilter === defaultEvent || set.event_name === eventFilter)
+            && (characterFilter === defaultCharacter || comp.team1_picks.some(pick => pick.pokemon_name === characterFilter.pokemon_name) || comp.team2_pokemon.some(pick => pick.pokemon_name === characterFilter.pokemon_name))
+            && (regionFilter === defaultRegion || comp.team1_region === regionFilter || comp.team2_region === regionFilter)
+            && (teamFilter === defaultTeam || comp.team1_name === teamFilter || comp.team2_name === teamFilter)
+            && (playerFilter === defaultPlayer || comp.team1_picks.some(pick => pick.player_name === playerFilter) || comp.team2_picks.some(pick => pick.player_name === playerFilter));
         });
   
         // If no matches are left after filtering, exclude this set
@@ -56,7 +56,7 @@ function CompsSorting({ events, teams, players, charactersAndMoves, compsData, s
         };
       }).filter(set => set !== null); // Remove null sets
   
-      setFilteredComps(filteredComps);
+      setFilteredData(filteredData);
     }
   
     useEffect(() => {
@@ -119,4 +119,4 @@ function CompsSorting({ events, teams, players, charactersAndMoves, compsData, s
     )
   }
 
-  export default CompsSorting;
+  export default MatchFiltering;

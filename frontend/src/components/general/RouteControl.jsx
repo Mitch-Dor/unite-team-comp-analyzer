@@ -10,7 +10,7 @@ import Insights from '../mainComponents/js/Insights';
 import Stats from '../mainComponents/js/Stats';
 import TierList from '../mainComponents/js/TierList';
 import Traits from '../mainComponents/js/Traits';
-import Comps from '../mainComponents/js/Comps';
+import ProMatches from '../mainComponents/js/ProMatches';
 import Login from '../sideComponents/js/Login';
 import DraftSandbox from '../mainComponents/js/DraftSandbox';
 
@@ -25,7 +25,7 @@ function RouteControl() {
         <Route exact path='/stats' element={<Stats />} />
         <Route exact path='/tier-list' element={<TierList />} />
         <Route exact path='/traits' element={<Traits />} />
-        <Route exact path='/comps' element={<Comps />} />
+        <Route exact path='/pro-matches' element={<ProMatches />} />
         <Route exact path='/login' element={<Login />} />
       </Routes>
   );

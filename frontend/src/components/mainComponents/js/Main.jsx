@@ -21,7 +21,7 @@ function Main() {
   useEffect(() => {
     async function checkAdmin() {
       if (user) {
-        const admin = await isAdmin(user.user_google_id);
+        const admin = await isAdmin();
         setAdmin(admin);
       }
     }
@@ -107,7 +107,7 @@ function Main() {
                 {admin && (
                   <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits', {state: {user: user}})}>Traits</button>
                 )}
-                <button id="comps" className="modeBTN bigBTNs" onClick={() => navigate('/comps', {state: {user: user}})}>Team Comps</button>
+                <button id="proMatches" className="modeBTN bigBTNs" onClick={() => navigate('/pro-matches', {state: {user: user}})}>Pro Matches</button>
             </div>
             <div id="settingContainer">
                 <button id="settings" className="settingBTN bigBTNs" onClick={() => openCloseSettings()}>Draft Settings</button>

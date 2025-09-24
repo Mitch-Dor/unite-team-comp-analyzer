@@ -85,7 +85,7 @@ function TierList() {
   useEffect(() => {
     async function checkAdmin() {
       if (user) {
-        const admin = await isAdmin(user.user_google_id);
+        const admin = await isAdmin();
         setAdmin(admin);
       }
     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CustomDropdown from '../compSupport/CustomDropdown';
+import CustomDropdown from '../proMatchSupport/CustomDropdown';
 import { fetchIndividualBattleStats } from '../backendCalls/http.js';
 
 function BattleStatsSorting({ setData, moveData, allPokemon, setKeyPokemon }) {

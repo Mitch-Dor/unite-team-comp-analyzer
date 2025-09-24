@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
 import CustomDropdown from './CustomDropdown';
-import { formatSet } from '../Comps';
+import { formatSet } from '../ProMatches';
 
-function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers, user }) {
+function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers, user }) {
     const [setInsertion, setSetInsertion] = useState(false);
     const [eventInsertion, setEventInsertion] = useState(false);
     const [teamInsertion, setTeamInsertion] = useState(false);
@@ -67,6 +67,11 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
         }
 
         function setCheck() {
+            const fpBans = [1, 3];
+            const spBans = [2, 4];
+            const fpPicks = [1, 4, 5, 8, 9];
+            const spPicks = [2, 3, 6, 7, 10];
+
             // Check if setInsertion exists and has the required length
             if (!setInsertion || setInsertion.length < 7) {
                 error += "\n" + "Invalid set data structure";
@@ -468,29 +473,31 @@ function SubmitSetModal({ setShowSubmitForm, setCompsData, compsData, events, te
 
 // The full insertion form for a set
 function SetInsertion({ resetKey, setSetInsertion, events, teams, players, charactersAndMoves }) {
-    const [match1, setMatch1] = useState(null);
-    const [match2, setMatch2] = useState(null);
-    const [match3, setMatch3] = useState(null);
-    const [match4, setMatch4] = useState(null);
-    const [match5, setMatch5] = useState(null);
-    const [selectedEvent, setSelectedEvent] = useState(null);
+    /* set_id, set_score, set_winner, and match_ids will be calculated when and after submitting */
+    const [composedSet, setComposedSet] = useState({event_date: null, event_id: null, event_name: null, matches: null, set_descriptor: null, set_id: null, set_score: null, set_winner: null});
+    const [match1, setMatch1] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+    const [match2, setMatch2] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+    const [match3, setMatch3] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+    const [match4, setMatch4] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+    const [match5, setMatch5] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+    const [selectedEvent, setSelectedEvent] = useState({event_id: null, event_name: null, event_date: null, vod_url: null});
     const [setDescriptor, setSetDescriptor] = useState("");
 
     const resetForm = () => {
-        setMatch1(null);
-        setMatch2(null);
-        setMatch3(null);
-        setMatch4(null);
-        setMatch5(null);
-        setSelectedEvent(null);
+        setMatch1({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+        setMatch2({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+        setMatch3({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+        setMatch4({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+        setMatch5({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
+        setSelectedEvent({event_id: null, event_name: null, event_date: null, vod_url: null});
         setSetDescriptor("");
     };
 
     useEffect(() => {
         if (selectedEvent) {
-            setSetInsertion([match1, match2, match3, match4, match5, selectedEvent, setDescriptor]);
+            setComposedSet({event_date: selectedEvent.event_date, event_id: selectedEvent.event_id, event_name: selectedEvent.event_name, matches: [match1, match2, match3, match4, match5], set_descriptor: setDescriptor, set_id: null, set_score: null, set_winner: null, vod_url: selectedEvent.vod_url});
         } else {
-            setSetInsertion([match1, match2, match3, match4, match5, null, null]);
+            setComposedSet({event_date: null, event_id: null, event_name: null, matches: [match1, match2, match3, match4, match5], set_descriptor: setDescriptor, set_id: null, set_score: null, set_winner: null, vod_url: null});
         }
     }, [match1, match2, match3, match4, match5, selectedEvent, setDescriptor]);
 
@@ -502,11 +509,19 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
         resetForm();
     }, [resetKey]);
 
+    useEffect(() => {
+        console.log(match1, match2, match3, match4, match5);
+    }, [match1, match2, match3, match4, match5]);
+
+    useEffect(() => {
+        setComposedSet({...composedSet, set_descriptor: setDescriptor});
+    }, [setDescriptor]);
+
     return (
         <div id="set-creation" className="comp-card">
             <div className="set-creation-event-data">
                 {/* Event Name Dropdown */}
-                <select value={selectedEvent ? selectedEvent.event_name : ""} onChange={(e) => {
+                <select value={selectedEvent && selectedEvent.event_name ? selectedEvent.event_name : ""} onChange={(e) => {
                     const eventName = e.target.value;
                     const event = events.find(ev => ev.event_name === eventName);
                     setSelectedEvent(event);
@@ -521,14 +536,14 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
                 {/* Event Date (Read-only) */}
                 <input 
                     type="text" 
-                    value={selectedEvent ? selectedEvent.event_date : ""} 
+                    value={selectedEvent && selectedEvent.event_date ? selectedEvent.event_date : ""} 
                     readOnly 
                     placeholder="Event Date (Choose Event)"
                 />
                 {/* Event VOD URL (Read-only) */}
                 <input 
                     type="text" 
-                    value={selectedEvent ? selectedEvent.vod_url : ""} 
+                    value={selectedEvent && selectedEvent.vod_url ? selectedEvent.vod_url : ""} 
                     readOnly 
                     placeholder="Event VOD URL (Choose Event)"
                 />
@@ -536,124 +551,82 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
             {/* Set Descriptor (Text Input) */}
             <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
             <div className="comp-card">
-                <MatchInsertion resetKey={resetKey} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={1}/>
+                <MatchInsertion resetKey={resetKey} match={match1} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={1}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion resetKey={resetKey} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={2}/>
+                <MatchInsertion resetKey={resetKey} match={match2} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={2}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion resetKey={resetKey} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={3}/>
+                <MatchInsertion resetKey={resetKey} match={match3} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={3}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion resetKey={resetKey} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={4}/>
+                <MatchInsertion resetKey={resetKey} match={match4} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={4}/>
             </div>
             <div className="comp-card">
-                <MatchInsertion resetKey={resetKey} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={5}/>
+                <MatchInsertion resetKey={resetKey} match={match5} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={5}/>
             </div>
         </div>
     );
 }
 
 // Match insertion form for a set (Used in SetInsertion)
-    function MatchInsertion({ resetKey, setMatch, teams, players, charactersAndMoves, matchNumber }) {
-    const [comp1, setComp1] = useState(null);
-    const [comp2, setComp2] = useState(null);
-    const [matchWinner, setMatchWinner] = useState(null);
+    function MatchInsertion({ resetKey, match, setMatch, teams, players, charactersAndMoves, matchNumber }) {
+    // {match_id: null, match_winner_id: null, match_winner_text: null, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null}
     // Just used in this and lower components. Not sent up components to database
     const [unavailableCharacters, setUnavailableCharacters] = useState([]);
-    const [pickedTeams, setPickedTeams] = useState({team1: "Team 1", team2: "Team 2"});
-
-    const resetForm = () => {
-        setComp1(null);
-        setComp2(null);
-        setMatchWinner(null);
-    };
+    const [firstPickSelected, setFirstPickSelected] = useState(1); // 1 is unselected, 2 is team 1 is fp, 3 is team 2 is fp (For CompInsertion To Know Pick Positions / Ban Positions)
+    const [pickedTeams, setPickedTeams] = useState({team1: match.team1_id ? {team_id: match.team1_id, team_name: match.team1_name} : {team_id: null, team_name: "Team 1"}, team2: match.team2_id ? {team_id: match.team2_id, team_name: match.team2_name} : {team_id: null, team_name: "Team 2"}});
 
     useEffect(() => {
-        setMatch([comp1, comp2, matchWinner]);
-    }, [comp1, comp2, matchWinner]);
-
-    useEffect(() => {
-        resetForm();
-    }, []);
-
-    useEffect(() => {
-        resetForm();
-    }, [resetKey]);
+        setPickedTeams({team1: match.team1_id ? {team_id: match.team1_id, team_name: match.team1_name} : {team_id: null, team_name: "Team 1"}, team2: match.team2_id ? {team_id: match.team2_id, team_name: match.team2_name} : {team_id: null, team_name: "Team 2"}});
+    }, [match.team1_id, match.team2_id]);
 
     // Filter out characters that are already banned or picked
     useEffect(() => {
-        // When comp1 and comp2 are null, use all characters
-        if (!comp1 && !comp2) {
-            setUnavailableCharacters([[]]);
-            return;
-        }
+        setUnavailableCharacters([
+            ...match.team1_bans.map(ban => ban.pokemon_id),
+            ...match.team2_bans.map(ban => ban.pokemon_id),
+            ...match.team1_picks.map(pick => pick.pokemon_id),
+            ...match.team2_picks.map(pick => pick.pokemon_id)
+        ]);
+    }, [match.team1_picks, match.team2_picks, match.team1_bans, match.team2_bans]);
 
-        if (comp1 && comp1[0]) {
-            setPickedTeams({team1: comp1[0].team_name, team2: pickedTeams.team2});
+    useEffect(() => {
+        if (firstPickSelected === 1) {
+            setMatch({...match, firstPick: 0});
+        } else if (firstPickSelected === 2) {
+            setMatch({...match, firstPick: 1});
+        } else if (firstPickSelected === 3) {
+            setMatch({...match, firstPick: 2});
         }
-        if (comp2 && comp2[0]) {
-            setPickedTeams({team1: pickedTeams.team1, team2: comp2[0].team_name});
-        }
-        
-        // comp#[2-3] are bans. comp#[4-8] are picks
-        // Remove the banned characters from the available characters
-        const bannedCharacters = [];
-        if (comp1) {
-            [comp1[2], comp1[3]].forEach(ban => {
-                if (ban && ban.pokemon_id) bannedCharacters.push(ban.pokemon_id);
-            });
-        }
-        if (comp2) {
-            [comp2[2], comp2[3]].forEach(ban => {
-                if (ban && ban.pokemon_id) bannedCharacters.push(ban.pokemon_id);
-            });
-        }
-        
-        // Remove the picks from the available characters
-        const picks = [];
-        if (comp1) {
-            [comp1[4], comp1[5], comp1[6], comp1[7], comp1[8]].forEach(pick => {
-                if (pick && pick.pokemon_id) picks.push(pick.pokemon_id);
-            });
-        }
-        if (comp2) {
-            [comp2[4], comp2[5], comp2[6], comp2[7], comp2[8]].forEach(pick => {
-                if (pick && pick.pokemon_id) picks.push(pick.pokemon_id);
-            });
-        }
-        
-        // Combine bannedCharacters and picks
-        setUnavailableCharacters([...bannedCharacters, ...picks]);
-    }, [comp1, comp2, charactersAndMoves]);
+    }, [firstPickSelected]);
 
     return (
         <div id="match-insertion">
             <h3>Match {matchNumber}</h3>
             <div className="set-comp-content">
+            {[1, 2].map((compNumber) => (
                 <CompInsertion 
-                    resetKey={resetKey} 
-                    setComp={setComp1} 
+                    key={compNumber}
+                    resetKey={resetKey}
+                    match={match}
+                    setMatch={setMatch} 
                     teams={teams} 
                     players={players} 
                     charactersAndMoves={charactersAndMoves}
                     unavailableCharacters={unavailableCharacters}
+                    firstPickSelected={firstPickSelected}
+                    setFirstPickSelected={setFirstPickSelected}
+                    compNumber={compNumber}
                 />
-                <CompInsertion 
-                    resetKey={resetKey} 
-                    setComp={setComp2} 
-                    teams={teams} 
-                    players={players} 
-                    charactersAndMoves={charactersAndMoves}
-                    unavailableCharacters={unavailableCharacters}
-                />
+            ))}
             </div>
             {/* Match Winner Dropdown */}
             <div className="match-winner-dropdown">
-                <select value={matchWinner ? matchWinner : ""} onChange={(e) => setMatchWinner(e.target.value)}>
+                <select value={{team_id: match.match_winner_id, team_name: match.match_winner_text} ?? ""} onChange={(e) => setMatch({...match, match_winner_id: e.target.value.team_id, match_winner_text: e.target.value.team_name})}>
                     <option value="">Winner Select</option>
-                    <option value="1">{pickedTeams.team1}</option>
-                    <option value="2">{pickedTeams.team2}</option>
+                    <option value={pickedTeams.team1}>{pickedTeams.team1.team_name}</option>
+                    <option value={pickedTeams.team2}>{pickedTeams.team2.team_name}</option>
                 </select>
             </div>
         </div>
@@ -661,104 +634,34 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
 }
 
 // Comp insertion form for a match (Used in SetInsertion)
-function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, unavailableCharacters }) {
-    const [selectedTeam, setSelectedTeam] = useState(null);
-    const [teamIsFirstPick, setTeamIsFirstPick] = useState(false);
-    const [ban1, setBan1] = useState(null);
-    const [ban2, setBan2] = useState(null);
-    const [pokemon1, setPokemon1] = useState(null);
-    const [pokemon2, setPokemon2] = useState(null);
-    const [pokemon3, setPokemon3] = useState(null);
-    const [pokemon4, setPokemon4] = useState(null);
-    const [pokemon5, setPokemon5] = useState(null);
-    const [pokemon1move1, setPokemon1Move1] = useState(null);
-    const [pokemon1move2, setPokemon1Move2] = useState(null);
-    const [pokemon2move1, setPokemon2Move1] = useState(null);
-    const [pokemon2move2, setPokemon2Move2] = useState(null);
-    const [pokemon3move1, setPokemon3Move1] = useState(null);
-    const [pokemon3move2, setPokemon3Move2] = useState(null);
-    const [pokemon4move1, setPokemon4Move1] = useState(null);
-    const [pokemon4move2, setPokemon4Move2] = useState(null);
-    const [pokemon5move1, setPokemon5Move1] = useState(null);
-    const [pokemon5move2, setPokemon5Move2] = useState(null);
-    const [player1, setPlayer1] = useState(null);
-    const [player2, setPlayer2] = useState(null);   
-    const [player3, setPlayer3] = useState(null);
-    const [player4, setPlayer4] = useState(null);
-    const [player5, setPlayer5] = useState(null);
-    const [p1stats, setP1Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
-    const [p2stats, setP2Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
-    const [p3stats, setP3Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
-    const [p4stats, setP4Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
-    const [p5stats, setP5Stats] = useState({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayer: null});
-
-    const resetForm = () => {
-        setSelectedTeam(null);
-        setTeamIsFirstPick(false);
-        setBan1(null);
-        setBan2(null);
-        setPokemon1(null);
-        setPokemon2(null);
-        setPokemon3(null);
-        setPokemon4(null);
-        setPokemon5(null);
-        setPokemon1Move1(null);
-        setPokemon1Move2(null);
-        setPokemon2Move1(null);
-        setPokemon2Move2(null);
-        setPokemon3Move1(null);
-        setPokemon3Move2(null);
-        setPokemon4Move1(null);
-        setPokemon4Move2(null);
-        setPokemon5Move1(null);
-        setPokemon5Move2(null);
-        setPlayer1(null);
-        setPlayer2(null);
-        setPlayer3(null);
-        setPlayer4(null);
-        setPlayer5(null);
-        setP1Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
-        setP2Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
-        setP3Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
-        setP4Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
-        setP5Stats({kills: null, assists: null, scored: null, dealt: null, taken: null, healed: null, positionPlayed: null});
-    };
-
-    useEffect(() => {
-        if (selectedTeam) {
-            setComp([selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5, p1stats, p2stats, p3stats, p4stats, p5stats]);
-        } else {
-            setComp([null, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5, p1stats, p2stats, p3stats, p4stats, p5stats]);
-        }
-    }, [selectedTeam, teamIsFirstPick, ban1, ban2, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon1move1, pokemon1move2, pokemon2move1, pokemon2move2, pokemon3move1, pokemon3move2, pokemon4move1, pokemon4move2, pokemon5move1, pokemon5move2, player1, player2, player3, player4, player5, p1stats, p2stats, p3stats, p4stats, p5stats]);
-
-    useEffect(() => {
-        resetForm();
-    }, []);
-
-    useEffect(() => {
-        resetForm();
-    }, [resetKey]);
-
+function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAndMoves, unavailableCharacters, firstPickSelected, setFirstPickSelected, compNumber }) {
     // Get unique pokemon_name and pokemon_id combinations
     const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
+    const [bans, setBans] = useState([{ban_position: 1}, {ban_position: 2}, {ban_position: 3}]);
+    const [picks, setPicks] = useState([{pick_position: 1}, {pick_position: 2}, {pick_position: 3}, {pick_position: 4}, {pick_position: 5}]);
+
+    useEffect(() => {
+        setBans([{ban_position: 1}, {ban_position: 2}, {ban_position: 3}]);
+        setPicks([{pick_position: 1}, {pick_position: 2}, {pick_position: 3}, {pick_position: 4}, {pick_position: 5}]);
+    }, [resetKey]);
+
     // Filter out unavailable characters
     const filteredUniquePokemon = uniquePokemon.filter(char => 
         !unavailableCharacters.includes(char.pokemon_id) || !unavailableCharacters.some(id => id !== null && id !== undefined)
     );
 
+    useEffect(() => {
+        
+    }, [bans, picks]);
+
     return (
         <div id="comp-insertion">
             <div className="set-team-header">
                 {/* Team Name Dropdown */}
-                <select value={selectedTeam ? selectedTeam.team_name : ""} onChange={(e) => {
-                    const teamName = e.target.value;
-                    const team = teams.find(t => t.team_name === teamName);
-                    setSelectedTeam(team);
-                }}>
+                <select value={compNumber === 1 ? (match.team1_name ? match.team1_name : "") : (match.team2_name ? match.team2_name : "")} onChange={(e) => { setMatch({...match, [compNumber === 1 ? "team1_id" : "team2_id"]: e.target.value.team_id, [compNumber === 1 ? "team1_name" : "team2_name"]: e.target.value.team_name, [compNumber === 1 ? "team1_region" : "team2_region"]: e.target.value.team_region}); }}>
                     <option value="">Select Team</option>
                     {teams.map(team => (
-                        <option key={team.team_id} value={team.team_name}>
+                        <option key={team.team_id} value={team}>
                             {team.team_name}
                         </option>
                     ))}
@@ -767,7 +670,7 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                 <div className="team-region-display">
                     <input 
                     type="text" 
-                    value={selectedTeam ? selectedTeam.team_region : ""} 
+                    value={compNumber === 1 ? (match.team1_region ? match.team1_region : "") : (match.team2_region ? match.team2_region : "")} 
                     readOnly 
                     placeholder="Team Region (Choose Team)"
                     />
@@ -780,107 +683,134 @@ function CompInsertion({ resetKey, setComp, teams, players, charactersAndMoves, 
                     </label>
                     <input 
                         type="checkbox" 
-                        checked={teamIsFirstPick} 
-                        onChange={(e) => setTeamIsFirstPick(e.target.checked)} 
+                        checked={(firstPickSelected === 2 && compNumber === 1) || (firstPickSelected === 3 && compNumber === 2)} 
+                        disabled={firstPickSelected !== 1}
+                        onChange={(e) => { 
+                            if (firstPickSelected === 1) {
+                                !e.target.checked 
+                                    ? setFirstPickSelected(1) /* Was Selected, Unselected (None Selected) */ 
+                                    : compNumber === 1 
+                                        ? setFirstPickSelected(2) /* Team 1 is FP */ 
+                                        : setFirstPickSelected(3) /* Team 2 is FP */ 
+                            }
+                        }} 
                     />
                 </div>
             </div>
             <div className="set-team-bans">
                 {/* Bans Dropdowns */}
-                <CustomDropdown
-                    value={ban1}
-                    onChange={setBan1}
-                    options={filteredUniquePokemon}
-                    placeholder="Ban 1 Select"
-                    disabled={false}
-                    path="/assets/Draft/headshots"
-                />
-                <CustomDropdown
-                    value={ban2}
-                    onChange={setBan2}
-                    options={filteredUniquePokemon}
-                    placeholder="Ban 2 Select"
-                    disabled={false}
-                    path="/assets/Draft/headshots"
-                />
+                {[1, 2, 3].map((banPosition) => (
+                    <CustomDropdown
+                        key={banPosition}
+                        value={ {pokemon_id: bans[banPosition]?.pokemon_id, pokemon_name: bans[banPosition]?.pokemon_name} ?? { pokemon_id: "", pokemon_name: "" } }
+                        onChange={e => {
+                            const value = e.target.value;
+                            setBans(prevBans => {
+                                const newBans = [...prevBans];
+                                newBans[banPosition] = {
+                                    ...newBans[banPosition],
+                                    pokemon_id: value.pokemon_id,
+                                    pokemon_name: value.pokemon_name
+                                };
+                                return newBans;
+                            });
+                        }}
+                        options={filteredUniquePokemon}
+                        placeholder={`Ban ${banPosition} Select`}
+                        disabled={false}
+                        path="/assets/Draft/headshots"
+                    />
+                ))}
             </div>
             <div className="team-comp">
                 {/* Pokemon / Players */}
-                <CharacterPlayer 
-                    character={pokemon1} 
-                    move1={pokemon1move1} 
-                    move2={pokemon1move2} 
-                    player={player1} 
-                    stats={p1stats}
-                    setCharacter={setPokemon1} 
-                    setMove1={setPokemon1Move1} 
-                    setMove2={setPokemon1Move2} 
-                    setPlayer={setPlayer1}
-                    setStats={setP1Stats}
-                    charactersAndMoves={charactersAndMoves}
-                    players={players}
-                    unavailableCharacters={unavailableCharacters}
-                />
-                <CharacterPlayer 
-                    character={pokemon2} 
-                    move1={pokemon2move1} 
-                    move2={pokemon2move2} 
-                    player={player2} 
-                    stats={p2stats}
-                    setCharacter={setPokemon2} 
-                    setMove1={setPokemon2Move1} 
-                    setMove2={setPokemon2Move2} 
-                    setPlayer={setPlayer2}
-                    setStats={setP2Stats}
-                    charactersAndMoves={charactersAndMoves}
-                    players={players}
-                    unavailableCharacters={unavailableCharacters}
-                />
-                <CharacterPlayer 
-                    character={pokemon3} 
-                    move1={pokemon3move1} 
-                    move2={pokemon3move2} 
-                    player={player3} 
-                    stats={p3stats}
-                    setCharacter={setPokemon3} 
-                    setMove1={setPokemon3Move1} 
-                    setMove2={setPokemon3Move2} 
-                    setPlayer={setPlayer3}
-                    setStats={setP3Stats}
-                    charactersAndMoves={charactersAndMoves}
-                    players={players}
-                    unavailableCharacters={unavailableCharacters}
-                />
-                <CharacterPlayer 
-                    character={pokemon4} 
-                    move1={pokemon4move1} 
-                    move2={pokemon4move2} 
-                    player={player4} 
-                    stats={p4stats}
-                    setCharacter={setPokemon4} 
-                    setMove1={setPokemon4Move1} 
-                    setMove2={setPokemon4Move2} 
-                    setPlayer={setPlayer4}
-                    setStats={setP4Stats}
-                    charactersAndMoves={charactersAndMoves}
-                    players={players}
-                    unavailableCharacters={unavailableCharacters}
-                />
-                <CharacterPlayer 
-                    character={pokemon5} 
-                    move1={pokemon5move1} 
-                    move2={pokemon5move2} 
-                    player={player5} 
-                    stats={p5stats}
-                    setCharacter={setPokemon5} 
-                    setMove1={setPokemon5Move1} 
-                    setMove2={setPokemon5Move2} 
-                    setPlayer={setPlayer5}
-                    setStats={setP5Stats}
-                    charactersAndMoves={charactersAndMoves}
-                    players={players}
-                    unavailableCharacters={unavailableCharacters}
-                />
+                {[1, 2, 3, 4, 5].map((pickNumber) => (
+                    <CharacterPlayer 
+                        key={pickNumber}
+                        character={ {pokemon_id: picks[pickNumber]?.pokemon_id, pokemon_name: picks[pickNumber]?.pokemon_name} ?? { pokemon_id: "", pokemon_name: "" } } 
+                        move1={ {move_id: picks[pickNumber]?.move_1_id, move_name: picks[pickNumber]?.move_1_name} ?? { move_id: "", move_name: "" } }
+                        move2={ {move_id: picks[pickNumber]?.move_2_id, move_name: picks[pickNumber]?.move_2_name} ?? { move_id: "", move_name: "" } }
+                        player={ {player_id: picks[pickNumber]?.player_id, player_name: picks[pickNumber]?.player_name, player_other_names: picks[pickNumber]?.player_other_names} ?? { player_id: "", player_name: "", player_other_names: "" } } 
+                        stats={{
+                            assists: picks[pickNumber]?.assists ?? "",
+                            dealt: picks[pickNumber]?.dealt ?? "",
+                            kills: picks[pickNumber]?.kills ?? "",
+                            healed: picks[pickNumber]?.healed ?? "",
+                            scored: picks[pickNumber]?.scored ?? "",
+                            taken: picks[pickNumber]?.taken ?? "",
+                            position_played: picks[pickNumber]?.position_played ?? ""
+                        }}
+                        setCharacter={e => {
+                            const value = e.target.value;
+                            setPicks(prevPicks => {
+                                const newPicks = [...prevPicks];
+                                newPicks[pickNumber] = {
+                                    ...newPicks[pickNumber],
+                                    pokemon_id: value.pokemon_id,
+                                    pokemon_name: value.pokemon_name
+                                };
+                                return newPicks;
+                            });
+                        }}
+                        setMove1={e => {
+                            const value = e.target.value;
+                            setPicks(prevPicks => {
+                                const newPicks = [...prevPicks];
+                                newPicks[pickNumber] = {
+                                    ...newPicks[pickNumber],
+                                    move_1_id: value.move_id,
+                                    move_1_name: value.move_name
+                                };
+                                return newPicks;
+                            });
+                        }}
+                        setMove2={e => {
+                            const value = e.target.value;
+                            setPicks(prevPicks => {
+                                const newPicks = [...prevPicks];
+                                newPicks[pickNumber] = {
+                                    ...newPicks[pickNumber],
+                                    move_2_id: value.move_id,
+                                    move_2_name: value.move_name
+                                };
+                                return newPicks;
+                            });
+                        }}
+                        setPlayer={e => {
+                            const value = e.target.value;
+                            setPicks(prevPicks => {
+                                const newPicks = [...prevPicks];
+                                newPicks[pickNumber] = {
+                                    ...newPicks[pickNumber],
+                                    player_id: value.player_id,
+                                    player_name: value.player_name,
+                                    player_other_names: value.player_other_names
+                                };
+                                return newPicks;
+                            });
+                        }}
+                        setStats={e => {
+                            const value = e.target.value;
+                            setPicks(prevPicks => {
+                                const newPicks = [...prevPicks];
+                                newPicks[pickNumber] = {
+                                    ...newPicks[pickNumber],
+                                    assists: value.assists,
+                                    dealt: value.dealt,
+                                    kills: value.kills,
+                                    healed: value.healed,
+                                    scored: value.scored,
+                                    taken: value.taken,
+                                    position_played: value.position_played
+                                };
+                                return newPicks;
+                            });
+                        }}
+                        charactersAndMoves={charactersAndMoves}
+                        players={players}
+                        unavailableCharacters={unavailableCharacters}
+                    />
+                ))}
             </div>
         </div>
     )

@@ -1,4 +1,7 @@
-module.exports = function (app, database, passport, node_env, app_url) {
+module.exports = function (app, middleware, database, passport, node_env, app_url) {
+    
+    //// OAUTH ////
+
     const frontendUrl = node_env === 'production' 
         ? app_url : 'http://localhost:3000';
 
@@ -27,5 +30,15 @@ module.exports = function (app, database, passport, node_env, app_url) {
 
     app.get('/current_user', (req, res) => {
         res.json(req.user || null);
+    });
+
+    //// AUTH CHECKS ////
+
+    app.get('/GETisVerifiedUser', middleware.verifiedUserAuth, (req, res) => {
+        res.sendStatus(200);
+    });
+
+    app.get('/GETisAdmin', middleware.adminAuth, (req, res) => {
+        res.sendStatus(200);
     });
 };

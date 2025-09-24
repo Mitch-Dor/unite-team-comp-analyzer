@@ -1,8 +1,7 @@
-module.exports = function (app, database, adminGoogleId) {
-    // App is of course the server so that is how we send data
-    // Database we can get to the database SQL functions using database.characters.XXX()
-    app.get('/GETComps', (req, res) => {
-        database.comps.getAllComps().then(data => {
+module.exports = function (app, middleware, database) {
+
+    app.get('/GETallSets', (req, res) => {
+        database.comps.getAllSets().then(data => {
             res.json(data);
         })
         .catch(error => {
@@ -10,4 +9,15 @@ module.exports = function (app, database, adminGoogleId) {
             res.sendStatus(401);
         });
     });
+
+    app.post('/POSTset', middleware.verifiedUserAuth, (req, res) => {
+        database.comps.insertSet(req.body.setData).then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error inserting set:', error);
+            res.sendStatus(401);
+        });
+    })
+
 };

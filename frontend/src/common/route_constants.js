@@ -9,9 +9,9 @@ export const routes = {
     GET_ALL_DRAFT_INFO: `${getBaseUrl()}/GETallDraftInfo`,
     GET_ALL_ATTRIBUTES: `${getBaseUrl()}/GETallCharacterAttributes`,
     GET_SINGLE_ATTRIBUTES: `${getBaseUrl()}/GETsingleCharacterAttributes`,
-    PUT_CHARACTER_ATTRIBUTES: `${getBaseUrl()}/PUTCharacterAttributes`,
+    PUT_CHARACTER_ATTRIBUTE: `${getBaseUrl()}/PUTCharacterAttribute`,
     GET_RUN_A_STAR_ALGORITHM: `${getBaseUrl()}/GETrunAStarAlgorithm`,
-    GET_ALL_COMPS: `${getBaseUrl()}/GETallComps`,
+    GET_ALL_SETS: `${getBaseUrl()}/GETallSets`,
     GET_ALL_EVENTS: `${getBaseUrl()}/GETallEvents`,
     GET_ALL_TEAMS: `${getBaseUrl()}/GETallTeams`,
     GET_ALL_PLAYERS: `${getBaseUrl()}/GETallPlayers`,
@@ -23,7 +23,7 @@ export const routes = {
     POST_ROOMS: `${getBaseUrl()}/POSTrooms`,
     GET_ROOMS: `${getBaseUrl()}/GETrooms`,
     GET_ROOM_INFO: `${getBaseUrl()}/GETrooms/`,
-    GET_CHARACTER_STATS: `${getBaseUrl()}/GETcharacterStats`,
+    GET_DRAFT_STATS: `${getBaseUrl()}/GETdraftStats`,
     GET_OVERALL_BATTLE_STATS: `${getBaseUrl()}/GEToverallBattleStats`,
     GET_INDIVIDUAL_BATTLE_STATS: `${getBaseUrl()}/GETindividualBattleStats`,
     GET_RATE_COMP: `${getBaseUrl()}/GETrateComp`,
@@ -35,5 +35,4 @@ export const routes = {
     LOGOUT: `${getBaseUrl()}/logout`,
     SIGN_IN: `${getBaseUrl()}/auth/google`,
     GET_ALL_INSIGHTS: `${getBaseUrl()}/GETallInsights`,
-    GET_ALL_COMPS_TEST: `${getBaseUrl()}/GETComps`
 };

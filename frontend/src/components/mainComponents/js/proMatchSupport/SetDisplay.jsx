@@ -5,16 +5,16 @@ function SetDisplay({ set, advancedDataMode }) {
     return (
         <div className="set-card">
             <div className="set-header">
-                <div className="set-descriptor">{set.set_description}</div>
+                <div className="set-descriptor">{set.set_descriptor}</div>
                 <div className="set-event-name-vod-container">
-                    <div className="set-event">{set.set_event}</div>
+                    <div className="set-event">{set.event_name}</div>
                     <div className="event-vod">
-                    <a href={set.vod} target="_blank" rel="noopener noreferrer">
+                    <a href={set.vod_url} target="_blank" rel="noopener noreferrer">
                         <img src="/assets/icons/youtube.png" alt="VOD" />
                         </a>
                     </div>
                 </div>
-                <div className="set-date">{new Date(set.set_date).toLocaleDateString('en-US', {
+                <div className="set-date">{new Date(set.event_date).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
@@ -32,7 +32,7 @@ function SetDisplay({ set, advancedDataMode }) {
             
             <div className="set-footer">
                 <div className="winner-label">
-                    Set Winner: <span className="winner-name">{set.winner} {set.team1_wins > set.team2_wins ? `(${set.team1_wins} - ${set.team2_wins})` : `(${set.team2_wins} - ${set.team1_wins})`}</span>
+                    Set Winner: <span className="winner-name">{set.set_winner.team_name} {set.set_score[0].wins > set.set_score[1].wins ? `(${set.set_score[0].wins} - ${set.set_score[1].wins})` : `(${set.set_score[1].wins} - ${set.set_score[0].wins})`}</span>
                 </div>
             </div>
         </div>

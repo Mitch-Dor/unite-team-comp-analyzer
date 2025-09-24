@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../css/traits.css';
-import { updateCharacterAttributes, fetchAllCharacterAttributes } from './backendCalls/http.js';
+import { updateCharacterAttribute, fetchAllCharacterAttributes } from './backendCalls/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
 
 function Traits() {
@@ -200,7 +200,7 @@ function Traits() {
         ...newData[rowIndex],
         [column]: value
       };
-      updateCharacterAttributes(newData[rowIndex].pokemon_id, newData[rowIndex], user.user_google_id);
+      updateCharacterAttribute(newData[rowIndex].pokemon_id, column, value);
       return newData;
     });
   };

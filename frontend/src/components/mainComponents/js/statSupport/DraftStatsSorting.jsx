@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchCharacterStats } from '../backendCalls/http.js';
+import { fetchDraftStats } from '../backendCalls/http.js';
 
 function DraftStatsSorting({ events, teams, players, regions, setData, moveData, allPokemon, setPopUpText }) {
     const [selectedEvent, setSelectedEvent] = useState("");
@@ -20,7 +20,7 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
             beforeAfter: beforeAfter ? beforeAfter : null
         }
         
-        fetchCharacterStats(queryContext)
+        fetchDraftStats(queryContext)
             .then(data => {
                 // Process the data without modifying moveData directly
                 const processedData = data.map(row => {
@@ -55,7 +55,7 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
                 setData(processedData);
             })
             .catch(error => {
-                console.error("Error fetching character stats:", error);
+                console.error("Error fetching draft stats:", error);
             });
     }, [selectedEvent, selectedRegion, selectedTeam, selectedPlayer, selectedDate, beforeAfter, setData]);
   

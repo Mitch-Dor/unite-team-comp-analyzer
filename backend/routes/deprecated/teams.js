@@ -216,18 +216,18 @@ module.exports = function (app, database, adminGoogleId) {
     async function checkVerifiedUser(userGoogleId) {
         return new Promise((resolve, reject) => {
             database.teams.getAllVerifiedUsers()
-                .then(users => {
-                    const isVerified = users.some(user => user.user_google_id === userGoogleId);
-                    if (!isVerified) {
-                        reject({ status: 402, message: 'User not verified' });
-                    } else {
-                        resolve(true);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error checking verified user:', error);
-                    reject({ status: 401, message: 'Database error' });
-                });
+            .then(users => {
+                const isVerified = users.some(user => user.user_google_id === userGoogleId);
+                if (!isVerified) {
+                    reject({ status: 402, message: 'User not verified' });
+                } else {
+                    resolve(true);
+                }
+            })
+            .catch(error => {
+                console.error('Error checking verified user:', error);
+                reject({ status: 401, message: 'Database error' });
+            });
         });
     }
 };

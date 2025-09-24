@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-module.exports = function (app, database, io) {
+module.exports = function (app, middleware, database, io) {
     // Get all active rooms
     app.get('/GETrooms', (req, res) => {
         try {
