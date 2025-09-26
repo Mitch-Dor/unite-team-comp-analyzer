@@ -46,7 +46,7 @@ function Stats() {
                 setEvents(fetchedEvents.sort((a, b) => a.event_name.localeCompare(b.event_name)));
                 setTeams(fetchedTeams.sort((a, b) => a.team_name.localeCompare(b.team_name)));
                 setPlayers(fetchedPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name)));
-                // Cumulate all the moves for each character
+                // Accumulate all the moves for each character
                 const cumulativeMoves = [];
                 const rawMovesData = [];
                 for (const character of uniquePokemon) {

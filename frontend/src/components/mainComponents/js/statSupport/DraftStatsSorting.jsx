@@ -22,18 +22,17 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
         
         fetchDraftStats(queryContext)
             .then(data => {
-                console.log(data);
                 // Process the data without modifying moveData directly
                 const processedData = data.map(row => {
                     // Create a deep copy of the row to avoid modifying the original
-                    const rowCopy = { ...row, movesets: [...row.movesets] };
+                    const rowCopy = { ...row, movesets: [...row.movesets || []] };
                     
                     // Find the corresponding moveObj but don't modify it
                     const moveObj = moveData.find(move => move.pokemon_name === row.pokemon_name);
-                    if (moveObj && row.movesets.length < moveObj.move_combos.length) {
+                    if (moveObj && (rowCopy.movesets === null || rowCopy.movesets.length < moveObj.move_combos.length)) {
                         // Add missing move combinations to the row's movesets
                         for (const moveCombo of moveObj.move_combos) {
-                            const found = row.movesets.some(moveSet => 
+                            const found = rowCopy.movesets.some(moveSet => 
                                 moveSet.move_1 === moveCombo[0] && moveSet.move_2 === moveCombo[1]
                             );
                             
@@ -52,13 +51,14 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
                     }
                     return rowCopy;
                 });
+                console.log(processedData);
                 // Use the processed data instead of the original
                 setData(processedData);
             })
             .catch(error => {
                 console.error("Error fetching draft stats:", error);
             });
-    }, [selectedEvent, selectedRegion, selectedTeam, selectedPlayer, selectedDate, beforeAfter, setData]);
+    }, [selectedEvent, selectedRegion, selectedTeam, selectedPlayer, selectedDate, beforeAfter, setData, moveData]);
   
     return (
         <div id="filterContainer">

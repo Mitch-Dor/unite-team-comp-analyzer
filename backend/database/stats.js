@@ -76,6 +76,8 @@ class Stats {
               json_build_object(
                 'move_1_id', move_1_id,
                 'move_2_id', move_2_id,
+                'move_1_name', move_1_name,
+                'move_2_name', move_2_name,
                 'moveset_count', moveset_count,
                 'moveset_wins', moveset_wins
               )
@@ -84,14 +86,16 @@ class Stats {
               SELECT
                 pick_pokemon_id,
                 move_1_id,
+                pm1.move_name as move_1_name,
                 move_2_id,
+                pm2.move_name as move_2_name,
                 COUNT(*) AS moveset_count,
                 SUM(CASE WHEN did_win THEN 1 ELSE 0 END) AS moveset_wins
               FROM picks_aggregate
-              GROUP BY pick_pokemon_id, move_1_id, move_2_id
+              LEFT JOIN pokemon_moves pm1 ON pm1.move_id = move_1_id
+              LEFT JOIN pokemon_moves pm2 ON pm2.move_id = move_2_id
+              GROUP BY pick_pokemon_id, move_1_id, move_2_id, move_1_name, move_2_name
             ) sub
-            LEFT JOIN pokemon_moves pm1 ON pm1.move_id = sub.move_1_id
-            LEFT JOIN pokemon_moves pm2 ON pm2.move_id = sub.move_2_id
             GROUP BY pick_pokemon_id
           )
           --++ Select The Final Results ++--
