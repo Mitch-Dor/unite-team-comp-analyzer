@@ -20,7 +20,7 @@ module.exports = function (app, middleware, database) {
     });
 
     app.put('/GETindividualBattleStats', (req, res) => {
-        database.stats.getIndividualBattleStats(req.body).then(data => {
+        database.stats.getIndividualBattleStats(req.body.minKills, req.body.minAssists, req.body.minDealt, req.body.minTaken, req.body.minHealed, req.body.minScored, req.body.lane, req.body.pokemon, req.body.move1, req.body.move2).then(data => {
             res.json(data);
         })
         .catch(error => {

@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import MatchDisplay from '../proMatchSupport/MatchDisplay';
 
 // Register the required chart components
 ChartJS.register(
@@ -286,123 +287,8 @@ function AllPokemonChart({ data, orderBy, totalData }) {
 // Display comps the pokemon appeared in that match the criteria. The comp is displayed with each team, their pokemon, 
 // and their moves represented with just the featured Pokemon having its data like kills listed with it. There must be a link to the VOD containing the match for VOD review.
 function MatchDisplaysChart({ data }) {
-  const team1 = [
-    { name: data.pokemon1_1, move_1: data.pokemon1_1_move_1, move_2: data.pokemon1_1_move_2 },
-    { name: data.pokemon1_2, move_1: data.pokemon1_2_move_1, move_2: data.pokemon1_2_move_2 },
-    { name: data.pokemon1_3, move_1: data.pokemon1_3_move_1, move_2: data.pokemon1_3_move_2 },
-    { name: data.pokemon1_4, move_1: data.pokemon1_4_move_1, move_2: data.pokemon1_4_move_2 },
-    { name: data.pokemon1_5, move_1: data.pokemon1_5_move_1, move_2: data.pokemon1_5_move_2 }
-  ];
-
-  const team2 = [
-    { name: data.pokemon2_1, move_1: data.pokemon2_1_move_1, move_2: data.pokemon2_1_move_2 },
-    { name: data.pokemon2_2, move_1: data.pokemon2_2_move_1, move_2: data.pokemon2_2_move_2 },
-    { name: data.pokemon2_3, move_1: data.pokemon2_3_move_1, move_2: data.pokemon2_3_move_2 },
-    { name: data.pokemon2_4, move_1: data.pokemon2_4_move_1, move_2: data.pokemon2_4_move_2 },
-    { name: data.pokemon2_5, move_1: data.pokemon2_5_move_1, move_2: data.pokemon2_5_move_2 }
-  ];
-
-  const keyPokemon = { name: data.key_pokemon, kills: data.kills, assists: data.assists, scored: data.scored, dealt: data.dealt, taken: data.taken, healed: data.healed, position: data.position }
-
-  const vod_url = data.vod_url;
-
   return (
-  <div>
-    <div className="comp-card">
-      <div className="comp-content">
-        <div className="team-comp" style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
-          <div className="draft-row">
-            <div className="base-data">
-              {team1.map((pokemon, i) => {
-                return (
-                  <div className="draft-row-number-headshot-container" key={i}>
-                    <img 
-                      src={`/assets/Draft/headshots/${pokemon.name}.png`} 
-                      alt={pokemon.name} 
-                      className="pokemon-icon"
-                    />
-                    <div className="pokemon-name">
-                      {pokemon.name}
-                      <div className="move-icons">
-                        <img 
-                          src={`/assets/Draft/moves/${pokemon.name}_${pokemon.move_1.replace(/ /g, '_')}.png`}
-                          alt={pokemon.move_1}
-                          className="move-icon"
-                        />
-                        <img 
-                          src={`/assets/Draft/moves/${pokemon.name}_${pokemon.move_2.replace(/ /g, '_')}.png`}
-                          alt={pokemon.move_2}
-                          className="move-icon"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="draft-row">
-            <div className="base-data">
-              {team2.map((pokemon, i) => {
-                return (
-                  <div className="draft-row-number-headshot-container" key={i}>
-                    <img 
-                      src={`/assets/Draft/headshots/${pokemon.name}.png`} 
-                      alt={pokemon.name} 
-                      className="pokemon-icon"
-                    />
-                    <div className="pokemon-name">
-                      {pokemon.name}
-                      <div className="move-icons">
-                        <img 
-                          src={`/assets/Draft/moves/${pokemon.name}_${pokemon.move_1.replace(/ /g, '_')}.png`}
-                          alt={pokemon.move_1}
-                          className="move-icon"
-                        />
-                        <img 
-                          src={`/assets/Draft/moves/${pokemon.name}_${pokemon.move_2.replace(/ /g, '_')}.png`}
-                          alt={pokemon.move_2}
-                          className="move-icon"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="keyPokemonStats">
-            <img 
-              src={`/assets/Draft/headshots/${keyPokemon.name}.png`} 
-              alt={keyPokemon.name} 
-              className="pokemon-icon"
-            />
-            <div className="statNumber kills">{keyPokemon.kills}</div>
-            <div className="statNumber assists">{keyPokemon.assists}</div>
-            <div className="statNumber scored">{keyPokemon.scored}</div>
-            <div className="statBar dealt">
-              <div className="statBarFill red" style={{width: '100%'}}></div>
-              <span>{keyPokemon.dealt}</span>
-            </div>
-            <div className="statBar taken">
-              <div className="statBarFill blue" style={{width: '100%'}}></div>
-              <span>{keyPokemon.taken}</span>
-            </div>
-            <div className="statBar healed">
-              <div className="statBarFill green" style={{width: '100%'}}></div>
-              <span>{keyPokemon.healed}</span>
-            </div>
-            <div className={`positionIndicator ${keyPokemon.position}`}></div>
-            <div className="event-vod" style={{paddingLeft: '0', height: '34px'}}>
-              <a href={vod_url} target="_blank" rel="noopener noreferrer">
-                <img src="/assets/icons/youtube.png" alt="VOD" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <MatchDisplay match={data} advancedDataMode={true} />
 );
 
 }
