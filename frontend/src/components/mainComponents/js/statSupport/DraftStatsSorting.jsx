@@ -16,12 +16,13 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
             region: selectedRegion ? selectedRegion : null, // Region is just a string
             team: selectedTeam ? selectedTeam.team_id : null,
             player: selectedPlayer ? selectedPlayer.player_id : null,
-            date: selectedDate ? selectedDate : null,
-            beforeAfter: beforeAfter ? beforeAfter : null
+            dateLower: selectedDate ? selectedDate : null,
+            dateUpper: selectedDate ? selectedDate : null
         }
         
         fetchDraftStats(queryContext)
             .then(data => {
+                console.log(data);
                 // Process the data without modifying moveData directly
                 const processedData = data.map(row => {
                     // Create a deep copy of the row to avoid modifying the original

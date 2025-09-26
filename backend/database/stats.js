@@ -8,9 +8,134 @@ class Stats {
     this.db = db;
   }
 
-  getDraftStats(event, region, team, player, date, beforeAfter){
-    
+  async getDraftStats(event, region, team, player, dateLower, dateUpper) {
+    return await new Promise((resolve, reject) => {
+      try {
+        const sql = `
+          --++ Make A Base Table With All Comps Minus Picks And Bans (Because Those Are Many To One Relationships) ++--
+          WITH all_comps AS (
+            SELECT e.event_id, e.event_date, m.match_id, c.comp_id, c.did_win, t.team_id, t.team_region
+            FROM comps c
+            LEFT JOIN matches m ON c.comp_id IN (m.comp_1_id, m.comp_2_id)
+            LEFT JOIN professional_teams t ON c.team_id = t.team_id
+            LEFT JOIN professional_sets ps ON m.set_id = ps.set_id
+            LEFT JOIN events e ON ps.event_id = e.event_id
+            WHERE ($1::int IS NULL OR e.event_id = $1)
+              AND ($2::text IS NULL OR t.team_region = $2)
+              AND ($3::int IS NULL OR t.team_id = $3)
+              AND ($5::date IS NULL OR e.event_date >= $5)
+              AND ($6::date IS NULL OR e.event_date <= $6)
+          ),
+          --++ Make A Table With All Picks Minus Bans (Because Joining Both Picks And Bans Will Multiply The Rows) ++--
+          picks_aggregate AS (
+            SELECT ac.comp_id, p.pokemon_id AS pick_pokemon_id, p.move_1_id, p.move_2_id, ac.did_win, p.pick_position
+            FROM all_comps ac
+            LEFT JOIN picks p ON p.comp_id = ac.comp_id
+            WHERE ($4::int IS NULL OR p.player_id = $4)
+          ),
+          --++ Make A Table With All Bans Minus Picks (Because Joining Both Picks And Bans Will Multiply The Rows) ++--
+          bans_aggregate AS (
+            SELECT ac.comp_id, b.pokemon_id AS ban_pokemon_id, b.ban_position
+            FROM all_comps ac
+            LEFT JOIN bans b ON b.comp_id = ac.comp_id
+            ---- Filter Bans By Player By Making Sure The Player Was On The Team That Banned The Pokemon ----
+            WHERE EXISTS (
+              SELECT 1
+              FROM picks p
+              WHERE p.comp_id = ac.comp_id AND ($4::int IS NULL OR p.player_id = $4)
+            )
+          ),
+          --++ Make A Table With The Total Number Of Matches (Can't Do COUNT(*) Because Our Base Is Of Comps, Not Matches) ++--
+          total_matches AS (
+            SELECT COUNT(DISTINCT match_id) AS total_matches
+            FROM all_comps
+          ),
+          --++ Make A Table With The Total Number Of Picks And Wins For Each Pokemon ++--
+          pick_counts AS (
+            SELECT pick_pokemon_id, COUNT(*) AS total_picks, SUM(CASE WHEN did_win THEN 1 ELSE 0 END) AS total_pick_wins
+            FROM picks_aggregate
+            GROUP BY pick_pokemon_id
+          ),
+          --++ Make A Table With The Total Number Of Bans For Each Pokemon ++--
+          ban_counts AS (
+            SELECT ban_pokemon_id, COUNT(*) AS total_bans
+            FROM bans_aggregate
+            GROUP BY ban_pokemon_id
+          ),
+          --++ Make A Table With The Total Number Of Picks For Each Position For Each Pokemon ++--
+          position_counts AS (
+            SELECT pick_pokemon_id, SUM(CASE WHEN pick_position = '1' THEN 1 ELSE 0 END) AS first_picks, SUM(CASE WHEN (pick_position = '2' OR pick_position = '3') THEN 1 ELSE 0 END) AS second_picks, SUM(CASE WHEN (pick_position = '4' OR pick_position = '5') THEN 1 ELSE 0 END) AS third_picks, SUM(CASE WHEN (pick_position = '6' OR pick_position = '7') THEN 1 ELSE 0 END) AS fourth_picks, SUM(CASE WHEN (pick_position = '8' OR pick_position = '9') THEN 1 ELSE 0 END) AS fifth_picks, SUM(CASE WHEN (pick_position = '10') THEN 1 ELSE 0 END) AS sixth_picks
+            FROM picks_aggregate
+            GROUP BY pick_pokemon_id
+          ),
+          --++ Make A Table With The Usage And Wins For Each Moveset For Each Pokemon ++--
+          moveset_counts AS (
+          SELECT
+            pick_pokemon_id,
+            json_agg(
+              json_build_object(
+                'move_1_id', move_1_id,
+                'move_2_id', move_2_id,
+                'moveset_count', moveset_count,
+                'moveset_wins', moveset_wins
+              )
+            ) AS movesets
+            FROM (
+              SELECT
+                pick_pokemon_id,
+                move_1_id,
+                move_2_id,
+                COUNT(*) AS moveset_count,
+                SUM(CASE WHEN did_win THEN 1 ELSE 0 END) AS moveset_wins
+              FROM picks_aggregate
+              GROUP BY pick_pokemon_id, move_1_id, move_2_id
+            ) sub
+            LEFT JOIN pokemon_moves pm1 ON pm1.move_id = sub.move_1_id
+            LEFT JOIN pokemon_moves pm2 ON pm2.move_id = sub.move_2_id
+            GROUP BY pick_pokemon_id
+          )
+          --++ Select The Final Results ++--
+          SELECT 
+            pchar.pokemon_id,
+            pchar.pokemon_name,
+            tm.total_matches,
+            pc.total_picks,
+            pc.total_pick_wins,
+            bc.total_bans,
+            posc.first_picks,
+            posc.second_picks,
+            posc.third_picks,
+            posc.fourth_picks,
+            posc.fifth_picks,
+            posc.sixth_picks,
+            mc.movesets
+          FROM playable_characters pchar
+          LEFT JOIN pick_counts pc ON pchar.pokemon_id = pc.pick_pokemon_id
+          LEFT JOIN ban_counts bc ON pchar.pokemon_id = bc.ban_pokemon_id
+          LEFT JOIN position_counts posc ON pchar.pokemon_id = posc.pick_pokemon_id
+          LEFT JOIN moveset_counts mc ON pchar.pokemon_id = mc.pick_pokemon_id
+          CROSS JOIN total_matches tm
+        `;
+  
+        const params = [event, region, team, player, dateLower, dateUpper];
+  
+        this.db.query(sql, params, (err, res) => {
+          if (err) {
+            console.error("SQL Error in draft stats:", err.message);
+            reject(err);
+          } else {
+            resolve(res.rows);
+          }
+        });
+      } catch (error) {
+        console.error("Error getting draft stats", error);
+        reject(error);
+      }
+    });
   }
+  
+  
+  
 
   // Get overall battle stats
   async getOverallBattleStats() {

@@ -1,6 +1,6 @@
 module.exports = function (app, middleware, database) {
     app.put('/GETdraftStats', (req, res) => {
-        database.stats.getDraftStats(req.body).then(data => {
+        database.stats.getDraftStats(req.body.event, req.body.region, req.body.team, req.body.player, req.body.dateLower, req.body.dateUpper).then(data => {
             res.json(data);
         })
         .catch(error => {
