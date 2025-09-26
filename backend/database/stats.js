@@ -47,8 +47,14 @@ class Stats {
           ),
           --++ Make A Table With The Total Number Of Matches (Can't Do COUNT(*) Because Our Base Is Of Comps, Not Matches) ++--
           total_matches AS (
-            SELECT COUNT(DISTINCT match_id) AS total_matches
-            FROM all_comps
+            SELECT COUNT(DISTINCT ac.match_id) AS total_matches
+            FROM all_comps ac
+            ---- Filter Total Matches By Player By Making Sure The Player was Present In The Match ----
+            WHERE EXISTS (
+              SELECT 1
+              FROM picks p
+              WHERE p.comp_id = ac.comp_id AND ($4::int IS NULL OR p.player_id = $4)
+            )
           ),
           --++ Make A Table With The Total Number Of Picks And Wins For Each Pokemon ++--
           pick_counts AS (
@@ -64,7 +70,7 @@ class Stats {
           ),
           --++ Make A Table With The Total Number Of Picks For Each Position For Each Pokemon ++--
           position_counts AS (
-            SELECT pick_pokemon_id, SUM(CASE WHEN pick_position = '1' THEN 1 ELSE 0 END) AS first_picks, SUM(CASE WHEN (pick_position = '2' OR pick_position = '3') THEN 1 ELSE 0 END) AS second_picks, SUM(CASE WHEN (pick_position = '4' OR pick_position = '5') THEN 1 ELSE 0 END) AS third_picks, SUM(CASE WHEN (pick_position = '6' OR pick_position = '7') THEN 1 ELSE 0 END) AS fourth_picks, SUM(CASE WHEN (pick_position = '8' OR pick_position = '9') THEN 1 ELSE 0 END) AS fifth_picks, SUM(CASE WHEN (pick_position = '10') THEN 1 ELSE 0 END) AS sixth_picks
+            SELECT pick_pokemon_id, SUM(CASE WHEN pick_position = '1' THEN 1 ELSE 0 END) AS round_1_picks, SUM(CASE WHEN (pick_position = '2' OR pick_position = '3') THEN 1 ELSE 0 END) AS round_2_picks, SUM(CASE WHEN (pick_position = '4' OR pick_position = '5') THEN 1 ELSE 0 END) AS round_3_picks, SUM(CASE WHEN (pick_position = '6' OR pick_position = '7') THEN 1 ELSE 0 END) AS round_4_picks, SUM(CASE WHEN (pick_position = '8' OR pick_position = '9') THEN 1 ELSE 0 END) AS round_5_picks, SUM(CASE WHEN (pick_position = '10') THEN 1 ELSE 0 END) AS round_6_picks
             FROM picks_aggregate
             GROUP BY pick_pokemon_id
           ),
@@ -100,18 +106,18 @@ class Stats {
           )
           --++ Select The Final Results ++--
           SELECT 
-            pchar.pokemon_id,
+            pchar.pokemon_id::INT,
             pchar.pokemon_name,
-            tm.total_matches,
-            pc.total_picks,
-            pc.total_pick_wins,
-            bc.total_bans,
-            posc.first_picks,
-            posc.second_picks,
-            posc.third_picks,
-            posc.fourth_picks,
-            posc.fifth_picks,
-            posc.sixth_picks,
+            tm.total_matches::INT,
+            pc.total_picks::INT,
+            pc.total_pick_wins::INT,
+            bc.total_bans::INT,
+            posc.round_1_picks::INT,
+            posc.round_2_picks::INT,
+            posc.round_3_picks::INT,
+            posc.round_4_picks::INT,
+            posc.round_5_picks::INT,
+            posc.round_6_picks::INT,
             mc.movesets
           FROM playable_characters pchar
           LEFT JOIN pick_counts pc ON pchar.pokemon_id = pc.pick_pokemon_id

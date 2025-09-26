@@ -63,7 +63,7 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
             case 'win':
               return [data.win_rate];
             case 'pickOrder':
-              return [((data.pick_round_1 / data.picks) * 100.0).toFixed(1), ((data.pick_round_2 / data.picks) * 100.0).toFixed(1), ((data.pick_round_3 / data.picks) * 100.0).toFixed(1), ((data.pick_round_4 / data.picks) * 100.0).toFixed(1), ((data.pick_round_5 / data.picks) * 100.0).toFixed(1), ((data.pick_round_6 / data.picks) * 100.0).toFixed(1)];
+              return [data.round_1_pick_rate, data.round_2_pick_rate, data.round_3_pick_rate, data.round_4_pick_rate, data.round_5_pick_rate, data.round_6_pick_rate];
             default:
               return [data.ban_rate, data.pick_rate, data.presence, data.win_rate];
           }
@@ -142,13 +142,13 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
           label: function(context) {
             switch(context.label) {
               case "Ban Rate":
-                return `${context.label}: ${data.bans} bans over ${data.total_matches} total matches (${context.raw}%)`;
+                return `${context.label}: ${data.total_bans} bans over ${data.total_matches} total matches (${context.raw}%)`;
               case "Pick Rate":
-                return `${context.label}: ${data.picks} picks over ${data.total_matches} total matches (${context.raw}%)`;
+                return `${context.label}: ${data.total_picks} picks over ${data.total_matches} total matches (${context.raw}%)`;
               case "Presence":
-                return `${context.label}: ${parseInt(data.picks, 10) + parseInt(data.bans, 10)} picks/bans over ${data.total_matches} total matches (${context.raw}%)`;
+                return `${context.label}: ${data.total_picks + data.total_bans} picks/bans over ${data.total_matches} total matches (${context.raw}%)`;
               case "Win Rate":
-                return `${context.label}: ${data.wins} wins over ${data.picks} total picks (${context.raw}%)`;
+                return `${context.label}: ${data.total_pick_wins} wins over ${data.total_picks} total picks (${context.raw}%)`;
               default:
                 return `${context.dataset.label}: ${context.raw}%`;
             }
@@ -156,17 +156,17 @@ function BaseDataChart({ data, orderBy, setShowPokemonData }) {
         } : {
           label: function(context) {
             const roundMap = {
-              'Round 1': { count: data.pick_round_1, label: 'round 1' },
-              'Round 2': { count: data.pick_round_2, label: 'round 2' },
-              'Round 3': { count: data.pick_round_3, label: 'round 3' },
-              'Round 4': { count: data.pick_round_4, label: 'round 4' },
-              'Round 5': { count: data.pick_round_5, label: 'round 5' },
-              'Round 6': { count: data.pick_round_6, label: 'round 6' },
+              'Round 1': { count: data.round_1_pick_rate, label: 'round 1' },
+              'Round 2': { count: data.round_2_pick_rate, label: 'round 2' },
+              'Round 3': { count: data.round_3_pick_rate, label: 'round 3' },
+              'Round 4': { count: data.round_4_pick_rate, label: 'round 4' },
+              'Round 5': { count: data.round_5_pick_rate, label: 'round 5' },
+              'Round 6': { count: data.round_6_pick_rate, label: 'round 6' },
             };
             
             const roundInfo = roundMap[context.label];
             if (roundInfo) {
-              return `${context.label}: ${roundInfo.count} ${roundInfo.label} picks over ${data.picks} total picks (${context.raw}%)`;
+              return `${context.label}: ${roundInfo.count} ${roundInfo.label} picks over ${data.total_picks} total picks (${context.raw}%)`;
             }
             return `${context.dataset.label}: ${context.raw}`;
           }
@@ -213,8 +213,8 @@ function PokemonDataChart({ data, setShowPokemonData }) {
         for (let i = 0; i < data.movesets.length; i++) {
           const moveset = data.movesets[i];
           if (moveset) {
-            baseLabels.push(`Pick Rate ${moveset.move_1} + ${moveset.move_2}`);
-            baseLabels.push(`Win Rate ${moveset.move_1} + ${moveset.move_2}`);
+            baseLabels.push(`Pick Rate ${moveset.move_1_name} + ${moveset.move_2_name}`);
+            baseLabels.push(`Win Rate ${moveset.move_1_name} + ${moveset.move_2_name}`);
           }
         }
       }
@@ -230,12 +230,12 @@ function PokemonDataChart({ data, setShowPokemonData }) {
             data.pick_rate, 
             data.presence, 
             data.win_rate,
-           ((data.pick_round_1 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_2 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_3 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_4 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_5 / data.picks) * 100).toFixed(1), 
-           ((data.pick_round_6 / data.picks) * 100).toFixed(1)
+            data.round_1_pick_rate, 
+            data.round_2_pick_rate, 
+            data.round_3_pick_rate, 
+            data.round_4_pick_rate, 
+            data.round_5_pick_rate, 
+            data.round_6_pick_rate
           ];
           
           // Add moveset data only if they exist
@@ -243,16 +243,8 @@ function PokemonDataChart({ data, setShowPokemonData }) {
             for (let i = 0; i < data.movesets.length; i++) {
               const moveset = data.movesets[i];
               if (moveset) {
-                // Calculate pick rate for this moveset
-                const pickRate = data.picks > 0 ? 
-                  parseFloat(((moveset.requested_usages / data.picks) * 100).toFixed(1)) : 0;
-                
-                // Calculate win rate for this moveset
-                const winRate = moveset.requested_usages > 0 ? 
-                  parseFloat(((moveset.requested_wins / moveset.requested_usages) * 100).toFixed(1)) : 0;
-                
-                baseData.push(pickRate);
-                baseData.push(winRate);
+                baseData.push(moveset.pick_rate);
+                baseData.push(moveset.win_rate);
               }
             }
           }
@@ -319,40 +311,40 @@ function PokemonDataChart({ data, setShowPokemonData }) {
           label: function(context) {
             switch(context.label) {
               case "Ban Rate":
-                return `${context.label}: ${data.bans} bans over ${data.total_matches} total matches (${context.raw}%)`;
+                return `${context.label}: ${data.total_bans} bans over ${data.total_matches} total matches (${context.raw}%)`;
               case "Pick Rate":
-                return `${context.label}: ${data.picks} picks over ${data.total_matches} total matches (${context.raw}%)`;
+                return `${context.label}: ${data.total_picks} picks over ${data.total_matches} total matches (${context.raw}%)`;
               case "Presence":
-                return `${context.label}: ${parseInt(data.picks, 10) + parseInt(data.bans, 10)} picks/bans over ${data.total_matches} total matches (${context.raw}%)`;
+                return `${context.label}: ${data.total_picks + data.total_bans} picks/bans over ${data.total_matches} total matches (${context.raw}%)`;
               case "Win Rate":
-                return `${context.label}: ${data.wins} wins over ${data.picks} total picks (${context.raw}%)`;
+                return `${context.label}: ${data.total_pick_wins} wins over ${data.total_picks} total picks (${context.raw}%)`;
               case "Round 1":
-                return `${context.label}: ${data.pick_round_1} round 1 picks over ${data.picks} total picks (${context.raw}%)`;
+                return `${context.label}: ${data.round_1_picks} round 1 picks over ${data.total_picks} total picks (${context.raw}%)`;
               case "Round 2":
-                return `${context.label}: ${data.pick_round_2} round 2 picks over ${data.picks} total picks (${context.raw}%)`;
+                return `${context.label}: ${data.round_2_picks} round 2 picks over ${data.total_picks} total picks (${context.raw}%)`;
               case "Round 3":
-                return `${context.label}: ${data.pick_round_3} round 3 picks over ${data.picks} total picks (${context.raw}%)`;
+                return `${context.label}: ${data.round_3_picks} round 3 picks over ${data.total_picks} total picks (${context.raw}%)`;
               case "Round 4":
-                return `${context.label}: ${data.pick_round_4} round 4 picks over ${data.picks} total picks (${context.raw}%)`;
+                return `${context.label}: ${data.round_4_picks} round 4 picks over ${data.total_picks} total picks (${context.raw}%)`;
               case "Round 5":
-                return `${context.label}: ${data.pick_round_5} round 5 picks over ${data.picks} total picks (${context.raw}%)`;
+                return `${context.label}: ${data.round_5_picks} round 5 picks over ${data.total_picks} total picks (${context.raw}%)`;
               case "Round 6":
-                return `${context.label}: ${data.pick_round_6} round 6 picks over ${data.picks} total picks (${context.raw}%)`;
+                return `${context.label}: ${data.round_6_picks} round 6 picks over ${data.total_picks} total picks (${context.raw}%)`;
               default:
                 // Check if this is a moveset tooltip
                 if (context.label.startsWith('Pick Rate ')) {
                   // Find the moveset data
                   const moveName = context.label.replace('Pick Rate ', '');
-                  const movesetData = data.movesets.find(m => `${m.move_1} + ${m.move_2}` === moveName);
+                  const movesetData = data.movesets.find(m => `${m.move_1_name} + ${m.move_2_name}` === moveName);
                   if (movesetData) {
-                    return `${context.label}: ${movesetData.requested_usages} picks over ${data.picks} total picks (${context.raw}%)`;
+                    return `${context.label}: ${movesetData.moveset_count} picks over ${data.total_picks} total picks (${context.raw}%)`;
                   }
                 } else if (context.label.startsWith('Win Rate ')) {
                   // Find the moveset data
                   const moveName = context.label.replace('Win Rate ', '');
-                  const movesetData = data.movesets.find(m => `${m.move_1} + ${m.move_2}` === moveName);
+                  const movesetData = data.movesets.find(m => `${m.move_1_name} + ${m.move_2_name}` === moveName);
                   if (movesetData) {
-                    return `${context.label}: ${movesetData.requested_wins} wins over ${movesetData.requested_usages} picks (${context.raw}%)`;
+                    return `${context.label}: ${movesetData.moveset_wins} wins over ${movesetData.moveset_count} picks (${context.raw}%)`;
                   }
                 }
                 return `${context.label}: ${context.raw}%`;
