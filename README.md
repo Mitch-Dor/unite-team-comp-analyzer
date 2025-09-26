@@ -52,14 +52,14 @@ SELECT SETVAL(
 ```
 ```
 SELECT SETVAL(
-  pg_get_serial_sequence('professional_comps', 'comp_id'),
-  (SELECT MAX(comp_id) FROM professional_comps)
+  pg_get_serial_sequence('comps', 'comp_id'),
+  (SELECT MAX(comp_id) FROM comps)
 );
 ```
 ```
 SELECT SETVAL(
-  pg_get_serial_sequence('professional_matches', 'match_id'),
-  (SELECT MAX(match_id) FROM professional_matches)
+  pg_get_serial_sequence('matches', 'match_id'),
+  (SELECT MAX(match_id) FROM matches)
 );
 ```
 ```

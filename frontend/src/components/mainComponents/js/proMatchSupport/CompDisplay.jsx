@@ -55,7 +55,20 @@ function CompDisplay({ picks, bans, team_name, team_region, did_win, advancedDat
                         />
                         </div>
                     </div>
-                    <div className="player-name" title={pick.player_name || '—'}>{pick.player_name || '—'}</div>
+                    <div className="player-name" title={
+                        pick.player_name
+                            ? pick.player_other_names
+                                ? `${pick.player_name} (${pick.player_other_names})`
+                                : pick.player_name
+                            : '—'
+                    }>
+                        {pick.player_name
+                            ? pick.player_other_names
+                                ? `${pick.player_name} (${pick.player_other_names})`
+                                : pick.player_name
+                            : '—'
+                        }
+                    </div>
                 </div>
                 {pick.dealt && advancedDataMode && /* pick.dealt not being 0 indicates that nothing else is 0 */
                     <div className="stats-row">

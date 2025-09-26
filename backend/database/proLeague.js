@@ -28,7 +28,7 @@ class ProLeague {
     // Insert an event
     async insertEvent(name, date) {
         return new Promise((resolve, reject) => { 
-          const sql = 'INSERT INTO events (event_name, event_date) VALUES ($1, $2, $3) RETURNING event_id';
+          const sql = 'INSERT INTO events (event_name, event_date) VALUES ($1, $2) RETURNING event_id';
           this.db.query(sql, [name, date], function(err, result) {
             if (err) {
               reject(err);

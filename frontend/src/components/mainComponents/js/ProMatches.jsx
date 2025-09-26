@@ -7,47 +7,6 @@ import SetDisplay from './proMatchSupport/SetDisplay';
 import Disclaimer from '../../sideComponents/js/Disclaimer';
 import { useLocation } from 'react-router-dom';
 
-export function formatSet(formattedData) {
-  // Create an array of set objects. Each set object is an array of matches with the same set_id
-  const coreData = formattedData.reduce((acc, comp) => {
-    const setId = comp.set_id;
-    if (!acc[setId]) {
-      acc[setId] = [];
-    }
-    acc[setId].push(comp);
-    return acc;
-  }, {});
-  // Go through each set and count how many times each team won. The team with more wins is the winner of the set. Add this to the set object
-  const setWinnerData = Object.keys(coreData).map(setId => {
-    const set = coreData[setId];
-    // Which team is team1 and team2 can change so we need to count wins relative to team_name
-    const team1 = set[0].team1.name;
-    const team2 = set[0].team2.name;
-    let team1Wins = 0;
-    let team2Wins = 0;
-    for (const match of set) {
-      if ((match.team1.name === team1 && match.winningTeam === 1) || (match.team2.name === team1 && match.winningTeam === 2)) {
-        team1Wins++;
-      } else if ((match.team1.name === team2 && match.winningTeam === 1) || (match.team2.name === team2 && match.winningTeam === 2)) {
-        team2Wins++;
-      }
-    }
-    return {
-      matches: set, // Remove event, coreData, set_description, vod, set_id from each match object
-      winner: team1Wins > team2Wins ? team1 : team2,
-      team1_wins: team1Wins,
-      team2_wins: team2Wins,
-      set_description: set[0].set_description,
-      vod: set[0].vod,
-      set_event: set[0].event,
-      set_date: set[0].matchDate,
-      set_id: set[0].set_id
-    } 
-  })
-
-  return setWinnerData;
-}
-
 function ProMatches() {
   const [coreData, setCoreData] = useState([]);
   const [loading, setLoading] = useState(true);

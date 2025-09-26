@@ -11,7 +11,7 @@ module.exports = function (app, middleware, database) {
     });
 
     app.post('/POSTset', middleware.verifiedUserAuth, (req, res) => {
-        database.comps.insertSet(req.body.setData).then(data => {
+        database.comps.insertSet(req.body.setData, req.body.nullMatches, req.body.nullStats).then(data => {
             res.json(data);
         })
         .catch(error => {

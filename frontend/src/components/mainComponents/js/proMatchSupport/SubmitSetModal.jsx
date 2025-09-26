@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
 import CustomDropdown from './CustomDropdown';
-import { formatSet } from '../ProMatches';
 
 function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers, user }) {
     const [setInsertion, setSetInsertion] = useState(false);
@@ -22,14 +21,23 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
             }
             setShowSubmitForm(false);
         });
+
+        // const timer = setTimeout(() => {
+        //     const savedSet = {};
+        //     setSetInsertion(savedSet);
+        // }, 5000);
+
+        // return () => clearTimeout(timer);
     }, []);
+
+    // useEffect(() => {
+    //     console.log(setInsertion);
+    // }, [setInsertion]);
+      
   
     // Function to submit the comp
     function submitComp() {
-
-        // Format the data and do error checking
-        let formattedData = [];
-        let error = "Missing Fields:";
+        let errorMsg = "Missing Fields:";
         let errorCount = 0;
         let i = 1;
 
@@ -49,218 +57,134 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
                 break;
         }
 
-        function checkNotDefaultMatch(match) {
-            for (let j=0; j<2; j++){
-                for(let i=0; i<24; i++){
-                    if (i === 1 && match[j][i] !== false) {
-                        return true;
-                    }
-                    if(match[j][i] !== null && i !== 1){
-                        return true;
-                    }
-                }
-            }
-            if(match[3] !== null){
-                return false;
-            }
-            return false;
-        }
-
         function setCheck() {
-            const fpBans = [1, 3];
-            const spBans = [2, 4];
-            const fpPicks = [1, 4, 5, 8, 9];
-            const spPicks = [2, 3, 6, 7, 10];
+            // Check for null values
+            /// Event and Set Data
+            checkNull(setInsertion.event_date, "Event Date");
+            checkNull(setInsertion.event_name, "Event Name");
+            checkNull(setInsertion.event_id, "Event ID");
+            checkNull(setInsertion.set_descriptor, "Set Descriptor");
+            checkNull(setInsertion.set_score[0].team_id, "Set Score[0] Team ID");
+            checkNull(setInsertion.set_score[1].team_id, "Set Score[1] Team ID");
+            checkNull(setInsertion.set_score[0].team_name, "Set Score[0] Team Name");
+            checkNull(setInsertion.set_score[1].team_name, "Set Score[1] Team Name");
+            checkNull(setInsertion.set_score[0].wins, "Set Score[0] Wins");
+            checkNull(setInsertion.set_score[1].wins, "Set Score[1] Wins");
+            checkNull(setInsertion.set_winner.team_id, "Set Winner Team ID");
+            checkNull(setInsertion.set_winner.team_name, "Set Winner Team Name");
 
-            // Check if setInsertion exists and has the required length
-            if (!setInsertion || setInsertion.length < 7) {
-                error += "\n" + "Invalid set data structure";
-                errorCount++;
-            }
-
-            // Check if event data exists
-            if (!setInsertion[5] || setInsertion[5] === null) {
-                error += "\n" + "Event data is missing";
-                errorCount++;
-            }
-
-            // Format the data in a way that's easy to insert into the comps page and do null checks
-            for (let j = 0; j < 5; j++) {
-                const match = setInsertion[j];
-                if (checkNotDefaultMatch(match)) {
-                    let matchData = {
-                        team1: match[0],
-                        team2: match[1],
-                        winner: match[2]
+            let nullMatches = [];
+            let nullStats = [];
+            
+            /// Match Data
+            for (let i = 0; i < 5; i++) {
+                // Make sure the match is not null
+                const backupErrorCount = errorCount;
+                const backupErrorMsg = errorMsg;
+                checkNull(setInsertion.matches[i].match_winner_id, "Match " + (i+1) + " Winner ID");
+                checkNull(setInsertion.matches[i].match_winner_text, "Match " + (i+1) + " Winner Text");
+                checkNull(setInsertion.matches[i].team1_id, "Match " + (i+1) + " Team 1 ID");
+                checkNull(setInsertion.matches[i].team2_id, "Match " + (i+1) + " Team 2 ID");
+                checkNull(setInsertion.matches[i].team1_name, "Match " + (i+1) + " Team 1 Name");
+                checkNull(setInsertion.matches[i].team2_name, "Match " + (i+1) + " Team 2 Name");
+                checkNull(setInsertion.matches[i].firstPick, "Match " + (i+1) + " First Pick", true);
+                checkNull(setInsertion.matches[i].team1_region, "Match " + (i+1) + " Team 1 Region");
+                checkNull(setInsertion.matches[i].team2_region, "Match " + (i+1) + " Team 2 Region");
+                checkNull(setInsertion.matches[i].match_vod_url, "Match " + (i+1) + " Match VOD URL");
+                // Ban Data
+                for (let j = 0; j < 3; j++) {
+                    checkNull(setInsertion.matches[i].team1_bans[j].pokemon_id, "Match " + (i+1) + " Team 1 Ban " + (j+1) + " Pokemon ID");
+                    checkNull(setInsertion.matches[i].team1_bans[j].pokemon_name, "Match " + (i+1) + " Team 1 Ban " + (j+1) + " Pokemon Name");
+                    checkNull(setInsertion.matches[i].team1_bans[j].ban_position, "Match " + (i+1) + " Team 1 Ban " + (j+1) + " Ban Position");
+                    checkNull(setInsertion.matches[i].team2_bans[j].pokemon_id, "Match " + (i+1) + " Team 2 Ban " + (j+1) + " Pokemon ID");
+                    checkNull(setInsertion.matches[i].team2_bans[j].pokemon_name, "Match " + (i+1) + " Team 2 Ban " + (j+1) + " Pokemon Name");
+                    checkNull(setInsertion.matches[i].team2_bans[j].ban_position, "Match " + (i+1) + " Team 2 Ban " + (j+1) + " Ban Position");
+                }
+                // Pick Data
+                for (let j = 0; j < 5; j++) {
+                    checkNull(setInsertion.matches[i].team1_picks[j].pokemon_id, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Pokemon ID");
+                    checkNull(setInsertion.matches[i].team1_picks[j].pokemon_name, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Pokemon Name");
+                    checkNull(setInsertion.matches[i].team1_picks[j].pick_position, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Pick Position");
+                    checkNull(setInsertion.matches[i].team1_picks[j].move_1_id, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Move 1 ID");
+                    checkNull(setInsertion.matches[i].team1_picks[j].move_1_name, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Move 1 Name");
+                    checkNull(setInsertion.matches[i].team1_picks[j].move_2_id, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Move 2 ID");
+                    checkNull(setInsertion.matches[i].team1_picks[j].move_2_name, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Move 2 Name");
+                    checkNull(setInsertion.matches[i].team1_picks[j].player_id, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Player ID");
+                    checkNull(setInsertion.matches[i].team1_picks[j].player_name, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Player Name");
+                    checkNull(setInsertion.matches[i].team1_picks[j].position_played, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Stats Position Played");
+                    checkNull(setInsertion.matches[i].team2_picks[j].pokemon_id, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Pokemon ID");
+                    checkNull(setInsertion.matches[i].team2_picks[j].pokemon_name, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Pokemon Name");
+                    checkNull(setInsertion.matches[i].team2_picks[j].pick_position, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Pick Position");
+                    checkNull(setInsertion.matches[i].team2_picks[j].move_1_id, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Move 1 ID");
+                    checkNull(setInsertion.matches[i].team2_picks[j].move_1_name, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Move 1 Name");
+                    checkNull(setInsertion.matches[i].team2_picks[j].move_2_id, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Move 2 ID");
+                    checkNull(setInsertion.matches[i].team2_picks[j].move_2_name, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Move 2 Name");
+                    checkNull(setInsertion.matches[i].team2_picks[j].player_id, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Player ID");
+                    checkNull(setInsertion.matches[i].team2_picks[j].player_name, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Player Name");
+                    checkNull(setInsertion.matches[i].team2_picks[j].position_played, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Stats Position Played");
+                    // Optional Extra Stats (All Or Nothing)
+                    const backupErrorCount2 = errorCount;
+                    const backupErrorMsg2 = errorMsg;
+                    checkNull(setInsertion.matches[i].team1_picks[j].kills, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Stats Kills");
+                    checkNull(setInsertion.matches[i].team1_picks[j].assists, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Stats Assists");
+                    checkNull(setInsertion.matches[i].team1_picks[j].scored, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Stats Scored");
+                    checkNull(setInsertion.matches[i].team1_picks[j].dealt, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Stats Dealt");
+                    checkNull(setInsertion.matches[i].team1_picks[j].taken, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Stats Taken");
+                    checkNull(setInsertion.matches[i].team1_picks[j].healed, "Match " + (i+1) + " Team 1 Pick " + (j+1) + " Stats Healed");
+                    // None of the stats were filled, so they probably weren't provided
+                    if (errorCount-6 === backupErrorCount2) {
+                        errorCount = backupErrorCount2;
+                        errorMsg = backupErrorMsg2;
+                        nullStats.push({match: i, pick: j, team: 1});
+                    }
+                    const backupErrorCount3 = errorCount;
+                    const backupErrorMsg3 = errorMsg;
+                    checkNull(setInsertion.matches[i].team2_picks[j].kills, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Stats Kills");
+                    checkNull(setInsertion.matches[i].team2_picks[j].assists, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Stats Assists");
+                    checkNull(setInsertion.matches[i].team2_picks[j].scored, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Stats Scored");
+                    checkNull(setInsertion.matches[i].team2_picks[j].dealt, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Stats Dealt");
+                    checkNull(setInsertion.matches[i].team2_picks[j].taken, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Stats Taken");
+                    checkNull(setInsertion.matches[i].team2_picks[j].healed, "Match " + (i+1) + " Team 2 Pick " + (j+1) + " Stats Healed");
+                    // None of the stats were filled, so they probably weren't provided
+                    if (errorCount-6 === backupErrorCount3) {
+                        errorCount = backupErrorCount3;
+                        errorMsg = backupErrorMsg3;
+                        nullStats.push({match: i, pick: j, team: 2});
                     }
 
-                    // Check if team data exists
-                    if (!matchData.team1 || !matchData.team2) {
-                        error += "\n" + "Match " + (j + 1) + " is missing team data";
-                        errorCount++;
-                        continue;
-                    }
-
-                    // Group team1 and team2 Pokémon and bans for duplicate checking
-                    const allPokemonAndBans = [
-                        ...matchData.team1.slice(4, 9), // team1 Pokémon
-                        ...matchData.team2.slice(4, 9), // team2 Pokémon
-                        matchData.team1[2], matchData.team1[3], // team1 bans
-                        matchData.team2[2], matchData.team2[3]  // team2 bans
-                    ];
-                    if (new Set(allPokemonAndBans).size !== allPokemonAndBans.length) {
-                        error += "\n" + "Match " + (j + 1) + " has duplicate Pokémon or bans";
-                        errorCount++;
-                    }
-
-                    // Check if team names are equal
-                    if (matchData.team1[0]?.team_name === matchData.team2[0]?.team_name) {
-                        error += "\n" + "Match " + (j + 1) + " has identical team names";
-                        errorCount++;
-                    }
-
-                    let team1Data = {
-                        name: checkNull(matchData.team1[0]?.team_name, "team1TeamName", i),
-                        region: checkNull(matchData.team1[0]?.team_region, "team1TeamRegion", i),
-                        firstPick: checkNull(matchData.team1[1], "team1FirstPick", i),
-                        // One attribute like pokemon_name being present implies the other attributes are present
-                        bans: [checkNull(matchData.team1[2]?.pokemon_name, "team1Ban1", i), checkNull(matchData.team1[3]?.pokemon_name, "team1Ban2", i)],
-                        pokemon: [checkNull(matchData.team1[4]?.pokemon_name, "team1Pokemon1", i), checkNull(matchData.team1[5]?.pokemon_name, "team1Pokemon2", i), checkNull(matchData.team1[6]?.pokemon_name, "team1Pokemon3", i), checkNull(matchData.team1[7]?.pokemon_name, "team1Pokemon4", i), checkNull(matchData.team1[8]?.pokemon_name, "team1Pokemon5", i)],
-                        pokemon_moves: [checkNull(matchData.team1[9]?.move_name, "team1Pokemon1Move1", i), checkNull(matchData.team1[10]?.move_name, "team1Pokemon1Move2", i), checkNull(matchData.team1[11]?.move_name, "team1Pokemon2Move1", i), checkNull(matchData.team1[12]?.move_name, "team1Pokemon2Move2", i), checkNull(matchData.team1[13]?.move_name, "team1Pokemon3Move1", i), checkNull(matchData.team1[14]?.move_name, "team1Pokemon3Move2", i), checkNull(matchData.team1[15]?.move_name, "team1Pokemon4Move1", i), checkNull(matchData.team1[16]?.move_name, "team1Pokemon4Move2", i), checkNull(matchData.team1[17]?.move_name, "team1Pokemon5Move1", i), checkNull(matchData.team1[18]?.move_name, "team1Pokemon5Move2", i)],
-                        players: [checkNull(matchData.team1[19]?.player_name, "team1Player1", i), checkNull(matchData.team1[20]?.player_name, "team1Player2", i), checkNull(matchData.team1[21]?.player_name, "team1Player3", i), checkNull(matchData.team1[22]?.player_name, "team1Player4", i), checkNull(matchData.team1[23]?.player_name, "team1Player5", i)],
-                        pokemon_data: checkStats([matchData.team1[24], matchData.team1[25], matchData.team1[26], matchData.team1[27], matchData.team1[28]], j, 1)
-                    }
-                    let team2Data = {
-                        name: checkNull(matchData.team2[0]?.team_name, "team2TeamName", i),
-                        region: checkNull(matchData.team2[0]?.team_region, "team2TeamRegion", i),
-                        firstPick: checkNull(matchData.team2[1], "team2FirstPick", i),
-                        bans: [checkNull(matchData.team2[2]?.pokemon_name, "team2Ban1", i), checkNull(matchData.team2[3]?.pokemon_name, "team2Ban2", i)],
-                        pokemon: [checkNull(matchData.team2[4]?.pokemon_name, "team2Pokemon1", i), checkNull(matchData.team2[5]?.pokemon_name, "team2Pokemon2", i), checkNull(matchData.team2[6]?.pokemon_name, "team2Pokemon3", i), checkNull(matchData.team2[7]?.pokemon_name, "team2Pokemon4", i), checkNull(matchData.team2[8]?.pokemon_name, "team2Pokemon5", i)],
-                        pokemon_moves: [checkNull(matchData.team2[9]?.move_name, "team2Pokemon1Move1", i), checkNull(matchData.team2[10]?.move_name, "team2Pokemon1Move2", i), checkNull(matchData.team2[11]?.move_name, "team2Pokemon2Move1", i), checkNull(matchData.team2[12]?.move_name, "team2Pokemon2Move2", i), checkNull(matchData.team2[13]?.move_name, "team2Pokemon3Move1", i), checkNull(matchData.team2[14]?.move_name, "team2Pokemon3Move2", i), checkNull(matchData.team2[15]?.move_name, "team2Pokemon4Move1", i), checkNull(matchData.team2[16]?.move_name, "team2Pokemon4Move2", i), checkNull(matchData.team2[17]?.move_name, "team2Pokemon5Move1", i), checkNull(matchData.team2[18]?.move_name, "team2Pokemon5Move2", i)],
-                        players: [checkNull(matchData.team2[19]?.player_name, "team2Player1", i), checkNull(matchData.team2[20]?.player_name, "team2Player2", i), checkNull(matchData.team2[21]?.player_name, "team2Player3", i), checkNull(matchData.team2[22]?.player_name, "team2Player4", i), checkNull(matchData.team2[23]?.player_name, "team2Player5", i)],
-                        pokemon_data: checkStats([matchData.team2[24], matchData.team2[25], matchData.team2[26], matchData.team2[27], matchData.team2[28]], j, 2)
-                    }
-                    checkNull(matchData.winner, "winner", i);
-
-                    // Check first pick validation
-                    if (team1Data.firstPick === team2Data.firstPick) {
-                        error += "\n" + "Match " + i + " must have exactly one team as first pick";
-                        errorCount++;
-                    }
-
-                    // Check for duplicate moves for each Pokémon in team1
-                    for (let k = 9; k <= 18; k += 2) {
-                        if (matchData.team1[k] === matchData.team1[k + 1]) {
-                            error += "\n" + "Match " + (j + 1) + " has duplicate moves for a Pokémon in team 1";
-                            errorCount++;
-                        }
-                    }
-
-                    // Check for duplicate moves for each Pokémon in team2
-                    for (let k = 9; k <= 18; k += 2) {
-                        if (matchData.team2[k] === matchData.team2[k + 1]) {
-                            error += "\n" + "Match " + (j + 1) + " has duplicate moves for a Pokémon in team 2";
-                            errorCount++;
-                        }
-                    }
-
-                    // Put it all in one match object with the event data added too
-                    // comps page wants first picks as booleans (like they are now), database does not
-                    formattedData.push({
-                        team1: team1Data, 
-                        team2: team2Data, 
-                        winningTeam: parseInt(matchData.winner), 
-                        event: checkNull(setInsertion[5]?.event_name, "eventName", 0), 
-                        matchDate: checkNull(setInsertion[5]?.event_date, "eventDate", 0), 
-                        set_description: checkNull(setInsertion[6], "setDescriptor", 0), 
-                        vod: checkNull(setInsertion[5]?.vod_url, "vodUrl", 0),
-                        has_advanced_data: team1Data.pokemon_data[0][3] ? true : false
-                    });
-                    i++;
+                }
+                if (errorCount-(10+(4*3)+(18*5)) === backupErrorCount) {
+                    // Everything was null, so the match is not filled at all
+                    errorCount = backupErrorCount;
+                    errorMsg = backupErrorMsg;
+                    nullMatches.push(i);
                 }
             }
 
-            // If something is missing, don't submit
-            if (errorCount > 0) {
-                alert(error);
-                return;
-            }
-
-            // If previous checks determined that the data contained the fields it needed, the IDs are present too.
-            // Also format the data in a way that's easy to insert into the database
-            // Database needs the IDs
-            // Pull out match data first
-            let matchData = [];
-            for (let j = 0; j < 5; j++) {
-                const match = setInsertion[j];
-                if (checkNotDefaultMatch(match)) {
-                    const thisMatch = {
-                        team1: {
-                            team_id: match[0][0].team_id,
-                            isFirstPick: match[0][1],
-                            bans: [match[0][2]?.pokemon_id, match[0][3]?.pokemon_id],
-                            pokemon: [match[0][4]?.pokemon_id, match[0][5]?.pokemon_id, match[0][6]?.pokemon_id, match[0][7]?.pokemon_id, match[0][8]?.pokemon_id],
-                            pokemon_moves: [match[0][9]?.move_id, match[0][10]?.move_id, match[0][11]?.move_id, match[0][12]?.move_id, match[0][13]?.move_id, match[0][14]?.move_id, match[0][15]?.move_id, match[0][16]?.move_id, match[0][17]?.move_id, match[0][18]?.move_id],
-                            players: [match[0][19]?.player_id, match[0][20]?.player_id, match[0][21]?.player_id, match[0][22]?.player_id, match[0][23]?.player_id],
-                            pokemon_data: checkStats([match[0][24], match[0][25], match[0][26], match[0][27], match[0][28]])
-                        },
-                        team2: {
-                            team_id: match[1][0].team_id,
-                            isFirstPick: match[1][1],
-                            bans: [match[1][2]?.pokemon_id, match[1][3]?.pokemon_id],
-                            pokemon: [match[1][4]?.pokemon_id, match[1][5]?.pokemon_id, match[1][6]?.pokemon_id, match[1][7]?.pokemon_id, match[1][8]?.pokemon_id],
-                            pokemon_moves: [match[1][9]?.move_id, match[1][10]?.move_id, match[1][11]?.move_id, match[1][12]?.move_id, match[1][13]?.move_id, match[1][14]?.move_id, match[1][15]?.move_id, match[1][16]?.move_id, match[1][17]?.move_id, match[1][18]?.move_id],
-                            players: [match[1][19]?.player_id, match[1][20]?.player_id, match[1][21]?.player_id, match[1][22]?.player_id, match[1][23]?.player_id],
-                            pokemon_data: checkStats([match[1][24], match[1][25], match[1][26], match[1][27], match[1][28]])
-                        },
-                        winningTeam: parseInt(match[2]),
-                        hasAdvancedData: match[0][24].dealt ? true : false
-                    }
-                    matchData.push(thisMatch);
-                }
-            }
-            const databaseData = {
-                event_id: setInsertion[5]?.event_id,
-                set_descriptor: setInsertion[6],
-                matches: matchData
-            }
-
-            // Check if the number of wins for each team is equal
-            const team1Name = formattedData[0].team1.team_id;
-            const team2Name = formattedData[0].team2.team_id;
-            let team1Wins = 0;
-            let team2Wins = 0;
-            formattedData.forEach(match => {
-                if ((match.winningTeam === 1 && match.team1.team_id === team1Name) || (match.winningTeam === 2 && match.team2.team_id === team1Name)) {
-                    team1Wins++;
-                } else if ((match.winningTeam === 1 && match.team2.team_id === team2Name) || (match.winningTeam === 2 && match.team1.team_id === team2Name)) {
-                    team2Wins++;
-                }
-            });
-            if (team1Wins === team2Wins) {
-                error += "\n" + "Set has equal wins for both teams";
+            // If both teams have equal wins, then the set is not filled
+            if (setInsertion.set_score[0].wins === setInsertion.set_score[1].wins) {
+                errorMsg += "\nNo Clear Winner (Equal Wins)";
                 errorCount++;
             }
 
             // If something is missing, don't submit
             if (errorCount > 0) {
-                alert(error);
+                alert(errorMsg);
                 return;
             }
 
             // Submit the data
-            insertSet(databaseData, user.user_google_id).then(data => {
-                // Add the set ID to the set data
-                formattedData.forEach(match => {
-                    match.set_id = data.id;
-                });
+            insertSet(setInsertion, nullMatches, nullStats).then(data => {
+                // Add set to the coreData with set_id added and null matches removed
+                const newSetInsertion = {
+                    ...setInsertion,
+                    set_id: data.set_id,
+                    matches: setInsertion.matches.filter((_, i) => !nullMatches.includes(i))
+                };
 
-                // Set data needs to be the same as the data that's already in the comps page
-                const setData = formatSet(formattedData);
-
-                // Update the comp data on the comp display page with the new comps
-                // Do after sending to database to only show data that was successfully inserted
-                setCompsData([...compsData, ...setData]);
+                console.log(setInsertion);
+                  
+                setCoreData(prev => [...prev, newSetInsertion]);
                 // Clear the set insertion data and the input fields
                 setSetInsertion(null);
                 resetAllForms();
@@ -272,16 +196,14 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
             // Make sure the fields are consistent with the database
             checkNull(eventInsertion.event_name, "Event Name");
             checkNull(eventInsertion.event_date, "Event Date");
-            checkNull(eventInsertion.vod_url, "Event VOD URL");
             // If there are no errors, submit the data
             if (errorCount === 0) {
-                insertEvent(eventInsertion.event_name, eventInsertion.event_date, eventInsertion.vod_url, user.user_google_id).then(data => {
+                insertEvent(eventInsertion.event_name, eventInsertion.event_date).then(data => {
                     // Update the event data with the ID
                     const newEvent = {
                         event_id: data.id,
                         event_name: eventInsertion.event_name,
-                        event_date: eventInsertion.event_date,
-                        vod_url: eventInsertion.vod_url
+                        event_date: eventInsertion.event_date
                     }
                     // Put this new event in the events array
                     setEvents([...events, newEvent]);
@@ -290,7 +212,7 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
                     resetAllForms();
                 });
             } else {
-                alert(error);
+                alert(errorMsg);
                 return;
             }
         }
@@ -302,7 +224,7 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
             checkNull(teamInsertion.team_region, "Team Region");
             // If there are no errors, submit the data
             if (errorCount === 0) {
-                insertTeam(teamInsertion.team_name, teamInsertion.team_region, user.user_google_id).then(data => {
+                insertTeam(teamInsertion.team_name, teamInsertion.team_region).then(data => {
                     // Update the team data with the ID
                     const newTeam = {
                         team_id: data.id,
@@ -316,7 +238,7 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
                     resetAllForms();
                 });
             } else {
-                alert(error);
+                alert(errorMsg);
                 return;
             }
         }
@@ -327,7 +249,7 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
             checkNull(playerInsertion.player_name, "Player Name");
             // If there are no errors, submit the data
             if (errorCount === 0) {
-                insertPlayer(playerInsertion.player_name, user.user_google_id).then(data => {
+                insertPlayer(playerInsertion.player_name).then(data => {
                     // Update the player data with the ID
                     const newPlayer = {
                         player_id: data.id,
@@ -340,93 +262,25 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
                     resetAllForms();
                 });
             } else {
-                alert(error);
+                alert(errorMsg);
                 return;
             }
         }
 
-        function checkNull(data, field, i) {
+        function checkNull(data, field, nonZero = false) {
             if (data === null || data === undefined || data === "") {
-                if (i === undefined) {
-                     // Add the field to the error message
-                    error += "\n" + field;
-                    errorCount++;
-                    return "null";
-                }
                 // Add the field to the error message
-                if (i === 0) {
-                    // Error in event data
-                    error += "\n" + "Event " + field;
-                    errorCount++;
-                    return "null";
-                }else {
-                    // Error in match data
-                    error += "\n" + "Match " + i + " " + field;
-                    errorCount++;
-                    return "null";
-                }
+                errorMsg += "\n" + field;
+                errorCount++;
             }
-            return data;
-        }
-    
-        function checkStats(data, match, team) {
-            let allNull = true;
-            let allFilled = true;
-            let returnArray = [];
-            for (let i = 0; i < 5; i++) {
-                let statArray = [];
-                if (data[i].kills !== null && data[i].kills !== "" && !Number.isNaN(data[i].kills)) {
-                    allNull = false;
-                } else {
-                    allFilled = false;
-                }
-                statArray.push(data[i].kills);
-                if (data[i].assists !== null && data[i].assists !== "" && !Number.isNaN(data[i].assists)) {
-                    allNull = false;
-                } else {
-                    allFilled = false;
-                }
-                statArray.push(data[i].assists);
-                if (data[i].scored !== null && data[i].scored !== "" && !Number.isNaN(data[i].scored)) {
-                    allNull = false;
-                } else {
-                    allFilled = false;
-                }
-                statArray.push(data[i].scored);
-                if (data[i].dealt !== null && data[i].dealt !== "" && !Number.isNaN(data[i].dealt)) {
-                    allNull = false;
-                } else {
-                    allFilled = false;
-                }
-                statArray.push(data[i].dealt);
-                if (data[i].taken !== null && data[i].taken !== "" && !Number.isNaN(data[i].taken)) {
-                    allNull = false;
-                } else {
-                    allFilled = false;
-                }
-                statArray.push(data[i].taken);
-                if (data[i].healed !== null && data[i].healed !== "" && !Number.isNaN(data[i].healed)) {
-                    allNull = false;
-                } else {
-                    allFilled = false;
-                }
-                statArray.push(data[i].healed);
-                if (data[i].positionPlayed !== null && data[i].positionPlayed !== "") {
-                    allNull = false;
-                } else {
-                    allFilled = false;
-                }
-                statArray.push(data[i].positionPlayed);
-                returnArray.push(statArray);
+            if (nonZero && data === 0) {
+                // Add the field to the error message
+                errorMsg += "\n" + field;
+                errorCount++;
             }
-            if (!allFilled && !allNull) {
-                errorCount += 1;
-                error += `Stat data missing from match ${match} team ${team}.`;
-            }
-            return returnArray;
         }
     }
-    
+
     const resetAllForms = () => {
         setResetKey(prev => prev + 1);
     };
@@ -473,33 +327,65 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
 
 // The full insertion form for a set
 function SetInsertion({ resetKey, setSetInsertion, events, teams, players, charactersAndMoves }) {
-    /* set_id, set_score, set_winner, and match_ids will be calculated when and after submitting */
+    /* set_id, and match_ids will be calculated when and after submitting */
     const [composedSet, setComposedSet] = useState({event_date: null, event_id: null, event_name: null, matches: null, set_descriptor: null, set_id: null, set_score: null, set_winner: null});
     const [match1, setMatch1] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
     const [match2, setMatch2] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
     const [match3, setMatch3] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
     const [match4, setMatch4] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
     const [match5, setMatch5] = useState({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
-    const [selectedEvent, setSelectedEvent] = useState({event_id: null, event_name: null, event_date: null, vod_url: null});
+    const [selectedEvent, setSelectedEvent] = useState({event_id: null, event_name: null, event_date: null});
     const [setDescriptor, setSetDescriptor] = useState("");
+    const fpBans = [1, 3, 5];
+    const spBans = [2, 4, 6];
+    const fpPicks = [1, 4, 5, 8, 9];
+    const spPicks = [2, 3, 6, 7, 10];
 
     const resetForm = () => {
-        setMatch1({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
-        setMatch2({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
-        setMatch3({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
-        setMatch4({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
-        setMatch5({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null});
-        setSelectedEvent({event_id: null, event_name: null, event_date: null, vod_url: null});
+        setMatch1({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null, match_vod_url: null});
+        setMatch2({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null, match_vod_url: null});
+        setMatch3({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null, match_vod_url: null});
+        setMatch4({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null, match_vod_url: null});
+        setMatch5({match_id: null, match_winner_id: null, match_winner_text: null, firstPick: 0, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null, match_vod_url: null});
+        setSelectedEvent({event_id: null, event_name: null, event_date: null});
         setSetDescriptor("");
     };
 
     useEffect(() => {
-        if (selectedEvent) {
-            setComposedSet({event_date: selectedEvent.event_date, event_id: selectedEvent.event_id, event_name: selectedEvent.event_name, matches: [match1, match2, match3, match4, match5], set_descriptor: setDescriptor, set_id: null, set_score: null, set_winner: null, vod_url: selectedEvent.vod_url});
-        } else {
-            setComposedSet({event_date: null, event_id: null, event_name: null, matches: [match1, match2, match3, match4, match5], set_descriptor: setDescriptor, set_id: null, set_score: null, set_winner: null, vod_url: null});
-        }
+        const matches = [match1, match2, match3, match4, match5];
+    
+        const baseSet = selectedEvent
+            ? {
+                  event_date: selectedEvent.event_date,
+                  event_id: selectedEvent.event_id,
+                  event_name: selectedEvent.event_name,
+              }
+            : {
+                  event_date: null,
+                  event_id: null,
+                  event_name: null,
+              };
+    
+        // set_score, set_winner need to be calculated
+        const team1 = { team_id: matches[0]?.team1_id, team_name: matches[0]?.team1_name };
+        const team2 = { team_id: matches[0]?.team2_id, team_name: matches[0]?.team2_name };
+    
+        const team1Count = matches.filter(match => match?.match_winner_id === team1.team_id).length;
+        const team2Count = matches.filter(match => match?.match_winner_id === team2.team_id).length;
+    
+        setComposedSet({
+            ...baseSet,
+            matches,
+            set_descriptor: setDescriptor,
+            set_id: null,
+            set_score: [
+                { ...team1, wins: team1Count },
+                { ...team2, wins: team2Count },
+            ],
+            set_winner: team1Count > team2Count ? team1 : team2,
+        });
     }, [match1, match2, match3, match4, match5, selectedEvent, setDescriptor]);
+    
 
     useEffect(() => {
         resetForm();
@@ -510,13 +396,59 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
     }, [resetKey]);
 
     useEffect(() => {
-        console.log(match1, match2, match3, match4, match5);
-    }, [match1, match2, match3, match4, match5]);
+        setSetInsertion(composedSet);
+    }, [composedSet]);
 
     useEffect(() => {
         setComposedSet({...composedSet, set_descriptor: setDescriptor});
     }, [setDescriptor]);
 
+    useEffect(() => {
+        const updateMatch = (match, fp) => {
+          if (!match?.team1_picks?.length || !match?.team2_picks?.length) return match;
+      
+          const newMatch = {
+            ...match,
+            team1_picks: match.team1_picks.map((pick, j) => ({
+              ...pick,
+              pick_position:
+                fp === 1 ? fpPicks[j] :
+                fp === 2 ? spPicks[j] :
+                j + 1 
+            })),
+            team2_picks: match.team2_picks.map((pick, j) => ({
+              ...pick,
+              pick_position:
+                fp === 1 ? spPicks[j] :
+                fp === 2 ? fpPicks[j] :
+                j + 1
+            })),    
+            team1_bans: match.team1_bans.map((ban, j) => ({
+              ...ban,
+              ban_position:
+                fp === 1 ? fpBans[j] :
+                fp === 2 ? spBans[j] :
+                j + 1
+            })),
+            team2_bans: match.team2_bans.map((ban, j) => ({
+              ...ban,
+              ban_position:
+                fp === 1 ? spBans[j] :
+                fp === 2 ? fpBans[j] :
+                j + 1
+            }))
+          };
+      
+          return newMatch;
+        };
+      
+        setMatch1(prev => updateMatch(prev, prev.firstPick));
+        setMatch2(prev => updateMatch(prev, prev.firstPick));
+        setMatch3(prev => updateMatch(prev, prev.firstPick));
+        setMatch4(prev => updateMatch(prev, prev.firstPick));
+        setMatch5(prev => updateMatch(prev, prev.firstPick));
+    }, [match1.firstPick, match2.firstPick, match3.firstPick, match4.firstPick, match5.firstPick]);
+      
     return (
         <div id="set-creation" className="comp-card">
             <div className="set-creation-event-data">
@@ -539,13 +471,6 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
                     value={selectedEvent && selectedEvent.event_date ? selectedEvent.event_date : ""} 
                     readOnly 
                     placeholder="Event Date (Choose Event)"
-                />
-                {/* Event VOD URL (Read-only) */}
-                <input 
-                    type="text" 
-                    value={selectedEvent && selectedEvent.vod_url ? selectedEvent.vod_url : ""} 
-                    readOnly 
-                    placeholder="Event VOD URL (Choose Event)"
                 />
             </div>
             {/* Set Descriptor (Text Input) */}
@@ -621,6 +546,8 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
                 />
             ))}
             </div>
+            {/* Match VOD URL */}
+            <input type="text" value={match.match_vod_url ? match.match_vod_url : ""} placeholder="Match VOD URL" onChange={(e) => setMatch({...match, match_vod_url: e.target.value})} />
             {/* Match Winner Dropdown */}
             <div className="match-winner-dropdown">
             <select
@@ -676,8 +603,25 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
     );
 
     useEffect(() => {
-        setMatch({...match, [compNumber === 1 ? "team1_bans" : "team2_bans"]: bans, [compNumber === 1 ? "team1_picks" : "team2_picks"]: picks});
-    }, [bans, picks]);
+        setMatch(prev => ({
+          ...prev,
+          [compNumber === 1 ? "team1_bans" : "team2_bans"]: bans,
+          [compNumber === 1 ? "team1_picks" : "team2_picks"]: picks
+        }));
+    }, [bans, picks, compNumber, setMatch]);
+
+    useEffect(() => {
+        if ((firstPickSelected === 2 && compNumber === 1) || (firstPickSelected === 3 && compNumber === 2)) {
+            setBans(prevBans => [{...prevBans[0], ban_position: 1}, {...prevBans[1], ban_position: 3}, {...prevBans[2], ban_position: 5}]);
+            setPicks(prevPicks => [{...prevPicks[0], pick_position: 1}, {...prevPicks[1], pick_position: 4}, {...prevPicks[2], pick_position: 5}, {...prevPicks[3], pick_position: 8}, {...prevPicks[4], pick_position: 9}]);
+        } else if ((firstPickSelected === 3 && compNumber === 1) || (firstPickSelected === 2 && compNumber === 2)) {
+            setBans(prevBans => [{...prevBans[0], ban_position: 2}, {...prevBans[1], ban_position: 4}, {...prevBans[2], ban_position: 6}]);
+            setPicks(prevPicks => [{...prevPicks[0], pick_position: 2}, {...prevPicks[1], pick_position: 3}, {...prevPicks[2], pick_position: 6}, {...prevPicks[3], pick_position: 7}, {...prevPicks[4], pick_position: 10}]);
+        } else {
+            setBans(prevBans => [{...prevBans[0], ban_position: 1}, {...prevBans[1], ban_position: 2}, {...prevBans[2], ban_position: 3}]);
+            setPicks(prevPicks => [{...prevPicks[0], pick_position: 1}, {...prevPicks[1], pick_position: 2}, {...prevPicks[2], pick_position: 3}, {...prevPicks[3], pick_position: 4}, {...prevPicks[4], pick_position: 5}]);
+        }
+    }, [firstPickSelected]);
 
     return (
         <div id="comp-insertion">
@@ -754,7 +698,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                                 return newBans;
                             });
                         }}
-                        options={filteredUniquePokemon}
+                        options={[{ pokemon_id: 0, pokemon_name: "None" }, ...filteredUniquePokemon]}
                         placeholder={`Ban ${banPosition} Select`}
                         disabled={false}
                         path="/assets/Draft/headshots"
@@ -935,17 +879,15 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
 function EventCreation({ resetKey, setEventInsertion }) {
     const [eventName, setEventName] = useState(null);
     const [eventDate, setEventDate] = useState(null);
-    const [eventVodUrl, setEventVodUrl] = useState(null);
 
     const resetForm = () => {
         setEventName(null);
         setEventDate(null);
-        setEventVodUrl(null);
     };
 
     useEffect(() => {
-        setEventInsertion({event_name: eventName, event_date: eventDate, vod_url: eventVodUrl});
-    }, [eventName, eventDate, eventVodUrl]);
+        setEventInsertion({event_name: eventName, event_date: eventDate});
+    }, [eventName, eventDate]);
 
     useEffect(() => {
         resetForm();
@@ -961,8 +903,6 @@ function EventCreation({ resetKey, setEventInsertion }) {
             <input type="text" value={eventName ? eventName : ""} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
             {/* Event Date */}
             <input type="date" value={eventDate ? eventDate : ""} placeholder="Event Date" onChange={(e) => setEventDate(e.target.value)} />
-            {/* Event VOD URL */}
-            <input type="text" value={eventVodUrl ? eventVodUrl : ""} placeholder="Event VOD URL" onChange={(e) => setEventVodUrl(e.target.value)} />
         </div>
     )
 }

@@ -35,8 +35,33 @@ class Stats {
     });
   }
 
-  getIndividualBattleStats(minKills = 0, minAssists = 0, minDealt = 0, minTaken = 0, minHealed = 0, minScored = 0, lane, pokemon, move1, move2){
-
+  async getIndividualBattleStats(minKills = 0, minAssists = 0, minDealt = 0, minTaken = 0, minHealed = 0, minScored = 0, lane, pokemon, move1, move2){
+    // Need to get the comps / matches that link to this minimum pokemon_performance
+    return await new Promise((resolve, reject) => {
+      try {
+        let sql = `SELECT * FROM pokemon_performance
+        WHERE kills >= ${minKills}
+        AND assists >= ${minAssists}
+        AND damage_dealt >= ${minDealt}
+        AND damage_taken >= ${minTaken}
+        AND damage_healed >= ${minHealed}
+        AND points_scored >= ${minScored}
+        AND position_played = '${lane}'
+        AND pokemon_id = ${pokemon}
+        AND (move_1_id = ${move1} OR move_2_id = ${move1}) AND (move_1_id = ${move2} OR move_2_id = ${move2})`;
+        this.db.query(sql, (err, res) => {
+          if (err) {
+            console.error("SQL Error in individual battle stats:", err.message);
+            reject(err);
+          } else {
+            resolve(res.rows);
+          }
+        })
+      } catch (error) {
+        console.error("Error getting individual battle stats ", error);
+        reject(error);
+      }
+    })
   }
   
 }

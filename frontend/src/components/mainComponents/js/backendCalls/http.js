@@ -206,7 +206,7 @@ export async function insertPlayer(name, userGoogleId) {
 }
 
 // Function to insert a set
-export async function insertSet(setMatches, userGoogleId) {
+export async function insertSet(setMatches, nullMatches, nullStats) {
     const setData = await fetch(routes.POST_SET, {
         method: 'POST',
         credentials: 'include',
@@ -214,8 +214,9 @@ export async function insertSet(setMatches, userGoogleId) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            setMatches: setMatches,
-            userGoogleId: userGoogleId
+            setData: setMatches,
+            nullMatches: nullMatches,
+            nullStats: nullStats
         })
     });
     const setDataJson = await setData.json();
