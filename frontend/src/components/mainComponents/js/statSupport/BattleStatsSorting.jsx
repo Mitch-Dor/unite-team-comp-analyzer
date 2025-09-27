@@ -32,7 +32,6 @@ function BattleStatsSorting({ setData, moveData, allPokemon, setKeyPokemon }) {
         if (pokemon){
             fetchIndividualBattleStats(queryContext)
                 .then(data => {
-                    console.log(data);
                     setData(data[0].matches);
                 })
                 .catch(error => {

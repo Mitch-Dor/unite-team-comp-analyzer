@@ -273,6 +273,7 @@ function Traits() {
                             value={row[column] || ''}
                             onChange={(e) => handleCellChange(rowIndex, column, e.target.value)}
                             className={getTextClass(column, row[column], row)}
+                            disabled={column === "pokemon_name" || column === "pokemon_class"}
                           >
                             <option value=""></option>
                             {columnOptions[column]?.map(option => (

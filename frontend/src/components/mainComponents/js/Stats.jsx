@@ -43,9 +43,9 @@ function Stats() {
                 const uniquePokemon = [...new Set(fetchedCharactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id, release_date: new Date(char.release_date)})))].map(str => JSON.parse(str)); 
                 setAllPokemon(uniquePokemon);
                 // Sort all in alphabetical order
-                setEvents(fetchedEvents.sort((a, b) => a.event_name.localeCompare(b.event_name)));
-                setTeams(fetchedTeams.sort((a, b) => a.team_name.localeCompare(b.team_name)));
-                setPlayers(fetchedPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name)));
+                setEvents(fetchedEvents);
+                setTeams(fetchedTeams);
+                setPlayers(fetchedPlayers);
                 // Accumulate all the moves for each character
                 const cumulativeMoves = [];
                 const rawMovesData = [];
@@ -196,7 +196,7 @@ function Stats() {
                                 </div>
                             ) : (
                                 <>
-                                    {battleData.length > 0 ? (
+                                    {battleData && battleData.length > 0 ? (
                                         <>
                                             {battleData
                                                 .slice() // clone so you don't mutate state

@@ -13,7 +13,7 @@ class ProLeague {
     // Get all events
     async getAllEvents() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM events';
+            const sql = 'SELECT * FROM events ORDER BY event_date DESC';
             this.db.query(sql, (err, res) => { 
                 if (err) {
                     console.error("SQL Error:", err.message);
@@ -44,7 +44,7 @@ class ProLeague {
 
     async getAllTeams() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM professional_teams';
+            const sql = 'SELECT * FROM professional_teams ORDER BY team_name ASC';
             this.db.query(sql, (err, res) => {
                 if (err) {
                     console.error("SQL Error:", err.message);
@@ -74,7 +74,7 @@ class ProLeague {
 
     async getAllPlayers() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM professional_players';
+            const sql = 'SELECT * FROM professional_players ORDER BY player_name ASC';
             this.db.query(sql, (err, res) => {
                 if (err) {
                     console.error("SQL Error:", err.message);

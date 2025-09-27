@@ -242,6 +242,7 @@ class Comps {
 
         FROM professional_sets s
         JOIN events e ON s.event_id = e.event_id
+        ORDER BY s.set_id ASC
         ----++ End Main Select Query ++----
         `;
         

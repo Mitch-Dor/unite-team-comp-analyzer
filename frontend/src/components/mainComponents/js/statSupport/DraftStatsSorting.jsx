@@ -67,7 +67,6 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
                     rowCopy.round_6_pick_rate = parseFloat(((rowCopy.round_6_picks / rowCopy.total_picks) * 100).toFixed(1));
                     return rowCopy;
                 });
-                console.log(processedData);
                 // Use the processed data instead of the original
                 setData(processedData);
             })

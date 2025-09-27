@@ -12,7 +12,7 @@ class Pokemon {
     // Characters and their corresponding moves
     async getAllCharactersAndMoves() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM playable_characters natural join pokemon_moves';
+            const sql = 'SELECT * FROM playable_characters natural join pokemon_moves ORDER BY pokedex_number';
             this.db.query(sql, (err, res) => {
                 if (err) {
                     console.error("SQL Error:", err.message);
@@ -41,7 +41,7 @@ class Pokemon {
     // Character Attributes By Name
     async getIndividualCharacterAttributes(name){
         return new Promise((resolve, reject) => {
-            this.db.query('select * from pokemon_attributes where pokemon_name = $1 ORDER BY pokedex_number', [name], (err, res) => {
+            this.db.query('select * from pokemon_attributes where pokemon_name = $1', [name], (err, res) => {
                 if (err) {
                     console.error(err.message);
                     reject(err);
@@ -101,7 +101,7 @@ class Pokemon {
 
     async getAllTierListEntries() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM tier_list natural join playable_characters';
+            const sql = 'SELECT * FROM tier_list natural join playable_characters ORDER BY pokedex_number';
             this.db.query(sql, (err, res) => {
             if (err) {
               reject(err);
@@ -163,7 +163,7 @@ class Pokemon {
 
     async getAllInsights() {
         return new Promise((resolve, reject) => {
-          this.db.query('select * from pokemon_insights', (err, res) => {
+          this.db.query('select * from pokemon_insights ORDER BY pokedex_number', (err, res) => {
             if (err) {
               console.error(err.message);
               reject(err);

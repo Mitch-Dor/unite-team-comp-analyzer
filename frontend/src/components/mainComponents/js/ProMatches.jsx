@@ -30,9 +30,9 @@ function ProMatches() {
           const fetchedCharactersAndMoves = await fetchAllCharactersAndMoves();  
           const fetchedSets = await fetchAllSets();
           // Sort all in alphabetical order
-          setEvents(fetchedEvents.sort((a, b) => a.event_name.localeCompare(b.event_name)));
-          setTeams(fetchedTeams.sort((a, b) => a.team_name.localeCompare(b.team_name)));
-          setPlayers(fetchedPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name)));
+          setEvents(fetchedEvents);
+          setTeams(fetchedTeams);
+          setPlayers(fetchedPlayers);
           // Doesn't need to be sorted. Is already in order of creation / proper move order
           setCharactersAndMoves(fetchedCharactersAndMoves);
           setCoreData(fetchedSets);

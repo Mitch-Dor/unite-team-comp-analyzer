@@ -187,7 +187,7 @@ function TierList() {
     });
 
     if (admin) {
-      insertTierListEntry(targetTier, itemData.id, user.user_google_id);
+      insertTierListEntry(targetTier, itemData.id);
     }
   };
 
@@ -306,7 +306,7 @@ function TierList() {
     });
 
     if (admin) {
-      insertTierListEntry(targetTier, itemData.id, user.user_google_id);
+      insertTierListEntry(targetTier, itemData.id);
     }
   }
 
