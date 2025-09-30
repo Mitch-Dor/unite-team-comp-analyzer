@@ -1,4 +1,4 @@
-INSERT INTO public.professional_teams (team_id,team_name,team_region) VALUES
+INSERT INTO public.pro_teams (team_id,team_name,team_region) VALUES
 	 (1,'Exile','NA'),
 	 (2,'Ignorance','NA'),
 	 (3,'Luminosity Gaming','NA'),
@@ -9,7 +9,7 @@ INSERT INTO public.professional_teams (team_id,team_name,team_region) VALUES
 	 (8,'Nemesis','NA'),
 	 (9,'T3','NA'),
 	 (10,'TI Gang','NA');
-INSERT INTO public.professional_teams (team_id,team_name,team_region) VALUES
+INSERT INTO public.pro_teams (team_id,team_name,team_region) VALUES
 	 (11,'YT','NA'),
 	 (12,'Standing On Business','NA'),
 	 (13,'U Need Coaching','NA'),
@@ -20,7 +20,7 @@ INSERT INTO public.professional_teams (team_id,team_name,team_region) VALUES
 	 (18,'Daybreak','OC'),
 	 (19,'Bees','NA'),
 	 (20,'DreamMax Esports','BR');
-INSERT INTO public.professional_teams (team_id,team_name,team_region) VALUES
+INSERT INTO public.pro_teams (team_id,team_name,team_region) VALUES
 	 (21,'Nouns Esports','EU'),
 	 (22,'Stamina Esports','LA-N'),
 	 (23,'Peru Unite','LA-S'),

@@ -19,7 +19,7 @@ class Comps {
             SELECT
                 m.match_id,
                 m.set_id,
-                
+                m.vod_url,
                 -- Comp1 and Team1
                 c1.comp_id AS comp_1_id,
                 t1.team_id AS team1_id,
@@ -51,11 +51,11 @@ class Comps {
                     ELSE NULL
                 END AS match_winner_text
 
-            FROM matches m
-            JOIN comps c1 ON c1.comp_id = m.comp_1_id
-            JOIN comps c2 ON c2.comp_id = m.comp_2_id
-            JOIN professional_teams t1 ON t1.team_id = c1.team_id
-            JOIN professional_teams t2 ON t2.team_id = c2.team_id
+            FROM pro_matches m
+            JOIN pro_comps c1 ON c1.comp_id = m.comp_1_id
+            JOIN pro_comps c2 ON c2.comp_id = m.comp_2_id
+            JOIN pro_teams t1 ON t1.team_id = c1.team_id
+            JOIN pro_teams t2 ON t2.team_id = c2.team_id
             
             GROUP BY m.match_id, m.set_id, c1.comp_id, t1.team_id, t1.team_name, t1.team_region,
                     c2.comp_id, t2.team_id, t2.team_name, t2.team_region
@@ -73,6 +73,7 @@ class Comps {
                     ---- Create The Match Object ----
                     json_build_object(
                         'match_id', mw.match_id,
+                        'match_url', mw.vod_url,
                         'team1_id', mw.team1_id,
                         'team1_name', pt2.team_name,
                         'team1_region', pt2.team_region,
@@ -106,12 +107,12 @@ class Comps {
                                 ) 
                                 ORDER BY p.pick_position
                             )
-                            FROM picks p
+                            FROM pro_picks p
                             JOIN playable_characters pc ON p.pokemon_id = pc.pokemon_id
-                            JOIN professional_players pp ON p.player_id = pp.player_id
+                            JOIN pro_players pp ON p.player_id = pp.player_id
                             JOIN pokemon_moves pm1 ON p.move_1_id = pm1.move_id
                             JOIN pokemon_moves pm2 ON p.move_2_id = pm2.move_id
-                            LEFT JOIN pokemon_performance ppe ON ppe.comp_id = p.comp_id AND ppe.pokemon_id = p.pokemon_id
+                            LEFT JOIN pro_performance ppe ON ppe.comp_id = p.comp_id AND ppe.pokemon_id = p.pokemon_id
                             WHERE p.comp_id = mw.comp_1_id
                         ),
                         'team1_bans', (
@@ -125,7 +126,7 @@ class Comps {
                                 ) 
                                 ORDER BY b.ban_position
                             )
-                            FROM bans b
+                            FROM pro_bans b
                             JOIN playable_characters pc ON b.pokemon_id = pc.pokemon_id
                             WHERE b.comp_id = mw.comp_1_id
                         ),
@@ -154,12 +155,12 @@ class Comps {
                                 ) 
                                 ORDER BY p.pick_position
                             )
-                            FROM picks p
+                            FROM pro_picks p
                             JOIN playable_characters pc ON p.pokemon_id = pc.pokemon_id
-                            JOIN professional_players pp ON p.player_id = pp.player_id
+                            JOIN pro_players pp ON p.player_id = pp.player_id
                             JOIN pokemon_moves pm1 ON p.move_1_id = pm1.move_id
                             JOIN pokemon_moves pm2 ON p.move_2_id = pm2.move_id
-                            LEFT JOIN pokemon_performance ppe ON ppe.comp_id = p.comp_id AND ppe.pokemon_id = p.pokemon_id
+                            LEFT JOIN pro_performance ppe ON ppe.comp_id = p.comp_id AND ppe.pokemon_id = p.pokemon_id
                             WHERE p.comp_id = mw.comp_2_id
                         ),
                         'team2_bans', (
@@ -173,16 +174,16 @@ class Comps {
                                 ) 
                                 ORDER BY b.ban_position
                             )
-                            FROM bans b
+                            FROM pro_bans b
                             JOIN playable_characters pc ON b.pokemon_id = pc.pokemon_id
                             WHERE b.comp_id = mw.comp_2_id
                         )
                     ) ORDER BY mw.match_id
                 )
                 FROM match_winners mw
-                JOIN professional_teams pt1 ON pt1.team_id = mw.match_winner
-                JOIN professional_teams pt2 ON pt2.team_id = mw.team1_id
-                JOIN professional_teams pt3 ON pt3.team_id = mw.team2_id 
+                JOIN pro_teams pt1 ON pt1.team_id = mw.match_winner
+                JOIN pro_teams pt2 ON pt2.team_id = mw.team1_id
+                JOIN pro_teams pt3 ON pt3.team_id = mw.team2_id 
                 WHERE mw.set_id = s.set_id
             ) AS matches,
             --++ End Matches Array ++--
@@ -202,12 +203,12 @@ class Comps {
                     ---- Get Both Teams From This Set ----
                     SELECT mw.team1_id AS team_id, pt1.team_name
                     FROM match_winners mw
-                    JOIN professional_teams pt1 ON pt1.team_id = mw.team1_id
+                    JOIN pro_teams pt1 ON pt1.team_id = mw.team1_id
                     WHERE mw.set_id = s.set_id
                     UNION
                     SELECT mw.team2_id AS team_id, pt2.team_name
                     FROM match_winners mw
-                    JOIN professional_teams pt2 ON pt2.team_id = mw.team2_id
+                    JOIN pro_teams pt2 ON pt2.team_id = mw.team2_id
                     WHERE mw.set_id = s.set_id
                 ) teams
                 ---- Left Join Number Of Wins So That Even A Team With 0 Wins Is Displayed ----
@@ -240,8 +241,8 @@ class Comps {
             ) AS set_winner
             --++ End Set Winner Object ++--
 
-        FROM professional_sets s
-        JOIN events e ON s.event_id = e.event_id
+        FROM pro_sets s
+        JOIN pro_events e ON s.event_id = e.event_id
         ORDER BY s.set_id ASC
         ----++ End Main Select Query ++----
         `;
@@ -265,7 +266,7 @@ class Comps {
             // Insert Set
             const setId = await new Promise((resolve, reject) => {
                 const sql = `
-                INSERT INTO professional_sets (event_id, set_descriptor) VALUES ($1, $2) RETURNING set_id
+                INSERT INTO pro_sets (event_id, set_descriptor) VALUES ($1, $2) RETURNING set_id
                 `;
                 client.query(sql, [setData.event_id, setData.set_descriptor], (err, res) => {
                     if (err) {
@@ -285,7 +286,7 @@ class Comps {
                 // Team 1 Comp
                 const comp1Promise = await new Promise((resolve, reject) => {
                     const sql = `
-                    INSERT INTO comps (did_win, first_pick, team_id) VALUES ($1, $2, $3) RETURNING comp_id
+                    INSERT INTO pro_comps (did_win, first_pick, team_id) VALUES ($1, $2, $3) RETURNING comp_id
                     `;
                     client.query(sql, [setData.matches[i].match_winner_id === setData.matches[i].team1_id, setData.matches[i].firstPick === 1, setData.matches[i].team1_id], (err, res) => {
                         if (err) {
@@ -298,7 +299,7 @@ class Comps {
                 // Team 2 Comp
                 const comp2Promise = await new Promise((resolve, reject) => {
                     const sql = `
-                    INSERT INTO comps (did_win, first_pick, team_id) VALUES ($1, $2, $3) RETURNING comp_id
+                    INSERT INTO pro_comps (did_win, first_pick, team_id) VALUES ($1, $2, $3) RETURNING comp_id
                     `;
                     client.query(sql, [setData.matches[i].match_winner_id === setData.matches[i].team2_id, setData.matches[i].firstPick === 2, setData.matches[i].team2_id], (err, res) => {
                         if (err) {
@@ -321,7 +322,7 @@ class Comps {
                 }
                 const matchPromise = await new Promise((resolve, reject) => {
                     const sql = `
-                    INSERT INTO matches (set_id, comp_1_id, comp_2_id, vod_url) VALUES ($1, $2, $3, $4) RETURNING match_id
+                    INSERT INTO pro_matches (set_id, comp_1_id, comp_2_id, vod_url) VALUES ($1, $2, $3, $4) RETURNING match_id
                     `;
                     client.query(sql, [setId, matchComps[i].comp1, matchComps[i].comp2, setData.matches[i].match_vod_url], (err, res) => {
                         if (err) {
@@ -342,7 +343,7 @@ class Comps {
                 // Team 1 Picks
                 for (let j = 0; j < 5; j++) {
                     const sql = `
-                        INSERT INTO picks (comp_id, pokemon_id, pick_position, player_id, position_played, move_1_id, move_2_id) VALUES ($1, $2, $3, $4, $5, $6, $7)
+                        INSERT INTO pro_picks (comp_id, pokemon_id, pick_position, player_id, position_played, move_1_id, move_2_id) VALUES ($1, $2, $3, $4, $5, $6, $7)
                     `;
                     const pickPromise = new Promise((resolve, reject) => {
                         client.query(sql, [matchComps[i].comp1, setData.matches[i].team1_picks[j].pokemon_id, setData.matches[i].team1_picks[j].pick_position, setData.matches[i].team1_picks[j].player_id, setData.matches[i].team1_picks[j].position_played, setData.matches[i].team1_picks[j].move_1_id, setData.matches[i].team1_picks[j].move_2_id], (err, res) => {
@@ -357,7 +358,7 @@ class Comps {
                 // Team 2 Picks
                 for (let j = 0; j < 5; j++) {
                     const sql = `
-                        INSERT INTO picks (comp_id, pokemon_id, pick_position, player_id, position_played, move_1_id, move_2_id) VALUES ($1, $2, $3, $4, $5, $6, $7)
+                        INSERT INTO pro_picks (comp_id, pokemon_id, pick_position, player_id, position_played, move_1_id, move_2_id) VALUES ($1, $2, $3, $4, $5, $6, $7)
                     `;
                     const pickPromise = new Promise((resolve, reject) => {
                         client.query(sql, [matchComps[i].comp2, setData.matches[i].team2_picks[j].pokemon_id, setData.matches[i].team2_picks[j].pick_position, setData.matches[i].team2_picks[j].player_id, setData.matches[i].team2_picks[j].position_played, setData.matches[i].team2_picks[j].move_1_id, setData.matches[i].team2_picks[j].move_2_id], (err, res) => {
@@ -372,7 +373,7 @@ class Comps {
                 // Team 1 Bans
                 for (let j = 0; j < 3; j++) {
                     const sql = `
-                        INSERT INTO bans (comp_id, pokemon_id, ban_position) VALUES ($1, $2, $3)
+                        INSERT INTO pro_bans (comp_id, pokemon_id, ban_position) VALUES ($1, $2, $3)
                     `;
                     const banPromise = new Promise((resolve, reject) => {
                         client.query(sql, [matchComps[i].comp1, setData.matches[i].team1_bans[j].pokemon_id, setData.matches[i].team1_bans[j].ban_position], (err, res) => {
@@ -387,7 +388,7 @@ class Comps {
                 // Team 2 Bans
                 for (let j = 0; j < 3; j++) {
                     const sql = `
-                        INSERT INTO bans (comp_id, pokemon_id, ban_position) VALUES ($1, $2, $3)
+                        INSERT INTO pro_bans (comp_id, pokemon_id, ban_position) VALUES ($1, $2, $3)
                     `;
                     const banPromise = new Promise((resolve, reject) => {
                         client.query(sql, [matchComps[i].comp2, setData.matches[i].team2_bans[j].pokemon_id, setData.matches[i].team2_bans[j].ban_position], (err, res) => {
@@ -405,7 +406,7 @@ class Comps {
                         continue;
                     }
                     const sql = `
-                        INSERT INTO pokemon_performance (comp_id, pokemon_id, kills, assists, damage_dealt, damage_taken, damage_healed, points_scored) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                        INSERT INTO pro_performance (comp_id, pokemon_id, kills, assists, damage_dealt, damage_taken, damage_healed, points_scored) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                     `;
                     const statPromise = new Promise((resolve, reject) => {
                         client.query(sql, [matchComps[i].comp1, setData.matches[i].team1_picks[j].pokemon_id, setData.matches[i].team1_picks[j].kills, setData.matches[i].team1_picks[j].assists, setData.matches[i].team1_picks[j].dealt, setData.matches[i].team1_picks[j].taken, setData.matches[i].team1_picks[j].healed, setData.matches[i].team1_picks[j].scored], (err, res) => {
@@ -423,7 +424,7 @@ class Comps {
                         continue;
                     }
                     const sql = `
-                        INSERT INTO pokemon_performance (comp_id, pokemon_id, kills, assists, damage_dealt, damage_taken, damage_healed, points_scored) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                        INSERT INTO pro_performance (comp_id, pokemon_id, kills, assists, damage_dealt, damage_taken, damage_healed, points_scored) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                     `;
                     const statPromise = new Promise((resolve, reject) => {
                         client.query(sql, [matchComps[i].comp2, setData.matches[i].team2_picks[j].pokemon_id, setData.matches[i].team2_picks[j].kills, setData.matches[i].team2_picks[j].assists, setData.matches[i].team2_picks[j].dealt, setData.matches[i].team2_picks[j].taken, setData.matches[i].team2_picks[j].healed, setData.matches[i].team2_picks[j].scored], (err, res) => {

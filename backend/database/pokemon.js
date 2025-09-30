@@ -163,7 +163,7 @@ class Pokemon {
 
     async getAllInsights() {
         return new Promise((resolve, reject) => {
-          this.db.query('select * from pokemon_insights ORDER BY pokedex_number', (err, res) => {
+          this.db.query('select * from pokemon_insights', (err, res) => {
             if (err) {
               console.error(err.message);
               reject(err);

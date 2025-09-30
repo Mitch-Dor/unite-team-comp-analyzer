@@ -1,0 +1,88 @@
+INSERT INTO public.playable_characters (pokemon_id,pokemon_name,pokemon_class,pokedex_number,release_date) VALUES
+	 (10,'Mr_Mime','Supporter',122,'2021-07-21'),
+	 (13,'Talonflame','Speedster',663,'2021-07-21'),
+	 (31,'Aegislash','All_Rounder',681,'2022-02-11'),
+	 (64,'Gyarados','All_Rounder',130,'2024-01-25'),
+	 (25,'Sylveon','Attacker',700,'2021-10-06'),
+	 (52,'Goodra','Defender',706,'2023-03-16'),
+	 (30,'Trevenant','Defender',709,'2022-01-20'),
+	 (32,'Hoopa','Supporter',720,'2022-02-24'),
+	 (27,'Decidueye','Attacker',724,'2021-11-19'),
+	 (28,'Tsareena','All_Rounder',763,'2021-12-09');
+INSERT INTO public.playable_characters (pokemon_id,pokemon_name,pokemon_class,pokedex_number,release_date) VALUES
+	 (50,'Comfey','Supporter',764,'2023-02-02'),
+	 (61,'Mimikyu','All_Rounder',778,'2023-10-19'),
+	 (38,'Buzzwole','All_Rounder',794,'2022-08-04'),
+	 (20,'Zeraora','Speedster',807,'2021-07-21'),
+	 (57,'Inteleon','Attacker',818,'2023-07-04'),
+	 (53,'Lapras','Defender',131,'2023-04-13'),
+	 (17,'Snorlax','Defender',143,'2021-07-21'),
+	 (26,'Greedent','Defender',820,'2021-10-20'),
+	 (29,'Dragonite','All_Rounder',149,'2021-12-20'),
+	 (14,'Eldegoss','Supporter',830,'2021-07-21');
+INSERT INTO public.playable_characters (pokemon_id,pokemon_name,pokemon_class,pokedex_number,release_date) VALUES
+	 (1,'Cinderace','Attacker',815,'2021-07-21'),
+	 (11,'Venusaur','Attacker',3,'2021-07-21'),
+	 (18,'Charizard','All_Rounder',6,'2021-07-21'),
+	 (23,'Blastoise','Defender',9,'2021-09-01'),
+	 (58,'Mewtwo_Y','Attacker',150,'2023-08-17'),
+	 (19,'Pikachu','Attacker',25,'2021-07-21'),
+	 (59,'Mewtwo_X','All_Rounder',150,'2023-07-21'),
+	 (75,'Alolan_Raichu','Attacker',26,'2025-04-17'),
+	 (44,'Clefable','Supporter',36,'2022-10-13'),
+	 (5,'Alolan_Ninetales','Attacker',38,'2021-07-21');
+INSERT INTO public.playable_characters (pokemon_id,pokemon_name,pokemon_class,pokedex_number,release_date) VALUES
+	 (6,'Wigglytuff','Supporter',40,'2021-07-21'),
+	 (71,'Psyduck','Supporter',54,'2024-11-14'),
+	 (7,'Machamp','All_Rounder',68,'2021-07-21'),
+	 (73,'Galarian_Rapidash','Speedster',78,'2025-01-23'),
+	 (9,'Slowbro','Defender',80,'2021-07-21'),
+	 (41,'Dodrio','Speedster',85,'2022-09-15'),
+	 (3,'Gengar','Speedster',94,'2021-07-21'),
+	 (40,'Mew','Attacker',151,'2022-09-02'),
+	 (43,'Scyther','Speedster',123,'2022-09-29'),
+	 (42,'Scizor','All_Rounder',212,'2022-09-29');
+INSERT INTO public.playable_characters (pokemon_id,pokemon_name,pokemon_class,pokedex_number,release_date) VALUES
+	 (34,'Azumarill','All_Rounder',184,'2022-04-08'),
+	 (35,'Espeon','Attacker',196,'2022-05-16'),
+	 (55,'Umbreon','Defender',197,'2023-05-25'),
+	 (22,'Blissey','Supporter',242,'2021-08-18'),
+	 (74,'Suicune','All_Rounder',245,'2025-03-01'),
+	 (39,'Tyranitar','All_Rounder',248,'2022-08-16'),
+	 (68,'Ho_Oh','Defender',250,'2024-07-19'),
+	 (60,'Blaziken','All_Rounder',257,'2023-09-14'),
+	 (21,'Gardevoir','Attacker',282,'2021-07-28'),
+	 (46,'Sableye','Supporter',302,'2022-11-16');
+INSERT INTO public.playable_characters (pokemon_id,pokemon_name,pokemon_class,pokedex_number,release_date) VALUES
+	 (8,'Absol','Speedster',359,'2021-07-21'),
+	 (63,'Metagross','All_Rounder',376,'2023-12-26'),
+	 (78,'Latias','Supporter',380,'2025-08-08'),
+	 (77,'Latios','Attacker',381,'2025-07-18'),
+	 (2,'Garchomp','All_Rounder',445,'2021-07-21'),
+	 (12,'Lucario','All_Rounder',448,'2021-07-21'),
+	 (56,'Leafeon','Speedster',470,'2023-06-08'),
+	 (4,'Cramorant','Attacker',845,'2021-07-21'),
+	 (37,'Glaceon','Attacker',471,'2022-07-21'),
+	 (24,'Mamoswine','Defender',473,'2021-09-29');
+INSERT INTO public.playable_characters (pokemon_id,pokemon_name,pokemon_class,pokedex_number,release_date) VALUES
+	 (70,'Darkrai','Speedster',491,'2024-10-17'),
+	 (76,'Alcremie','Supporter',869,'2025-06-12'),
+	 (16,'Crustle','Defender',558,'2021-07-21'),
+	 (45,'Zoroark','Speedster',571,'2022-10-27'),
+	 (54,'Chandelure','Attacker',609,'2023-04-27'),
+	 (66,'Falinks','All_Rounder',870,'2024-04-25'),
+	 (33,'Duraludon','Attacker',884,'2022-03-15'),
+	 (36,'Delphox','Attacker',655,'2022-06-09'),
+	 (49,'Dragapult','Attacker',887,'2022-12-29'),
+	 (15,'Greninja','Attacker',658,'2021-07-21');
+INSERT INTO public.playable_characters (pokemon_id,pokemon_name,pokemon_class,pokedex_number,release_date) VALUES
+	 (51,'Zacian','All_Rounder',888,'2023-02-27'),
+	 (48,'Urshifu_RS','All_Rounder',892,'2022-12-01'),
+	 (47,'Urshifu_SS','All_Rounder',892,'2022-12-01'),
+	 (62,'Meowscarada','Speedster',908,'2023-12-07'),
+	 (69,'Armarouge','Attacker',936,'2024-09-12'),
+	 (67,'Ceruledge','All_Rounder',937,'2024-06-13'),
+	 (72,'Tinkaton','All_Rounder',959,'2024-12-12'),
+	 (65,'Miraidon','Attacker',1008,'2024-02-27'),
+	 (79,'Pawmot','All_Rounder',923,'2025-09-04'),
+	 (0,'None','None',0,'2021-07-21');

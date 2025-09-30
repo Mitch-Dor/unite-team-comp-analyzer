@@ -15,11 +15,11 @@ class Stats {
           --++ Make A Base Table With All Comps Minus Picks And Bans (Because Those Are Many To One Relationships) ++--
           WITH all_comps AS (
             SELECT e.event_id, e.event_date, m.match_id, c.comp_id, c.did_win, t.team_id, t.team_region
-            FROM comps c
-            LEFT JOIN matches m ON c.comp_id IN (m.comp_1_id, m.comp_2_id)
-            LEFT JOIN professional_teams t ON c.team_id = t.team_id
-            LEFT JOIN professional_sets ps ON m.set_id = ps.set_id
-            LEFT JOIN events e ON ps.event_id = e.event_id
+            FROM pro_comps c
+            LEFT JOIN pro_matches m ON c.comp_id IN (m.comp_1_id, m.comp_2_id)
+            LEFT JOIN pro_teams t ON c.team_id = t.team_id
+            LEFT JOIN pro_sets ps ON m.set_id = ps.set_id
+            LEFT JOIN pro_events e ON ps.event_id = e.event_id
             WHERE ($1::int IS NULL OR e.event_id = $1)
               AND ($2::text IS NULL OR t.team_region = $2)
               AND ($3::int IS NULL OR t.team_id = $3)
@@ -30,18 +30,18 @@ class Stats {
           picks_aggregate AS (
             SELECT ac.comp_id, p.pokemon_id AS pick_pokemon_id, p.move_1_id, p.move_2_id, ac.did_win, p.pick_position
             FROM all_comps ac
-            LEFT JOIN picks p ON p.comp_id = ac.comp_id
+            LEFT JOIN pro_picks p ON p.comp_id = ac.comp_id
             WHERE ($4::int IS NULL OR p.player_id = $4)
           ),
           --++ Make A Table With All Bans Minus Picks (Because Joining Both Picks And Bans Will Multiply The Rows) ++--
           bans_aggregate AS (
             SELECT ac.comp_id, b.pokemon_id AS ban_pokemon_id, b.ban_position
             FROM all_comps ac
-            LEFT JOIN bans b ON b.comp_id = ac.comp_id
+            LEFT JOIN pro_bans b ON b.comp_id = ac.comp_id
             ---- Filter Bans By Player By Making Sure The Player Was On The Team That Banned The Pokemon ----
             WHERE EXISTS (
               SELECT 1
-              FROM picks p
+              FROM pro_picks p
               WHERE p.comp_id = ac.comp_id AND ($4::int IS NULL OR p.player_id = $4)
             )
           ),
@@ -52,7 +52,7 @@ class Stats {
             ---- Filter Total Matches By Player By Making Sure The Player was Present In The Match ----
             WHERE EXISTS (
               SELECT 1
-              FROM picks p
+              FROM pro_picks p
               WHERE p.comp_id = ac.comp_id AND ($4::int IS NULL OR p.player_id = $4)
             )
           ),
@@ -151,9 +151,23 @@ class Stats {
   async getOverallBattleStats() {
     return await new Promise((resolve, reject) => {
       try {
-        let sql = `SELECT pokemon_id, pokemon_name, AVG(kills) as mean_kills, AVG(assists) as mean_assists, AVG(damage_dealt) as mean_dealt, AVG(damage_taken) as mean_taken, AVG(damage_healed) as mean_healed, AVG(points_scored) as mean_scored, SUM((position_played = 'TopCarry')::int) AS num_times_top, SUM((position_played = 'EXPShareTop')::int) AS num_times_exp_share_top, SUM((position_played = 'JungleCarry')::int) AS num_times_jungle, SUM((position_played = 'BottomCarry')::int) AS num_times_bot, SUM((position_played = 'EXPShareBot')::int) AS num_times_exp_share_bot
-                      FROM pokemon_performance NATURAL JOIN playable_characters
-                      GROUP BY pokemon_id, pokemon_name`;
+        let sql = `
+        --++ Get Position Counts ++--
+        WITH position_counts AS (
+          SELECT pokemon_id, SUM((position_played = 'TopCarry')::int) AS num_times_top, 
+                          SUM((position_played = 'EXPShareTop')::int) AS num_times_exp_share_top, 
+                          SUM((position_played = 'JungleCarry')::int) AS num_times_jungle, 
+                          SUM((position_played = 'BottomCarry')::int) AS num_times_bot, 
+                          SUM((position_played = 'EXPShareBot')::int) AS num_times_exp_share_bot
+          FROM pro_picks
+          GROUP BY pokemon_id
+        )
+        --++ Get Overall Data ++--
+        SELECT pp.pokemon_id, pchar.pokemon_name, AVG(pp.kills) as mean_kills, AVG(pp.assists) as mean_assists, AVG(pp.damage_dealt) as mean_dealt, 
+            AVG(pp.damage_taken) as mean_taken, AVG(pp.damage_healed) as mean_healed, AVG(pp.points_scored) as mean_scored, 
+            pc.num_times_top, pc.num_times_exp_share_top, pc.num_times_jungle, pc.num_times_bot, pc.num_times_exp_share_bot
+        FROM pro_performance pp NATURAL JOIN playable_characters pchar JOIN position_counts pc ON pc.pokemon_id = pp.pokemon_id
+        GROUP BY pp.pokemon_id, pchar.pokemon_name, pc.num_times_top, pc.num_times_exp_share_top, pc.num_times_jungle, pc.num_times_bot, pc.num_times_exp_share_bot`;
         this.db.query(sql, (err, res) => {
           if (err) {
             console.error("SQL Error in overall battle stats:", err.message);
@@ -178,15 +192,15 @@ class Stats {
         --++ Find Comps That Match the Minimum Criteria ++--
         WITH matching_comp_ids AS (
           SELECT pp.comp_id
-          FROM pokemon_performance pp
-          JOIN picks p ON pp.comp_id = p.comp_id
+          FROM pro_performance pp
+          JOIN pro_picks p ON pp.comp_id = p.comp_id
           WHERE pp.kills >= $1
           AND pp.assists >= $2
           AND pp.damage_dealt >= $3
           AND pp.damage_taken >= $4
           AND pp.damage_healed >= $5
           AND pp.points_scored >= $6
-          AND (pp.position_played = $7 OR $7 = 'any')
+          AND (p.position_played = $7 OR $7 = 'any')
           AND pp.pokemon_id = $8
           AND ( $9::int IS NULL OR $9::int = p.move_1_id OR $9::int = p.move_2_id )
           AND ( $10::int IS NULL OR $10::int = p.move_1_id OR $10::int = p.move_2_id )
@@ -225,12 +239,12 @@ class Stats {
               )
             ORDER BY p.pick_position
           )
-          FROM picks p
+          FROM pro_picks p
           JOIN playable_characters pc ON p.pokemon_id = pc.pokemon_id
-          JOIN professional_players pp ON p.player_id = pp.player_id
+          JOIN pro_players pp ON p.player_id = pp.player_id
           JOIN pokemon_moves pm1 ON p.move_1_id = pm1.move_id
           JOIN pokemon_moves pm2 ON p.move_2_id = pm2.move_id
-          LEFT JOIN pokemon_performance ppe ON ppe.comp_id = p.comp_id AND ppe.pokemon_id = p.pokemon_id
+          LEFT JOIN pro_performance ppe ON ppe.comp_id = p.comp_id AND ppe.pokemon_id = p.pokemon_id
           WHERE p.comp_id = c1.comp_id
         ),
         'team1_bans', (
@@ -242,7 +256,7 @@ class Stats {
             )
           ORDER BY b.ban_position
           )
-          FROM bans b
+          FROM pro_bans b
           JOIN playable_characters pc ON b.pokemon_id = pc.pokemon_id
           WHERE b.comp_id = c1.comp_id
         ),
@@ -269,12 +283,12 @@ class Stats {
               )
               ORDER BY p.pick_position
             )
-            FROM picks p
+            FROM pro_picks p
             JOIN playable_characters pc ON p.pokemon_id = pc.pokemon_id
-            JOIN professional_players pp ON p.player_id = pp.player_id
+            JOIN pro_players pp ON p.player_id = pp.player_id
             JOIN pokemon_moves pm1 ON p.move_1_id = pm1.move_id
             JOIN pokemon_moves pm2 ON p.move_2_id = pm2.move_id
-            LEFT JOIN pokemon_performance ppe ON ppe.comp_id = p.comp_id AND ppe.pokemon_id = p.pokemon_id
+            LEFT JOIN pro_performance ppe ON ppe.comp_id = p.comp_id AND ppe.pokemon_id = p.pokemon_id
             WHERE p.comp_id = c2.comp_id
             ),
             'team2_bans', (
@@ -286,17 +300,17 @@ class Stats {
                 )
                 ORDER BY b.ban_position
               )
-              FROM bans b
+              FROM pro_bans b
               JOIN playable_characters pc ON b.pokemon_id = pc.pokemon_id
               WHERE b.comp_id = c2.comp_id
           )
         ) ORDER BY m.match_id
       ) as matches
-      FROM matches m
-      JOIN comps c1 ON c1.comp_id = m.comp_1_id
-      JOIN comps c2 ON c2.comp_id = m.comp_2_id
-      JOIN professional_teams t1 ON t1.team_id = c1.team_id
-      JOIN professional_teams t2 ON t2.team_id = c2.team_id
+      FROM pro_matches m
+      JOIN pro_comps c1 ON c1.comp_id = m.comp_1_id
+      JOIN pro_comps c2 ON c2.comp_id = m.comp_2_id
+      JOIN pro_teams t1 ON t1.team_id = c1.team_id
+      JOIN pro_teams t2 ON t2.team_id = c2.team_id
       WHERE c1.comp_id IN (SELECT comp_id FROM matching_comp_ids)
       OR c2.comp_id IN (SELECT comp_id FROM matching_comp_ids)
       `;

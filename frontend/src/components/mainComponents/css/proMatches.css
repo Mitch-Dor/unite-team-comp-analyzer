@@ -898,7 +898,7 @@ select.stat-input {
     object-fit: contain;
 }
 
-.event-vod {
+.match-vod {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -907,12 +907,12 @@ select.stat-input {
     padding-left: 10px;
 }
 
-.event-vod a {
+.match-vod a {
     width: 30px;
     height: 20px;
 }
 
-.event-vod img {
+.match-vod img {
     width: 30px;
     height: 20px;
 }

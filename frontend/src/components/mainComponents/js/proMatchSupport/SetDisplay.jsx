@@ -8,11 +8,6 @@ function SetDisplay({ set, advancedDataMode }) {
                 <div className="set-descriptor">{set.set_descriptor}</div>
                 <div className="set-event-name-vod-container">
                     <div className="set-event">{set.event_name}</div>
-                    <div className="event-vod">
-                    <a href={set.vod_url} target="_blank" rel="noopener noreferrer">
-                        <img src="/assets/icons/youtube.png" alt="VOD" />
-                        </a>
-                    </div>
                 </div>
                 <div className="set-date">{new Date(set.event_date).toLocaleDateString('en-US', {
                     year: 'numeric',

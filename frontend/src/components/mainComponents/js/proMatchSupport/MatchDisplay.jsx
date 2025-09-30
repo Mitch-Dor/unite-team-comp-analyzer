@@ -13,9 +13,14 @@ function MatchDisplay({ match, advancedDataMode }) {
             </div>
             
             <div className="comp-footer">
-            <div className="winner-label">
-                Match Winner: <span className="winner-name">{match.match_winner_text}</span>
-            </div>
+                <div className="winner-label">
+                    Match Winner: <span className="winner-name">{match.match_winner_text}</span>
+                </div>
+                <div className="match-vod">
+                    <a href={match.match_url} target="_blank" rel="noopener noreferrer">
+                        <img src="/assets/icons/youtube.png" alt="VOD" />
+                    </a>
+                </div>
             </div>
         </div>
     );

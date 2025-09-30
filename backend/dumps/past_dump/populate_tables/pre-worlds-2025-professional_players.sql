@@ -1,4 +1,4 @@
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (1,'symp',NULL),
 	 (2,'oblivion',NULL),
 	 (3,'pure',NULL),
@@ -9,7 +9,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (8,'nayeon',NULL),
 	 (9,'Scrublenaut',NULL),
 	 (10,'Gupiter',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (11,'Overlord',NULL),
 	 (12,'Joey',NULL),
 	 (13,'otter',NULL),
@@ -20,7 +20,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (18,'RSG_Red',NULL),
 	 (19,'Ascha',NULL),
 	 (20,'Kolintang',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (21,'Rollin',NULL),
 	 (22,'Kraitos',NULL),
 	 (23,'zugrug',NULL),
@@ -31,7 +31,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (28,'EggN00b',NULL),
 	 (29,'OGwastaken',NULL),
 	 (30,'Duskrunner5',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (31,'Kirtan','infAme'),
 	 (32,'Victorin',NULL),
 	 (33,'bits',NULL),
@@ -42,7 +42,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (38,'Aznable',NULL),
 	 (39,'Metallic',NULL),
 	 (40,'Soby',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (41,'Tyedye',NULL),
 	 (42,'Anon',NULL),
 	 (43,'Zelot','Zel0ot'),
@@ -53,7 +53,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (48,'Fwii',NULL),
 	 (49,'Russs',NULL),
 	 (50,'Luis7a',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (51,'Akeelo',NULL),
 	 (52,'SoSadSam',NULL),
 	 (53,'BoraReach',NULL),
@@ -64,7 +64,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (58,'ChiefX','Loveu'),
 	 (59,'rayyw','rhys#1fan<3'),
 	 (60,'slippyhead','ianwhysp');
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (61,'Regretz',NULL),
 	 (62,'Oogway',NULL),
 	 (63,'VinDiesel',NULL),
@@ -75,7 +75,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (68,'Luniar',NULL),
 	 (69,'Stanleyfishy1x',NULL),
 	 (70,'Split',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (71,'Brzy',NULL),
 	 (72,'Gannon',NULL),
 	 (73,'Kyriaos',NULL),
@@ -86,7 +86,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (78,'Sentient Scarf',NULL),
 	 (79,'Anonymouse',NULL),
 	 (80,'Dsystemmc',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (81,'Liz',NULL),
 	 (82,'Itsmefu',NULL),
 	 (83,'JOMEGALULE',NULL),
@@ -97,7 +97,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (88,'ToonSlim',NULL),
 	 (89,'Inder',NULL),
 	 (90,'Ghatlue',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (91,'Bruv',NULL),
 	 (92,'ADESu',NULL),
 	 (93,'Olivotec',NULL),
@@ -108,7 +108,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (99,'Regi195',NULL),
 	 (101,'Pachy',NULL),
 	 (102,'Frank',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (103,'Zynuz',NULL),
 	 (104,'Anemo',NULL),
 	 (105,'DrakenN04',NULL),
@@ -119,7 +119,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (110,'sSlime',NULL),
 	 (111,'TsunTsun',NULL),
 	 (112,'USAKAZU',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (113,'Luuna',NULL),
 	 (114,'94',NULL),
 	 (115,'Ice',NULL),
@@ -130,7 +130,7 @@ INSERT INTO public.professional_players (player_id,player_name,other_names) VALU
 	 (100,'Ranma','Premiu'),
 	 (119,'Lip',NULL),
 	 (120,'Comi',NULL);
-INSERT INTO public.professional_players (player_id,player_name,other_names) VALUES
+INSERT INTO public.pro_players (player_id,player_name,other_names) VALUES
 	 (121,'Garam',NULL),
 	 (122,'Seram',NULL),
 	 (123,'Pisterio',NULL),

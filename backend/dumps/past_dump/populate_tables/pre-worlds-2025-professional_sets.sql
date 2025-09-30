@@ -1,4 +1,4 @@
-INSERT INTO public.professional_sets (set_id,event_id,set_descriptor) VALUES
+INSERT INTO public.pro_sets (set_id,event_id,set_descriptor) VALUES
 	 (1,1,'Losers Round 1'),
 	 (2,1,'Losers Round 1'),
 	 (3,1,'Winners Semis'),
@@ -9,7 +9,7 @@ INSERT INTO public.professional_sets (set_id,event_id,set_descriptor) VALUES
 	 (8,1,'Losers Finals'),
 	 (9,1,'Grand Finals'),
 	 (10,1,'Grand Finals Reset');
-INSERT INTO public.professional_sets (set_id,event_id,set_descriptor) VALUES
+INSERT INTO public.pro_sets (set_id,event_id,set_descriptor) VALUES
 	 (11,2,'Winner Semis'),
 	 (12,2,'Loser Quarters'),
 	 (13,2,'Loser Quarters'),
@@ -20,7 +20,7 @@ INSERT INTO public.professional_sets (set_id,event_id,set_descriptor) VALUES
 	 (18,2,'Grand Finals (R)'),
 	 (19,3,'Winner Semis'),
 	 (20,3,'Losers Quarters');
-INSERT INTO public.professional_sets (set_id,event_id,set_descriptor) VALUES
+INSERT INTO public.pro_sets (set_id,event_id,set_descriptor) VALUES
 	 (21,3,'Losers Quarters'),
 	 (22,3,'Winners Finals'),
 	 (23,3,'Losers Semis'),
@@ -31,7 +31,7 @@ INSERT INTO public.professional_sets (set_id,event_id,set_descriptor) VALUES
 	 (28,4,'Winners Semis'),
 	 (29,4,'Winners Finals'),
 	 (30,4,'Losers Semis');
-INSERT INTO public.professional_sets (set_id,event_id,set_descriptor) VALUES
+INSERT INTO public.pro_sets (set_id,event_id,set_descriptor) VALUES
 	 (31,4,'Losers Finals'),
 	 (32,4,'Grand Finals'),
 	 (36,5,'Round of 12'),
@@ -42,7 +42,7 @@ INSERT INTO public.professional_sets (set_id,event_id,set_descriptor) VALUES
 	 (41,5,'Quarterfinals'),
 	 (42,5,'Quarterfinals'),
 	 (43,5,'Semifinals');
-INSERT INTO public.professional_sets (set_id,event_id,set_descriptor) VALUES
+INSERT INTO public.pro_sets (set_id,event_id,set_descriptor) VALUES
 	 (44,5,'Semifinals'),
 	 (45,5,'Grand Finals'),
 	 (53,8,'Day 1 Groups'),

@@ -13,7 +13,7 @@ class ProLeague {
     // Get all events
     async getAllEvents() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM events ORDER BY event_date DESC';
+            const sql = 'SELECT * FROM pro_events ORDER BY event_date DESC';
             this.db.query(sql, (err, res) => { 
                 if (err) {
                     console.error("SQL Error:", err.message);
@@ -28,7 +28,7 @@ class ProLeague {
     // Insert an event
     async insertEvent(name, date) {
         return new Promise((resolve, reject) => { 
-          const sql = 'INSERT INTO events (event_name, event_date) VALUES ($1, $2) RETURNING event_id';
+          const sql = 'INSERT INTO pro_events (event_name, event_date) VALUES ($1, $2) RETURNING event_id';
           this.db.query(sql, [name, date], function(err, result) {
             if (err) {
               reject(err);
@@ -44,7 +44,7 @@ class ProLeague {
 
     async getAllTeams() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM professional_teams ORDER BY team_name ASC';
+            const sql = 'SELECT * FROM pro_teams ORDER BY team_name ASC';
             this.db.query(sql, (err, res) => {
                 if (err) {
                     console.error("SQL Error:", err.message);
@@ -58,7 +58,7 @@ class ProLeague {
 
     async insertTeam(name, region) {
         return new Promise((resolve, reject) => {
-            const sql = 'INSERT INTO professional_teams (team_name, team_region) VALUES ($1, $2) RETURNING team_id';  
+            const sql = 'INSERT INTO pro_teams (team_name, team_region) VALUES ($1, $2) RETURNING team_id';  
             this.db.query(sql, [name, region], function(err, result) {
                 if (err) {
                     reject(err);
@@ -74,7 +74,7 @@ class ProLeague {
 
     async getAllPlayers() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM professional_players ORDER BY player_name ASC';
+            const sql = 'SELECT * FROM pro_players ORDER BY player_name ASC';
             this.db.query(sql, (err, res) => {
                 if (err) {
                     console.error("SQL Error:", err.message);
@@ -88,7 +88,7 @@ class ProLeague {
 
     async insertPlayer(name) {
         return new Promise((resolve, reject) => { 
-            const sql = 'INSERT INTO professional_players (player_name) VALUES ($1) RETURNING player_id';
+            const sql = 'INSERT INTO pro_players (player_name) VALUES ($1) RETURNING player_id';
             this.db.query(sql, [name], function(err, result) {
                 if (err) {
                     reject(err);
