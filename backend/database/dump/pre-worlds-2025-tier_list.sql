@@ -1,0 +1,87 @@
+INSERT INTO public.tier_list (tier_name,pokemon_id) VALUES
+	 ('C',1),
+	 ('B',5),
+	 ('C',11),
+	 ('D',15),
+	 ('A',19),
+	 ('E',21),
+	 ('D',27),
+	 ('A',35),
+	 ('C',37),
+	 ('B',40);
+INSERT INTO public.tier_list (tier_name,pokemon_id) VALUES
+	 ('E',49),
+	 ('E',54),
+	 ('S',57),
+	 ('A',58),
+	 ('B',65),
+	 ('A',56),
+	 ('E',3),
+	 ('D',70),
+	 ('B',6),
+	 ('D',10);
+INSERT INTO public.tier_list (tier_name,pokemon_id) VALUES
+	 ('B',14),
+	 ('S',22),
+	 ('S',71),
+	 ('A',32),
+	 ('A',2),
+	 ('C',12),
+	 ('D',18),
+	 ('C',29),
+	 ('B',31),
+	 ('E',39);
+INSERT INTO public.tier_list (tier_name,pokemon_id) VALUES
+	 ('A',47),
+	 ('A',51),
+	 ('E',59),
+	 ('B',60),
+	 ('A',63),
+	 ('D',67),
+	 ('S',74),
+	 ('S',55),
+	 ('S',17),
+	 ('B',9);
+INSERT INTO public.tier_list (tier_name,pokemon_id) VALUES
+	 ('A',24),
+	 ('B',30),
+	 ('B',16),
+	 ('C',23),
+	 ('C',52),
+	 ('D',26),
+	 ('B',75),
+	 ('A',8),
+	 ('A',13),
+	 ('B',62);
+INSERT INTO public.tier_list (tier_name,pokemon_id) VALUES
+	 ('B',45),
+	 ('A',38),
+	 ('B',61),
+	 ('C',68),
+	 ('A',53),
+	 ('B',50),
+	 ('A',44),
+	 ('C',20),
+	 ('B',41),
+	 ('F',4);
+INSERT INTO public.tier_list (tier_name,pokemon_id) VALUES
+	 ('C',72),
+	 ('D',42),
+	 ('E',33),
+	 ('D',48),
+	 ('D',34),
+	 ('B',28),
+	 ('D',36),
+	 ('C',25),
+	 ('A',69),
+	 ('B',43);
+INSERT INTO public.tier_list (tier_name,pokemon_id) VALUES
+	 ('C',73),
+	 ('B',46),
+	 ('D',64),
+	 ('D',7),
+	 ('D',66),
+	 ('S',76),
+	 ('S',77),
+	 ('B',78),
+	 ('B',79);
