@@ -6,11 +6,22 @@ const getBaseUrl = () => {
 };
 
 export const routes = {
+    //// DRAFT ROUTES ////
     GET_ALL_DRAFT_INFO: `${getBaseUrl()}/GETallDraftInfo`,
-    GET_ALL_ATTRIBUTES: `${getBaseUrl()}/GETallCharacterAttributes`,
-    GET_SINGLE_ATTRIBUTES: `${getBaseUrl()}/GETsingleCharacterAttributes`,
-    PUT_CHARACTER_ATTRIBUTE: `${getBaseUrl()}/PUTCharacterAttribute`,
+
+    //// DRAFT ROOM ROUTES ////
+    POST_ROOMS: `${getBaseUrl()}/POSTrooms`,
+    GET_ROOMS: `${getBaseUrl()}/GETrooms`,
+    GET_ROOM_INFO: `${getBaseUrl()}/GETrooms/`,
+
+    //// AI ROUTES ////
     GET_RUN_A_STAR_ALGORITHM: `${getBaseUrl()}/GETrunAStarAlgorithm`,
+    GET_RATE_COMP: `${getBaseUrl()}/GETrateComp`,
+
+    //// INSIGHTS ROUTES ////
+    GET_ALL_INSIGHTS: `${getBaseUrl()}/GETallInsights`,
+    
+    //// PRO MATCHES ROUTES ////
     GET_ALL_SETS: `${getBaseUrl()}/GETallSets`,
     GET_ALL_EVENTS: `${getBaseUrl()}/GETallEvents`,
     GET_ALL_TEAMS: `${getBaseUrl()}/GETallTeams`,
@@ -20,19 +31,25 @@ export const routes = {
     POST_TEAM: `${getBaseUrl()}/POSTteam`,
     POST_PLAYER: `${getBaseUrl()}/POSTplayer`,
     POST_SET: `${getBaseUrl()}/POSTset`,
-    POST_ROOMS: `${getBaseUrl()}/POSTrooms`,
-    GET_ROOMS: `${getBaseUrl()}/GETrooms`,
-    GET_ROOM_INFO: `${getBaseUrl()}/GETrooms/`,
+
+    //// STATS ROUTES ////
     GET_DRAFT_STATS: `${getBaseUrl()}/GETdraftStats`,
     GET_OVERALL_BATTLE_STATS: `${getBaseUrl()}/GEToverallBattleStats`,
     GET_INDIVIDUAL_BATTLE_STATS: `${getBaseUrl()}/GETindividualBattleStats`,
-    GET_RATE_COMP: `${getBaseUrl()}/GETrateComp`,
+    
+    //// TIER LIST ROUTES ////
     GET_TIER_LIST: `${getBaseUrl()}/GETtierList`,
     POST_TIER_LIST_ENTRY: `${getBaseUrl()}/POSTtierListEntry`,
+
+    //// USER PERMISSIONS ROUTES ////
     GET_IS_VERIFIED_USER: `${getBaseUrl()}/GETisVerifiedUser`,
     GET_IS_ADMIN: `${getBaseUrl()}/GETisAdmin`,
     CURRENT_USER: `${getBaseUrl()}/current_user`,
     LOGOUT: `${getBaseUrl()}/logout`,
     SIGN_IN: `${getBaseUrl()}/auth/google`,
-    GET_ALL_INSIGHTS: `${getBaseUrl()}/GETallInsights`,
+
+    //// ATTRIBUTES ROUTES ////
+    GET_ALL_ATTRIBUTES: `${getBaseUrl()}/GETallCharacterAttributes`,
+    GET_SINGLE_ATTRIBUTES: `${getBaseUrl()}/GETsingleCharacterAttributes`,
+    PUT_CHARACTER_ATTRIBUTE: `${getBaseUrl()}/PUTCharacterAttribute`,
 };

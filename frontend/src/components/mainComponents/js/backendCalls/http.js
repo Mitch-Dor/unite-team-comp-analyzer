@@ -1,6 +1,8 @@
 import { routes } from '../../../../common/route_constants.js';
 
-// Function to fetch all character names and classes
+//// DRAFT ROUTES ////
+
+/* Function to fetch all character names and classes */
 export async function fetchCharacterDraftInfo() {
     const characterData = await fetch(routes.GET_ALL_DRAFT_INFO, {
         method: 'GET',
@@ -13,55 +15,50 @@ export async function fetchCharacterDraftInfo() {
     return characterDataJson;
 }
 
-// Function to fetch all character attributes
-export async function fetchAllCharacterAttributes() {
-    const characterAttributeData = await fetch(routes.GET_ALL_ATTRIBUTES, {
+//// DRAFT ROOM ROUTES ////
+
+/* Function to create a new room */
+export async function createRoom() {
+    const roomData = await fetch(routes.POST_ROOMS, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const roomDataJson = await roomData.json();
+    return roomDataJson;
+}
+
+/* Function to get all rooms */
+export async function getAllRooms() {
+    const roomData = await fetch(routes.GET_ROOMS, {
         method: 'GET',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-        },
+        }
     });
-    const characterAttributeDataJson = await characterAttributeData.json();
-    return characterAttributeDataJson;
+    const roomDataJson = await roomData.json();
+    return roomDataJson;
 }
 
-// Function to fetch a single character's attributes
-export async function fetchCharacterAttributes(name) {
-    const characterAttributeData = await fetch(routes.GET_SINGLE_ATTRIBUTES, {
-        // I can't include a body in a GET request
-        method: 'PUT',
+/* Function to get room info by roomId */
+export async function getRoomInfo(roomId) {
+    const roomData = await fetch(routes.GET_ROOM_INFO + roomId, {
+        method: 'GET',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            name: name
-        })
+        }
     });
-    const characterAttributeDataJson = await characterAttributeData.json();
-    return characterAttributeDataJson;
+    const roomDataJson = await roomData.json();
+    return roomDataJson;
 }
 
-// Function to update a single character's attributes
-export async function updateCharacterAttribute(pokemonId, column, value) {
-    const characterAttributeData = await fetch(routes.PUT_CHARACTER_ATTRIBUTE, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            pokemonId: pokemonId,
-            column: column,
-            value: value
-        })
-    });
-    const characterAttributeDataJson = await characterAttributeData.json();
-    return characterAttributeDataJson;
-}
+//// AI ROUTES ////
 
-// Function to run the a_star algorithm to find the best team
+/* Function to run the a_star algorithm to find the best team */
 export async function runAStarAlgorithm(targetTeam, opposingTeam, bans) {
     const characterData = await fetch(routes.GET_RUN_A_STAR_ALGORITHM, {
         // I can't include a body in a GET request
@@ -80,7 +77,37 @@ export async function runAStarAlgorithm(targetTeam, opposingTeam, bans) {
     return characterDataJson;
 }
 
-// Function to fetch all comps
+/* Function to rate a comp using the heuristics used in A* */
+export async function rateComp(comp) {
+    const compData = await fetch(routes.GET_RATE_COMP, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(comp)
+    });
+    const compDataJson = await compData.json();
+    return compDataJson;
+}
+
+//// INSIGHTS ROUTES ////
+
+export async function fetchAllInsights() { 
+    const insightData = await fetch(routes.GET_ALL_INSIGHTS, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const insightDataJson = await insightData.json();
+    return insightDataJson;
+}
+
+//// PRO MATCHES ROUTES ////
+
+/* Function to fetch all comps */
 export async function fetchAllSets() {
     const compData = await fetch(routes.GET_ALL_SETS, {
         method: 'GET',
@@ -93,7 +120,7 @@ export async function fetchAllSets() {
     return compDataJson;
 }
 
-// Function to fetch all events
+/* Function to fetch all events */
 export async function fetchAllEvents() {
     const eventData = await fetch(routes.GET_ALL_EVENTS, {
         method: 'GET',
@@ -106,7 +133,7 @@ export async function fetchAllEvents() {
     return eventDataJson;
 }
 
-// Function to fetch all teams
+/* Function to fetch all teams */
 export async function fetchAllTeams() {
     const teamData = await fetch(routes.GET_ALL_TEAMS, {
         method: 'GET',
@@ -119,7 +146,7 @@ export async function fetchAllTeams() {
     return teamDataJson;
 }
 
-// Function to fetch all players
+/* Function to fetch all players */
 export async function fetchAllPlayers() {
     const playerData = await fetch(routes.GET_ALL_PLAYERS, {
         method: 'GET',
@@ -138,7 +165,7 @@ export async function fetchAllPlayers() {
     return playerDataJson;
 }
 
-// Function to fetch all characters and moves
+/* Function to fetch all characters and moves */
 export async function fetchAllCharactersAndMoves() {
     const characterMoveData = await fetch(routes.GET_ALL_CHARACTERS_AND_MOVES, {
         method: 'GET',
@@ -151,7 +178,7 @@ export async function fetchAllCharactersAndMoves() {
     return characterMoveDataJson;
 }
 
-// Function to insert an event
+/* Function to insert an event */
 export async function insertEvent(name, date, vodUrl, userGoogleId) {
     const eventData = await fetch(routes.POST_EVENT, {
         method: 'POST',
@@ -170,7 +197,7 @@ export async function insertEvent(name, date, vodUrl, userGoogleId) {
     return eventDataJson;
 }
 
-// Function to insert a team
+/* Function to insert a team */
 export async function insertTeam(name, region, userGoogleId) {
     const teamData = await fetch(routes.POST_TEAM, {
         method: 'POST',
@@ -188,7 +215,7 @@ export async function insertTeam(name, region, userGoogleId) {
     return teamDataJson;
 }
 
-// Function to insert a player
+/* Function to insert a player */
 export async function insertPlayer(name, userGoogleId) {
     const playerData = await fetch(routes.POST_PLAYER, {
         method: 'POST',
@@ -205,7 +232,7 @@ export async function insertPlayer(name, userGoogleId) {
     return playerDataJson;
 }
 
-// Function to insert a set
+/* Function to insert a set */
 export async function insertSet(setMatches, nullMatches, nullStats) {
     const setData = await fetch(routes.POST_SET, {
         method: 'POST',
@@ -223,46 +250,9 @@ export async function insertSet(setMatches, nullMatches, nullStats) {
     return setDataJson;
 }
 
-// Function to create a new room
-export async function createRoom() {
-    const roomData = await fetch(routes.POST_ROOMS, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
-    const roomDataJson = await roomData.json();
-    return roomDataJson;
-}
+//// STATS ROUTES ////
 
-// Function to get all rooms
-export async function getAllRooms() {
-    const roomData = await fetch(routes.GET_ROOMS, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
-    const roomDataJson = await roomData.json();
-    return roomDataJson;
-}
-
-// Function to get room info by roomId
-export async function getRoomInfo(roomId) {
-    const roomData = await fetch(routes.GET_ROOM_INFO + roomId, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
-    const roomDataJson = await roomData.json();
-    return roomDataJson;
-}
-
-// Function to fetch character stats based on query context
+/* Function to fetch character stats based on query context */
 export async function fetchDraftStats(queryContext) {
     const statsData = await fetch(routes.GET_DRAFT_STATS, {
         method: 'PUT',
@@ -276,21 +266,36 @@ export async function fetchDraftStats(queryContext) {
     return statsDataJson;
 }
 
-// Function to rate a comp using the heuristics used in A*
-export async function rateComp(comp) {
-    const compData = await fetch(routes.GET_RATE_COMP, {
+/* Function to fetch summarized Battle Data for all pokemon */
+export async function fetchOverallBattleStats() {
+    const statsData = await fetch(routes.GET_OVERALL_BATTLE_STATS, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const statsDataJson = await statsData.json();
+    return statsDataJson;
+}
+
+/* Function to fetch Battle Data for a specific character based on a query */
+export async function fetchIndividualBattleStats(queryContext) {
+    const statsData = await fetch(routes.GET_INDIVIDUAL_BATTLE_STATS, {
         method: 'PUT',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(comp)
+        body: JSON.stringify(queryContext)
     });
-    const compDataJson = await compData.json();
-    return compDataJson;
+    const statsDataJson = await statsData.json();
+    return statsDataJson;
 }
 
-// Function to fetch all tier list entries
+//// TIER LIST ROUTES ////
+
+/* Function to fetch all tier list entries */
 export async function fetchAllTierListEntries() {
     const tierListData = await fetch(routes.GET_TIER_LIST, {
         method: 'GET',
@@ -303,7 +308,7 @@ export async function fetchAllTierListEntries() {
     return tierListDataJson;
 }
 
-// Function to insert a tier list entry
+/* Function to insert a tier list entry */
 export async function insertTierListEntry(tierName, pokemonId, googleId) {
     const response = await fetch(routes.POST_TIER_LIST_ENTRY, {
         method: 'POST',
@@ -325,7 +330,9 @@ export async function insertTierListEntry(tierName, pokemonId, googleId) {
     throw new Error('Failed to update tier list entry');
 }
 
-// Function to check if a user is verified
+//// USER PERMISSIONS ROUTES ////
+
+/* Function to check if a user is verified */
 export async function isVerifiedUser() {
     const response = await fetch(routes.GET_IS_VERIFIED_USER, {
         method: 'GET',
@@ -340,7 +347,7 @@ export async function isVerifiedUser() {
     return true;
 }
 
-// Function to check if a user is an admin
+/* Function to check if a user is an admin */
 export async function isAdmin() {
     const response = await fetch(routes.GET_IS_ADMIN, {
         method: 'GET',
@@ -355,41 +362,54 @@ export async function isAdmin() {
     return true;
 }
 
-// Function to fetch summarized Battle Data for all pokemon
-export async function fetchOverallBattleStats() {
-    const statsData = await fetch(routes.GET_OVERALL_BATTLE_STATS, {
+/* Current_User, Logout, Sign_In routes not included in this file */
+
+//// ATTRIBUTES ROUTES ////
+
+/* Function to fetch all character attributes */
+export async function fetchAllCharacterAttributes() {
+    const characterAttributeData = await fetch(routes.GET_ALL_ATTRIBUTES, {
         method: 'GET',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-        }
+        },
     });
-    const statsDataJson = await statsData.json();
-    return statsDataJson;
+    const characterAttributeDataJson = await characterAttributeData.json();
+    return characterAttributeDataJson;
 }
 
-// Function to fetch Battle Data for a specific character based on a query
-export async function fetchIndividualBattleStats(queryContext) {
-    const statsData = await fetch(routes.GET_INDIVIDUAL_BATTLE_STATS, {
+/* Function to fetch a single character's attributes */
+export async function fetchCharacterAttributes(name) {
+    const characterAttributeData = await fetch(routes.GET_SINGLE_ATTRIBUTES, {
+        // I can't include a body in a GET request
         method: 'PUT',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(queryContext)
+        body: JSON.stringify({
+            name: name
+        })
     });
-    const statsDataJson = await statsData.json();
-    return statsDataJson;
+    const characterAttributeDataJson = await characterAttributeData.json();
+    return characterAttributeDataJson;
 }
 
-export async function fetchAllInsights() { 
-    const insightData = await fetch(routes.GET_ALL_INSIGHTS, {
-        method: 'GET',
+/* Function to update a single character's attributes */
+export async function updateCharacterAttribute(pokemonId, column, value) {
+    const characterAttributeData = await fetch(routes.PUT_CHARACTER_ATTRIBUTE, {
+        method: 'PUT',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify({
+            pokemonId: pokemonId,
+            column: column,
+            value: value
+        })
     });
-    const insightDataJson = await insightData.json();
-    return insightDataJson;
+    const characterAttributeDataJson = await characterAttributeData.json();
+    return characterAttributeDataJson;
 }
