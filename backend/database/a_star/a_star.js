@@ -1,31 +1,31 @@
 const MinHeap = require('./MinHeap');
 
+//// A* GENERATE BEST DRAFT FUNCTION ////
+
 // Calculate the best draft possible given both current teams and the pokemon that are available to be picked.
 function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
-    // Convert raw pokemon data to Pokemon objects if needed
+    
+    // Prepare data (teams and available Pokemon) to be used in search
+
     const pokemonObjects = allPokemon.map(p => 
         p instanceof Pokemon ? p : new Pokemon(p)
     );
     
-    // Get a list of all remaining pokemon (Not picked or banned)
     const remainingPokemon = pokemonObjects.filter(pokemon => {
-        
-        // Check if this pokemon is already in your team
+        // Check if picked
         const inYourTeam = yourTeam.some(teamPokemon => 
             teamPokemon.pokemon_id && teamPokemon.pokemon_id === pokemon.pokemon_id
         );
-        
-        // Check if this pokemon is already in enemy team
         const inEnemyTeam = enemyTeam.some(teamPokemon => 
             teamPokemon.pokemon_id && teamPokemon.pokemon_id === pokemon.pokemon_id
         );
-        
-        // Check if this pokemon is banned
+
+        // Check if banned
         const isBanned = bans.some(bannedPokemon => 
             bannedPokemon.pokemon_id && bannedPokemon.pokemon_id === pokemon.pokemon_id
         );
 
-        // Special cases where if a certain pokemon is in your team, enemy team, or banned, another pokemon is automatically unpickable
+        // Special case removals
         if (pokemon.pokemon_name === "Scyther" && (yourTeam.some(p => p.pokemon_name === "Scizor") || enemyTeam.some(p => p.pokemon_name === "Scizor") || bans.some(p => p.pokemon_name === "Scizor"))) {
             return false;
         } else if (pokemon.pokemon_name === "Scizor" && (yourTeam.some(p => p.pokemon_name === "Scyther") || enemyTeam.some(p => p.pokemon_name === "Scyther") || bans.some(p => p.pokemon_name === "Scyther"))) {
@@ -36,91 +36,36 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
             return false;
         } 
         
-        // Return true if the pokemon is not in any of these collections
         return !inYourTeam && !inEnemyTeam && !isBanned;
     });
 
-    // Initialize open and closed sets
-    let open = new MinHeap();
-    let closed = new Set();
-
-    // A class to represent a team state
-    class TeamNode {
-        constructor(picks = [], incurredCost = 0, heuristic = 0) {
-            this.score = incurredCost + heuristic;
-            this.picks = picks; // Array of Pokemon references
-            this.incurredCost = incurredCost;
-            this.heuristic = heuristic;
-        }
-        
-        // Helper method to get team key
-        getKey() {
-            // Sort by pokemon id to ensure consistent representation
-            return this.picks.map(p => p.pokemon_id).sort().join('|');
-        }
-        
-        // Helper to check if team already has this pokemon
-        hasPokemon(pokemon) {
-            return this.picks.some(p => p.pokemon_id === pokemon.pokemon_id);
-        }
-
-        // Helper to check if team already has this pokemon's adjacent pokemon
-        hasAdjacentPokemon(pokemon) {
-            if (pokemon.pokemon_name === "Scyther") {
-                return this.picks.some(p => p.pokemon_name === "Scizor");
-            } else if (pokemon.pokemon_name === "Scizor") {
-                return this.picks.some(p => p.pokemon_name === "Scyther");
-            } else if (pokemon.pokemon_name === "Urshifu_SS") {
-                return this.picks.some(p => p.pokemon_name === "Urshifu_RS");
-            } else if (pokemon.pokemon_name === "Urshifu_RS") {
-                return this.picks.some(p => p.pokemon_name === "Urshifu_SS");
-            }
-        }
-        
-        // Create a new node with an additional pokemon
-        addPokemon(pokemon, synScore, counScore) {
-            // Create new picks array with the additional pokemon
-            const newPicks = [...this.picks, pokemon];
-            
-            // Calculate new score based on previous score and new heuristics
-            return new TeamNode(newPicks, this.incurredCost, synScore + counScore);
-        }
-    }
+    let open = new MinHeap(); // Frontier of nodes to be explored
+    let closed = new Set(); // Already explored nodes
 
     // Convert string names in yourTeam to full Pokemon objects
     const yourTeamObjects = [];
-
-    // Loop through all team member names
     for (const pokemon of yourTeam) {
-        // Find the matching Pokemon in the full data set
         const matchingPokemon = pokemonObjects.find(pokemonObject => 
             pokemonObject.pokemon_id === pokemon.pokemon_id
         );
-        
         if (matchingPokemon) {
             yourTeamObjects.push(matchingPokemon);
         } else {
             console.warn(`Pokemon "${pokemon.pokemon_id}" not found in available data`);
-            // Create a basic Pokemon object with just the name
             yourTeamObjects.push(new Pokemon({pokemon_id: pokemon.pokemon_id}));
         }
     }
 
-    // Convert string names in yourTeam to full Pokemon objects
+    // Convert string names in enemyTeam to full Pokemon objects
     const enemyTeamObjects = [];
-
-    // Loop through all team member names
     for (const pokemon of enemyTeam) {
-        // Find the matching Pokemon in the full data set
         const matchingPokemon = pokemonObjects.find(pokemonObject => 
             pokemonObject.pokemon_id === pokemon.pokemon_id
         );
-        
         if (matchingPokemon) {
             enemyTeamObjects.push(matchingPokemon);
         } else {
             console.warn(`Pokemon "${pokemon.pokemon_id}" not found in available data`);
-            // Create a basic Pokemon object with just the name
             enemyTeamObjects.push(new Pokemon({pokemon_id: pokemon.pokemon_id}));
         }
     }
@@ -140,10 +85,8 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
                 open.push(new TeamNode(team));
                 return;
             }
-
             const currentPokemon = team[index];
             const alternateFormName = alternateFormsMap[currentPokemon.pokemon_name];
-
             if (alternateFormName) {
                 const alternateForm = pokemonObjects.find(p => p.pokemon_name === alternateFormName);
                 if (alternateForm) {
@@ -153,11 +96,9 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
                     generateCombinations(newTeamWithAlt, index + 1);
                 }
             }
-
             // Continue with the current form
             generateCombinations(team, index + 1);
         };
-
         generateCombinations(yourTeamObjects);
     } else {
         for (const pokemon of remainingPokemon) {
@@ -216,6 +157,41 @@ function a_star_search(yourTeam, enemyTeam, bans, allPokemon, tierList) {
     return null; // Error
 }
 
+//// RATE COMP FUNCTION ////
+
+function rateComp(comp, allPokemon, tierList){
+    // Get all pokemon objects
+    const pokemonObjects = allPokemon.map(p => 
+        p instanceof Pokemon ? p : new Pokemon(p)
+    );
+
+    // Make pokemon objects
+    const yourTeamObjects = [];
+
+    // Loop through all team member names
+    for (const name of comp) {
+        // Find the matching Pokemon in the full data set
+        const matchingPokemon = pokemonObjects.find(pokemon => 
+            pokemon.name === name.pokemon_name || pokemon.id === name.pokemon_name
+        );
+        
+        if (matchingPokemon) {
+            yourTeamObjects.push(matchingPokemon);
+        } else {
+            console.warn(`Pokemon "${name.pokemon_name}" not found in available data`);
+            // Create a basic Pokemon object with just the name
+            yourTeamObjects.push(new Pokemon({pokemon_name: name.pokemon_name}));
+        }
+    }
+    // Throw it into the heuristics
+    const tierScore = heuristic_tier_score(yourTeamObjects, tierList);
+    const synergyScore = heuristic_synergy_score(yourTeamObjects);
+    const totalScore = tierScore + synergyScore;
+    return {totalScore, tierScore, synergyScore};
+}
+
+//// A* SEARCH CLASSES ////
+
 // Define a Pokemon class to store attributes more efficiently
 class Pokemon {
     constructor(data) {
@@ -254,6 +230,51 @@ class Pokemon {
         };
     }
 }
+
+// A class to represent a team state
+class TeamNode {
+    constructor(picks = [], incurredCost = 0, heuristic = 0) {
+        this.score = incurredCost + heuristic;
+        this.picks = picks; // Array of Pokemon references
+        this.incurredCost = incurredCost;
+        this.heuristic = heuristic;
+    }
+    
+    // Helper method to get team key
+    getKey() {
+        // Sort by pokemon id to ensure consistent representation
+        return this.picks.map(p => p.pokemon_id).sort().join('|');
+    }
+    
+    // Helper to check if team already has this pokemon
+    hasPokemon(pokemon) {
+        return this.picks.some(p => p.pokemon_id === pokemon.pokemon_id);
+    }
+
+    // Helper to check if team already has this pokemon's adjacent pokemon
+    hasAdjacentPokemon(pokemon) {
+        if (pokemon.pokemon_name === "Scyther") {
+            return this.picks.some(p => p.pokemon_name === "Scizor");
+        } else if (pokemon.pokemon_name === "Scizor") {
+            return this.picks.some(p => p.pokemon_name === "Scyther");
+        } else if (pokemon.pokemon_name === "Urshifu_SS") {
+            return this.picks.some(p => p.pokemon_name === "Urshifu_RS");
+        } else if (pokemon.pokemon_name === "Urshifu_RS") {
+            return this.picks.some(p => p.pokemon_name === "Urshifu_SS");
+        }
+    }
+    
+    // Create a new node with an additional pokemon
+    addPokemon(pokemon, synScore, counScore) {
+        // Create new picks array with the additional pokemon
+        const newPicks = [...this.picks, pokemon];
+        
+        // Calculate new score based on previous score and new heuristics
+        return new TeamNode(newPicks, this.incurredCost, synScore + counScore);
+    }
+}
+
+//// HEURISTIC FUNCTIONS ////
 
 // Heuristic function that takes in a team and returns a score
 function heuristic(yourTeam, enemyTeam, tierList){
@@ -353,132 +374,6 @@ function heuristic_synergy_score(yourTeam){
         totalPoints += 100;
     }
 
-    // Check if the team can fill every role
-    function checkRoles(team, attrCounts) {
-        if (team.length == 4) {
-            // Make sure the team can cover at least 4 roles
-            if (attrCounts.canExpShare.Yes < 1) {
-                return false;
-            }
-            if ((attrCounts.canTopLaneCarry.Yes < 1 && attrCounts.canJungleCarry.Yes < 1) || (attrCounts.canTopLaneCarry.Yes < 1 && attrCounts.canBottomLaneCarry.Yes < 1) || (attrCounts.canJungleCarry.Yes < 1 && attrCounts.canBottomLaneCarry.Yes < 1)) {
-                return false;
-            }
-        }
-        if (team.length != 5) {
-            // Don't penalize yet
-            return true;
-        }
-        if (attrCounts.canTopLaneCarry.Yes < 1 || attrCounts.canJungleCarry.Yes < 1 || attrCounts.canBottomLaneCarry.Yes < 1 || attrCounts.canExpShare.Yes < 2) {
-            // Don't have enough traits in general to fill every role
-            return false;
-        }
-        // Check unique pokemon to be able to fill all roles (EX: one pokemon can't be a top laner and a jungle carry)
-        let topLane = null;
-        let topEXPShare = null;
-        let jungle = null;
-        let botLane = null;
-        let botEXPShare = null;
-        
-        // First pass: assign pokemon that MUST fill specific roles
-        for (const pokemon of team) {
-            // Must fill this role because they can only play this role
-            if (pokemon.attributes.canTopLaneCarry === "Yes" && pokemon.attributes.canExpShare === "No" && pokemon.attributes.canJungleCarry === "No" && pokemon.attributes.canBottomLaneCarry === "No") {
-                topLane = pokemon;
-            }
-            if (pokemon.attributes.canExpShare === "Yes" && pokemon.attributes.canTopLaneCarry === "No" && pokemon.attributes.canJungleCarry === "No" && pokemon.attributes.canBottomLaneCarry === "No") {
-                if (topEXPShare === null) {
-                    topEXPShare = pokemon;
-                } else if (botEXPShare === null) {
-                    botEXPShare = pokemon;
-                }
-            }
-            if (pokemon.attributes.canJungleCarry === "Yes" && pokemon.attributes.canExpShare === "No" && pokemon.attributes.canTopLaneCarry === "No" && pokemon.attributes.canBottomLaneCarry === "No") {
-                jungle = pokemon;
-            }
-            if (pokemon.attributes.canBottomLaneCarry === "Yes" && pokemon.attributes.canExpShare === "No" && pokemon.attributes.canTopLaneCarry === "No" && pokemon.attributes.canJungleCarry === "No") {
-                botLane = pokemon;
-            }
-            
-            // Must fill this role because they are the only Pokemon that can fill it
-            if (pokemon.attributes.canTopLaneCarry === "Yes" && attrCounts.canTopLaneCarry.Yes === 1) {
-                topLane = pokemon;
-            }
-            if (pokemon.attributes.canJungleCarry === "Yes" && attrCounts.canJungleCarry.Yes === 1) {
-                jungle = pokemon;
-            }
-            if (pokemon.attributes.canBottomLaneCarry === "Yes" && attrCounts.canBottomLaneCarry.Yes === 1) {
-                botLane = pokemon;
-            }
-            if (pokemon.attributes.canExpShare === "Yes" && attrCounts.canExpShare.Yes === 2) {
-                if (topEXPShare === null) {
-                    topEXPShare = pokemon;
-                } else if (botEXPShare === null && topEXPShare !== pokemon) {
-                    botEXPShare = pokemon;
-                }
-            }
-        }
-        
-        // Second pass: try to fill remaining roles with flexible pokemon
-        // Get unassigned Pokemon
-        const unassignedPokemon = team.filter(p => 
-            p !== topLane && p !== topEXPShare && p !== jungle && p !== botLane && p !== botEXPShare
-        );
-        
-        // Helper function to get all permutations of an array
-        function getPermutations(arr) {
-            if (arr.length <= 1) return [arr];
-            let result = [];
-            
-            for (let i = 0; i < arr.length; i++) {
-                const current = arr[i];
-                const remaining = [...arr.slice(0, i), ...arr.slice(i + 1)];
-                const permutationsOfRemaining = getPermutations(remaining);
-                
-                for (let perm of permutationsOfRemaining) {
-                    result.push([current, ...perm]);
-                }
-            }
-            
-            return result;
-        }
-        
-        // Get all permutations of unassigned Pokemon
-        const permutations = getPermutations(unassignedPokemon);
-        
-        // Try all possible combinations to fill remaining roles
-        for (const perm of permutations) {
-            for (const pokemon of perm) {
-                // Try to fill top lane
-                if (topLane === null && pokemon.attributes.canTopLaneCarry === "Yes") {
-                    topLane = pokemon;
-                }
-                // Try to fill jungle
-                else if (jungle === null && pokemon.attributes.canJungleCarry === "Yes") {
-                    jungle = pokemon;
-                }
-                // Try to fill bottom lane
-                else if (botLane === null && pokemon.attributes.canBottomLaneCarry === "Yes") {
-                    botLane = pokemon;
-                }
-                // Try to fill top exp share
-                else if (topEXPShare === null && pokemon.attributes.canExpShare === "Yes") {
-                    topEXPShare = pokemon;
-                }
-                // Try to fill bottom exp share
-                else if (botEXPShare === null && pokemon.attributes.canExpShare === "Yes") {
-                    botEXPShare = pokemon;
-                }
-            }
-            // All roles filled
-            if (topLane !== null && topEXPShare !== null && jungle !== null && botLane !== null && botEXPShare !== null) {
-                return true;
-            }
-        }
-        
-        // Roles could not be filled
-        return false;
-    }
-
     // If we don't have these best roles it's bad
     // EXP Shares are generally more important to have on their proper role
     // This will also trend the model towards picking EXP Shares early unless there is a good counter elsewhere which is generally good
@@ -500,46 +395,6 @@ function heuristic_synergy_score(yourTeam){
     }
 
     return totalPoints;
-}
-
-// Helper function that counts the number of times each attribute appears in a team
-function countAttributes(data) {
-    const categories = {
-        earlyGame: { Strong: 0, Medium: 0, Weak: 0 },
-        midGame: { Strong: 0, Medium: 0, Weak: 0 },
-        lateGame: { Strong: 0, Medium: 0, Weak: 0 },
-        mobility: { High: 0, Medium: 0, Low: 0 },
-        range: { High: 0, Medium: 0, Low: 0 },
-        bulk: { High: 0, Medium: 0, Low: 0 },
-        damage: { High: 0, Medium: 0, Low: 0 },
-        damageType: { Burst: 0, Consistent: 0, "N/A": 0 },
-        damageAffect: { SingleTarget: 0, SmallAOE: 0, MediumAOE: 0, LargeAOE: 0 },
-        cc: { High: 0, Medium: 0, Low: 0, None: 0 },
-        playStyle: { Dive: 0, Teamfight: 0, SplitMap: 0, Poke: 0, Assist: 0 },
-        classification: { ADC: 0, Bruiser: 0, Assassin: 0, DrainTank: 0, UtilityMage: 0, BurstMage: 0, Healer: 0, Buffer: 0, Engage: 0 },
-        class: { Attacker: 0, Defender: 0, Supporter: 0, Speedster: 0, AllRounder: 0 },
-        otherAttr: { AntiCC: 0, Peel: 0, Heals: 0, Lockdown: 0, SpaceControl: 0 },
-        canExpShare: { Yes: 0, No: 0 },
-        canTopLaneCarry: { Yes: 0, No: 0 },
-        canJungleCarry: { Yes: 0, No: 0 },
-        canBottomLaneCarry: { Yes: 0, No: 0 },
-        bestLane: { TopLane: 0, JungleCarry: 0, BottomCarry: 0, EXPShareTop: 0, EXPShareBot: 0 },
-    };
-    
-    data.forEach(entry => {
-        Object.keys(categories).forEach(key => {
-            if (Array.isArray(entry.attributes[key])) {
-                entry.attributes[key].forEach(value => {
-                    if (Object.prototype.hasOwnProperty.call(categories[key], value)) {
-                        categories[key][value]++;
-                    }
-                });
-            } else if (entry.attributes[key] && Object.prototype.hasOwnProperty.call(categories[key], entry.attributes[key])) {
-                categories[key][entry.attributes[key]]++;
-            }
-        });
-    });
-    return categories;
 }
 
 // Heuristic function that takes in a team and returns a score based on that team's counterpicks
@@ -626,38 +481,172 @@ function heuristic_counter_score(yourTeam, enemyTeam){
     return totalPoints;
 }
 
-function rateComp(comp, allPokemon, tierList){
-    // Get all pokemon objects
-    const pokemonObjects = allPokemon.map(p => 
-        p instanceof Pokemon ? p : new Pokemon(p)
-    );
+//// HELPER FUNCTIONS ////
 
-    // Make pokemon objects
-    const yourTeamObjects = [];
-
-    // Loop through all team member names
-    for (const name of comp) {
-        // Find the matching Pokemon in the full data set
-        const matchingPokemon = pokemonObjects.find(pokemon => 
-            pokemon.name === name.pokemon_name || pokemon.id === name.pokemon_name
-        );
-        
-        if (matchingPokemon) {
-            yourTeamObjects.push(matchingPokemon);
-        } else {
-            console.warn(`Pokemon "${name.pokemon_name}" not found in available data`);
-            // Create a basic Pokemon object with just the name
-            yourTeamObjects.push(new Pokemon({pokemon_name: name.pokemon_name}));
-        }
-    }
-    // Throw it into the heuristics
-    const tierScore = heuristic_tier_score(yourTeamObjects, tierList);
-    const synergyScore = heuristic_synergy_score(yourTeamObjects);
-    const totalScore = tierScore + synergyScore;
-    return {totalScore, tierScore, synergyScore};
+// Helper function that counts the number of times each attribute appears in a team
+function countAttributes(data) {
+    const categories = {
+        earlyGame: { Strong: 0, Medium: 0, Weak: 0 },
+        midGame: { Strong: 0, Medium: 0, Weak: 0 },
+        lateGame: { Strong: 0, Medium: 0, Weak: 0 },
+        mobility: { High: 0, Medium: 0, Low: 0 },
+        range: { High: 0, Medium: 0, Low: 0 },
+        bulk: { High: 0, Medium: 0, Low: 0 },
+        damage: { High: 0, Medium: 0, Low: 0 },
+        damageType: { Burst: 0, Consistent: 0, "N/A": 0 },
+        damageAffect: { SingleTarget: 0, SmallAOE: 0, MediumAOE: 0, LargeAOE: 0 },
+        cc: { High: 0, Medium: 0, Low: 0, None: 0 },
+        playStyle: { Dive: 0, Teamfight: 0, SplitMap: 0, Poke: 0, Assist: 0 },
+        classification: { ADC: 0, Bruiser: 0, Assassin: 0, DrainTank: 0, UtilityMage: 0, BurstMage: 0, Healer: 0, Buffer: 0, Engage: 0 },
+        class: { Attacker: 0, Defender: 0, Supporter: 0, Speedster: 0, AllRounder: 0 },
+        otherAttr: { AntiCC: 0, Peel: 0, Heals: 0, Lockdown: 0, SpaceControl: 0 },
+        canExpShare: { Yes: 0, No: 0 },
+        canTopLaneCarry: { Yes: 0, No: 0 },
+        canJungleCarry: { Yes: 0, No: 0 },
+        canBottomLaneCarry: { Yes: 0, No: 0 },
+        bestLane: { TopLane: 0, JungleCarry: 0, BottomCarry: 0, EXPShareTop: 0, EXPShareBot: 0 },
+    };
+    
+    data.forEach(entry => {
+        Object.keys(categories).forEach(key => {
+            if (Array.isArray(entry.attributes[key])) {
+                entry.attributes[key].forEach(value => {
+                    if (Object.prototype.hasOwnProperty.call(categories[key], value)) {
+                        categories[key][value]++;
+                    }
+                });
+            } else if (entry.attributes[key] && Object.prototype.hasOwnProperty.call(categories[key], entry.attributes[key])) {
+                categories[key][entry.attributes[key]]++;
+            }
+        });
+    });
+    return categories;
 }
 
-// const algorithmicPerfectAnswer = a_star_search([], [], [], rawTraitData);
-// console.log(algorithmicPerfectAnswer);
+// Check if the team can fill every role
+function checkRoles(team, attrCounts) {
+    if (team.length == 4) {
+        // Make sure the team can cover at least 4 roles
+        if (attrCounts.canExpShare.Yes < 1) {
+            return false;
+        }
+        if ((attrCounts.canTopLaneCarry.Yes < 1 && attrCounts.canJungleCarry.Yes < 1) || (attrCounts.canTopLaneCarry.Yes < 1 && attrCounts.canBottomLaneCarry.Yes < 1) || (attrCounts.canJungleCarry.Yes < 1 && attrCounts.canBottomLaneCarry.Yes < 1)) {
+            return false;
+        }
+    }
+    if (team.length != 5) {
+        // Don't penalize yet
+        return true;
+    }
+    if (attrCounts.canTopLaneCarry.Yes < 1 || attrCounts.canJungleCarry.Yes < 1 || attrCounts.canBottomLaneCarry.Yes < 1 || attrCounts.canExpShare.Yes < 2) {
+        // Don't have enough traits in general to fill every role
+        return false;
+    }
+    // Check unique pokemon to be able to fill all roles (EX: one pokemon can't be a top laner and a jungle carry)
+    let topLane = null;
+    let topEXPShare = null;
+    let jungle = null;
+    let botLane = null;
+    let botEXPShare = null;
+    
+    // First pass: assign pokemon that MUST fill specific roles
+    for (const pokemon of team) {
+        // Must fill this role because they can only play this role
+        if (pokemon.attributes.canTopLaneCarry === "Yes" && pokemon.attributes.canExpShare === "No" && pokemon.attributes.canJungleCarry === "No" && pokemon.attributes.canBottomLaneCarry === "No") {
+            topLane = pokemon;
+        }
+        if (pokemon.attributes.canExpShare === "Yes" && pokemon.attributes.canTopLaneCarry === "No" && pokemon.attributes.canJungleCarry === "No" && pokemon.attributes.canBottomLaneCarry === "No") {
+            if (topEXPShare === null) {
+                topEXPShare = pokemon;
+            } else if (botEXPShare === null) {
+                botEXPShare = pokemon;
+            }
+        }
+        if (pokemon.attributes.canJungleCarry === "Yes" && pokemon.attributes.canExpShare === "No" && pokemon.attributes.canTopLaneCarry === "No" && pokemon.attributes.canBottomLaneCarry === "No") {
+            jungle = pokemon;
+        }
+        if (pokemon.attributes.canBottomLaneCarry === "Yes" && pokemon.attributes.canExpShare === "No" && pokemon.attributes.canTopLaneCarry === "No" && pokemon.attributes.canJungleCarry === "No") {
+            botLane = pokemon;
+        }
+        
+        // Must fill this role because they are the only Pokemon that can fill it
+        if (pokemon.attributes.canTopLaneCarry === "Yes" && attrCounts.canTopLaneCarry.Yes === 1) {
+            topLane = pokemon;
+        }
+        if (pokemon.attributes.canJungleCarry === "Yes" && attrCounts.canJungleCarry.Yes === 1) {
+            jungle = pokemon;
+        }
+        if (pokemon.attributes.canBottomLaneCarry === "Yes" && attrCounts.canBottomLaneCarry.Yes === 1) {
+            botLane = pokemon;
+        }
+        if (pokemon.attributes.canExpShare === "Yes" && attrCounts.canExpShare.Yes === 2) {
+            if (topEXPShare === null) {
+                topEXPShare = pokemon;
+            } else if (botEXPShare === null && topEXPShare !== pokemon) {
+                botEXPShare = pokemon;
+            }
+        }
+    }
+    
+    // Second pass: try to fill remaining roles with flexible pokemon
+    // Get unassigned Pokemon
+    const unassignedPokemon = team.filter(p => 
+        p !== topLane && p !== topEXPShare && p !== jungle && p !== botLane && p !== botEXPShare
+    );
+
+    // Get all permutations of unassigned Pokemon
+    const permutations = getPermutations(unassignedPokemon);
+    
+    // Try all possible combinations to fill remaining roles
+    for (const perm of permutations) {
+        for (const pokemon of perm) {
+            // Try to fill top lane
+            if (topLane === null && pokemon.attributes.canTopLaneCarry === "Yes") {
+                topLane = pokemon;
+            }
+            // Try to fill jungle
+            else if (jungle === null && pokemon.attributes.canJungleCarry === "Yes") {
+                jungle = pokemon;
+            }
+            // Try to fill bottom lane
+            else if (botLane === null && pokemon.attributes.canBottomLaneCarry === "Yes") {
+                botLane = pokemon;
+            }
+            // Try to fill top exp share
+            else if (topEXPShare === null && pokemon.attributes.canExpShare === "Yes") {
+                topEXPShare = pokemon;
+            }
+            // Try to fill bottom exp share
+            else if (botEXPShare === null && pokemon.attributes.canExpShare === "Yes") {
+                botEXPShare = pokemon;
+            }
+        }
+        // All roles filled
+        if (topLane !== null && topEXPShare !== null && jungle !== null && botLane !== null && botEXPShare !== null) {
+            return true;
+        }
+    }
+    
+    // Roles could not be filled
+    return false;
+}
+
+// Helper function to get all permutations of an array
+function getPermutations(arr) {
+    if (arr.length <= 1) return [arr];
+    let result = [];
+    
+    for (let i = 0; i < arr.length; i++) {
+        const current = arr[i];
+        const remaining = [...arr.slice(0, i), ...arr.slice(i + 1)];
+        const permutationsOfRemaining = getPermutations(remaining);
+        
+        for (let perm of permutationsOfRemaining) {
+            result.push([current, ...perm]);
+        }
+    }
+    
+    return result;
+}
 
 module.exports = { a_star_search, rateComp };

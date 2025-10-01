@@ -2,7 +2,7 @@ const database = require('./database.js');
 
 function adminAuth(req, res, next) {
 
-    const googleId = req.session.passport.user;
+    const googleId = req.session.passport?.user;
 
     if (!googleId) {
         return res.status(400).json({ message: "googleId is required" });
@@ -20,7 +20,7 @@ exports.adminAuth = adminAuth;
 
 async function verifiedUserAuth(req, res, next) {
     try {
-        const googleId = req.session.passport.user;
+        const googleId = req.session.passport?.user;
     
         if (!googleId) {
             return res.status(400).json({ message: "googleId is required" });

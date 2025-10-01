@@ -68,7 +68,7 @@ function ProMatches() {
 
   return (
     <div id="mainContainer" className="main-container">
-      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCoreData={setCoreData} coreData={coreData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} user={user} />}
+      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCoreData={setCoreData} coreData={coreData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} />}
       <div id="compsContainer">
         <MatchFiltering events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} coreData={coreData} setFilteredData={setFilteredData} advancedDataMode={advancedDataMode} setAdvancedDataMode={setAdvancedDataMode} />
         <div className="comps-list">

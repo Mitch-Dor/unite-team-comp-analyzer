@@ -341,7 +341,7 @@ export async function isVerifiedUser() {
             'Content-Type': 'application/json',
         }
     });
-    if (response.status === 401) {
+    if (!response.ok) {
         return false;
     }
     return true;
@@ -356,7 +356,7 @@ export async function isAdmin() {
             'Content-Type': 'application/json',
         }
     });
-    if (response.status === 401) {
+    if (!response.ok) {
         return false;
     }
     return true;

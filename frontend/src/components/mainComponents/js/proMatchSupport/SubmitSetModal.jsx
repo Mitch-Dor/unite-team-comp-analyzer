@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
 import CustomDropdown from './CustomDropdown';
 
-function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers, user }) {
-    const [setInsertion, setSetInsertion] = useState(false);
+function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers }) {
+    const [setInsertion, setSetInsertion] = useState(null);
     const [eventInsertion, setEventInsertion] = useState(false);
     const [teamInsertion, setTeamInsertion] = useState(false);
     const [playerInsertion, setPlayerInsertion] = useState(false);
@@ -12,15 +12,14 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
 
     useEffect(() => {
         // Set an event listener for if the user clicks outside of the modal to close it
-        window.addEventListener('click', (e) => {
-            // Check if the clicked element is the open button or is inside the modal
+        const handleClick = (e) => {
             if (e.target.id === 'open-set-submit-form' || 
                 e.target.closest('#set-submit-form') || 
-                e.target.closest('.dropdown-options')) {
-                return;
-            }
+                e.target.closest('.dropdown-options')) return;
             setShowSubmitForm(false);
-        });
+        };
+        window.addEventListener('click', handleClick);
+        return () => window.removeEventListener('click', handleClick);
 
         // const timer = setTimeout(() => {
         //     const savedSet = {};
@@ -181,13 +180,17 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
                     set_id: data.set_id,
                     matches: setInsertion.matches.filter((_, i) => !nullMatches.includes(i))
                 };
-
-                console.log(setInsertion);
                   
                 setCoreData(prev => [...prev, newSetInsertion]);
                 // Clear the set insertion data and the input fields
                 setSetInsertion(null);
                 resetAllForms();
+            })
+            .catch(error => {
+                console.error(error);
+                console.log(setInsertion);
+                alert("Error submitting set. Please check console for submission data.");
+                return;
             });
         }
 
@@ -686,7 +689,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                 {[0, 1, 2].map((banPosition) => (
                     <CustomDropdown
                         key={banPosition}
-                        value={ {pokemon_id: bans[banPosition]?.pokemon_id, pokemon_name: bans[banPosition]?.pokemon_name} ?? { pokemon_id: "", pokemon_name: "" } }
+                        value={ {pokemon_id: bans[banPosition]?.pokemon_id ?? "", pokemon_name: bans[banPosition]?.pokemon_name ?? ""} }
                         onChange={value => {
                             setBans(prevBans => {
                                 const newBans = [...prevBans];
@@ -710,10 +713,10 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                 {[0, 1, 2, 3, 4].map((pickNumber) => (
                     <CharacterPlayer 
                         key={pickNumber}
-                        character={ {pokemon_id: picks[pickNumber]?.pokemon_id, pokemon_name: picks[pickNumber]?.pokemon_name} ?? { pokemon_id: "", pokemon_name: "" } } 
-                        move1={ {move_id: picks[pickNumber]?.move_1_id, move_name: picks[pickNumber]?.move_1_name} ?? { move_id: "", move_name: "" } }
-                        move2={ {move_id: picks[pickNumber]?.move_2_id, move_name: picks[pickNumber]?.move_2_name} ?? { move_id: "", move_name: "" } }
-                        player={ {player_id: picks[pickNumber]?.player_id, player_name: picks[pickNumber]?.player_name, player_other_names: picks[pickNumber]?.player_other_names} ?? { player_id: "", player_name: "", player_other_names: "" } } 
+                        character={ {pokemon_id: picks[pickNumber]?.pokemon_id ?? "", pokemon_name: picks[pickNumber]?.pokemon_name ?? ""} } 
+                        move1={ {move_id: picks[pickNumber]?.move_1_id ?? "", move_name: picks[pickNumber]?.move_1_name} }
+                        move2={ {move_id: picks[pickNumber]?.move_2_id ?? "", move_name: picks[pickNumber]?.move_2_name ?? ""} }
+                        player={ {player_id: picks[pickNumber]?.player_id ?? "", player_name: picks[pickNumber]?.player_name ?? "", player_other_names: picks[pickNumber]?.player_other_names ?? ""} } 
                         stats={{
                             assists: picks[pickNumber]?.assists ?? "",
                             dealt: picks[pickNumber]?.dealt ?? "",
