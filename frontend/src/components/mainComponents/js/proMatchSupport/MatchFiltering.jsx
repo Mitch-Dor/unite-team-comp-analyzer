@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CustomDropdown from "./CustomDropdown";
 import Home from "../../../sideComponents/js/Home";
 
-function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, setFilteredData, advancedDataMode, setAdvancedDataMode }) {
+function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, setFilteredData, expandShrinkAllMatches, setExpandShrinkAllMatches }) {
     const [regions, setRegions] = useState([]);
     const [characters, setCharacters] = useState([]);
     const baseData = coreData;
@@ -107,10 +107,9 @@ function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, 
             <option key={index} value={player.player_name}>{player.player_name}</option>
             ))}
         </select>
-        <label className="advancedDataCheckbox" title="Advanced Data Mode (Damage Dealt, Taken, Healed, Kills, etc.)">
-          <input type="checkbox" checked={advancedDataMode} onChange={() => setAdvancedDataMode(prev => !prev)} />
-          <span className="slider"></span>
-        </label>
+        <button className="expandShrinkAllMatchesButton" onClick={() => setExpandShrinkAllMatches(prev => !prev)}>
+            {expandShrinkAllMatches ? "Shrink All" : "Expand All"}
+        </button>
         <Home />
       </div>
     )

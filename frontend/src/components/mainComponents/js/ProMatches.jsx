@@ -18,7 +18,7 @@ function ProMatches() {
   const [filteredData, setFilteredData] = useState([]);
   const { user } = useLocation().state || {};
   const [verifiedUser, setVerifiedUser] = useState(false);
-  const [advancedDataMode, setAdvancedDataMode] = useState(false);
+  const [expandShrinkAllMatches, setExpandShrinkAllMatches] = useState(false);
 
   useEffect(() => {
     async function fetchAllData() {
@@ -70,10 +70,10 @@ function ProMatches() {
     <div id="mainContainer" className="main-container">
       {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCoreData={setCoreData} coreData={coreData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} />}
       <div id="compsContainer">
-        <MatchFiltering events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} coreData={coreData} setFilteredData={setFilteredData} advancedDataMode={advancedDataMode} setAdvancedDataMode={setAdvancedDataMode} />
+        <MatchFiltering events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} coreData={coreData} setFilteredData={setFilteredData} expandShrinkAllMatches={expandShrinkAllMatches} setExpandShrinkAllMatches={setExpandShrinkAllMatches} />
         <div className="comps-list">
           { filteredData && filteredData.length > 0 ? filteredData.map((set, index) => (
-            <SlickSetDisplay key={index} set={set} />
+            <SlickSetDisplay key={index} set={set} expandShrinkAllMatches={expandShrinkAllMatches} />
           )) : (
             <div className="no-matches-found">No matches found</div>
           )}

@@ -1,9 +1,10 @@
+import { useEffect } from 'react';
 import SlickCompDisplay from './SlickCompDisplay';
 import { FaCaretDown } from 'react-icons/fa';
 import { FaCaretUp } from 'react-icons/fa';
 import { useState } from 'react';
 
-function SlickMatchDisplay({ match, team1_name, team2_name }) {
+function SlickMatchDisplay({ match, team1_name, team2_name, expandShrinkAllMatches }) {
     const allPicks = [...match.team1_picks, ...match.team2_picks].sort((a, b) => a.pick_position - b.pick_position);
     const allBans = [...match.team1_bans, ...match.team2_bans].sort((a, b) => a.ban_position - b.ban_position);
     const row1Picks = allPicks.filter(pick => pick.pick_position % 2 === 1);
@@ -27,6 +28,14 @@ function SlickMatchDisplay({ match, team1_name, team2_name }) {
             ban.team_name = match.team2_name === team2_name ? 'team2' : 'team1';
         }
     })
+
+    useEffect(() => {
+        if (expandShrinkAllMatches) {
+            setAdvancedDataMode(true);
+        } else {
+            setAdvancedDataMode(false);
+        }
+    }, [expandShrinkAllMatches]);
 
     return (
         <div className='slick-match-container'>

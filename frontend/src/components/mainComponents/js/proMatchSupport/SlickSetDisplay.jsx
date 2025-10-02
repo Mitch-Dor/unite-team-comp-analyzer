@@ -1,7 +1,7 @@
 import SlickMatchDisplay from './SlickMatchDisplay';
 import '../../css/proMatchDisplay.css';
 
-function SlickSetDisplay({ set }) {
+function SlickSetDisplay({ set, expandShrinkAllMatches }) {
 
     return (
         <div className="slick-set-container">
@@ -18,7 +18,7 @@ function SlickSetDisplay({ set }) {
             </div>
             <div className='slick-set-content'>
                 {set.matches.map((match, index) => (
-                    <SlickMatchDisplay key={index} match={match} team1_name={set.set_score[0].team_name} team2_name={set.set_score[1].team_name} />
+                    <SlickMatchDisplay key={index} match={match} team1_name={set.set_score[0].team_name} team2_name={set.set_score[1].team_name} expandShrinkAllMatches={expandShrinkAllMatches} />
                 ))}
             </div>
             <div className='slick-set-footer'>
