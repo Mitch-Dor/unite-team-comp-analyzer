@@ -33,7 +33,7 @@
     height: calc(100% - 50px);
     gap: 30px;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-start;
     overflow-y: scroll;
     flex-grow: 1;
     -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
