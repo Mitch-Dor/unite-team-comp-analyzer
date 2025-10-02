@@ -358,13 +358,13 @@ function SingleDraft() {
             }
             // Perform the action based on the current state
             if (stateRef.current.startsWith('team1Ban')) {
-                updatePokemonStatus(targetPokemon, 'ban1');
+                updatePokemonStatus(actionPokemon, 'ban1');
             } else if (stateRef.current.startsWith('team2Ban')) {
-                updatePokemonStatus(targetPokemon, 'ban2');
+                updatePokemonStatus(actionPokemon, 'ban2');
             } else if (stateRef.current.startsWith('team1Pick')) {
-                updatePokemonStatus(targetPokemon, 'team1');
+                updatePokemonStatus(actionPokemon, 'team1');
             } else if (stateRef.current.startsWith('team2Pick')) {
-                updatePokemonStatus(targetPokemon, 'team2');
+                updatePokemonStatus(actionPokemon, 'team2');
             } else {
                 console.error("No matching state");
             }
