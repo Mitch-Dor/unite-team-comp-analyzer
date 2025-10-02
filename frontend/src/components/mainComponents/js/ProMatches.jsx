@@ -3,7 +3,7 @@ import '../css/proMatches.css';
 import { fetchAllSets, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, isVerifiedUser } from './backendCalls/http';
 import SubmitSetModal from './proMatchSupport/SubmitSetModal';
 import MatchFiltering from './proMatchSupport/MatchFiltering';
-import SetDisplay from './proMatchSupport/SetDisplay';
+import SlickSetDisplay from './proMatchSupport/SlickSetDisplay';
 import Disclaimer from '../../sideComponents/js/Disclaimer';
 import { useLocation } from 'react-router-dom';
 
@@ -73,7 +73,7 @@ function ProMatches() {
         <MatchFiltering events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} coreData={coreData} setFilteredData={setFilteredData} advancedDataMode={advancedDataMode} setAdvancedDataMode={setAdvancedDataMode} />
         <div className="comps-list">
           { filteredData && filteredData.length > 0 ? filteredData.map((set, index) => (
-            <SetDisplay key={index} set={set} advancedDataMode={advancedDataMode} />
+            <SlickSetDisplay key={index} set={set} />
           )) : (
             <div className="no-matches-found">No matches found</div>
           )}

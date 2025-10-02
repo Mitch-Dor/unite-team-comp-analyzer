@@ -1,4 +1,4 @@
-import MatchDisplay from './MatchDisplay';
+import BlockMatchDisplay from './BlockMatchDisplay';
 
 function SetDisplay({ set, advancedDataMode }) {
 
@@ -20,7 +20,7 @@ function SetDisplay({ set, advancedDataMode }) {
             <div className="set-content">
             {set.matches.map((match, index) => (
                 <div key={index} className="set-match-container">
-                    <MatchDisplay match={match} advancedDataMode={advancedDataMode} />
+                    <BlockMatchDisplay match={match} advancedDataMode={advancedDataMode} />
                 </div>
             ))}
             </div>

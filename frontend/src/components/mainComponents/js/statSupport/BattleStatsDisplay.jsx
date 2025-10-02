@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import MatchDisplay from '../proMatchSupport/MatchDisplay';
+import BlockMatchDisplay from '../proMatchSupport/BlockMatchDisplay';
 
 // Register the required chart components
 ChartJS.register(
@@ -288,7 +288,7 @@ function AllPokemonChart({ data, orderBy, totalData }) {
 // and their moves represented with just the featured Pokemon having its data like kills listed with it. There must be a link to the VOD containing the match for VOD review.
 function MatchDisplaysChart({ data }) {
   return (
-    <MatchDisplay match={data} advancedDataMode={true} />
+    <BlockMatchDisplay match={data} advancedDataMode={true} />
 );
 
 }

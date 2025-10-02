@@ -1,0 +1,364 @@
+/* SLICK SET DISPLAY */
+
+.slick-set-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 600px;
+    max-width: 100%;
+    background-color: rgba(26, 26, 26, 0.7);
+    font-size: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border-radius: 10px;
+    border: 2px solid white;
+    overflow: hidden;
+}
+
+.slick-set-header, .slick-set-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    color: white;
+    font-size: 1.25em;
+    background-color: rgba(26, 26, 26, 0.7);
+}
+
+.slick-set-header {
+    border-radius: 10px 10px 0px 0px;
+    border-bottom: 1px solid black;
+}
+
+.slick-set-footer {
+    padding: 8px 0px;
+    border-radius: 0px 0px 10px 10px;
+    border-top: 1px solid black;
+}
+
+.slick-set-descriptor {
+    text-align: center;
+}
+
+.slick-set-team-indicator-container {
+    position: relative;
+    height: 80px;
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.slick-set-team-indicator {
+    position: relative;
+    height: 80px;
+    width: 80px;
+    font-size: 1.15em;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* The gradient fill */
+    background: linear-gradient(90deg, #e74c3c, #f39c12);
+
+    /* The smear mask */
+    -webkit-mask-image: url('/assets/Smear.png');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+
+    mask-image: url('/assets/Smear.png');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+
+    -webkit-mask-mode: luminance; /* makes white=visible, black=transparent */
+    mask-mode: luminance;
+}
+
+.slick-set-team-indicator-name {
+    position: absolute;          /* ensure it sits above */
+    z-index: 1;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.slick-set-team1 {
+    background: linear-gradient(90deg, #be471f, #f39c12);
+}
+
+.slick-set-team2 {
+    background: linear-gradient(90deg, #a03ce7, #5d37c5);
+}
+
+.slick-set-event-name {
+    text-align: center;
+}
+
+.slick-set-match-winner {
+    text-align: center;
+}
+
+.slick-set-date {
+    text-align: center;
+}
+
+.slick-set-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding-top: 20px;
+}
+
+/* SLICK MATCH DISPLAY */
+
+.slick-match-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    color: white;
+    font-size: 1em;
+    border-bottom: 1px solid black;
+}
+
+.slick-match-base-info-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 110px;
+    width: 100%;
+    padding-bottom: 21px
+}
+
+.slick-match-information {
+    height: 100%;
+    width: 100px;
+    max-width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.slick-match-winner {
+    font-weight: bold;
+    text-align: center;
+}
+
+.slick-match-winner-text {
+    color: white;
+}
+
+.slick-match-winner-text.team-1 {
+    color: #f39c12;
+}
+
+.slick-match-winner-text.team-2 {
+    color: #a03ce7;
+}
+
+.slick-set-winner-name.team-1 {
+    color: #f39c12;
+}
+
+.slick-set-winner-name.team-2 {
+    color: #a03ce7;
+}
+
+.slick-match-vod img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: 30px;
+}
+
+.slick-match-label {
+    color: silver;
+}
+
+.slick-match-picks-bans-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.slick-match-bans {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+}
+
+.slick-match-bans-team1, .slick-match-bans-team2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100px;
+}
+
+.slick-match-draft {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 70%;
+    height: 70px;
+}
+
+.slick-match-draft-row {
+    display: flex;
+    justify-content: space-between;
+    height: 50%;
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+
+.slick-match-draft-row.draft-row-1 {
+    top: 0;
+}
+
+.slick-match-draft-row.draft-row-2 {
+    top: 50%;
+}
+
+/* Stagger the rows */
+.slick-match-draft-row.draft-row-2 .slick-match-draft-pick {
+    margin-left: calc(50% / 5); 
+}
+
+.slick-match-draft-row.draft-row-1 .slick-match-draft-pick {
+    margin-right: calc(50% / 5);
+}
+  
+
+.slick-match-draft-pick {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+    border-radius: 50%;
+}
+
+.slick-match-bans-pick {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    padding: 2px;
+    border-radius: 50%;
+}
+
+.slick-match-draft-pick img, .slick-match-bans-pick img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.slick-match-ban-position-label, .slick-match-draft-position-label {
+    position: absolute;
+    top: -4px;  /* tweak placement */
+    right: -4px;
+    background: red;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slick-match-expand {
+    height: 100%;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.slick-match-expand svg {
+    height: 20px;
+    width: 20px;
+    color: white;
+}
+
+.slick-match-expanded-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* SLICK COMP DISPLAY */
+
+.team-name.team-1 {
+    color: #f39c12;
+}
+
+.team-name.team-2 {
+    color: #a03ce7;
+}
+
+.crown {
+    color: #f39c12;
+}
+
+.slick-match-expanded-container .team-side {
+    border-radius: 0px;
+}
+
+.team-side.side1 {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Smaller than desktop */
+@media (max-width: 1024px) {
+    .slick-match-winner {
+        font-size: 0.75em;
+    }
+
+    .slick-match-base-info-container {
+        height: 90px;
+    }
+    
+    .slick-match-draft-pick {
+        width: 25px;
+        height: 25px;
+    }
+
+    .slick-match-bans-pick {
+        width: 20px;
+        height: 20px;
+    }
+
+    .slick-match-expanded-container {
+        flex-direction: column;
+    }
+
+    .slick-match-expanded-container .team-side {
+        width: calc(100% - 16px);
+    }
+}

@@ -1,4 +1,4 @@
-function CompDisplay({ picks, bans, team_name, team_region, did_win, advancedDataMode }) {
+function BlockCompDisplay({ picks, bans, team_name, team_region, did_win, advancedDataMode }) {
     const totalDealt = picks.reduce((acc, pick) => acc + pick.dealt, 0);
     const totalTaken = picks.reduce((acc, pick) => acc + pick.taken, 0);
     const totalHealed = picks.reduce((acc, pick) => acc + pick.healed, 0);
@@ -97,4 +97,4 @@ function CompDisplay({ picks, bans, team_name, team_region, did_win, advancedDat
     );
 }
 
-export default CompDisplay;
+export default BlockCompDisplay;
