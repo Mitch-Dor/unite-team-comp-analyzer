@@ -1,0 +1,82 @@
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    font-size: 14px;
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+.dropdown-button {
+    padding: 8px;
+    width: 100%;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.dropdown-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.selected-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1em;
+    text-overflow: clip;
+    width: 100%;
+}
+
+.dropdown-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.selected-option span {
+    width: 100%;
+    text-align: left;
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 100%;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 2000;
+    margin-top: 2px;
+    white-space: nowrap;
+    font-size: 0.5em;
+}
+
+.dropdown-option {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: white;
+    min-width: fit-content;
+}
+
+.dropdown-option.target {
+    border: 1px solid #7fb3ff;
+}
+
+.dropdown-option:hover {
+    background-color: #444;
+}

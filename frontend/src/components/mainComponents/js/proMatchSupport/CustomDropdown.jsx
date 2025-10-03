@@ -1,7 +1,8 @@
+import '../../css/proMatchSupport/customDropdown.css';
 import React, { useState, useEffect, useRef } from 'react';
 
 // Custom dropdown component
-function CustomDropdown({ value, onChange, options, placeholder, disabled, path, character_name, defaultOption }) {
+function CustomDropdown({ value, onChange, options, placeholder, disabled, path, character_name }) {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentTarget, setCurrentTarget] = useState(-1);
@@ -122,7 +123,8 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                 }}
                 disabled={disabled}
             >
-                {value && value !== defaultOption ? (
+                {/* Display the selected option */}
+                {value && (value && ((value?.pokemon_name ?? "") !== "" || (value?.move_name ?? "") !== "")) ? (
                     <div className="selected-option">
                         <img 
                             src={getImagePath(value.pokemon_name ? value.pokemon_name : value.move_name)} 
@@ -133,25 +135,21 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                     </div>
                 ) : searchTerm ? (
                     <span>{searchTerm}</span>
-                ) : defaultOption ? (
-                    <span>{defaultOption}</span>
-                ) : (
+                ) :  (
                     <span>{placeholder}</span>
                 )}
             </button>
             {isOpen && (
                 <div className="dropdown-options" ref={optionsRef}>
-                    {defaultOption && (
-                        <div
-                            className="dropdown-option"
-                            onClick={() => {
-                                onChange(defaultOption);
-                                setIsOpen(false);
-                            }}
-                        >
-                            <span>{defaultOption}</span>
-                        </div>
-                    )}
+                    <div
+                        className="dropdown-option"
+                        onClick={() => {
+                            onChange("");
+                            setIsOpen(false);
+                        }}
+                    >
+                        <span>{placeholder}</span>
+                    </div>
                     {options.map((option, index) => (
                         <div
                             key={option.pokemon_id || option.move_id || option.pokemon_name || option.move_name || index}

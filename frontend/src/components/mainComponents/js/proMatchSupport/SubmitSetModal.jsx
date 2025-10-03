@@ -817,37 +817,43 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
         <div className="character-player-stat-container">
             <div className="set-character-player">
                 {/* Character Dropdown */}
-                <CustomDropdown
-                    value={character}
-                    onChange={(value) => {
-                        setCharacter(value);
-                        setMove1({ move_id: "", move_name: "" });
-                        setMove2({ move_id: "", move_name: "" });
-                    }}
-                    options={filteredUniquePokemon}
-                    placeholder="Character Select"
-                    path="/assets/Draft/headshots"
-                />
+                <div className="insert-set-character-select-container">
+                    <CustomDropdown
+                        value={character}
+                        onChange={(value) => {
+                            setCharacter(value);
+                            setMove1({ move_id: "", move_name: "" });
+                            setMove2({ move_id: "", move_name: "" });
+                        }}
+                        options={filteredUniquePokemon}
+                        placeholder="Character Select"
+                        path="/assets/Draft/headshots"
+                    />
+                </div>
                 {/* Move 1 Dropdown */}
-                <CustomDropdown
-                    value={move1}
-                    onChange={setMove1}
-                    options={availableMoves}
-                    placeholder="Move 1 Select"
-                    disabled={!character}   
-                    path="/assets/Draft/moves"
-                    character_name={character ? character.pokemon_name : character}  
-                />
+                <div className="insert-set-move-select-container">
+                    <CustomDropdown
+                        value={move1}
+                        onChange={setMove1}
+                        options={availableMoves}
+                        placeholder="Move 1 Select"
+                        disabled={character?.pokemon_name === ""}   
+                        path="/assets/Draft/moves"
+                        character_name={character ? character.pokemon_name : null}  
+                    />
+                </div>
                 {/* Move 2 Dropdown */}
-                <CustomDropdown
+                <div className="insert-set-move-select-container">
+                    <CustomDropdown
                     value={move2}
                     onChange={setMove2}
                     options={availableMoves}
                     placeholder="Move 2 Select"
-                    disabled={!character}   
+                    disabled={character?.pokemon_name === ""}   
                     path="/assets/Draft/moves"
-                    character_name={character ? character.pokemon_name : character}  
-                />
+                    character_name={character ? character.pokemon_name : null}  
+                    />
+                </div>
                 {/* Player Dropdown */}
                 <select value={player ? JSON.stringify(player) : ""} onChange={(e) => setPlayer(JSON.parse(e.target.value))}>
                     <option value="">Player Select</option>

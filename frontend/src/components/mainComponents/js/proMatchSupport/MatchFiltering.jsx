@@ -82,7 +82,6 @@ function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, 
               placeholder={defaultCharacter}
               disabled={false}
               path="/assets/Draft/headshots"
-              defaultOption={defaultCharacter}
             />
           </div>
         </div>

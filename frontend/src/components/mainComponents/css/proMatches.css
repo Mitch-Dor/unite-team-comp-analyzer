@@ -757,22 +757,6 @@
     width: 100%;
 }
 
-.set-character-player .custom-dropdown:nth-child(1) {
-    width: 40%;
-}
-
-.set-character-player .custom-dropdown:nth-child(2) {
-    width: 15%;
-}
-
-.set-character-player .custom-dropdown:nth-child(3) {
-    width: 15%;
-}
-
-.set-character-player select:nth-child(4) {
-    width: 25%;
-}
-
 .stat-inputs-container {
     display: flex;
     justify-content: space-between;
@@ -822,85 +806,6 @@ select.stat-input {
     color: white;
     border: none;
     border-radius: 6px;
-}
-
-.custom-dropdown {
-    position: relative;
-    width: 40%;
-}
-
-.dropdown-button {
-    padding: 8px;
-    width: 100%;
-    background-color: #333;
-    border: 1px solid #555;
-    border-radius: 5px;
-    color: white;
-    text-align: left;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    overflow: hidden;
-}
-
-.dropdown-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.dropdown-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 100%;
-    background-color: #333;
-    border: 1px solid #555;
-    border-radius: 5px;
-    max-height: 200px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    z-index: 2000;
-    margin-top: 2px;
-    white-space: nowrap;
-}
-
-.dropdown-option {
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    color: white;
-    min-width: fit-content;
-}
-
-.dropdown-option.target {
-    border: 1px solid #7fb3ff;
-}
-
-.dropdown-option:hover {
-    background-color: #444;
-}
-
-.selected-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.45rem;
-    text-overflow: clip;
-}
-
-@media (min-width: 1024px) {
-    .selected-option {
-        font-size: 0.8rem;
-    }
-}
-
-.dropdown-icon {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
 }
 
 .match-vod {
@@ -964,19 +869,10 @@ select.stat-input {
     width: 18%;
 }
 
-.custom-dropdown {
-    width: 100%;
+.insert-set-character-select-container {
+    width: 40%;
 }
 
-.dropdown-button {
-    font-size: 0.5rem;
-}
-
-@media (min-width: 1024px) {
-    .custom-dropdown-container .custom-dropdown {
-        font-size: 0.875rem;
-    }
-    .dropdown-button {
-        font-size: 0.875rem;
-    }
+.insert-set-move-select-container {
+    width: 15%;
 }
