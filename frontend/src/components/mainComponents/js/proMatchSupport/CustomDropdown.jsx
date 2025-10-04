@@ -1,11 +1,13 @@
 import '../../css/proMatchSupport/customDropdown.css';
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 // Custom dropdown component
 function CustomDropdown({ value, onChange, options, placeholder, disabled, path, character_name }) {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentTarget, setCurrentTarget] = useState(-1);
+    const [dropdownPosition, setDropdownPosition] = useState(null);
     const dropdownRef = useRef(null);
     const isFocusedRef = useRef(false);
     const optionsRef = useRef(null);
@@ -104,6 +106,23 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
         return `${path}/${name}.png`;
     }
 
+    // When dropdown opens, calculate its absolute screen position
+    useEffect(() => {
+        if (isOpen && dropdownRef.current) {
+            const rect = dropdownRef.current.getBoundingClientRect();
+            const spaceBelow = window.innerHeight - rect.bottom;
+            const dropdownHeight = Math.min(200, options.length * 35 + 40); // approx height
+            const shouldFlip = spaceBelow < dropdownHeight && rect.top > dropdownHeight;
+
+            setDropdownPosition({
+                top: shouldFlip ? rect.top - dropdownHeight : rect.bottom,
+                left: rect.left,
+                width: rect.width,
+                flip: shouldFlip,
+            });
+        }
+    }, [isOpen, options.length]);
+
     return (
         <div 
             className="custom-dropdown" 
@@ -139,35 +158,49 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                     <span>{placeholder}</span>
                 )}
             </button>
-            {isOpen && (
-                <div className="custom-dropdown-dropdown-options" ref={optionsRef}>
-                    <div
-                        className="custom-dropdown-dropdown-option"
-                        onClick={() => {
-                            onChange("");
-                            setIsOpen(false);
-                        }}
+            {isOpen && dropdownPosition && (
+                createPortal(
+                    <div className="custom-dropdown-dropdown-options"
+                    ref={optionsRef}
+                    style={{
+                        position: 'absolute',
+                        top: dropdownPosition.top + 'px',
+                        left: dropdownPosition.left + 'px',
+                        minWidth: dropdownPosition.width + 'px',
+                        maxHeight: '200px',
+                        overflowY: 'auto',
+                        zIndex: 9999,
+                    }}
                     >
-                        <span>{placeholder}</span>
-                    </div>
-                    {options.map((option, index) => (
                         <div
-                            key={option.pokemon_id || option.move_id || option.pokemon_name || option.move_name || index}
-                            className={`custom-dropdown-dropdown-option ${index === currentTarget ? 'target' : ''}`}
+                            className="custom-dropdown-dropdown-option"
                             onClick={() => {
-                                onChange(option);
+                                onChange("");
                                 setIsOpen(false);
                             }}
                         >
-                            <img 
-                                src={getImagePath(option.pokemon_name ? option.pokemon_name : option.move_name)} 
-                                alt={option.pokemon_name ? option.pokemon_name : option.move_name}
-                                className="custom-dropdown-dropdown-icon"
-                            />
-                            <span>{option.pokemon_name ? option.pokemon_name : option.move_name}</span>
+                            <span>{placeholder}</span>
                         </div>
-                    ))}
-                </div>
+                        {options.map((option, index) => (
+                            <div
+                                key={option.pokemon_id || option.move_id || option.pokemon_name || option.move_name || index}
+                                className={`custom-dropdown-dropdown-option ${index === currentTarget ? 'target' : ''}`}
+                                onClick={() => {
+                                    onChange(option);
+                                    setIsOpen(false);
+                                }}
+                            >
+                                <img 
+                                    src={getImagePath(option.pokemon_name ? option.pokemon_name : option.move_name)} 
+                                    alt={option.pokemon_name ? option.pokemon_name : option.move_name}
+                                    className="custom-dropdown-dropdown-icon"
+                                />
+                                <span>{option.pokemon_name ? option.pokemon_name : option.move_name}</span>
+                            </div>
+                        ))}
+                    </div>,
+                    document.body
+                )
             )}
         </div>
     );

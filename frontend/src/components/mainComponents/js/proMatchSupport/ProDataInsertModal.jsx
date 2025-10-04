@@ -291,23 +291,27 @@ function ProDataInsertModal({ setShowSubmitForm, coreData, setCoreData, events, 
     // pdim = pro data insert modal
     return (
         <div id="pdim-container">
-            <div className="pdim-header-type-select">
-                <div 
-                  className={`pdim-header-type-select-category ${creationState === 0 ? 'active' : ''}`}
-                  onClick={() => setCreationState(0)}
-                >Set</div>
-                <div 
-                  className={`pdim-header-type-select-category ${creationState === 1 ? 'active' : ''}`}
-                  onClick={() => setCreationState(1)}
-                >Event</div>
-                <div 
-                  className={`pdim-header-type-select-category ${creationState === 2 ? 'active' : ''}`}
-                  onClick={() => setCreationState(2)}
-                >Team</div>
-                <div 
-                  className={`pdim-header-type-select-category ${creationState === 3 ? 'active' : ''}`}
-                  onClick={() => setCreationState(3)}
-                >Player</div>
+            <div className="pdim-header-container">
+                <button className="pdim-header-button" id="pdim-submit-button" onClick={submitComp}>Submit</button>
+                <div className="pdim-header-type-select">
+                    <div 
+                    className={`pdim-header-type-select-category ${creationState === 0 ? 'active' : ''}`}
+                    onClick={() => setCreationState(0)}
+                    >Set</div>
+                    <div 
+                    className={`pdim-header-type-select-category ${creationState === 1 ? 'active' : ''}`}
+                    onClick={() => setCreationState(1)}
+                    >Event</div>
+                    <div 
+                    className={`pdim-header-type-select-category ${creationState === 2 ? 'active' : ''}`}
+                    onClick={() => setCreationState(2)}
+                    >Team</div>
+                    <div 
+                    className={`pdim-header-type-select-category ${creationState === 3 ? 'active' : ''}`}
+                    onClick={() => setCreationState(3)}
+                    >Player</div>
+                </div>
+                <button className="pdim-header-button" id="pdim-reset-button" onClick={resetAllForms}>Reset</button>
             </div>
             {creationState === 0 && (
                 <SetInsertion resetKey={resetKey} setSetInsertion={setSetInsertion} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} />
@@ -321,10 +325,6 @@ function ProDataInsertModal({ setShowSubmitForm, coreData, setCoreData, events, 
             {creationState === 3 && (
                 <PlayerCreation resetKey={resetKey} setPlayerInsertion={setPlayerInsertion} />
             )}
-            {/* Submit Button */}
-            <button id="pdim-submit-button" onClick={submitComp}>Submit</button>
-            {/* Add Reset Button */}
-            <button id="pdim-reset-button" onClick={resetAllForms}>Reset</button>
         </div>
     );
 }
@@ -479,21 +479,11 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
             </div>
             {/* Set Descriptor (Text Input) */}
             <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
-            <div className="pdim-match-data-card">
-                <MatchInsertion resetKey={resetKey} match={match1} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={1}/>
-            </div>
-            <div className="pdim-match-data-card">
-                <MatchInsertion resetKey={resetKey} match={match2} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={2}/>
-            </div>
-            <div className="pdim-match-data-card">
-                <MatchInsertion resetKey={resetKey} match={match3} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={3}/>
-            </div>
-            <div className="pdim-match-data-card">
-                <MatchInsertion resetKey={resetKey} match={match4} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={4}/>
-            </div>
-            <div className="pdim-match-data-card">
-                <MatchInsertion resetKey={resetKey} match={match5} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={5}/>
-            </div>
+            <MatchInsertion resetKey={resetKey} match={match1} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={1}/>
+            <MatchInsertion resetKey={resetKey} match={match2} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={2}/>
+            <MatchInsertion resetKey={resetKey} match={match3} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={3}/>
+            <MatchInsertion resetKey={resetKey} match={match4} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={4}/>
+            <MatchInsertion resetKey={resetKey} match={match5} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={5}/>
         </div>
     );
 }
@@ -532,8 +522,44 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
 
     return (
         <div className="pdim-match-data-container">
-            <h3>Match {matchNumber}</h3>
-            <div className="pdim-comp-card">
+            <div className="pdim-match-data-input-container">
+                <h3>Match {matchNumber}</h3>
+                {/* Match VOD URL */}
+                <input type="text" value={match.match_vod_url ? match.match_vod_url : ""} placeholder="Match VOD URL" onChange={(e) => setMatch({...match, match_vod_url: e.target.value})} />
+                {/* Match Winner Dropdown */}
+                <div className="pdim-match-winner-dropdown">
+                    <select
+                        value={
+                        match.match_winner_id
+                            ? JSON.stringify({
+                                team_id: match.match_winner_id,
+                                team_name: match.match_winner_text,
+                            })
+                            : ""
+                        }
+                        onChange={(e) => {
+                        if (!e.target.value) {
+                            setMatch({ ...match, match_winner_id: "", match_winner_text: "" });
+                            return;
+                        }
+                        const team = JSON.parse(e.target.value);
+                        setMatch({
+                            ...match,
+                            match_winner_id: team.team_id,
+                            match_winner_text: team.team_name,
+                        });
+                        }}
+                    >
+                        <option value="">Winner Select</option>
+                        <option value={JSON.stringify(pickedTeams.team1)}>
+                        {pickedTeams.team1.team_name}
+                        </option>
+                        <option value={JSON.stringify(pickedTeams.team2)}>
+                        {pickedTeams.team2.team_name}
+                        </option>
+                    </select>
+                </div>
+            </div>
             {[1, 2].map((compNumber) => (
                 <CompInsertion 
                     key={compNumber}
@@ -549,42 +575,6 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
                     compNumber={compNumber}
                 />
             ))}
-            </div>
-            {/* Match VOD URL */}
-            <input type="text" value={match.match_vod_url ? match.match_vod_url : ""} placeholder="Match VOD URL" onChange={(e) => setMatch({...match, match_vod_url: e.target.value})} />
-            {/* Match Winner Dropdown */}
-            <div className="pdim-match-winner-dropdown">
-            <select
-                value={
-                match.match_winner_id
-                    ? JSON.stringify({
-                        team_id: match.match_winner_id,
-                        team_name: match.match_winner_text,
-                    })
-                    : ""
-                }
-                onChange={(e) => {
-                if (!e.target.value) {
-                    setMatch({ ...match, match_winner_id: "", match_winner_text: "" });
-                    return;
-                }
-                const team = JSON.parse(e.target.value);
-                setMatch({
-                    ...match,
-                    match_winner_id: team.team_id,
-                    match_winner_text: team.team_name,
-                });
-                }}
-            >
-                <option value="">Winner Select</option>
-                <option value={JSON.stringify(pickedTeams.team1)}>
-                {pickedTeams.team1.team_name}
-                </option>
-                <option value={JSON.stringify(pickedTeams.team2)}>
-                {pickedTeams.team2.team_name}
-                </option>
-            </select>
-            </div>
         </div>
     )
 }
@@ -864,14 +854,7 @@ function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, 
                         </option>
                     ))}
                 </select>
-            </div>
-            <div className="pdim-pick-extra-data-row">
-                <input className="pdim-pick-stat-input" type="text" placeholder="kills" value={stats.kills ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "kills")}></input>
-                <input className="pdim-pick-stat-input" type="text" placeholder="assists" value={stats.assists ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "assists")}></input>
-                <input className="pdim-pick-stat-input" type="text" placeholder="scored" value={stats.scored ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "scored")}></input>
-                <input className="pdim-pick-stat-input" type="text" placeholder="dealt" value={stats.dealt ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "dealt")}></input>
-                <input className="pdim-pick-stat-input" type="text" placeholder="taken" value={stats.taken ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "taken")}></input>
-                <input className="pdim-pick-stat-input" type="text" placeholder="healed" value={stats.healed ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "healed")}></input>
+                {/* Position Dropdown */}
                 <select className="pdim-pick-stat-input" value={stats.position_played ?? ""} onChange={(e) => setStats(e.target.value, "position_played")}>
                     <option value="">Role</option>
                     <option value="TopCarry">Top Carry</option>
@@ -880,6 +863,14 @@ function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, 
                     <option value="BottomCarry">Bot Carry</option>
                     <option value="EXPShareBot">Bot EXP Share</option>
                 </select>
+            </div>
+            <div className="pdim-pick-extra-data-row">
+                <input className="pdim-pick-stat-input" type="text" placeholder="kills" value={stats.kills ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "kills")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="assists" value={stats.assists ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "assists")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="scored" value={stats.scored ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "scored")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="dealt" value={stats.dealt ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "dealt")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="taken" value={stats.taken ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "taken")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="healed" value={stats.healed ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "healed")}></input>
             </div>
         </div>
     )

@@ -2,10 +2,10 @@
 
 #pdim-container {
     position: fixed;
-    top: 10%;
-    left: 10%;
-    width: 80%;
-    height: 80%;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
     overflow-y: auto;
     background-color: rgba(42, 42, 42, 0.95);
     border-radius: 10px;
@@ -13,13 +13,15 @@
     z-index: 10;
     display: flex;
     flex-direction: column;
+    font-size: 14px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 #pdim-container::-webkit-scrollbar {
     display: none;
 }
 
-.pdim-header-type-select {
+.pdim-header-container {
     display: flex;
     justify-content: space-between;
     padding: 0;
@@ -28,6 +30,32 @@
     top: 0;
     z-index: 11;
     width: 100%;
+}
+
+.pdim-header-button {
+    width: 10%;
+    border-radius: 0px;
+    font-size: 1.2em;
+}
+
+#pdim-submit-button, #pdim-reset-button {
+    background-color: #4e8cff;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#pdim-submit-button:hover, #pdim-reset-button:hover {
+    background-color: #3a78e7;
+}
+
+.pdim-header-type-select {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .pdim-header-type-select-category {
@@ -51,40 +79,6 @@
     border-bottom: 3px solid #7fb3ff;
 }
 
-#pdim-submit-button {
-    margin: 20px auto;
-    padding: 12px 30px;
-    background-color: #4e8cff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    display: block;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#pdim-submit-button:hover {
-    background-color: #3a78e7;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-}
-
-#pdim-submit-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-#pdim-reset-button {
-    width: 100%;
-    background-color: #4e8cff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-}
-
 /*** Overall Creation Forms ***/
 
 .pdim-creation-forms {
@@ -92,7 +86,6 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-bottom: 60px; /* Make space for the submit button */
 }
 
 .pdim-creation-forms input, .pdim-creation-forms select, .pdim-creation-forms .custom-dropdown-dropdown-button {
@@ -123,48 +116,48 @@
 
 /* Match Data */
 
-.pdim-match-data-card {
+.pdim-match-data-container {
     background-color: rgba(42, 42, 42, 0.85);
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    padding: 10px;
     width: 100%;
 }
 
-.pdim-match-data-container {
-
-}
-
-.pdim-match-data-container h3 {
-    width: 100%;
-    text-align: center;
-    text-decoration: underline;
-    color: white;
-}
-
-.pdim-match-winner-dropdown {
+.pdim-match-data-input-container {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    padding-bottom: 60px;
-    padding-top: 60px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.pdim-match-data-container h3 {
+    width: 15%;
+    text-align: center;
+    text-decoration: underline;
+    color: white;
+    font-size: 1.5em;
+}
+
+.pdim-match-winner-dropdown {
+    width: 25%;
+}
+
+.pdim-match-data-input-container input {
+    width: 35%;
 }
 
 /* Comp Data */
 
-.pdim-comp-card {
-    display: flex;
-    padding: 20px;
-    gap: 30px;
-    min-height: 200px;
-}
-
 .pdim-comp-data-container {
-    width: 50%;
+    width: 48%;
+    gap: 30px;
 }
 
 .pdim-comp-team-data-container {
@@ -220,11 +213,11 @@
     justify-content: space-between;
     width: 100%;
     padding-top: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 30px;
 }
 
-.pdim-comp-team-bans-container select {
-    width: 45%;
+.pdim-comp-team-bans-container .custom-dropdown {
+    width: 30%;
 }
 
 .pdim-comp-team-picks-container {
@@ -249,12 +242,15 @@
 }
 
 .pdim-pick-pokemon-select-container {
-    width: 40%;
+    width: 30%;
 }
-
 
 .pdim-pick-move-select-container {
     width: 15%;
+}
+
+.pdim-pick-necessary-data-row select {
+    width: 18%;
 }
 
 .pdim-pick-extra-data-row {
@@ -266,7 +262,6 @@
 
 input.pdim-pick-stat-input {
     width: 7%;
-    font-size: 10px;
 }
 
 select.pdim-pick-stat-input {
