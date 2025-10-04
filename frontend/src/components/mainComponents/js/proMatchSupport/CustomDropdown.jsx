@@ -15,11 +15,11 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
     // Scroll to current target when it changes
     useEffect(() => {
         if (isOpen && currentTarget !== -1 && optionsRef.current) {
-            const options = optionsRef.current.children;
-            if (options[currentTarget]) {
-                options[currentTarget].scrollIntoView({ 
+            const optionsEl = optionsRef.current.children;
+            if (optionsEl[currentTarget]) {
+                optionsEl[currentTarget].scrollIntoView({
                     block: 'nearest',
-                    behavior: 'smooth'
+                    behavior: 'smooth',
                 });
             }
         }
@@ -29,7 +29,15 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
     useEffect(() => {
         // Close dropdown when clicking outside
         function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            const dropdownEl = dropdownRef.current;
+            const optionsEl = optionsRef.current;
+        
+            // If click is outside both the main button and the dropdown list, close
+            if (
+                dropdownEl &&
+                !dropdownEl.contains(event.target) &&
+                (!optionsEl || !optionsEl.contains(event.target))
+            ) {
                 setIsOpen(false);
                 setSearchTerm('');
                 isFocusedRef.current = false;

@@ -15,7 +15,8 @@ function ProDataInsertModal({ setShowSubmitForm, coreData, setCoreData, events, 
         // Set an event listener for if the user clicks outside of the modal to close it
         const handleClick = (e) => {
             if (e.target.id === 'open-set-submit-form' || 
-                e.target.closest('#pdim-container')) return;
+                e.target.closest('#pdim-container') ||
+                e.target.closest('.custom-dropdown-dropdown-options')) return;
             setShowSubmitForm(false);
         };
         window.addEventListener('click', handleClick);
@@ -794,7 +795,7 @@ function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, 
         for (const pokemon of pokemonInstances) {
             moves.push({move_name: pokemon.move_name, move_id: pokemon.move_id});
         }
-        return moves;
+        return moves.sort((a, b) => a.move_id - b.move_id); // So that the order the moves should be input in is maintained
     };
     const availableMoves = character ? getPokemonMoves(character.pokemon_name) : [];
     // Get unique pokemon_name and pokemon_id combinations
