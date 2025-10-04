@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../css/proMatches.css';
 import { fetchAllSets, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, isVerifiedUser } from './backendCalls/http';
-import SubmitSetModal from './proMatchSupport/SubmitSetModal';
+import ProDataInsertModal from './proMatchSupport/ProDataInsertModal';
 import MatchFiltering from './proMatchSupport/MatchFiltering';
 import SlickSetDisplay from './proMatchSupport/SlickSetDisplay';
 import Disclaimer from '../../sideComponents/js/Disclaimer';
@@ -68,7 +68,7 @@ function ProMatches() {
 
   return (
     <div id="mainContainer" className="main-container">
-      {showSubmitForm && <SubmitSetModal setShowSubmitForm={setShowSubmitForm} setCoreData={setCoreData} coreData={coreData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} />}
+      {showSubmitForm && <ProDataInsertModal setShowSubmitForm={setShowSubmitForm} setCoreData={setCoreData} coreData={coreData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} />}
       <div id="compsContainer">
         <MatchFiltering events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} coreData={coreData} setFilteredData={setFilteredData} expandShrinkAllMatches={expandShrinkAllMatches} setExpandShrinkAllMatches={setExpandShrinkAllMatches} />
         <div className="comps-list">

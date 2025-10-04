@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
 import CustomDropdown from './CustomDropdown';
+import '../../css/proMatchSupport/proDataInsertModal.css';
 
-function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers }) {
+function ProDataInsertModal({ setShowSubmitForm, coreData, setCoreData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers }) {
     const [setInsertion, setSetInsertion] = useState(null);
     const [eventInsertion, setEventInsertion] = useState(false);
     const [teamInsertion, setTeamInsertion] = useState(false);
@@ -14,8 +15,7 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
         // Set an event listener for if the user clicks outside of the modal to close it
         const handleClick = (e) => {
             if (e.target.id === 'open-set-submit-form' || 
-                e.target.closest('#set-submit-form') || 
-                e.target.closest('.dropdown-options')) return;
+                e.target.closest('#pdim-container')) return;
             setShowSubmitForm(false);
         };
         window.addEventListener('click', handleClick);
@@ -288,23 +288,24 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
         setResetKey(prev => prev + 1);
     };
 
+    // pdim = pro data insert modal
     return (
-        <div id="set-submit-form">
-            <div className="comp-header">
+        <div id="pdim-container">
+            <div className="pdim-header-type-select">
                 <div 
-                  className={`set-submission-category ${creationState === 0 ? 'active' : ''}`}
+                  className={`pdim-header-type-select-category ${creationState === 0 ? 'active' : ''}`}
                   onClick={() => setCreationState(0)}
                 >Set</div>
                 <div 
-                  className={`set-submission-category ${creationState === 1 ? 'active' : ''}`}
+                  className={`pdim-header-type-select-category ${creationState === 1 ? 'active' : ''}`}
                   onClick={() => setCreationState(1)}
                 >Event</div>
                 <div 
-                  className={`set-submission-category ${creationState === 2 ? 'active' : ''}`}
+                  className={`pdim-header-type-select-category ${creationState === 2 ? 'active' : ''}`}
                   onClick={() => setCreationState(2)}
                 >Team</div>
                 <div 
-                  className={`set-submission-category ${creationState === 3 ? 'active' : ''}`}
+                  className={`pdim-header-type-select-category ${creationState === 3 ? 'active' : ''}`}
                   onClick={() => setCreationState(3)}
                 >Player</div>
             </div>
@@ -321,9 +322,9 @@ function SubmitSetModal({ setShowSubmitForm, coreData, setCoreData, events, team
                 <PlayerCreation resetKey={resetKey} setPlayerInsertion={setPlayerInsertion} />
             )}
             {/* Submit Button */}
-            <button id="set-submit-button" onClick={submitComp}>Submit</button>
+            <button id="pdim-submit-button" onClick={submitComp}>Submit</button>
             {/* Add Reset Button */}
-            <button id="set-reset-button" onClick={resetAllForms}>Reset</button>
+            <button id="pdim-reset-button" onClick={resetAllForms}>Reset</button>
         </div>
     );
 }
@@ -453,8 +454,8 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
     }, [match1.firstPick, match2.firstPick, match3.firstPick, match4.firstPick, match5.firstPick]);
       
     return (
-        <div id="set-creation" className="comp-card">
-            <div className="set-creation-event-data">
+        <div className="pdim-creation-forms">
+            <div className="pdim-event-data-container">
                 {/* Event Name Dropdown */}
                 <select value={selectedEvent && selectedEvent.event_name ? selectedEvent.event_name : ""} onChange={(e) => {
                     const eventName = e.target.value;
@@ -478,19 +479,19 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
             </div>
             {/* Set Descriptor (Text Input) */}
             <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
-            <div className="comp-card">
+            <div className="pdim-match-data-card">
                 <MatchInsertion resetKey={resetKey} match={match1} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={1}/>
             </div>
-            <div className="comp-card">
+            <div className="pdim-match-data-card">
                 <MatchInsertion resetKey={resetKey} match={match2} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={2}/>
             </div>
-            <div className="comp-card">
+            <div className="pdim-match-data-card">
                 <MatchInsertion resetKey={resetKey} match={match3} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={3}/>
             </div>
-            <div className="comp-card">
+            <div className="pdim-match-data-card">
                 <MatchInsertion resetKey={resetKey} match={match4} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={4}/>
             </div>
-            <div className="comp-card">
+            <div className="pdim-match-data-card">
                 <MatchInsertion resetKey={resetKey} match={match5} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={5}/>
             </div>
         </div>
@@ -530,9 +531,9 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
     }, [firstPickSelected]);
 
     return (
-        <div id="match-insertion">
+        <div className="pdim-match-data-container">
             <h3>Match {matchNumber}</h3>
-            <div className="set-comp-content">
+            <div className="pdim-comp-card">
             {[1, 2].map((compNumber) => (
                 <CompInsertion 
                     key={compNumber}
@@ -552,7 +553,7 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
             {/* Match VOD URL */}
             <input type="text" value={match.match_vod_url ? match.match_vod_url : ""} placeholder="Match VOD URL" onChange={(e) => setMatch({...match, match_vod_url: e.target.value})} />
             {/* Match Winner Dropdown */}
-            <div className="match-winner-dropdown">
+            <div className="pdim-match-winner-dropdown">
             <select
                 value={
                 match.match_winner_id
@@ -627,8 +628,8 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
     }, [firstPickSelected]);
 
     return (
-        <div id="comp-insertion">
-            <div className="set-team-header">
+        <div className="pdim-comp-data-container">
+            <div className="pdim-comp-team-data-container">
                 {/* Team Name Dropdown */}
                 <select
                 value={compNumber === 1 
@@ -656,7 +657,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                 ))}
                 </select>
                 {/* Team Region (Read-only) */}
-                <div className="team-region-display">
+                <div className="pdim-comp-team-region-display">
                     <input 
                     type="text" 
                     value={compNumber === 1 ? (match.team1_region ? match.team1_region : "") : (match.team2_region ? match.team2_region : "")} 
@@ -666,7 +667,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                 </div>
                 
                 {/* First Pick Checkbox */}
-                <div className="first-pick-checkbox">   
+                <div className="pdim-comp-first-pick-checkbox-container">   
                     <label>
                         First Pick:
                     </label>
@@ -684,7 +685,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                     />
                 </div>
             </div>
-            <div className="set-team-bans">
+            <div className="pdim-comp-team-bans-container">
                 {/* Bans Dropdowns */}
                 {[0, 1, 2].map((banPosition) => (
                     <CustomDropdown
@@ -708,10 +709,10 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                     />
                 ))}
             </div>
-            <div className="team-comp">
+            <div className="pdim-comp-team-picks-container">
                 {/* Pokemon / Players */}
                 {[0, 1, 2, 3, 4].map((pickNumber) => (
-                    <CharacterPlayer 
+                    <Pick 
                         key={pickNumber}
                         character={ {pokemon_id: picks[pickNumber]?.pokemon_id ?? "", pokemon_name: picks[pickNumber]?.pokemon_name ?? ""} } 
                         move1={ {move_id: picks[pickNumber]?.move_1_id ?? "", move_name: picks[pickNumber]?.move_1_name} }
@@ -792,7 +793,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
 }
 
 // Character and player insertion form for a comp (Used in SetInsertion)
-function CharacterPlayer({ character, move1, move2, player, stats, setCharacter, setMove1, setMove2, setPlayer, setStats, charactersAndMoves, players, unavailableCharacters }) {
+function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, setMove2, setPlayer, setStats, charactersAndMoves, players, unavailableCharacters }) {
     // Get available moves for the selected character
     const getPokemonMoves = (pokemonName) => {
         if (!pokemonName) return [];
@@ -814,10 +815,10 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
     );
     
     return (
-        <div className="character-player-stat-container">
-            <div className="set-character-player">
+        <div className="pdim-pick-data-container">
+            <div className="pdim-pick-necessary-data-row">
                 {/* Character Dropdown */}
-                <div className="insert-set-character-select-container">
+                <div className="pdim-pick-pokemon-select-container">
                     <CustomDropdown
                         value={character}
                         onChange={(value) => {
@@ -831,7 +832,7 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
                     />
                 </div>
                 {/* Move 1 Dropdown */}
-                <div className="insert-set-move-select-container">
+                <div className="pdim-pick-move-select-container">
                     <CustomDropdown
                         value={move1}
                         onChange={setMove1}
@@ -843,7 +844,7 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
                     />
                 </div>
                 {/* Move 2 Dropdown */}
-                <div className="insert-set-move-select-container">
+                <div className="pdim-pick-move-select-container">
                     <CustomDropdown
                     value={move2}
                     onChange={setMove2}
@@ -864,14 +865,14 @@ function CharacterPlayer({ character, move1, move2, player, stats, setCharacter,
                     ))}
                 </select>
             </div>
-            <div className="stat-inputs-container">
-                <input className="stat-input" type="text" placeholder="kills" value={stats.kills ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "kills")}></input>
-                <input className="stat-input" type="text" placeholder="assists" value={stats.assists ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "assists")}></input>
-                <input className="stat-input" type="text" placeholder="scored" value={stats.scored ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "scored")}></input>
-                <input className="stat-input" type="text" placeholder="dealt" value={stats.dealt ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "dealt")}></input>
-                <input className="stat-input" type="text" placeholder="taken" value={stats.taken ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "taken")}></input>
-                <input className="stat-input" type="text" placeholder="healed" value={stats.healed ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "healed")}></input>
-                <select className="stat-input" value={stats.position_played ?? ""} onChange={(e) => setStats(e.target.value, "position_played")}>
+            <div className="pdim-pick-extra-data-row">
+                <input className="pdim-pick-stat-input" type="text" placeholder="kills" value={stats.kills ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "kills")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="assists" value={stats.assists ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "assists")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="scored" value={stats.scored ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "scored")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="dealt" value={stats.dealt ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "dealt")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="taken" value={stats.taken ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "taken")}></input>
+                <input className="pdim-pick-stat-input" type="text" placeholder="healed" value={stats.healed ?? ""} onChange={(e) => setStats(e.target.value ? Number(e.target.value) : null, "healed")}></input>
+                <select className="pdim-pick-stat-input" value={stats.position_played ?? ""} onChange={(e) => setStats(e.target.value, "position_played")}>
                     <option value="">Role</option>
                     <option value="TopCarry">Top Carry</option>
                     <option value="EXPShareTop">Top EXP Share</option>
@@ -907,7 +908,7 @@ function EventCreation({ resetKey, setEventInsertion }) {
     }, [resetKey]);
 
     return (
-        <div id="event-creation">
+        <div className="pdim-creation-forms">
             {/* Event Name */}
             <input type="text" value={eventName ? eventName : ""} placeholder="Event Name" onChange={(e) => setEventName(e.target.value)} />
             {/* Event Date */}
@@ -939,7 +940,7 @@ function TeamCreation({ resetKey, setTeamInsertion }) {
     }, [resetKey]);
 
     return (
-        <div id="team-creation">
+        <div className="pdim-creation-forms">
             {/* Team Name */}
             <input type="text" value={teamName ? teamName : ""} placeholder="Team Name" onChange={(e) => setTeamName(e.target.value)} />
             {/* Team Region */}
@@ -969,11 +970,11 @@ function PlayerCreation({ resetKey, setPlayerInsertion }) {
     }, [resetKey]);
 
     return (
-        <div id="player-creation">
+        <div className="pdim-creation-forms">
             {/* Player Name */}
             <input type="text" value={playerName ? playerName : ""} placeholder="Player Name" onChange={(e) => setPlayerName(e.target.value)} />
         </div>
     );
 }
 
-export default SubmitSetModal;
+export default ProDataInsertModal;

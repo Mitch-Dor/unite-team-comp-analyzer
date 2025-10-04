@@ -116,7 +116,7 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
             }}
         >
             <button 
-                className="dropdown-button"
+                className="custom-dropdown-dropdown-button"
                 onClick={() => {
                     setIsOpen(!isOpen);
                     isFocusedRef.current = true;
@@ -125,11 +125,11 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
             >
                 {/* Display the selected option */}
                 {value && (value && ((value?.pokemon_name ?? "") !== "" || (value?.move_name ?? "") !== "")) ? (
-                    <div className="selected-option">
+                    <div className="custom-dropdown-selected-option">
                         <img 
                             src={getImagePath(value.pokemon_name ? value.pokemon_name : value.move_name)} 
                             alt={value.pokemon_name ? value.pokemon_name : value.move_name}
-                            className="dropdown-icon"
+                            className="custom-dropdown-dropdown-icon"
                         />
                         <span>{value.pokemon_name ? value.pokemon_name : value.move_name}</span>
                     </div>
@@ -140,9 +140,9 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                 )}
             </button>
             {isOpen && (
-                <div className="dropdown-options" ref={optionsRef}>
+                <div className="custom-dropdown-dropdown-options" ref={optionsRef}>
                     <div
-                        className="dropdown-option"
+                        className="custom-dropdown-dropdown-option"
                         onClick={() => {
                             onChange("");
                             setIsOpen(false);
@@ -153,7 +153,7 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                     {options.map((option, index) => (
                         <div
                             key={option.pokemon_id || option.move_id || option.pokemon_name || option.move_name || index}
-                            className={`dropdown-option ${index === currentTarget ? 'target' : ''}`}
+                            className={`custom-dropdown-dropdown-option ${index === currentTarget ? 'target' : ''}`}
                             onClick={() => {
                                 onChange(option);
                                 setIsOpen(false);
@@ -162,7 +162,7 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                             <img 
                                 src={getImagePath(option.pokemon_name ? option.pokemon_name : option.move_name)} 
                                 alt={option.pokemon_name ? option.pokemon_name : option.move_name}
-                                className="dropdown-icon"
+                                className="custom-dropdown-dropdown-icon"
                             />
                             <span>{option.pokemon_name ? option.pokemon_name : option.move_name}</span>
                         </div>
