@@ -129,7 +129,7 @@ function CustomDropdown({ value, onChange, options, placeholder, disabled, path,
                 flip: shouldFlip,
             });
         }
-    }, [isOpen, options.length]);
+    }, [isOpen]);
 
     return (
         <div 

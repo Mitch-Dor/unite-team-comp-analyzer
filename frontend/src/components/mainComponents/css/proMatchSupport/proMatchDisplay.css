@@ -253,7 +253,7 @@
 .slick-match-draft-pick {
     position: relative;
     width: 40px;
-    height: 40px;
+    aspect-ratio: 1/1;
     padding: 2px;
     border-radius: 50%;
 }
@@ -261,7 +261,7 @@
 .slick-match-bans-pick {
     position: relative;
     width: 20px;
-    height: 20px;
+    aspect-ratio: 1/1;
     padding: 2px;
     border-radius: 50%;
 }

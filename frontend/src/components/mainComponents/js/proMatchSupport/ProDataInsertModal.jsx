@@ -402,7 +402,7 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
 
     useEffect(() => {
         setSetInsertion(composedSet);
-    }, [composedSet]);
+    }, [composedSet]);    
 
     useEffect(() => {
         setComposedSet({...composedSet, set_descriptor: setDescriptor});
@@ -454,6 +454,23 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
         setMatch5(prev => updateMatch(prev, prev.firstPick));
     }, [match1.firstPick, match2.firstPick, match3.firstPick, match4.firstPick, match5.firstPick]);
       
+    // Create a dictionary mapping pokemon_name to an array of their moves
+    const pokemonToMoves = charactersAndMoves.reduce((acc, char) => {
+        if (!acc[char.pokemon_name]) {
+            acc[char.pokemon_name] = [];
+        }
+        acc[char.pokemon_name].push({ move_name: char.move_name, move_id: char.move_id });
+        return acc;
+    }, {});
+
+    // Sort the moves in each array by move_id
+    Object.keys(pokemonToMoves).forEach(pokemon => {
+        pokemonToMoves[pokemon].sort((a, b) => a.move_id - b.move_id);
+    });
+
+    // Get unique pokemon_name and pokemon_id combinations
+    const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
+
     return (
         <div className="pdim-creation-forms">
             <div className="pdim-event-data-container">
@@ -480,23 +497,28 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
             </div>
             {/* Set Descriptor (Text Input) */}
             <input type="text" value={setDescriptor} placeholder="Set Descriptor (EX: Losers Finals)" onChange={(e) => setSetDescriptor(e.target.value)} />
-            <MatchInsertion resetKey={resetKey} match={match1} setMatch={setMatch1} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={1}/>
-            <MatchInsertion resetKey={resetKey} match={match2} setMatch={setMatch2} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={2}/>
-            <MatchInsertion resetKey={resetKey} match={match3} setMatch={setMatch3} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={3}/>
-            <MatchInsertion resetKey={resetKey} match={match4} setMatch={setMatch4} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={4}/>
-            <MatchInsertion resetKey={resetKey} match={match5} setMatch={setMatch5} teams={teams} players={players} charactersAndMoves={charactersAndMoves} matchNumber={5}/>
+            <MatchInsertion resetKey={resetKey} match={match1} setMatch={setMatch1} teams={teams} players={players} matchNumber={1} uniquePokemon={uniquePokemon} pokemonToMoves={pokemonToMoves}/>
+            <MatchInsertion resetKey={resetKey} match={match2} setMatch={setMatch2} teams={teams} players={players} matchNumber={2} uniquePokemon={uniquePokemon} pokemonToMoves={pokemonToMoves}/>
+            <MatchInsertion resetKey={resetKey} match={match3} setMatch={setMatch3} teams={teams} players={players} matchNumber={3} uniquePokemon={uniquePokemon} pokemonToMoves={pokemonToMoves}/>
+            <MatchInsertion resetKey={resetKey} match={match4} setMatch={setMatch4} teams={teams} players={players} matchNumber={4} uniquePokemon={uniquePokemon} pokemonToMoves={pokemonToMoves}/>
+            <MatchInsertion resetKey={resetKey} match={match5} setMatch={setMatch5} teams={teams} players={players} matchNumber={5} uniquePokemon={uniquePokemon} pokemonToMoves={pokemonToMoves}/>
         </div>
     );
 }
 
 // Match insertion form for a set (Used in SetInsertion)
-    function MatchInsertion({ resetKey, match, setMatch, teams, players, charactersAndMoves, matchNumber }) {
+    function MatchInsertion({ resetKey, match, setMatch, teams, players, matchNumber, uniquePokemon, pokemonToMoves }) {
     // {match_id: null, match_winner_id: null, match_winner_text: null, team1_bans: [], team1_id: null, team1_name: null, team1_picks: [], team1_region: null, team2_bans: [], team2_id: null, team2_name: null, team2_picks: [], team2_region: null}
     // Just used in this and lower components. Not sent up components to database
     const [unavailableCharacters, setUnavailableCharacters] = useState([]);
     const [firstPickSelected, setFirstPickSelected] = useState(1); // 1 is unselected, 2 is team 1 is fp, 3 is team 2 is fp (For CompInsertion To Know Pick Positions / Ban Positions)
     const [pickedTeams, setPickedTeams] = useState({team1: match.team1_id ? {team_id: match.team1_id, team_name: match.team1_name} : {team_id: null, team_name: "Team 1"}, team2: match.team2_id ? {team_id: match.team2_id, team_name: match.team2_name} : {team_id: null, team_name: "Team 2"}});
 
+    // Filter out unavailable characters
+    const filteredUniquePokemon = uniquePokemon.filter(char => 
+        !unavailableCharacters.includes(char.pokemon_id) || !unavailableCharacters.some(id => id !== null && id !== undefined)
+    );
+    
     useEffect(() => {
         setPickedTeams({team1: match.team1_id ? {team_id: match.team1_id, team_name: match.team1_name} : {team_id: null, team_name: "Team 1"}, team2: match.team2_id ? {team_id: match.team2_id, team_name: match.team2_name} : {team_id: null, team_name: "Team 2"}});
     }, [match.team1_id, match.team2_id]);
@@ -569,7 +591,8 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
                     setMatch={setMatch} 
                     teams={teams} 
                     players={players} 
-                    charactersAndMoves={charactersAndMoves}
+                    availablePokemon={filteredUniquePokemon}
+                    pokemonToMoves={pokemonToMoves}
                     unavailableCharacters={unavailableCharacters}
                     firstPickSelected={firstPickSelected}
                     setFirstPickSelected={setFirstPickSelected}
@@ -581,9 +604,7 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
 }
 
 // Comp insertion form for a match (Used in SetInsertion)
-function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAndMoves, unavailableCharacters, firstPickSelected, setFirstPickSelected, compNumber }) {
-    // Get unique pokemon_name and pokemon_id combinations
-    const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
+function CompInsertion({ resetKey, match, setMatch, teams, players, availablePokemon, pokemonToMoves, unavailableCharacters, firstPickSelected, setFirstPickSelected, compNumber }) {
     const [bans, setBans] = useState([{ban_position: 1}, {ban_position: 2}, {ban_position: 3}]);
     const [picks, setPicks] = useState([{pick_position: 1}, {pick_position: 2}, {pick_position: 3}, {pick_position: 4}, {pick_position: 5}]);
 
@@ -591,11 +612,6 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
         setBans([{ban_position: 1}, {ban_position: 2}, {ban_position: 3}]);
         setPicks([{pick_position: 1}, {pick_position: 2}, {pick_position: 3}, {pick_position: 4}, {pick_position: 5}]);
     }, [resetKey]);
-
-    // Filter out unavailable characters
-    const filteredUniquePokemon = uniquePokemon.filter(char => 
-        !unavailableCharacters.includes(char.pokemon_id) || !unavailableCharacters.some(id => id !== null && id !== undefined)
-    );
 
     useEffect(() => {
         setMatch(prev => ({
@@ -693,7 +709,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                                 return newBans;
                             });
                         }}
-                        options={[{ pokemon_id: 0, pokemon_name: "None" }, ...filteredUniquePokemon]}
+                        options={[{ pokemon_id: 0, pokemon_name: "None" }, ...availablePokemon]}
                         placeholder={`Ban ${banPosition} Select`}
                         disabled={false}
                         path="/assets/Draft/headshots"
@@ -773,7 +789,8 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
                                 return newPicks;
                             });
                         }}
-                        charactersAndMoves={charactersAndMoves}
+                        availablePokemon={availablePokemon}
+                        pokemonToMoves={pokemonToMoves}
                         players={players}
                         unavailableCharacters={unavailableCharacters}
                     />
@@ -784,26 +801,9 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, charactersAn
 }
 
 // Character and player insertion form for a comp (Used in SetInsertion)
-function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, setMove2, setPlayer, setStats, charactersAndMoves, players, unavailableCharacters }) {
+function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, setMove2, setPlayer, setStats, availablePokemon, pokemonToMoves, players, unavailableCharacters }) {
     // Get available moves for the selected character
-    const getPokemonMoves = (pokemonName) => {
-        if (!pokemonName) return [];
-        // Find all instances of the Pokémon and collect their moves
-        const pokemonInstances = charactersAndMoves.filter(char => char.pokemon_name === pokemonName);
-        // Push all of their moves to an array
-        let moves = [];
-        for (const pokemon of pokemonInstances) {
-            moves.push({move_name: pokemon.move_name, move_id: pokemon.move_id});
-        }
-        return moves.sort((a, b) => a.move_id - b.move_id); // So that the order the moves should be input in is maintained
-    };
-    const availableMoves = character ? getPokemonMoves(character.pokemon_name) : [];
-    // Get unique pokemon_name and pokemon_id combinations
-    const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
-    // Filter out unavailable characters
-    const filteredUniquePokemon = uniquePokemon.filter(char => 
-        !unavailableCharacters.includes(char.pokemon_id) || !unavailableCharacters.some(id => id !== null && id !== undefined)
-    );
+    const availableMoves = character ? pokemonToMoves[character.pokemon_name] : [];
     
     return (
         <div className="pdim-pick-data-container">
@@ -817,7 +817,7 @@ function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, 
                             setMove1({ move_id: "", move_name: "" });
                             setMove2({ move_id: "", move_name: "" });
                         }}
-                        options={filteredUniquePokemon}
+                        options={availablePokemon}
                         placeholder="Character Select"
                         path="/assets/Draft/headshots"
                     />
