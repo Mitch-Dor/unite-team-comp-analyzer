@@ -36,7 +36,6 @@ function ProMatches() {
           // Doesn't need to be sorted. Is already in order of creation / proper move order
           setCharactersAndMoves(fetchedCharactersAndMoves);
           setCoreData(fetchedSets);
-          console.log(fetchedSets);
       } catch (error) {
           console.error("Error fetching data:", error);
       }
