@@ -14,7 +14,7 @@ function ProDataInsertModal({ setShowSubmitForm, coreData, setCoreData, events, 
     useEffect(() => {
         // Set an event listener for if the user clicks outside of the modal to close it
         const handleClick = (e) => {
-            if (e.target.id === 'open-set-submit-form' || 
+            if (e.target.id === 'pro-matches-open-pro-data-insert-form' || 
                 e.target.closest('#pdim-container') ||
                 e.target.closest('.custom-dropdown-dropdown-options') ||
                 e.target.closest('.pdim-match-unite-api-parse-screen-cover')) return;

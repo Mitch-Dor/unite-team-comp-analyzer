@@ -64,15 +64,15 @@ function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, 
     }, [eventFilter, characterFilter, regionFilter, teamFilter, playerFilter]);
   
     return (
-      <div className="comps-sorting-container">
+      <div className="pro-match-filtering-container">
         {/* Sort by Event */}
-        <select id='pro-match-filtering-event-dropdown' className="comps-sorting-dropdown" onChange={(e) => setEventFilter(e.target.value)}>
+        <select id='pro-match-filtering-event-dropdown' className="pro-match-filtering-dropdown" onChange={(e) => setEventFilter(e.target.value)}>
           <option value={defaultEvent}>{defaultEvent}</option>
         {events.map((event, index) => (
           <option key={index} value={event.event_name}>{event.event_name}</option>
         ))}
         </select>
-        <div className="custom-dropdown-container">
+        <div className="pro-match-filtering-custom-dropdown-container">
           {/* Sort by Pokemon */}
           <div id="sorting-pokemon-dropdown">
             <CustomDropdown
@@ -86,27 +86,27 @@ function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, 
           </div>
         </div>
         {/* Sort by Region */}
-        <select id='pro-match-filtering-region-dropdown' className="comps-sorting-dropdown" onChange={(e) => setRegionFilter(e.target.value)}>
+        <select id='pro-match-filtering-region-dropdown' className="pro-match-filtering-dropdown" onChange={(e) => setRegionFilter(e.target.value)}>
           <option value={defaultRegion}>{defaultRegion}</option>
           {regions.map((region, index) => (
             <option key={index} value={region}>{region}</option>
           ))}
         </select>
         {/* Sort by Team */}
-        <select id='pro-match-filtering-team-dropdown' className="comps-sorting-dropdown" onChange={(e) => setTeamFilter(e.target.value)}>
+        <select id='pro-match-filtering-team-dropdown' className="pro-match-filtering-dropdown" onChange={(e) => setTeamFilter(e.target.value)}>
           <option value={defaultTeam}>{defaultTeam}</option>
           {teams.map((team, index) => (
             <option key={index} value={team.team_name}>{team.team_name}</option>
           ))}
         </select>
         {/* Sort by Player */}
-        <select id='pro-match-filtering-player-dropdown' className="comps-sorting-dropdown" onChange={(e) => setPlayerFilter(e.target.value)}>
+        <select id='pro-match-filtering-player-dropdown' className="pro-match-filtering-dropdown" onChange={(e) => setPlayerFilter(e.target.value)}>
           <option value={defaultPlayer}>{defaultPlayer}</option>
           {players.map((player, index) => (
             <option key={index} value={player.player_name}>{player.player_name}</option>
             ))}
         </select>
-        <button className="expandShrinkAllMatchesButton" onClick={() => setExpandShrinkAllMatches(prev => !prev)}>
+        <button className="pro-match-expand-shrink-all-matches-button" onClick={() => setExpandShrinkAllMatches(prev => !prev)}>
             {expandShrinkAllMatches ? "Shrink All" : "Expand All"}
         </button>
         <Home />

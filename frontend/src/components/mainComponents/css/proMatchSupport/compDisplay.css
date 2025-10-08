@@ -1,0 +1,274 @@
+/* Shared by Slick and Block Unless Otherwise Stated */
+
+.comp-display-team-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: rgba(26, 26, 26, 0.6);
+}
+
+.comp-display-team-side.winning-team { /* Block Only */
+    background-color: rgba(52, 73, 94, 0.6);
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+}
+
+.comp-display-team-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comp-display-team-header-left-side {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-left: 10px;
+}
+
+.comp-display-team-header-right-side {
+    display: flex;
+    padding-right: 10px;
+}
+
+.comp-display-first-pick {
+    background-color: rgba(89, 144, 222, 0.6);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 0.5rem;
+}
+
+.comp-display-team-name {
+    font-size: 1.0rem;
+    font-weight: bold;
+    color: white;
+}
+
+.comp-display-team-region {
+    background-color: rgba(52, 73, 94, 0.6);
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 0.5rem;
+    color: #ccc;
+}
+
+.comp-display-team-bans {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+}
+
+.comp-display-ban-label {
+    color: #ff7f7f;
+    font-weight: bold;
+}
+
+.comp-display-ban-pokemon {
+    display: flex;
+    align-items: center;
+}
+
+.comp-display-pokemon-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(52, 73, 94, 0.6);
+    padding: 2px;
+}
+
+.comp-display-pokemon-icon.ban {
+    width: 25px;
+    height: 25px;
+    opacity: 0.8;
+    filter: grayscale(50%);
+}
+
+.comp-display-team-comp {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comp-display-draft-row {
+    padding: 8px 10px;
+    background-color: rgba(52, 73, 94, 0.3);
+    border-radius: 6px;
+    min-width: 200px;
+    width: 100% - 16px;
+}
+
+.comp-display-base-data {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+}
+
+.comp-display-draft-row-number-headshot-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.comp-display-draft-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: rgba(52, 73, 94, 0.8);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.8rem;
+}
+
+.comp-display-pokemon-name {
+    color: white;
+    font-weight: bold;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 11px;
+}
+
+.comp-display-move-icons {
+    display: flex;
+    justify-content: center;
+    margin-top: 2px;
+    gap: 2px;
+}
+
+.comp-display-move-icon {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+.comp-display-player-name {
+    color: #ccc;
+    margin-left: auto;
+    text-align: right;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 40px;
+    max-width: 60px;
+}
+
+.comp-display-stats-row {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font-size: 0.6rem;
+}
+
+.comp-display-statNumber {
+    display: flex;
+    width: 7%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    align-items: center;
+    background-position: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.comp-display-statNumber.kills {
+    background-image: url('/assets/icons/kills.png');
+}
+
+.comp-display-statNumber.assists {
+    background-image: url('/assets/icons/assists.png');
+}
+
+.comp-display-statNumber.scored {
+    background-image: url('/assets/icons/score.png');
+}
+
+.comp-display-statBar {
+    position: relative;
+    width: 20%;
+    background-color: rgba(107, 107, 107, 0.5);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.comp-display-statBarFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 0;
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.comp-display-statBarFill.red {
+  background-color: rgba(247, 64, 64, 0.7);
+}
+
+.comp-display-statBarFill.blue {
+  background-color: rgba(64, 134, 247, 0.7);
+}
+
+.comp-display-statBarFill.green {
+  background-color: rgba(64, 247, 110, 0.7);
+}
+
+.comp-display-statBar span {
+  position: relative;
+  z-index: 1;
+}
+
+.comp-display-positionIndicator {
+    width: 5%;
+    display: flex;
+    background-repeat: no-repeat;
+    background-size: contain;
+    align-items: center;
+    background-position: center;
+    justify-content: center;
+}
+
+.comp-display-positionIndicator.TopCarry {
+    background-image: url('/assets/Draft/filterIcons/top.png');
+}
+
+.comp-display-positionIndicator.EXPShareTop {
+    background-image: url('/assets/Draft/filterIcons/EXPShareTop.png');
+}
+
+.comp-display-positionIndicator.BottomCarry {
+    background-image: url('/assets/Draft/filterIcons/bot.png');
+}
+
+.comp-display-positionIndicator.JungleCarry {
+    background-image: url('/assets/Draft/filterIcons/jungle.png');
+}
+
+.comp-display-positionIndicator.EXPShareBot {
+    background-image: url('/assets/Draft/filterIcons/EXPShareBot.png');
+}
+
+@media (max-width: 1024px) {
+    .team-side {
+        width: 100%;
+    }
+}

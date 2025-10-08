@@ -1,0 +1,134 @@
+/* Block SET Display */
+
+.block-set-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-size: 14px;
+}
+
+.block-set-header {
+    background-color: rgba(26, 26, 26);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 40px);
+    border-radius: 10px 10px 0px 0px;
+    font-size: 1em;
+}
+
+.block-set-descriptor {
+
+}
+
+.block-set-event {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.block-set-date {
+
+}
+
+.block-set-matches-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: center;
+    width: calc(100% - 20px);
+    background-color: rgba(26, 26, 26, 0.85);
+    padding: 10px;
+}
+
+.block-set-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.block-set-winner-label {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: white;
+    text-align: center;
+    width: 100%;
+    background-color: rgba(26, 26, 26);
+    padding: 15px 20px;
+    border-radius: 0px 0px 10px 10px;
+}
+
+/* Block MATCH Display */
+
+.block-match-card {
+    background-color: rgba(42, 42, 42, 0.85);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 100%;
+    margin: 5px 0px;
+}
+
+.block-match-footer {
+    background-color: rgba(26, 26, 26, 0.9);
+    padding: 8px 20px;
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.block-match-winner-label {
+    font-weight: bold;
+}
+
+.block-match-winner-name {
+    color: #7fb3ff;
+}
+
+.block-match-vod {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: 30px;
+}
+
+.block-match-vod a {
+    width: 100%;
+    height: 100%;
+}
+
+.block-match-vod img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.block-match-comps-container {
+    display: flex;
+    padding: 15px;
+    gap: 15px;
+    min-height: 200px;
+    max-width: calc(100% - 30px);
+}
+
+@media (min-width: 1024px) {
+    .block-match-card {
+        width: 45%;
+        min-width: 513px;
+    }
+}
+
+/* Comp Display is in compDisplay.css (Shared By Both Match Displays) */

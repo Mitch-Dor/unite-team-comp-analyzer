@@ -4,6 +4,7 @@ import { fetchAllSets, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllC
 import ProDataInsertModal from './proMatchSupport/ProDataInsertModal';
 import MatchFiltering from './proMatchSupport/MatchFiltering';
 import SlickSetDisplay from './proMatchSupport/SlickSetDisplay';
+import BlockSetDisplay from './proMatchSupport/BlockSetDisplay';
 import Disclaimer from '../../sideComponents/js/Disclaimer';
 import { useLocation } from 'react-router-dom';
 
@@ -62,24 +63,24 @@ function ProMatches() {
   }, [coreData]);
 
   if (loading) {
-    return <div className="loading-container">Loading...</div>;
+    return <div className="pro-matches-loading-container">Loading...</div>;
   }
 
   return (
-    <div id="mainContainer" className="main-container">
+    <div id="pro-matches-main-container" className="pro-matches-main-container">
       {showSubmitForm && <ProDataInsertModal setShowSubmitForm={setShowSubmitForm} setCoreData={setCoreData} coreData={coreData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} />}
-      <div id="compsContainer">
+      <div id="pro-matches-matches-container">
         <MatchFiltering events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} coreData={coreData} setFilteredData={setFilteredData} expandShrinkAllMatches={expandShrinkAllMatches} setExpandShrinkAllMatches={setExpandShrinkAllMatches} />
-        <div className="comps-list">
+        <div className="pro-matches-match-list">
           { filteredData && filteredData.length > 0 ? filteredData.map((set, index) => (
-            <SlickSetDisplay key={index} set={set} expandShrinkAllMatches={expandShrinkAllMatches} />
+            <SlickSetDisplay key={`pro-matches-${index}`} set={set} expandShrinkAllMatches={expandShrinkAllMatches} />
           )) : (
-            <div className="no-matches-found">No matches found</div>
+            <div className="pro-matches-no-matches-found">No matches found</div>
           )}
         </div>
       </div>
       {verifiedUser ? (
-        <div id="open-set-submit-form" className="open-set-submit-form" onClick={() => {setShowSubmitForm(true); setFilteredData(coreData)}}>+</div>
+        <div id="pro-matches-open-pro-data-insert-form" className="pro-matches-open-pro-data-insert-form" onClick={() => {setShowSubmitForm(true); setFilteredData(coreData)}}>+</div>
       ) : (
         <Disclaimer />
       )}

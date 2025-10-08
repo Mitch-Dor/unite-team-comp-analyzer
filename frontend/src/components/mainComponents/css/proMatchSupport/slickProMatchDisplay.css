@@ -240,7 +240,6 @@
     top: 50%;
 }
 
-/* Stagger the rows */
 .slick-match-draft-row.draft-row-2 .slick-match-draft-pick {
     margin-left: calc(50% / 5); 
 }
@@ -295,6 +294,7 @@
     justify-content: center;
     align-items: center;
     padding-left: 10px;
+    cursor: pointer;
 }
 
 .slick-match-expand svg {
@@ -314,25 +314,27 @@
 
 /* SLICK COMP DISPLAY */
 
-.team-name.team-1 {
+.comp-display-team-name.team-1 {
     color: #f39c12;
 }
 
-.team-name.team-2 {
+.comp-display-team-name.team-2 {
     color: #a03ce7;
 }
 
-.crown {
+.comp-display-crown {
     color: #f39c12;
 }
 
-.slick-match-expanded-container .team-side {
+.slick-match-expanded-container .comp-display-team-side {
     border-radius: 0px;
 }
 
-.team-side.side1 {
+.comp-display-team-side.side1 {
     border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* Rest Of Comp Display is in compDisplay.css (Shared By Both Match Displays) */
 
 /* Smaller than desktop */
 @media (max-width: 1024px) {

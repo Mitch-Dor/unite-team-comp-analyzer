@@ -1,5 +1,5 @@
 import SlickMatchDisplay from './SlickMatchDisplay';
-import '../../css/proMatchSupport/proMatchDisplay.css';
+import '../../css/proMatchSupport/slickProMatchDisplay.css';
 
 function SlickSetDisplay({ set, expandShrinkAllMatches }) {
 
