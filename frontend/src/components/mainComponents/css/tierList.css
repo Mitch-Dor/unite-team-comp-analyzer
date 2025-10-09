@@ -1,7 +1,10 @@
-.mainContainer {
-    height: 100vh;
-    width: 100vw;
+#tier-list-main-container {
+    gap: 20px;
+    padding: 20px;
+    width: calc(100vw - 40px);
+    height: calc(100vh - 40px);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-image: url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png");
@@ -13,37 +16,96 @@
     overflow: hidden;
 }
 
-#tierListContainer {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    width: calc(100vw - 40px);
-    height: calc(100vh - 40px);
+.tier-list-admin-warning {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 50, 50, 0.9);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    font-weight: bold;
+    max-width: 300px;
+    text-align: center;
 }
 
-.tier-list-section {
+.tier-list-assigned-section {
     flex: 1 1 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
     overflow-y: auto;
+    position: relative;
+    transition: width 0.8s, flex-basis 0.8s;
+    width: 100%;
+    height: calc(50% - 10px); 
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
-    min-height: 0; /* Important for Firefox */
-    position: relative;
-    /* Smoothly animate width and flex-basis changes */
-    transition: width 0.8s, flex-basis 0.8s;
-    width: 50%; /* Default width if not expanded */
-    flex-basis: 50%;
 }
 
-.tier-list-section.expanded {
-    width: calc(80% - 10px) !important;
+.tier-list-assigned-section::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.tier-list-assigned-section.expanded {
+    height: calc(80% - 10px);
     flex: 0 0 calc(80% - 10px);
     flex-basis: calc(80% - 10px);
 }
 
-.expandSection {
+.tier-list-unassigned-section {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    min-height: 0; /* Important for Firefox */
+    /* Smoothly animate width and flex-basis changes */
+    transition: width 0.8s, flex-basis 0.8s;
+    height: calc(50% - 20px); /* Default width if not shrunk */
+    flex-basis: calc(50% - 20px);
+}
+
+.tier-list-unassigned-section::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.tier-list-unassigned-section.shrunk {
+    height: calc(20% - 10px);
+    flex: 0 0 calc(20% - 10px);
+    flex-basis: calc(20% - 10px);
+}
+
+.tier-list-export-to-PDF-button {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.tier-list-export-to-PDF-button svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    margin: 0;
+    object-fit: contain;
+}
+
+.tier-list-expand-assigned-section-button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -61,7 +123,7 @@
     cursor: pointer;
 }
 
-.expandSection svg {
+.tier-list-expand-assigned-section-button svg {
     width: 100%;
     height: 100%;
     display: block;
@@ -69,77 +131,7 @@
     object-fit: contain;
 }
 
-.exportToPDF {
-    position: absolute;
-    top: 10px;
-    right: 50px;
-    width: 30px;
-    height: 30px;
-    border-radius: 5px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-.exportToPDF svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    margin: 0;
-    object-fit: contain;
-}
-
-.tier-list-section::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-}
-
-.unassigned-section {
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-y: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-    min-height: 0; /* Important for Firefox */
-    /* Smoothly animate width and flex-basis changes */
-    transition: width 0.8s, flex-basis 0.8s;
-    width: calc(50% - 20px); /* Default width if not shrunk */
-    flex-basis: calc(50% - 20px);
-}
-
-.unassigned-section.shrunk {
-    width: calc(20% - 10px) !important;
-    flex: 0 0 calc(20% - 10px);
-    flex-basis: calc(20% - 10px);
-}
-
-.unassigned-section::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-}
-
-.class-section {
-    background-color: #2a2a2a;
-    border-radius: 8px;
-    padding: 15px;
-}
-
-.class-section-title {
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    padding: 5px;
-    border-radius: 4px;
-    background-color: #1a1a1a;
-}
-
-.tier-row {
+.tier-list-category {
     display: flex;
     min-height: 100px;
     background-color: #2a2a2a;
@@ -148,7 +140,7 @@
     flex-shrink: 0; /* Prevent tier rows from shrinking */
 }
 
-.tier-label {
+.tier-list-category-label {
     width: 65px;
     padding: 5px;
     display: flex;
@@ -165,15 +157,7 @@
     border: none;
 }
 
-@media (max-width: 720px) {
-    .tier-label {
-        width: 30px;
-    }
-
-    
-}
-
-.tier-content {
+.tier-list-category-content {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
@@ -183,7 +167,12 @@
     align-content: flex-start; /* Align items to the top */
 }
 
-.tier-content.selectable {
+.tier-list-category-content.drag-over {
+    background-color: #3a3a3a;
+    border: 2px dashed #ffffff;
+}
+
+.tier-list-category-content.selectable {
     cursor: pointer;
     border: 3px solid gold;
     box-shadow: 0 0 10px gold;
@@ -196,9 +185,9 @@
     }
 }
 
-.draggable-item {
-    width: 30px;
-    height: 30px;
+.tier-list-draggable-item {
+    width: 60px;
+    height: 60px;
     background-color: #000000;
     border-radius: 4px;
     cursor: move;
@@ -209,51 +198,33 @@
     overflow: hidden;
 }
 
-@media (min-width: 1024px) {
-    .draggable-item {
-        width: 60px;
-        height: 60px;
-    }
-}
-
-.draggable-item:hover {
+.tier-list-draggable-item:hover {
     transform: scale(1.05);
 }
 
-.draggable-item.dragging {
+.tier-list-draggable-item.dragging {
     opacity: 0.5;
     cursor: grabbing;
 }
 
-.tier-content.drag-over {
-    background-color: #3a3a3a;
-    border: 2px dashed #ffffff;
-}
-
-.pokemon-image {
+.tier-list-pokemon-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
     padding: 5px;
 }
 
-/* Add the admin warning styles */
-.admin-warning {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: rgba(255, 50, 50, 0.9);
-  color: white;
-  padding: 10px 15px;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-  font-weight: bold;
-  max-width: 300px;
-  text-align: center;
+@media (max-width: 1024px) {
+    .tier-label {
+        width: 30px;
+    }
+    tier-list-.draggable-item {
+        width: 30px;
+        height: 30px;
+    }
 }
 
-.default-tiers-button {
+.tier-list-default-tiers-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -269,22 +240,16 @@
   transition: background-color 0.2s, transform 0.1s;
 }
 
-.default-tiers-button:hover {
+.tier-list-default-tiers-button:hover {
   background-color: rgba(100, 149, 255, 0.9);
   transform: scale(1.05);
 }
 
-.default-tiers-button:active {
+.tier-list-default-tiers-button:active {
   transform: scale(0.98);
 }
 
-.default-tiers-button:disabled {
-  background-color: rgba(150, 150, 150, 0.9);
-  cursor: not-allowed;
-  transform: none;
-}
-
-.empty-tiers-button {
+.tier-list-empty-tiers-button {
   position: fixed;
   bottom: 20px;
   right: 250px;
@@ -300,17 +265,11 @@
   transition: background-color 0.2s, transform 0.1s;
 }
 
-.empty-tiers-button:hover {
+.tier-list-empty-tiers-button:hover {
   background-color: rgba(255, 100, 100, 0.9);
   transform: scale(1.05);
 }
 
-.empty-tiers-button:active {
+.tier-list-empty-tiers-button:active {
   transform: scale(0.98);
-}
-
-.empty-tiers-button:disabled {
-  background-color: rgba(150, 150, 150, 0.9);
-  cursor: not-allowed;
-  transform: none;
 }
