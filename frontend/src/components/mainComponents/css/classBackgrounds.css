@@ -2,7 +2,7 @@
 .All_Rounder .characterPortrait,
 .All_Rounder.characterPortrait,
 .characterListImg.All_Rounder,
-.draggable-item.All_Rounder,
+.tier-list-draggable-item.All_Rounder,
 .characterList img.All_Rounder {
     background-image: linear-gradient(
         45deg,
@@ -46,7 +46,7 @@
 .Attacker .characterPortrait,
 .Attacker.characterPortrait,
 .characterListImg.Attacker,
-.draggable-item.Attacker,
+.tier-list-draggable-item.Attacker,
 .characterList img.Attacker {
     background-image: linear-gradient(
         45deg,
@@ -90,7 +90,7 @@
 .Speedster .characterPortrait,
 .Speedster.characterPortrait,
 .characterListImg.Speedster,
-.draggable-item.Speedster,
+.tier-list-draggable-item.Speedster,
 .characterList img.Speedster {
     background-image: linear-gradient(
         45deg,
@@ -134,7 +134,7 @@
 .Defender .characterPortrait,
 .Defender.characterPortrait,
 .characterListImg.Defender,
-.draggable-item.Defender,
+.tier-list-draggable-item.Defender,
 .characterList img.Defender {
     background-image: linear-gradient(
         45deg,
@@ -178,7 +178,7 @@
 .Supporter .characterPortrait,
 .Supporter.characterPortrait,
 .characterListImg.Supporter,
-.draggable-item.Supporter,
+.tier-list-draggable-item.Supporter,
 .characterList img.Supporter {
     background-image: linear-gradient(
         45deg,

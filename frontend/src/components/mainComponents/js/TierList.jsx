@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import '../css/tierList.css';
 import '../css/classBackgrounds.css';
 import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry, isAdmin } from './backendCalls/http.js';
-import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
+import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { FaFilePdf } from "react-icons/fa";
 import Home from '../../sideComponents/js/Home.jsx';
 import jsPDF from "jspdf";
@@ -58,7 +58,7 @@ function TierList() {
   });
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [heightShiftAmount, setHeightShiftAmount] = useState(0);
   const tiers = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
   const [customNameTiers, setCustomNameTiers] = useState(['S', 'A', 'B', 'C', 'D', 'E', 'F']);
   const [selectedPokemon, setSelectedPokemon] = useState();
@@ -154,6 +154,10 @@ function TierList() {
   useEffect(() => {
     setCookie('tierNames', customNameTiers);
   }, [customNameTiers]);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--height-shift-amount', `${heightShiftAmount}%`);
+  }, [heightShiftAmount]);
 
   const handleDragStart = (e, item) => {
     e.dataTransfer.setData('text/plain', JSON.stringify(item));
@@ -373,80 +377,85 @@ function TierList() {
     {admin && (
       <div className="tier-list-admin-warning">Warning: As an admin user, your changes will update the database.</div>
     )}
-    <div ref={assignedRef} className={`tier-list-assigned-section ${isExpanded !== false ? 'expanded' : ''}`}>
+    <div id="tier-list-assigned-section-container" className="tier-list-section-container assigned">
+      <div ref={assignedRef} className="tier-list-assigned-section">
+        {tiers.map((tier, index) => (
+          <div key={tier} className="tier-list-category">
+            <div className="tier-list-category-label" contentEditable="true" suppressContentEditableWarning onBlur={(e) => {setCustomNameTiers(prevTiers => prevTiers.map((t, i) => i === index ? e.target.textContent : t))}}>{customNameTiers[index] === tier ? tier : customNameTiers[index]}</div>
+            <div
+              className={`tier-list-category-content ${selectedPokemon && selectedPokemon.tier==="unassigned" ? "selectable" : ""}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, tier)}
+              onClick={() => {handleClickPokemon(tier)}}
+            >
+              {items[tier].map(item => (
+                <div
+                  key={item.id}
+                  className={`tier-list-draggable-item ${item.pokemon_class}`}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, item)}
+                  onClick={(e) => {e.stopPropagation(); // prevent event from reaching parent so it doesn't reset selectedPokemon
+                    setSelectedPokemon(item)
+                  }}
+                >
+                  <img 
+                    src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
+                    alt={item.pokemon_name}
+                    className="tier-list-pokemon-image"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
       <button className="tier-list-export-to-PDF-button" onClick={handleExportPDF}>
         <FaFilePdf/>
       </button>
-      <button className="tier-list-expand-assigned-section-button" onClick={() => {setIsExpanded(!isExpanded)}}>
-        {isExpanded ? (
-          <SlArrowLeft />
-        ) : (
-          <SlArrowRight />
-        )}
-      </button>
-      {tiers.map((tier, index) => (
-        <div key={tier} className="tier-list-category">
-          <div className="tier-list-category-label" contentEditable="true" suppressContentEditableWarning onBlur={(e) => {setCustomNameTiers(prevTiers => prevTiers.map((t, i) => i === index ? e.target.textContent : t))}}>{customNameTiers[index] === tier ? tier : customNameTiers[index]}</div>
-          <div
-            className={`tier-list-category-content ${selectedPokemon && selectedPokemon.tier==="unassigned" ? "selectable" : ""}`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDrop(e, tier)}
-            onClick={() => {handleClickPokemon(tier)}}
-          >
-            {items[tier].map(item => (
-              <div
-                key={item.id}
-                className={`tier-list-draggable-item ${item.pokemon_class}`}
-                draggable
-                onDragStart={(e) => handleDragStart(e, item)}
-                onClick={(e) => {e.stopPropagation(); // prevent event from reaching parent so it doesn't reset selectedPokemon
-                  setSelectedPokemon(item)
-                }}
-              >
-                <img 
-                  src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
-                  alt={item.pokemon_name}
-                  className="tier-list-pokemon-image"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+      <div className="tier-list-category-height-adjust-container">
+        <button className="tier-list-category-height-adjust-button" disabled={heightShiftAmount === -30} onClick={() => {setHeightShiftAmount(prev => prev !== -30 ? prev - 10 : prev);}}>
+          <SlArrowUp />
+        </button>
+        <button className="tier-list-category-height-adjust-button" disabled={heightShiftAmount === 30} onClick={() => {setHeightShiftAmount(prev => prev !== 30 ? prev + 10 : prev);}}>
+          <SlArrowDown />
+        </button>
+      </div>
     </div>
     
-    <div className={`tier-list-unassigned-section ${isExpanded !== false ? 'shrunk' : ''}`}>
-      {classSections.map(({ class: className, title }) => (
-        <div key={className} className="tier-list-category">
-          <div className="tier-list-category-label">{title}</div>
-          <div
-            className={`tier-list-category-content ${selectedPokemon && selectedPokemon.tier!=="unassigned" ? "selectable" : ""}`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDrop(e, 'unassigned')}
-            onClick={() => {handleClickPokemon('unassigned')}}
-          >
-            {getUnassignedByClass(className).map(item => (
-              <div
-                key={item.id}
-                className={`tier-list-draggable-item ${item.pokemon_class}`}
-                draggable
-                onDragStart={(e) => handleDragStart(e, item)}
-                onClick={(e) => {e.stopPropagation(); // prevent event from reaching parent so it doesn't reset selectedPokemon
-                  setSelectedPokemon(item)
-                }}
-              >
-                <img 
-                  src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
-                  alt={item.pokemon_name}
-                  className="tier-list-pokemon-image"
-                />
-              </div>
-            ))}
+    <div id="tier-list-unassigned-section-container" className="tier-list-section-container">
+      <div className={"tier-list-unassigned-section"}>
+        {classSections.map(({ class: className, title }) => (
+          <div key={className} className="tier-list-category">
+            <div className="tier-list-category-label">{title}</div>
+            <div
+              className={`tier-list-category-content ${selectedPokemon && selectedPokemon.tier!=="unassigned" ? "selectable" : ""}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, 'unassigned')}
+              onClick={() => {handleClickPokemon('unassigned')}}
+            >
+              {getUnassignedByClass(className).map(item => (
+                <div
+                  key={item.id}
+                  className={`tier-list-draggable-item ${item.pokemon_class}`}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, item)}
+                  onClick={(e) => {e.stopPropagation(); // prevent event from reaching parent so it doesn't reset selectedPokemon
+                    setSelectedPokemon(item)
+                  }}
+                >
+                  <img 
+                    src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
+                    alt={item.pokemon_name}
+                    className="tier-list-pokemon-image"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
     <Home />
     <button 
