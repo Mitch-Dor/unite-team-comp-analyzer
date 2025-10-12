@@ -2,7 +2,7 @@
 
 //https://www.linode.com/docs/guides/getting-started-with-nodejs-sqlite/
 
-const constants = require('../../common/naming_constants.js');
+const constants = require('../../constants/naming_constants.js');
 
 var sqlite3 = require('sqlite3');
 var db;

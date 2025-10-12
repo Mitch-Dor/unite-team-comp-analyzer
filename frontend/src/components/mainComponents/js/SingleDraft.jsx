@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
-import { fetchCharacterDraftInfo, runAStarAlgorithm, fetchAllTierListEntries } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo, runAStarAlgorithm, fetchAllTierListEntries } from './common/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
 import Settings from '../../sideComponents/js/Settings.jsx';
 import '../css/draft.css';

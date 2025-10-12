@@ -1,5 +1,5 @@
 // Import for getting the current user through Google OAuth and passing that information as context to the app
-import { routes } from '../common/route_constants.js';
+import { routes } from '../constants/route_constants.js';
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
 const UserContext = createContext();

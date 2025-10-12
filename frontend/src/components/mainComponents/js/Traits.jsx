@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../css/traits.css';
-import { updateCharacterAttribute, fetchAllCharacterAttributes } from './backendCalls/http.js';
+import { updateCharacterAttribute, fetchAllCharacterAttributes } from './common/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
 
 function Traits() {

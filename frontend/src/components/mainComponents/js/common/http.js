@@ -1,4 +1,4 @@
-import { routes } from '../../../../common/route_constants.js';
+import { routes } from '../../../../constants/route_constants.js';
 
 //// DRAFT ROUTES ////
 

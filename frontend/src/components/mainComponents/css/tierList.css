@@ -39,6 +39,7 @@
     background-color: rgb(61, 61, 61);
     padding: 10px;
     position: relative;
+    transition: height ease-in-out 300ms;
 }
 
 #tier-list-assigned-section-container {
@@ -67,90 +68,8 @@
     display: none; /* Chrome, Safari, Opera */
 }
 
-.tier-list-section-container.expanded {
-    height: calc(80% - 10px);
-}
-
 .tier-list-unassigned-section::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
-}
-
-.tier-list-section-container.shrunk {
-    height: calc(20% - 10px);
-}
-
-.tier-list-export-to-PDF-button {
-    position: absolute;
-    top: 10px;
-    right: 50px;
-    width: 30px;
-    height: 30px;
-    border-radius: 5px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-.tier-list-export-to-PDF-button svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    margin: 0;
-    object-fit: contain;
-}
-
-.tier-list-category-height-adjust-container {
-    position: absolute;
-    bottom: -30px;
-    right: 20px;
-    width: 50px;
-    height: 20px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    background-color: rgb(42, 41, 41);
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.tier-list-category-height-adjust-button {
-    height: 20px;
-    width: 20px;
-    border-radius: 2px;
-    border: none;
-    background-color: rgba(83, 83, 83, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    margin: 0;
-    padding: 0;
-}
-
-.tier-list-category-height-adjust-button:disabled {
-    background-color: rgba(83, 83, 83, 0.3);
-    cursor: not-allowed;
-}
-
-.tier-list-expand-assigned-section-button svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    margin: 0;
-    object-fit: contain;
 }
 
 .tier-list-category {
@@ -177,13 +96,76 @@
     border-radius: 4px;
     margin-right: 10px;
     border: none;
+    position: relative;
+}
+
+.tier-list-category-add-pokemon-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(120, 120, 120, 0.3);
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.tier-list-category-add-pokemon-button:hover {
+    background-color: rgba(120, 120, 120, 0.8);
+}
+
+.tier-list-category-add-pokemon-screen-cover {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tier-list-category-add-pokemon-container {
+    position: absolute;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    height: 15%;
+    aspect-ratio: 7/3;
+    left: calc(var(--add-pokemon-left-amount) + 10px);
+    top: calc(var(--add-pokemon-bottom-amount) - 10px);
+    transform: translateY(-100%);
+    padding: 5px;
+    background-color: rgb(58, 58, 58);
+    border-radius: 10px;
+    gap: 3px;
+    border: 2px solid rgb(29, 29, 29);
+    overflow-y: scroll;
+}
+
+.tier-list-category-add-pokemon-container::-webkit-scrollbar {
+    display: none;
+}
+
+.tier-list-category-add-pokemon-container .tier-list-draggable-item {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
 }
 
 .tier-list-category-content {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 3px;
     padding: 10px;
     min-height: 50px;
     align-content: flex-start; /* Align items to the top */
@@ -217,11 +199,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    position: relative;
 }
 
 .tier-list-draggable-item:hover {
     transform: scale(1.05);
+    z-index: 2;
 }
 
 .tier-list-draggable-item.dragging {
@@ -236,62 +219,247 @@
     padding: 5px;
 }
 
-@media (max-width: 1024px) {
-    .tier-label {
-        width: 30px;
-    }
-    tier-list-.draggable-item {
-        width: 30px;
-        height: 30px;
-    }
+.tier-list-pokemon-assign-moves-button {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    border: 1px dashed white;
+    border-radius: 50%;
+    background-color: rgba(120, 120, 120, 0.8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75em;
+    z-index: 60;
+    cursor: pointer;
+}
+
+/* Tier List  Buttons */
+
+.tier-list-moves-mode-container {
+    position: absolute;
+    bottom: -30px;
+    right: 130px;
+    width: 60px;
+    height: 20px;
+    border-radius: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: white;
+    background-color: rgb(42, 41, 41);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: none;
+}
+
+.tier-list-moves-mode-slider-container {
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    padding: 2px;
+    border-radius: 10px;
+    display: flex;
+    transition: background-color 0.4s ease;
+    cursor: pointer;
+}
+
+.tier-list-moves-mode-slider-container.off {
+    background-color: rgba(80, 80, 90, 0.8);
+} 
+
+.tier-list-moves-mode-slider-container.on {
+    background-color: rgba(72, 201, 176, 0.9);
+} 
+
+.tier-list-moves-mode-slider {
+    border-radius: 50%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    transition: 500ms;
+}
+
+.tier-list-moves-mode-slider.off {
+    transform: translateX(0px);
+    background-color: rgb(150, 150, 150);
+}
+
+.tier-list-moves-mode-slider.on {
+    transform: translateX(calc(40px));
+    background-color: white;
+}
+
+.tier-list-export-to-PDF-button {
+    position: absolute;
+    bottom: -30px;
+    right: 90px;
+    width: 30px;
+    height: 30px;
+    border-radius: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: white;
+    background-color: rgb(42, 41, 41);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: none;
+}
+
+.tier-list-export-to-PDF-button svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding: 2px;
+    border-radius: 2px;
+    margin: 0;
+    object-fit: contain;
+    background-color: rgba(83, 83, 83, 0.8);
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.tier-list-export-to-PDF-button svg:hover {
+    background-color: rgba(124, 124, 124, 0.8);
+}
+
+.tier-list-category-height-adjust-container {
+    position: absolute;
+    bottom: -30px;
+    right: 20px;
+    width: 50px;
+    height: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: none;
+    background-color: rgb(42, 41, 41);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tier-list-category-height-adjust-button {
+    height: 20px;
+    width: 20px;
+    border-radius: 2px;
+    border: none;
+    background-color: rgba(83, 83, 83, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.tier-list-category-height-adjust-button:hover {
+    background-color: rgba(122, 122, 122, 0.8);
+}
+
+.tier-list-category-height-adjust-button:disabled {
+    background-color: rgba(83, 83, 83, 0.3);
+    cursor: not-allowed;
 }
 
 .tier-list-default-tiers-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: rgba(79, 129, 255, 0.9);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 5px;
-  border: none;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+    position: absolute;
+    bottom: -30px;
+    left: 20px;
+    height: 30px;
+    width: 100px;
+    background-color: rgba(79, 129, 255, 0.9);
+    color: white;
+    padding: 5px;
+    border-radius: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75em;
+    transition: background-color 0.2s;
 }
-
+  
 .tier-list-default-tiers-button:hover {
-  background-color: rgba(100, 149, 255, 0.9);
-  transform: scale(1.05);
+    background-color: rgba(100, 149, 255, 0.9);
 }
-
-.tier-list-default-tiers-button:active {
-  transform: scale(0.98);
-}
-
+  
 .tier-list-empty-tiers-button {
-  position: fixed;
-  bottom: 20px;
-  right: 250px;
-  background-color: rgba(255, 50, 50, 0.9);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 5px;
-  border: none;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+    position: absolute;
+    bottom: -30px;
+    left: 130px;
+    height: 30px;
+    width: 100px;
+    background-color: rgba(255, 50, 50, 0.9);
+    color: white;
+    padding: 5px;
+    border-radius: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75em;
+    transition: background-color 0.2s;
 }
-
+  
 .tier-list-empty-tiers-button:hover {
-  background-color: rgba(255, 100, 100, 0.9);
-  transform: scale(1.05);
+    background-color: rgba(255, 100, 100, 0.9);
 }
 
-.tier-list-empty-tiers-button:active {
-  transform: scale(0.98);
+@media (max-width: 1024px) {
+    #tier-list-main-container {
+        padding: 10px;
+        width: calc(100vw - 20px);
+        height: calc(100vh - 20px);
+    }
+    
+    .tier-list-category-label {
+        writing-mode: vertical-rl;
+        width: 30px;
+    }
+    
+    .tier-list-draggable-item {
+        width: 30px;
+        height: 30px;
+    }
+
+    .tier-list-category-height-adjust-container {
+        right: 12px;
+    }
+
+    .tier-list-export-to-PDF-button {
+        right: 77px;
+    }
+
+    .tier-list-moves-mode-container {
+        right: 112px;
+    }
+
+    .tier-list-default-tiers-button {
+        left: 12px;
+        width: 60px;
+        padding: 2px;
+    }
+
+    .tier-list-empty-tiers-button {
+        left: 77px;
+        width: 60px;
+        padding: 2px;
+    }
+
+    .tier-list-category-add-pokemon-container {
+        aspect-ratio: 5/3;
+    }
+
 }

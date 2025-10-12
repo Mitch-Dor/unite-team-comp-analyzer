@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CustomDropdown from '../proMatchSupport/CustomDropdown';
-import { fetchIndividualBattleStats } from '../backendCalls/http.js';
+import { fetchIndividualBattleStats } from '../common/http.js';
 
 function BattleStatsSorting({ setData, moveData, allPokemon, setKeyPokemon }) {
     const [minKills, setMinKills] = useState(0);

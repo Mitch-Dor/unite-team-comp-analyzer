@@ -1,4 +1,4 @@
-const { constants, NAME_CONSTANTS, MOVE_CONSTANTS } = require('../../frontend/src/common/naming_constants.js');
+const { constants, NAME_CONSTANTS, MOVE_CONSTANTS } = require('../../frontend/src/constants/naming_constants.js');
 const pokemonData = require('./databaseData/pokemonData');
 const compsData = require('./databaseData/compsData');
 

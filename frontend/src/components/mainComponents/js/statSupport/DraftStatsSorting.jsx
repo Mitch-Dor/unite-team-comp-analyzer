@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchDraftStats } from '../backendCalls/http.js';
+import { fetchDraftStats } from '../common/http.js';
 
 function DraftStatsSorting({ events, teams, players, regions, setData, moveData, allPokemon, setPopUpText }) {
     const [selectedEvent, setSelectedEvent] = useState("");

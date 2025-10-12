@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/proMatches.css';
-import { fetchAllSets, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, isVerifiedUser } from './backendCalls/http';
+import { fetchAllSets, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, isVerifiedUser } from './common/http';
 import ProDataInsertModal from './proMatchSupport/ProDataInsertModal';
 import MatchFiltering from './proMatchSupport/MatchFiltering';
 import SlickSetDisplay from './proMatchSupport/SlickSetDisplay';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
-import { fetchCharacterDraftInfo } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo } from './common/http.js';
 import Home from '../../sideComponents/js/Home.jsx';
 import '../css/draft.css';
 import '../css/classBackgrounds.css';

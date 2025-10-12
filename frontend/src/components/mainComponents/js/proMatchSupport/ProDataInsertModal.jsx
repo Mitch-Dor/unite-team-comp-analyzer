@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { insertEvent, insertTeam, insertPlayer, insertSet } from '../backendCalls/http';
+import { insertEvent, insertTeam, insertPlayer, insertSet } from '../common/http';
 import CustomDropdown from './CustomDropdown';
 import '../../css/proMatchSupport/proDataInsertModal.css';
+import { getCharactersMovesDictionary, getUniquePokemon } from '../common/common';
 
 function ProDataInsertModal({ setShowSubmitForm, coreData, setCoreData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers }) {
     const [setInsertion, setSetInsertion] = useState(null);
@@ -455,22 +456,11 @@ function SetInsertion({ resetKey, setSetInsertion, events, teams, players, chara
         setMatch5(prev => updateMatch(prev, prev.firstPick));
     }, [match1.firstPick, match2.firstPick, match3.firstPick, match4.firstPick, match5.firstPick]);
       
-    // Create a dictionary mapping pokemon_name to an array of their moves
-    const pokemonToMoves = charactersAndMoves.reduce((acc, char) => {
-        if (!acc[char.pokemon_name]) {
-            acc[char.pokemon_name] = [];
-        }
-        acc[char.pokemon_name].push({ move_name: char.move_name, move_id: char.move_id });
-        return acc;
-    }, {});
-
-    // Sort the moves in each array by move_id
-    Object.keys(pokemonToMoves).forEach(pokemon => {
-        pokemonToMoves[pokemon].sort((a, b) => a.move_id - b.move_id);
-    });
+    // Get dictionary mapping of characters to moves
+    const pokemonToMoves = getCharactersMovesDictionary(charactersAndMoves);
 
     // Get unique pokemon_name and pokemon_id combinations
-    const uniquePokemon = [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
+    const uniquePokemon = getUniquePokemon(charactersAndMoves);
 
     return (
         <div className="pdim-creation-forms">

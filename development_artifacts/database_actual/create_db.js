@@ -4,7 +4,7 @@
 
 // NOTE: CREATES DATABASE WHERE FILE IS RUN FROM
 
-const constants = require('../../frontend/src/common/naming_constants.js');
+const constants = require('../../frontend/src/constants/naming_constants.js');
 const pokemonData = require('./databaseData/pokemonData');
 const populate_db = require('./populate_db');
 

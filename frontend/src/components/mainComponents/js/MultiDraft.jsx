@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
-import { fetchCharacterDraftInfo, createRoom as apiCreateRoom } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo, createRoom as apiCreateRoom } from './common/http.js';
 import '../css/draft.css';
 import '../css/classBackgrounds.css';
 import { Peer } from 'peerjs';
@@ -12,7 +12,7 @@ import DraftAgain from './draftSupport/DraftAgain.jsx';
 import { genRandomPokemon } from './draftSupport/draftFunctions.js';
 import { IoIosChatboxes } from "react-icons/io";
 import { Filter } from 'bad-words';
-import { constants } from '../../../common/naming_constants.js';
+import { constants } from '../../../constants/naming_constants.js';
 
 function MultiDraft() {
     const location = useLocation();

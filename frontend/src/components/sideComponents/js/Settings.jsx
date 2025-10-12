@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import { fetchCharacterDraftInfo } from '../../mainComponents/js/backendCalls/http.js';
+import { fetchCharacterDraftInfo } from '../../mainComponents/js/common/http.js';
 import { BiQuestionMark } from "react-icons/bi";
 import '../css/settings.css';
 import '../../mainComponents/css/classBackgrounds.css';

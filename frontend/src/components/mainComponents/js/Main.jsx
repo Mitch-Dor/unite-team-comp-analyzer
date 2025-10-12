@@ -6,7 +6,7 @@ import Login from '../../sideComponents/js/Login';
 import Information from '../../sideComponents/js/Information';
 import { IoIosInformationCircle } from "react-icons/io";
 import { IoMdAlert } from "react-icons/io";
-import { isAdmin } from './backendCalls/http.js';
+import { isAdmin } from './common/http.js';
 
 
 function Main() {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../css/insights.css";
 import "../css/classBackgrounds.css";
-import { fetchAllCharacterAttributes, fetchAllInsights } from "./backendCalls/http";
+import { fetchAllCharacterAttributes, fetchAllInsights } from "./common/http";
 import Score from "./Score";
 import Home from "../../sideComponents/js/Home";
 

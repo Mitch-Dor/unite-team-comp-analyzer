@@ -2,45 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../css/tierList.css';
 import '../css/classBackgrounds.css';
-import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry, isAdmin } from './backendCalls/http.js';
+import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry, isAdmin } from './common/http.js';
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { FaFilePdf } from "react-icons/fa";
 import Home from '../../sideComponents/js/Home.jsx';
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-
-function setCookie(name, value, days = 7) {
-  if (name === 'tierList') {
-    // Only store the IDs for each tier so the cookie isn't too big
-    const idsOnly = {};
-    Object.keys(value).forEach(tier => {
-      idsOnly[tier] = value[tier].map(item => item.id);
-    });
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    let formulated = name + '=' + encodeURIComponent(JSON.stringify(idsOnly)) + '; expires=' + expires + '; path=/';
-    document.cookie = formulated;
-  } else if (name === 'tierNames') {
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    let formulated = name + '=' + encodeURIComponent(JSON.stringify(value)) + '; expires=' + expires + '; path=/';
-    document.cookie = formulated;
-  }
-}
-
-function getCookie(name) {
-  if (name === 'tierList') {
-    // Decoding Object
-    return document.cookie.split('; ').reduce((r, v) => {
-      const parts = v.split('=');
-      return parts[0] === name ? decodeURIComponent(parts[1]) : r
-    }, '');
-  } else if (name === 'tierNames') {
-    // Decoding Array
-    return document.cookie.split('; ').reduce((r, v) => {
-      const parts = v.split('=');
-      return parts[0] === name ? JSON.parse(decodeURIComponent(parts[1])) : r
-    }, '');
-  }
-}
 
 function TierList() {
   const location = useLocation();
@@ -62,6 +29,9 @@ function TierList() {
   const tiers = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
   const [customNameTiers, setCustomNameTiers] = useState(['S', 'A', 'B', 'C', 'D', 'E', 'F']);
   const [selectedPokemon, setSelectedPokemon] = useState();
+  const [movesMode, setMovesMode] = useState("off");
+  const [addPokemon, setAddPokemon] = useState("none");
+  const [hoveredPokemon, setHoveredPokemon] = useState(null);
   const assignedRef = useRef(null);
 
   useEffect(() => {
@@ -137,6 +107,7 @@ function TierList() {
         ...prevItems,
         unassigned: pokemonList.map((pokemon) => ({
           id: pokemon.pokemon_id,
+          pokedex_number: pokemon.pokedex_number,
           tier: 'unassigned',
           pokemon_name: pokemon.pokemon_name,
           pokemon_class: pokemon.pokemon_class
@@ -159,20 +130,20 @@ function TierList() {
     document.documentElement.style.setProperty('--height-shift-amount', `${heightShiftAmount}%`);
   }, [heightShiftAmount]);
 
-  const handleDragStart = (e, item) => {
+  function handleDragStart(e, item) {
     e.dataTransfer.setData('text/plain', JSON.stringify(item));
   };
 
-  const handleDragOver = (e) => {
+  function handleDragOver(e) {
     e.preventDefault();
     e.currentTarget.classList.add('drag-over');
   };
 
-  const handleDragLeave = (e) => {
+  function handleDragLeave(e) {
     e.currentTarget.classList.remove('drag-over');
   };
 
-  const handleDrop = (e, targetTier) => {
+  function handleDrop(e, targetTier) {
     e.preventDefault();
     e.currentTarget.classList.remove('drag-over');
     
@@ -186,7 +157,7 @@ function TierList() {
       // Remove from source tier
       newItems[sourceTier] = newItems[sourceTier].filter(item => item.id !== itemData.id);
       // Add to target tier
-      newItems[targetTier] = [...newItems[targetTier], { ...itemData, tier: targetTier }]; 
+      newItems[targetTier] = [...newItems[targetTier], { ...itemData, tier: targetTier }].sort((a, b) => a.pokedex_number - b.pokedex_number);; 
       return newItems;
     });
 
@@ -203,7 +174,7 @@ function TierList() {
     { class: 'Defender', title: 'Defenders' }
   ];
 
-  const getUnassignedByClass = (className) => {
+  function getUnassignedByClass(className) {
     return items.unassigned.filter(item => item.pokemon_class === className);
   };
 
@@ -225,11 +196,13 @@ function TierList() {
       };
 
       // First, collect all pokemon from the pokemonList to ensure we have them all
-      const allCharacters = pokemonList.map(pokemon => ({
-        id: pokemon.pokemon_id,
+      const allCharacters = pokemonList.map((pokemon, index) => ({
+        id: index,
+        pokemon_id: pokemon.pokemon_id,
         tier: 'unassigned',
         pokemon_name: pokemon.pokemon_name,
-        pokemon_class: pokemon.pokemon_class
+        pokemon_class: pokemon.pokemon_class,
+        pokedex_number: pokemon.pokedex_number
       }));
       
       // Create a set of IDs for quick lookup
@@ -282,11 +255,13 @@ function TierList() {
       };
       
       // Move all pokemon to unassigned
-      newItems.unassigned = pokemonList.map(pokemon => ({
-        id: pokemon.pokemon_id,
+      newItems.unassigned = pokemonList.map((pokemon, index) => ({
+        id: index,
+        pokemon_id: pokemon.pokemon_id,
         tier: 'unassigned',
         pokemon_name: pokemon.pokemon_name,
-        pokemon_class: pokemon.pokemon_class
+        pokemon_class: pokemon.pokemon_class,
+        pokedex_number: pokemon.pokedex_number
       }));
       setItems(newItems);
     }
@@ -314,63 +289,95 @@ function TierList() {
     }
   }
 
-  const handleExportPDF = async () => {
-  const input = assignedRef.current;
-  if (!input) return;
+  async function handleExportPDF() {
+    const input = assignedRef.current;
+    if (!input) return;
 
-  const canvas = await html2canvas(input, {
-    scale: 2,
-    useCORS: true,
-    scrollX: 0,
-    scrollY: -window.scrollY,
-    windowWidth: input.scrollWidth,
-    windowHeight: input.scrollHeight,
-    backgroundColor: null
-  });
+    const canvas = await html2canvas(input, {
+      scale: 2,
+      useCORS: true,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      windowWidth: input.scrollWidth,
+      windowHeight: input.scrollHeight,
+      backgroundColor: null
+    });
 
-  const imgData = canvas.toDataURL("image/png");
+    const imgData = canvas.toDataURL("image/png");
 
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-  // Load background image
-  const background = new Image();
-  background.src = "/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png";
-  background.crossOrigin = "anonymous"; // Needed if using external URLs
+    // Load background image
+    const background = new Image();
+    background.src = "/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png";
+    background.crossOrigin = "anonymous"; // Needed if using external URLs
 
-  background.onload = () => {
-    let heightLeft = pdfHeight;
-    let position = 0;
+    background.onload = () => {
+      let heightLeft = pdfHeight;
+      let position = 0;
 
-    while (heightLeft > 0) {
-      // Draw background first
-      pdf.addImage(
-        background,
-        "PNG",
-        0,
-        0,
-        pdfWidth,
-        pdf.internal.pageSize.getHeight()
-      );
+      while (heightLeft > 0) {
+        // Draw background first
+        pdf.addImage(
+          background,
+          "PNG",
+          0,
+          0,
+          pdfWidth,
+          pdf.internal.pageSize.getHeight()
+        );
 
-      // Draw main content on top
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+        // Draw main content on top
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
 
-      heightLeft -= pdf.internal.pageSize.getHeight();
-      position -= pdf.internal.pageSize.getHeight();
+        heightLeft -= pdf.internal.pageSize.getHeight();
+        position -= pdf.internal.pageSize.getHeight();
 
-      if (heightLeft > 0) {
-        pdf.addPage();
+        if (heightLeft > 0) {
+          pdf.addPage();
+        }
       }
-    }
 
-    // Open print dialog instead of saving
-    pdf.autoPrint();
-    window.open(pdf.output("bloburl"), "_blank");
+      // Open print dialog instead of saving
+      pdf.autoPrint();
+      window.open(pdf.output("bloburl"), "_blank");
+    };
   };
-};
 
+  function setCookie(name, value, days = 7) {
+    if (name === 'tierList') {
+      // Only store the IDs for each tier so the cookie isn't too big
+      const idsOnly = {};
+      Object.keys(value).forEach(tier => {
+        idsOnly[tier] = value[tier].map(item => item.id);
+      });
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      let formulated = name + '=' + encodeURIComponent(JSON.stringify(idsOnly)) + '; expires=' + expires + '; path=/';
+      document.cookie = formulated;
+    } else if (name === 'tierNames') {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      let formulated = name + '=' + encodeURIComponent(JSON.stringify(value)) + '; expires=' + expires + '; path=/';
+      document.cookie = formulated;
+    }
+  }
+
+  function getCookie(name) {
+    if (name === 'tierList') {
+      // Decoding Object
+      return document.cookie.split('; ').reduce((r, v) => {
+        const parts = v.split('=');
+        return parts[0] === name ? decodeURIComponent(parts[1]) : r
+      }, '');
+    } else if (name === 'tierNames') {
+      // Decoding Array
+      return document.cookie.split('; ').reduce((r, v) => {
+        const parts = v.split('=');
+        return parts[0] === name ? JSON.parse(decodeURIComponent(parts[1])) : r
+      }, '');
+    }
+  }
 
   return (
     <div id="tier-list-main-container">
@@ -398,17 +405,40 @@ function TierList() {
                   onClick={(e) => {e.stopPropagation(); // prevent event from reaching parent so it doesn't reset selectedPokemon
                     setSelectedPokemon(item)
                   }}
+                  onMouseOver={() => {setHoveredPokemon(item)}}
                 >
                   <img 
                     src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
                     alt={item.pokemon_name}
                     className="tier-list-pokemon-image"
                   />
+                  {hoveredPokemon && hoveredPokemon.id === item.id && (
+                    <div className="tier-list-pokemon-assign-moves-button" onClick={(e) => {e.stopPropagation(); }}>+</div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
         ))}
+      </div>
+      <button 
+        className="tier-list-default-tiers-button" 
+        onClick={applyDefaultTiers}
+        disabled={loading}
+      >
+        {loading ? 'Loading...' : 'Apply Default Tiers'}
+      </button>
+      <button 
+        className="tier-list-empty-tiers-button" 
+        onClick={emptyTiers}
+        disabled={loading}
+      >
+        {loading ? 'Loading...' : 'Empty Tiers'}
+      </button>
+      <div className="tier-list-moves-mode-container" title="Moves Mode" onClick={() => {movesMode === "off" ? setMovesMode("on") : setMovesMode("off")}}>
+        <div className={`tier-list-moves-mode-slider-container ${movesMode}`}>
+          <div className={`tier-list-moves-mode-slider ${movesMode}`}></div>
+        </div>
       </div>
       <button className="tier-list-export-to-PDF-button" onClick={handleExportPDF}>
         <FaFilePdf/>
@@ -427,7 +457,62 @@ function TierList() {
       <div className={"tier-list-unassigned-section"}>
         {classSections.map(({ class: className, title }) => (
           <div key={className} className="tier-list-category">
-            <div className="tier-list-category-label">{title}</div>
+            <div className="tier-list-category-label">
+              {title}
+              <div className="tier-list-category-add-pokemon-button" onClick={(e) => {
+                const x = e.pageX;
+                const y = e.pageY;
+                setAddPokemon(title);
+                document.documentElement.style.setProperty('--add-pokemon-left-amount', `${x}px`);
+                document.documentElement.style.setProperty('--add-pokemon-bottom-amount', `${y}px`);
+              }}>+</div>
+            </div>
+            {addPokemon === title && 
+              <div className="tier-list-category-add-pokemon-screen-cover" onClick={() => {setAddPokemon("none")}}>
+                <div className="tier-list-category-add-pokemon-container" onClick={(e) => {e.stopPropagation()}}>
+                  {pokemonList.filter(pokemon => pokemon.pokemon_class === className).map(item => (
+                    <div
+                      key={item.id}
+                      className={`tier-list-draggable-item ${item.pokemon_class}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setItems(prevItems => {
+                          const newItems = { ...prevItems };
+                    
+                          // Compute new id based on max id in unassigned
+                          const unassigned = newItems.unassigned;
+                          const maxId = unassigned.length > 0 ? Math.max(...unassigned.map(i => i.id)) : 0;
+                          const newId = maxId + 1;
+                    
+                          // Create new item (you can customize the rest of itemData as needed)
+                          const newItem = { 
+                            pokemon_id: item.pokemon_id,
+                            pokemon_name: item.pokemon_name,
+                            pokemon_class: item.pokemon_class,
+                            pokedex_number: item.pokedex_number,
+                            id: newId, 
+                            tier: "unassigned" 
+                          };
+                    
+                          // Insert into unassigned and sort by pokedex_number
+                          newItems.unassigned = [...unassigned, newItem].sort(
+                            (a, b) => a.pokedex_number - b.pokedex_number
+                          );
+                    
+                          return newItems;
+                        });
+                      }}
+                    >
+                      <img 
+                        src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
+                        alt={item.pokemon_name}
+                        className="tier-list-pokemon-image"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            }
             <div
               className={`tier-list-category-content ${selectedPokemon && selectedPokemon.tier!=="unassigned" ? "selectable" : ""}`}
               onDragOver={handleDragOver}
@@ -444,12 +529,16 @@ function TierList() {
                   onClick={(e) => {e.stopPropagation(); // prevent event from reaching parent so it doesn't reset selectedPokemon
                     setSelectedPokemon(item)
                   }}
+                  onMouseOver={() => {setHoveredPokemon(item)}}
                 >
                   <img 
                     src={`/assets/Draft/headshots/${item.pokemon_name}.png`}
                     alt={item.pokemon_name}
                     className="tier-list-pokemon-image"
                   />
+                  {hoveredPokemon && hoveredPokemon.id === item.id && (
+                    <div className="tier-list-pokemon-assign-moves-button">+</div>
+                  )}
                 </div>
               ))}
             </div>
@@ -458,20 +547,6 @@ function TierList() {
       </div>
     </div>
     <Home />
-    <button 
-      className="tier-list-default-tiers-button" 
-      onClick={applyDefaultTiers}
-      disabled={loading}
-    >
-      {loading ? 'Loading...' : 'Apply Default Tiers'}
-    </button>
-    <button 
-      className="tier-list-empty-tiers-button" 
-      onClick={emptyTiers}
-      disabled={loading}
-    >
-      {loading ? 'Loading...' : 'Empty Tiers'}
-    </button>
     </div>
   );
 }

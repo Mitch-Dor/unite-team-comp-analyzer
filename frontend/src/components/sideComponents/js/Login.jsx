@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import '../css/login.css'; // Add a CSS file for styling if needed
 import { useUser } from '../../../context/UserContext';
 import { VscAccount } from "react-icons/vsc";
-import { routes } from '../../../common/route_constants.js';
+import { routes } from '../../../constants/route_constants.js';
 
 function Login({ setUser }) {
   const { user } = useUser();

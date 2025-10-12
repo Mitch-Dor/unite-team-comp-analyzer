@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, fetchOverallBattleStats } from './backendCalls/http.js';
+import { fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllCharactersAndMoves, fetchOverallBattleStats } from './common/http.js';
 import StatsOrdering from './statSupport/StatsOrdering.jsx';
 import DraftStatsSorting from './statSupport/DraftStatsSorting.jsx';
 import DraftStatsBarChart from './statSupport/DraftStatsBarChart.jsx';
