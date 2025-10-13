@@ -224,34 +224,32 @@ function Traits() {
   );
 
   if (loading) {
-    return <div className="loading-container">Loading...</div>;
+    return <div className="traits-loading-container">Loading...</div>;
   }
 
   const columns = Object.keys(columnConfig);
 
   return (
-    <div id="mainContainer" className="main-container">
-      <div id="traitsFilterContainer">
-        {columns.map((column) => {
-          return (
-            <div className="columnSelector" key={column}>
-              <input name={column} type="checkbox" checked={!hiddenColumns.includes(column)} onChange={() => {handleHidingUnhidingColumn(column)}}></input>
-              <label htmlFor={column}>{column}</label>
-            </div>
-          );
-        })}
+    <div id="traits-main-container">
+      <div id="traits-filter-container">
+        {columns.map((column) => (
+          <div className="traits-column-selector" key={column}>
+            <input name={column} type="checkbox" checked={!hiddenColumns.includes(column)} onChange={() => {handleHidingUnhidingColumn(column)}}></input>
+            <label htmlFor={column}>{column}</label>
+          </div>
+        ))}
       </div>
-      <div id="traitsContainer">
-        <div className="search-container">
+      <div id="traits-search-and-content-container">
+        <div className="traits-search-container">
           <input
             type="text"
             placeholder="Search Pokémon or traits..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
+            className="traits-search-input"
           />
         </div>
-        <div className="table-container">
+        <div className="traits-table-container">
           <table className="traits-table">
             <thead>
               <tr>
@@ -268,21 +266,19 @@ function Traits() {
                 <tr key={rowIndex}>
                   {columns.map(column => !hiddenColumns.includes(column) ? (
                       <td key={column}>
-                        <div className="select-wrapper">
-                          <select
-                            value={row[column] || ''}
-                            onChange={(e) => handleCellChange(rowIndex, column, e.target.value)}
-                            className={getTextClass(column, row[column], row)}
-                            disabled={column === "pokemon_name" || column === "pokemon_class"}
-                          >
-                            <option value=""></option>
-                            {columnOptions[column]?.map(option => (
-                              <option key={option} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                        <select
+                          value={row[column] || ''}
+                          onChange={(e) => handleCellChange(rowIndex, column, e.target.value)}
+                          className={getTextClass(column, row[column], row)}
+                          disabled={column === "pokemon_name" || column === "pokemon_class"}
+                        >
+                          <option value=""></option>
+                          {columnOptions[column]?.map(option => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                   ) : null
                   )}
