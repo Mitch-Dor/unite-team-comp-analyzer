@@ -390,7 +390,7 @@ function TierList() {
         className={`tier-list-draggable-item ${item.pokemon_class} ${selectedPokemon && item.id === selectedPokemon.id ? 'selected' : ''}`}
         draggable
         onDragStart={(e) => handleDragStart(e, item)}
-        onClick={(e) => {e.stopPropagation(); // prevent event from reaching parent so it doesn't reset selectedPokemon
+        onClick={(e) => {e.stopPropagation();
           setSelectedPokemon(item)
         }}
       >

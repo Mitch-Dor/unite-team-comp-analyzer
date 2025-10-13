@@ -2,7 +2,6 @@ import React from 'react';
 
 const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, numUsers, settings, targetPokemon, setTargetPokemon }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
 
-    console.log(team1Bans, team2Bans);
     function isUnavailablePokemon(pokemon){
         // Special cases for Pokemon that are technically grouped as one in the game but are separate in my database
         let specialCaseUnavailable = false;

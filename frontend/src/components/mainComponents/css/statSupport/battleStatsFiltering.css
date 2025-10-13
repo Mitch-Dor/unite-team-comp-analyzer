@@ -1,0 +1,35 @@
+#battle-stats-filter-container {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    padding-top: 10px;
+}
+
+#battle-stats-filter-container select, #battle-stats-filter-container input {
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: white;
+    font-size: 1em;
+    max-height: 40px;
+    width: 80px;
+}
+
+#battle-stats-filter-container select {
+    width: 120px;
+}
+
+#battle-stats-filter-container .custom-dropdown {
+    width: 200px;
+}
+
+@media (max-width: 1024px) {
+    #battle-stats-filter-container {
+
+    }
+}

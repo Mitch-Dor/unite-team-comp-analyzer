@@ -1,0 +1,33 @@
+#stats-ordering-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 5px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-flow: row wrap;
+    border-radius: 5px;
+    z-index: 2000;
+}
+
+.stats-order-by-dropdown-container {
+    position: relative;
+}
+
+#stats-ordering-container select {
+    padding: 8px 10px;
+    padding-top: 15px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: white;
+    font-size: 1em;
+    max-height: 40px;
+    width: auto;
+    cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+
+}

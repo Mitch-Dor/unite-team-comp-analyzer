@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fetchDraftStats } from '../common/http.js';
+import '../../css/statSupport/draftStatsFiltering.css';
 
-function DraftStatsSorting({ events, teams, players, regions, setData, moveData, allPokemon, setPopUpText }) {
+function DraftStatsFiltering({ events, teams, players, regions, setData, moveData, allPokemon, setPopUpText }) {
     const [selectedEvent, setSelectedEvent] = useState("");
     const [selectedRegion, setSelectedRegion] = useState("");
     const [selectedTeam, setSelectedTeam] = useState("");
@@ -76,14 +77,31 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
     }, [selectedEvent, selectedRegion, selectedTeam, selectedPlayer, dateLower, dateUpper, setData, moveData]);
   
     return (
-        <div id="filterContainer">
-            <h3>Filters</h3>
-            <div className="filter-row">
-                <label htmlFor="dateSelectLower">Date Lower</label>
-                <input id="dateSelect" name="dateSelectLower" type="date" onChange={(e) => setDateLower(e.target.value)}></input> 
-                <label htmlFor="dateSelectUpper">Date Upper</label>
-                <input id="dateSelect" name="dateSelectUpper" type="date" onChange={(e) => setDateUpper(e.target.value)}></input> 
-                <div className="infoHover" onClick={ () => {setPopUpText(`For most relevant stats on a particular Pokemon (because total matches by default may include matches from before the Pokemon was released), use \'after [RELEASE DATE]\', in the settings using the release dates provided:\n\n ${allPokemon
+        <div id="draft-stats-filter-container">
+            <div className="draft-stats-filter-row">
+                <div className="stats-info-button" onClick={() => {setPopUpText(`
+Filter descriptions:
+
+Player: Cuts all picks to picks played specifically by that player. Bans are any bans made by the team the player was on.
+
+Team: Cuts all picks to picks played by that team. Bans are any bans made by that team.
+
+Region: Cuts all picks to picks made by teams belonging to that region. Bans are any bans made by a team belonging to that region.
+
+Event: Cuts all picks and bans to picks/bans that happened at that particular event.
+
+Date: Limits the search to events that happened within the specified time range.
+                `)}}>?
+                </div>
+                <div className="draft-stats-filter-date-container">
+                    <label htmlFor="draft-stats-date-lower-select">Date Lower</label>
+                    <input id="draft-stats-date-lower-select" name="dateSelectLower" type="date" onChange={(e) => setDateLower(e.target.value)}></input> 
+                </div>
+                <div className="draft-stats-filter-date-container">
+                    <label htmlFor="draft-stats-date-lower-select">Date Upper</label>
+                    <input id="draft-stats-date-upper-select" name="dateSelectUpper" type="date" onChange={(e) => setDateUpper(e.target.value)}></input> 
+                </div>
+                <div className="stats-info-button" onClick={ () => {setPopUpText(`For most relevant stats on a particular Pokemon (because total matches by default may include matches from before the Pokemon was released), set lower date bound to \' [RELEASE DATE]\', in the settings using the release dates provided:\n\n ${allPokemon
                     .map((char) => {const date = new Date(char.release_date);
                     return `${char.pokemon_name}: ${date.toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -93,7 +111,9 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
                     .join("\n")}`)}}>
                     ?
                 </div>
-                <select name="region" id="region" onChange={(e) => {
+            </div>
+            <div className="draft-stats-filter-row">
+                <select name="stats-region" id="stats-region" onChange={(e) => {
                     const selectedValue = e.target.value;
                     setSelectedRegion(selectedValue ? selectedValue : "");
                 }}>
@@ -102,9 +122,7 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
                         <option key={index} value={region}>{region}</option>
                     ))}
                 </select>
-            </div>
-            <div className="filter-row">
-                <select name="event" id="event" onChange={(e) => {
+                <select name="stats-event" id="stats-event" onChange={(e) => {
                     const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Event" option
                     setSelectedEvent(selectedIndex >= 0 ? events[selectedIndex] : "");
                 }}>
@@ -113,7 +131,7 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
                         <option key={index} value={event.event_id}>{event.event_name}</option>
                     ))}
                 </select>
-                <select name="team" id="team" onChange={(e) => {
+                <select name="stats-team" id="stats-team" onChange={(e) => {
                     const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Team" option
                     setSelectedTeam(selectedIndex >= 0 ? teams[selectedIndex] : "");
                 }}>
@@ -122,7 +140,7 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
                         <option key={index} value={team.team_id}>{team.team_name}</option>
                     ))}
                 </select>
-                <select name="player" id="player" onChange={(e) => {
+                <select name="stats-player" id="stats-player" onChange={(e) => {
                     const selectedIndex = e.target.selectedIndex - 1; // -1 for the "Select Player" option
                     setSelectedPlayer(selectedIndex >= 0 ? players[selectedIndex] : "");
                 }}>
@@ -136,4 +154,4 @@ function DraftStatsSorting({ events, teams, players, regions, setData, moveData,
     )
 }
 
-export default DraftStatsSorting;
+export default DraftStatsFiltering;
