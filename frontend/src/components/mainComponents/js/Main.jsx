@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/main.css'
+import '../css/main.css';
+import '../css/base.css';
 import Settings from '../../sideComponents/js/Settings';
 import Login from '../../sideComponents/js/Login';
 import Information from '../../sideComponents/js/Information';
-import { IoIosInformationCircle } from "react-icons/io";
 import { IoMdAlert } from "react-icons/io";
 import { isAdmin } from './common/http.js';
 
@@ -53,66 +53,48 @@ function Main() {
   }
 
   function setBackground(pngPath){
-    const mainContainer = document.getElementById("mainContainer");
+    const mainContainer = document.getElementById("main-base-container");
     if (mainContainer) {
       mainContainer.style.backgroundImage = `url(${pngPath})`;
-      mainContainer.style.backgroundSize = "cover";
-      mainContainer.style.backgroundRepeat = "repeat-x";
     }
-  }
-
-  function setTitle(){
-    const titleContainer = document.getElementById("titleContainer");
-    const titleImage = "/assets/Title2.png";
-    if (titleContainer) {
-      titleContainer.style.backgroundImage = `url(${titleImage})`;
-      titleContainer.style.backgroundSize = "contain";
-      titleContainer.style.backgroundRepeat = "no-repeat";
-      titleContainer.style.backgroundPosition = "center";
-    }
-  }
-
-  function openCloseSettings () {
-    setSettingsActive(!settingsActive);
   }
 
   useEffect(() => {
     chooseBackgrounds(); // Choose the background on the component mounting
-    setTitle();
   }, []);
 
   return (
-    <div id="mainContainer" className="scrollingBackground">
-        <div id="cornerContainer">
-            <button id="report" className="cornerBTN" onClick={() => window.open("https://forms.gle/CcD2mnziUqcEsy56A", "_blank")}>
+    <div id="main-base-container" className="scrollingBackground">
+        <div id="main-top-buttons-container">
+            <button id="main-report-button" className="main-top-buttons" onClick={() => window.open("https://forms.gle/CcD2mnziUqcEsy56A", "_blank")}>
               <IoMdAlert style={{ width: '100%', height: '100%' }} />
             </button>
-            <div id="info" className="cornerBTN">
+            <div id="main-info-button" className="main-top-buttons">
               <Information />
             </div>
             <Login setUser={setUser} />
         </div>
-        <div id="titleContainer"></div>
-        <div id="bigBTNContainer">
-            <div id="modesContainer">
-                <button id="SingleDraft" className="modeBTN bigBTNs" onClick={() => navigate('/single-draft', {state: {numUsers: numUsers, settings: settings}})}>Single Draft</button>
-                <button id="DraftSandbox" className="modeBTN bigBTNs" onClick={() => navigate('/draft-sandbox')}>Draft Sandbox</button>
-                <button id="MultiDraft" className="modeBTN bigBTNs" onClick={() => navigate('/multi-draft', {state: {settings: settings, user: user}})}>Multiplayer Draft</button>
+        <div id="main-title-container"></div>
+        <div id="main-directory-buttons-container">
+            <div className="main-directory-buttons-row">
+                <button id="SingleDraft" className="main-core-component-button main-directory-button main-draft-button" onClick={() => navigate('/single-draft', {state: {numUsers: numUsers, settings: settings}})}>Single Draft</button>
+                <button id="DraftSandbox" className="main-core-component-button main-directory-button main-draft-button" onClick={() => navigate('/draft-sandbox')}>Draft Sandbox</button>
+                <button id="MultiDraft" className="main-core-component-button main-directory-button main-draft-button" onClick={() => navigate('/multi-draft', {state: {settings: settings, user: user}})}>Multiplayer Draft</button>
             </div>
-            <div id="AdditionalFeaturesContainer">
-                <button id="tierList" className="modeBTN bigBTNs" onClick={() => navigate('/tier-list', {state: {user: user}})}>Tier List</button>
-                <button id="compScoreBTN" className="modeBTN bigBTNs" onClick={() => navigate('/insights')}>Insights</button>
-                <button id="stats" className="modeBTN bigBTNs" onClick={() => navigate('/stats')}>Stats</button>
+            <div className="main-directory-buttons-row">
+                <button id="tierList" className="main-core-component-button main-directory-button" onClick={() => navigate('/tier-list', {state: {user: user}})}>Tier List</button>
+                <button id="compScoreBTN" className="main-core-component-button main-directory-button" onClick={() => navigate('/insights')}>Insights</button>
+                <button id="stats" className="main-core-component-button main-directory-button" onClick={() => navigate('/stats')}>Stats</button>
                 {admin && (
-                  <button id="traits" className="modeBTN bigBTNs" onClick={() => navigate('/traits', {state: {user: user}})}>Traits</button>
+                  <button id="traits" className="main-core-component-button main-directory-button" onClick={() => navigate('/traits', {state: {user: user}})}>Traits</button>
                 )}
-                <button id="proMatches" className="modeBTN bigBTNs" onClick={() => navigate('/pro-matches', {state: {user: user}})}>Pro Matches</button>
+                <button id="proMatches" className="main-core-component-button main-directory-button" onClick={() => navigate('/pro-matches', {state: {user: user}})}>Pro Matches</button>
             </div>
-            <div id="settingContainer">
-                <button id="settings" className="settingBTN bigBTNs" onClick={() => openCloseSettings()}>Draft Settings</button>
+            <div class="main-directory-buttons-row">
+                <button id="settings" className="main-setting-button main-directory-button" onClick={() => setSettingsActive(!settingsActive)}>Draft Settings</button>
             </div>
         </div>
-        <div id="nametag">Created by Mitchell Dorward</div>
+        <div id="main-nametag">Created by Mitchell Dorward</div>
         { settingsActive && (
           <Settings settings={settings} updateSettings={setSettings} numUsers={numUsers} setNumUsers={setNumUsers} closeSettings={() => {setSettingsActive(false)}} ></Settings>
         )}
