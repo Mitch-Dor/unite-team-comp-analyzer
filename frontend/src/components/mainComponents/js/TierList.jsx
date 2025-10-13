@@ -298,59 +298,61 @@ function TierList() {
   async function handleExportPDF() {
     const input = assignedRef.current;
     if (!input) return;
-
+  
+    // Temporarily expand the div to full height
+    const originalHeight = input.style.height;
+    const originalOverflow = input.style.overflow;
+    input.style.height = `${input.scrollHeight}px`;
+    input.style.overflow = "visible";
+  
+    // Load background
+    const background = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = "/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png";
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+    });
+  
+    // Capture the div
     const canvas = await html2canvas(input, {
       scale: 2,
       useCORS: true,
-      scrollX: 0,
-      scrollY: -window.scrollY,
-      windowWidth: input.scrollWidth,
-      windowHeight: input.scrollHeight,
-      backgroundColor: null
+      backgroundColor: null,
     });
-
-    const imgData = canvas.toDataURL("image/png");
-
+  
+    // Restore original styles
+    input.style.height = originalHeight;
+    input.style.overflow = originalOverflow;
+  
+    // Combine with background
+    const combinedCanvas = document.createElement("canvas");
+    combinedCanvas.width = canvas.width;
+    combinedCanvas.height = canvas.height;
+    const ctx = combinedCanvas.getContext("2d");
+    ctx.drawImage(background, 0, 0, combinedCanvas.width, combinedCanvas.height);
+    ctx.drawImage(canvas, 0, 0);
+  
+    const imgData = combinedCanvas.toDataURL("image/png");
+  
+    // Generate PDF
     const pdf = new jsPDF("p", "mm", "a4");
     const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    // Load background image
-    const background = new Image();
-    background.src = "/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png";
-    background.crossOrigin = "anonymous"; // Needed if using external URLs
-
-    background.onload = () => {
-      let heightLeft = pdfHeight;
-      let position = 0;
-
-      while (heightLeft > 0) {
-        // Draw background first
-        pdf.addImage(
-          background,
-          "PNG",
-          0,
-          0,
-          pdfWidth,
-          pdf.internal.pageSize.getHeight()
-        );
-
-        // Draw main content on top
-        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-
-        heightLeft -= pdf.internal.pageSize.getHeight();
-        position -= pdf.internal.pageSize.getHeight();
-
-        if (heightLeft > 0) {
-          pdf.addPage();
-        }
-      }
-
-      // Open print dialog instead of saving
-      pdf.autoPrint();
-      window.open(pdf.output("bloburl"), "_blank");
-    };
-  };
+    const pdfHeight = (combinedCanvas.height * pdfWidth) / combinedCanvas.width;
+  
+    let heightLeft = pdfHeight;
+    let position = 0;
+  
+    while (heightLeft > 0) {
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pdf.internal.pageSize.getHeight();
+      position -= pdf.internal.pageSize.getHeight();
+      if (heightLeft > 0) pdf.addPage();
+    }
+  
+    window.open(pdf.output("bloburl"), "_blank");
+  }
+  
 
   function setLocalStorage(name, value, days = 7) {
     if (name === 'tierList') {
