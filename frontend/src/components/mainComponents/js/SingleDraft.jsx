@@ -437,11 +437,7 @@ function SingleDraft() {
   return (
     <div id="draftContainer">
         {!draftingActive && (
-            <div id="settingsScreenCover">
-                <div id="setSettings" onClick={(e) => e.stopPropagation()}>
-                < Settings numUsers={numUsers} setNumUsers={setNumUsers} settings={settings} updateSettings={setSettings} startDraft={setDraftingActive} ></Settings>
-            </div>
-          </div>
+            <Settings numUsers={numUsers} setNumUsers={setNumUsers} settings={settings} updateSettings={setSettings} startDraft={setDraftingActive} ></Settings>
         )}
         {stateRef.current === 'done' && (
             <DraftAgain draftAgain={draftAgain} />

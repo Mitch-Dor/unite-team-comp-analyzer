@@ -7,8 +7,8 @@ function Disclaimer() {
     return (
         <>
             {showDisclaimer && (
-                <div className="screenCover" onClick={() => {setShowDisclaimer(false)}}>
-                    <div className="disclaimerPopUp">
+                <div id="disclaimer-screen-cover" onClick={() => {setShowDisclaimer(false)}}>
+                    <div id="disclaimer-pop-up">
                         DISCLAIMER: This web-app does not have access to any information other than that which is publicly available. All of our information comes from
                         the games that Pokemon Unite streams publicly on their YouTube channel. Due to this, information may be missing and quality/quantity of information
                         may be inconsistent across matches, sets, or events. Information also must be entered by hand so please be patient as we do our best to gather as much
@@ -16,7 +16,7 @@ function Disclaimer() {
                     </div>
                 </div>
             )}
-            <div id="disclaimerButton" onClick={() => {setShowDisclaimer(!showDisclaimer)}}>D</div>
+            <div id="disclaimer-show-button" onClick={() => {setShowDisclaimer(!showDisclaimer)}}>D</div>
         </>
     )
 }

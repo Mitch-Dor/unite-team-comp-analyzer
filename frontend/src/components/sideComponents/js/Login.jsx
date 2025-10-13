@@ -14,13 +14,13 @@ function Login({ setUser }) {
   }, [user, setUser]);
 
   return (
-    <div className="login-container">
+    <div id="login-container">
       {user ? (
-        <div className="user-info">
-          <div className="profile-picture">
-            <VscAccount className="profile-icon" title={user.user_name + "\n" + user.user_email} />
+        <div id="login-user-info">
+          <div id="login-profile-picture">
+            <VscAccount id="login-profile-icon" title={user.user_name + "\n" + user.user_email} />
           </div>
-          <button className="logout-button">
+          <button id="logout-button">
             <a href={routes.LOGOUT}>Logout</a>
           </button>
         </div>
@@ -29,7 +29,7 @@ function Login({ setUser }) {
           {/* Use absolute URL to backend to bypass React Router */}
           <a 
             href={routes.SIGN_IN}
-            className="login-button"
+            id="login-button"
           >
             Login
           </a>

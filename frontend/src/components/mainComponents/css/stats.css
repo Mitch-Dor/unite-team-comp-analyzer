@@ -259,10 +259,6 @@ h3 {
     right: 5px;
 }
 
-@media (max-width: 1024px) {
-    
-}
-
 /* BATTLE STATS ONLY */
 
 .battle-stats-display-container {

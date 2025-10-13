@@ -13,7 +13,6 @@ function Main() {
   const [numUsers, setNumUsers] = useState(2);
   const [settings, setSettings] = useState({timer: 25, userTurn: "first", disallowedCharacters: []});
   const [settingsActive, setSettingsActive] = useState(false);
-  const [infoActive, setInfoActive] = useState(false);
   const [user, setUser] = useState(null);
   const [admin, setAdmin] = useState(false);
   const navigate = useNavigate();
@@ -88,9 +87,9 @@ function Main() {
             <button id="report" className="cornerBTN" onClick={() => window.open("https://forms.gle/CcD2mnziUqcEsy56A", "_blank")}>
               <IoMdAlert style={{ width: '100%', height: '100%' }} />
             </button>
-            <button id="info" className="cornerBTN" onClick={() => setInfoActive(true)}>
-              <IoIosInformationCircle style={{ width: '100%', height: '100%' }} />
-            </button>
+            <div id="info" className="cornerBTN">
+              <Information />
+            </div>
             <Login setUser={setUser} />
         </div>
         <div id="titleContainer"></div>
@@ -115,18 +114,7 @@ function Main() {
         </div>
         <div id="nametag">Created by Mitchell Dorward</div>
         { settingsActive && (
-          <div id="settingsScreenCover" onClick={() => setSettingsActive(false)}>
-            <div id="setSettings" onClick={(e) => e.stopPropagation()}>
-              < Settings settings={settings} updateSettings={setSettings} numUsers={numUsers} setNumUsers={setNumUsers} ></Settings>
-            </div>
-          </div>
-        )}
-        { infoActive && (
-          <div id="infoScreenCover" onClick={() => setInfoActive(false)}>
-            <div id="infoScreen" onClick={(e) => e.stopPropagation()}>
-              < Information ></Information>
-            </div>
-          </div>
+          <Settings settings={settings} updateSettings={setSettings} numUsers={numUsers} setNumUsers={setNumUsers} closeSettings={() => {setSettingsActive(false)}} ></Settings>
         )}
     </div>
   );

@@ -5,11 +5,11 @@ import "../css/home.css";
 function Home() {
     const navigate = useNavigate();
     return (
-        <div className="home-container" onClick={() => {
+        <div className="home-button-container" onClick={() => {
             // Send the user back to the main page
             navigate("/");
         }}>
-            <FaHome className="home-icon" />
+            <FaHome className="home-button-icon" />
         </div>
     );
 }

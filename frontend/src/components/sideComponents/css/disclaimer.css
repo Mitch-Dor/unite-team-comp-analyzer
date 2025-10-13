@@ -1,4 +1,4 @@
-.screenCover {
+#disclaimer-screen-cover {
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
@@ -6,12 +6,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 12px;
 }
 
-.disclaimerPopUp {
+#disclaimer-pop-up {
     width: 50vw;
     height: 50vh;
-    font-size: 0.8rem;
+    font-size: 1em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -23,13 +24,7 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
-@media (min-width: 1024px) {
-    .disclaimerPopUp {
-        font-size: 1rem;
-    }
-}
-
-#disclaimerButton {
+#disclaimer-show-button {
     position: absolute;
     bottom: 10px;
     right: 10px;
@@ -49,6 +44,12 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-#disclaimerButton:hover {
+#disclaimer-show-button:hover {
     transform: scale(1.2);
+}
+
+@media (max-width: 1024px) {
+    #disclaimer-pop-up {
+        font-size: 0.8em;
+    }
 }

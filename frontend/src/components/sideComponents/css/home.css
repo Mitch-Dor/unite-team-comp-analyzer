@@ -1,4 +1,4 @@
-.home-container {
+.home-button-container {
     position: fixed;
     bottom: 10px;
     left: 10px;
@@ -15,11 +15,11 @@
     transition: transform 0.3s ease;
 }
 
-.home-container:hover {
+.home-button-container:hover {
     transform: scale(1.2);
 }
 
-.home-icon {
+.home-button-icon {
     color: #fff;
     font-size: 20px;
 }

@@ -27,9 +27,3 @@
 #battle-stats-filter-container .custom-dropdown {
     width: 200px;
 }
-
-@media (max-width: 1024px) {
-    #battle-stats-filter-container {
-
-    }
-}
