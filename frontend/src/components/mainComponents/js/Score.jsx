@@ -33,39 +33,35 @@ function Score({ characterAttributes, characters }) {
     }, [selectedCharacter1, selectedCharacter2, selectedCharacter3, selectedCharacter4, selectedCharacter5]);
     
   return (
-    <div id="scoreContainer">
-        <div id="characterDisplayContainer">
-            <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter1} setSelectedCharacter={setSelectedCharacter1} />
-            <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter2} setSelectedCharacter={setSelectedCharacter2} />
-            <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter3} setSelectedCharacter={setSelectedCharacter3} />
-            <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter4} setSelectedCharacter={setSelectedCharacter4} />
-            <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter5} setSelectedCharacter={setSelectedCharacter5} />
-        </div>
-        <div id="bottomContainer">
-            <div id="legend">
+    <div id="score-main-container">
+        <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter1} setSelectedCharacter={setSelectedCharacter1} />
+        <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter2} setSelectedCharacter={setSelectedCharacter2} />
+        <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter3} setSelectedCharacter={setSelectedCharacter3} />
+        <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter4} setSelectedCharacter={setSelectedCharacter4} />
+        <div id="score-legend-and-comp-score-container">
+            <div id="score-legend">
                 <h2>Legend</h2>
-                <div className="legendItem">
-                    <div className="legendRow">
-                        <p>0-200 = S</p>
-                        <p>201-250 = A</p>
-                    </div>
-                    <div className="legendRow">
-                        <p>251-300 = B</p>
-                        <p>301-350 = C</p>
-                    </div>
-                    <div className="legendRow">
-                        <p>351-400 = D</p>
-                        <p>401+ = E</p>
-                    </div>
+                <div className="score-legend-row">
+                    <p className="S">0-200 = S</p>
+                    <p className="A">201-250 = A</p>
+                </div>
+                <div className="score-legend-row">
+                    <p className="B">251-300 = B</p>
+                    <p className="C">301-350 = C</p>
+                </div>
+                <div className="score-legend-row">
+                    <p className="D">351-400 = D</p>
+                    <p className="F">401+ = F</p>
                 </div>
             </div>
-            <div id="compScore">
+            <div id="score-comp-score">
                 <h2>Comp Score</h2>
-                <p id="totalScore">Total: {compScore.totalScore}</p>
+                <p id="totalScore" className={`${compScore.totalScore <= 200 ? 'S' : compScore.totalScore <= 250 ? 'A' : compScore.totalScore <= 300 ? 'B' : compScore.totalScore <= 350 ? 'C' : compScore.totalScore <= 400 ? 'D' : 'F'}`}>Total: {compScore.totalScore}</p>
                 <p id="tierScore">Tier Score: {compScore.tierScore}</p>
                 <p id="synergyScore">Synergy Score: {compScore.synergyScore}</p>
             </div>
         </div>
+        <TraitDisplay characters={characters} charactersAndTraits={characterAttributes} character={selectedCharacter5} setSelectedCharacter={setSelectedCharacter5} />
         <Home />
     </div>
   );

@@ -1,8 +1,8 @@
-.mainContainer {
+#insights-main-container {
     height: 100vh;
     width: 100vw;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     background-image: url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png");
     background-repeat: no-repeat;
@@ -13,26 +13,27 @@
     overflow: hidden;
 }
 
-.insightsModeSelector {
-    height: 5%;
+#insights-mode-selector {
+    height: 40px;
     width: 100%;
     display: flex;
     position: relative;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
-.insightsModeOption {
+.insights-mode-option {
     height: 100%;
     width: 50%;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 1.5em;
+    font-size: 1.25em;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
-.insightsModeBar {
+.insights-mode-bar {
     height: 4px;
     width: 50%;
     background-color: white;
@@ -42,15 +43,15 @@
     transition: left 0.5s ease, right 0.5s ease;
 }
 
-.insightsModeBar.left {
+.insights-mode-bar.left {
     left: 0;
 }
 
-.insightsModeBar.right {
+.insights-mode-bar.right {
     left: 50%;
 }
 
-.insightsContainer {
+#insights-content-container {
     height: 95%;
     width: 100%;
     display: flex;
@@ -59,7 +60,7 @@
     flex-direction: column;
 }
 
-.pokemonSelection {
+#insights-pokemon-select-container {
     height: 30%;
     width: 90%;
     display: flex;
@@ -71,20 +72,20 @@
     padding: 10px;
 }
 
-.characterListDiv {
+.insights-pokemon-select {
     height: calc(20% - 2px);
     aspect-ratio: 1 / 1;
     border: 1px solid black;
     cursor: pointer;
 }
 
-.characterListImg {
+.insights-pokemon-select-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-.insightData {
+.insights-data-container {
     height: 60%;
     width: 90%;
     display: flex;
@@ -94,16 +95,7 @@
     color: white;
 }
 
-.insightTitle {
-    font-size: 1.5em;
-    text-decoration: underline;
-    height: 10%;
-    width: 90%;
-    text-align: center;
-    color: white;
-}
-
-.insightNote {
+.insights-data-note {
     width: 30%;
     height: 90%;
     background-color: rgba(0, 0, 0, 0.6);
@@ -114,18 +106,27 @@
     flex-direction: column;
 }
 
-.insightText {
+.insights-data-title {
+    font-size: 1.5em;
+    text-decoration: underline;
+    height: 10%;
+    width: 90%;
+    text-align: center;
+    color: white;
+}
+
+.insights-data-text {
     height: 80%;
     width: 90%;
     text-align: center;
     overflow-y: scroll;
 }
 
-.insightText::-webkit-scrollbar {
+.insights-data-text::-webkit-scrollbar {
     display: none;
 }
 
-.insightPokemonModel {
+.insights-data-pokemon-image {
     width: calc(40% - 40px);
     height: calc(90% - 60px);
     background-color: rgba(0, 0, 0, 0.6);
@@ -142,13 +143,13 @@
     flex-direction: column;
 }
 
-.insightPokemonModel img {
+.insights-data-pokemon-image img {
     max-width: 80%;
     max-height: 80%;
     aspect-ratio: 1 / 1;
 }
 
-.insightExampleMatch {
+.insights-data-example-match {
     width: 20%;
     height: 90%;
     background-color: rgba(0, 0, 0, 0.6);
@@ -159,43 +160,36 @@
     flex-direction: column;
 }
 
-.insightMatchLink {
-    font-size: 1.25em;
-    color: white;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    padding-bottom: 10px;
-}
-
 @media (max-width: 720px) {
-    .mainContainer {
+    #insights-main-container {
         font-size: 12px;
     }
 
-    .characterListDiv {
+    .insights-pokemon-select {
         height: calc(10% - 2px);
     }
 
-    .insightData {
+    .insights-data-container {
         flex-wrap: wrap;
     }
 
-    .insightNote {
+    .insights-data-note {
         width: 90%;
         height: 50%;
     }
 
-    .insightPokemonModel {
+    .insights-data-pokemon-image {
         height: calc(40% - 20px);
         width: calc(50% - 20px);
         padding: 10px;
     }
 
-    .insightExampleMatch { 
+    .insights-data-example-match { 
         height: 40%;
         width: 40%;
     }
 
-    .insightExampleMatch .insightTitle {
+    .insights-data-example-match .insights-data-title {
         font-size: 1em;
     }
 

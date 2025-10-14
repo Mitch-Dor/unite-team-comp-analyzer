@@ -2,7 +2,8 @@
 .All_Rounder .characterPortrait,
 .All_Rounder.characterPortrait,
 .tier-list-draggable-item.All_Rounder,
-.settings-enable-disable-character-list img.All_Rounder {
+.settings-enable-disable-character-list img.All_Rounder,
+.insights-pokemon-select-image.All_Rounder {
     background-image: linear-gradient(
         45deg,
         purple 0%,
@@ -45,7 +46,8 @@
 .Attacker .characterPortrait,
 .Attacker.characterPortrait,
 .tier-list-draggable-item.Attacker,
-.settings-enable-disable-character-list img.Attacker {
+.settings-enable-disable-character-list img.Attacker,
+.insights-pokemon-select-image.Attacker {
     background-image: linear-gradient(
         45deg,
         fireBrick 0%,
@@ -88,7 +90,8 @@
 .Speedster .characterPortrait,
 .Speedster.characterPortrait,
 .tier-list-draggable-item.Speedster,
-.settings-enable-disable-character-list img.Speedster {
+.settings-enable-disable-character-list img.Speedster,
+.insights-pokemon-select-image.Speedster {
     background-image: linear-gradient(
         45deg,
         dodgerBlue 0%,
@@ -131,7 +134,8 @@
 .Defender .characterPortrait,
 .Defender.characterPortrait,
 .tier-list-draggable-item.Defender,
-.settings-enable-disable-character-list img.Defender {
+.settings-enable-disable-character-list img.Defender,
+.insights-pokemon-select-image.Defender {
     background-image: linear-gradient(
         45deg,
         SeaGreen 0%,
@@ -174,7 +178,8 @@
 .Supporter .characterPortrait,
 .Supporter.characterPortrait,
 .tier-list-draggable-item.Supporter,
-.settings-enable-disable-character-list img.Supporter {
+.settings-enable-disable-character-list img.Supporter,
+.insights-pokemon-select-image.Supporter {
     background-image: linear-gradient(
         45deg,
         gold 0%,

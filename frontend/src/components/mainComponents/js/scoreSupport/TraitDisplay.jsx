@@ -26,7 +26,15 @@ function TraitDisplay({ characters, charactersAndTraits, character, setSelectedC
         { trait_name: 'can_bottom_lane_carry', display_name: 'Can Bottom Lane Carry', value: null },
         { trait_name: 'best_lane', display_name: 'Best Lane', value: null },
         { trait_name: 'assumed_move_1', display_name: 'Assumed Move 1', value: null },
-        { trait_name: 'assumed_move_2', display_name: 'Assumed Move 2', value: null }
+        { trait_name: 'assumed_move_2', display_name: 'Assumed Move 2', value: null },
+        { trait_name: 'early_spike', display_name: 'Early Spike', value: null },
+        { trait_name: 'ult_level', display_name: 'Ult Level', value: null },
+        { trait_name: 'key_spike', display_name: 'Key Spike', value: null },
+        { trait_name: 'laning_phase', display_name: 'Laning Phase (1-10)', value: null },
+        { trait_name: '8_50_to_7_30', display_name: '8:50-7:30 (1-10)', value: null },
+        { trait_name: '7_30_to_6_30', display_name: '7:30-6:30 (1-10)', value: null },
+        { trait_name: '6_30_to_4', display_name: '6:30-4:00 (1-10)', value: null },
+        { trait_name: '4_to_end', display_name: '4:00-End (1-10)', value: null }
     ];
 
     useEffect(() => {
@@ -41,11 +49,11 @@ function TraitDisplay({ characters, charactersAndTraits, character, setSelectedC
     }, [character, charactersAndTraits]);
     
     return (
-        <div id="traitDisplay">
-            <div id="characterDisplay">
+        <div id="score-trait-display-container">
+            <div id="score-trait-display-character-display">
                 {character && <img src={`/assets/Draft/headshots/${character.pokemon_name}.png`} alt={character.pokemon_name} />}
             </div>
-            <div id="scoreCharacterDropdown">
+            <div id="score-trait-display-character-dropdown">
                 <CustomDropdown
                     value={character}
                     onChange={setSelectedCharacter}
@@ -55,20 +63,20 @@ function TraitDisplay({ characters, charactersAndTraits, character, setSelectedC
                     path="/assets/Draft/headshots"
                 />
             </div>
-            <div id="traitListing">
+            <div id="score-trait-display-trait-list">
                 { traits.length > 0 ? (
                     traits.map(trait => (
-                        <div key={trait.trait_name} className="traitRow">
-                            <div className="trait">
+                        <div key={trait.trait_name} className="score-trait-display-trait-list-row">
+                            <div className="trait-name">
                                 {trait.display_name}
                             </div>
-                            <div className="traitValue">
+                            <div className="trait-value">
                                 {trait.value}
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className="noTraits">
+                    <div className="score-trait-display-no-traits">
                         No traits found
                     </div>
                 )}

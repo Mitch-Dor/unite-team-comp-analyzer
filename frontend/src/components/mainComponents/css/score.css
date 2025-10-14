@@ -1,107 +1,132 @@
-body {
-    margin: 0;
-    padding: 0;
-}
-
-.mainContainer {
-    height: 100vh;
-    width: 100vw;
+#score-main-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-#scoreContainer {
-    display: flex;
-    height: 95%;
-    width: 100vw;
+    height: calc(100% - 40px);
+    width: calc(100% - 20px);
     flex-wrap: wrap;
     flex-direction: row;
-    top: 0px;
-}
-
-#characterDisplayContainer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: space-around;
-    width: 100%;
-    height: 60%;
-    padding: 10px;
-}
-
-#traitDisplay {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 15%;
-    height: 100%;
-}
-
-#characterDisplayContainer {
-    margin: 20px;
-    background: rgba(0, 0, 0, 0.5);
+    font-size: 12px;
+    box-sizing: border-box;
     border-radius: 10px;
 }
 
-#characterDisplay {
+#score-legend-and-comp-score-container {
+    width: 35%;
+    height: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #333;
+    border: 2px solid black;
+    color: white;
+    border-radius: 10px;
+}
+
+#score-legend, #score-comp-score {
+    height: 45%;   
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    box-sizing: border-box;
+}
+
+#score-legend h2, #score-comp-score h2 {
+    text-decoration: underline;
+}
+
+.score-legend-row {
     width: 100%;
-    height: 30%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.score-legend-row p {
+    text-align: center;
+    width: 45%;
+    font-size: 1em;
+}
+
+#score-legend-and-comp-score-container .S {
+    color: rgb(150, 59, 183);
+}
+
+#score-legend-and-comp-score-container .A {
+    color: aqua;
+}
+
+#score-legend-and-comp-score-container .B {
+    color: rgb(0, 255, 42);
+}
+
+#score-legend-and-comp-score-container .C {
+    color: rgb(205, 211, 101);
+}
+
+#score-legend-and-comp-score-container .D {
+    color: rgb(201, 146, 57);
+}
+
+#score-legend-and-comp-score-container .F {
+    color: rgb(200, 72, 72);
+}
+
+#score-comp-score p {
+    text-align: center;
+    margin: 0px 10px;
+    width: 90%;
+    font-size: 1em;
+}
+
+/* TraitDisplay.jsx Styles */
+
+#score-trait-display-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 28%;
+    height: 45%;
+    box-sizing: border-box;
+    padding: 8px;
+    background-color: rgba(60, 60, 60, 0.2);
+    border-radius: 10px;
+    box-shadow: 0 6px 24px 0 rgba(0,0,0,0.28), 0 1.5px 4.5px 0 rgba(0,0,0,0.16);
+}
+
+#score-trait-display-character-display {
+    height: 40%;
+    aspect-ratio: 1.5 / 1;
+    max-width: 100%;
     border: 2px solid black;
     background-color: white;
     border-radius: 10px;
-    margin-bottom: 10px;
 }
 
-#characterDisplay img {
+#score-trait-display-character-display img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 10px;
 }
 
-#scoreCharacterDropdown {
+#score-trait-display-character-dropdown {
     width: 100%;
     height: 10%;
-    margin-bottom: 10px;
 }
 
-#scoreCharacterDropdown .custom-dropdown {
+#score-trait-display-character-dropdown span {
+    text-align: center;
+}
+
+#score-trait-display-trait-list {
     width: 100%;
-    height: 100%;
-}
-
-#scoreCharacterDropdown .custom-dropdown .dropdown-button {
-    height: 100%;
-    font-size: 0.5rem;
-    border: 2px solid black;
-}
-
-.dropdown-option span {
-    font-size: 0.5rem;
-}
-
-@media (min-width: 1024px) {
-    #scoreCharacterDropdown .custom-dropdown .dropdown-button {
-        font-size: 0.8rem;
-    }
-    .dropdown-option span {
-        font-size: 0.8rem;
-    }
-}
-
-#traitListing {
-    width: 100%;
-    height: 40%;
+    height: 45%;
     border: 2px solid black;
     background-color: #333;
     border-radius: 10px;
@@ -110,11 +135,11 @@ body {
     scrollbar-width: none;
 }
 
-#traitListing::-webkit-scrollbar {
+#score-trait-display-trait-list::-webkit-scrollbar {
     display: none;
 }
 
-.traitRow {
+.score-trait-display-trait-list-row {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -122,35 +147,20 @@ body {
     width: 100%;
 }
 
-#traitListing .trait {
+.score-trait-display-trait-list-row .trait-name, .score-trait-display-trait-list-row .trait-value {
     width: 45%;
     height: 100%;
     background-color: #333;
     color: white;
-    text-align: left;
     overflow: hidden;
-    font-size: 0.4rem;
     padding: 2px 4px;
 }
 
-#traitListing .traitValue {
-    width: 45%;
-    height: 100%;
-    background-color: #333;
-    color: white;
+.score-trait-display-trait-list-row .trait-value {
     text-align: right;
-    overflow: hidden;
-    font-size: 0.4rem;
-    padding: 2px 4px;
 }
 
-@media (min-width: 1024px) {
-    #traitListing .trait, #traitListing .traitValue, #traitListing .noTraits {
-        font-size: 0.7rem;
-    }
-}
-
-.noTraits {
+.score-trait-display-no-traits {
     width: 100%;
     height: 100%;
     background-color: #333;
@@ -158,76 +168,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.4rem;
 }
 
-#bottomContainer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
-    height: 20%;
-    margin: 0px 20px;
-    padding: 20px 0px;
-    margin-bottom: 20px;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-}
+@media (max-width: 1024px) {
+    #score-trait-display-container {
+        padding: 0px;
+    }
 
-#legend {
-    height: 80%;   
-    width: 20%;
-    padding: 20px;
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+    #score-trait-display-character-dropdown span {
+        font-size: 0.8em;
+    }
 
-.legendItem {
-    width: 100%;
-}
-
-.legendRow {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.legendRow p {
-    margin: 0px 10px;
-    width: 45%;
-    font-size: 0.5rem;
-}
-
-#compScore {
-    height: 80%;
-    width: 20%;
-    padding: 20px;
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-#compScore p {
-    margin: 0px 10px;
-    width: 90%;
-    font-size: 0.5rem;
-}
-
-@media (min-width: 1024px) {
-    .legendRow p, #compScore p {
-        font-size: 0.8rem;
+    #score-main-container {
+        font-size: 10px;
     }
 }

@@ -70,44 +70,44 @@ export default function Inights() {
         } catch {
             return null;
         }
-        };
+    };
 
     return (
-        <div className="mainContainer">
-            <div className="insightsModeSelector">
-                <div className="insightsModeOption" onClick={() => {setMode("descriptions")}}>Details</div>
-                <div className="insightsModeOption" onClick={() => {setMode("score")}}>Score A Comp</div>
-                <div className={`insightsModeBar ${mode === "descriptions" ? "left" : "right"}`}></div>
+        <div id="insights-main-container">
+            <div id="insights-mode-selector">
+                <div className="insights-mode-option" onClick={() => {setMode("descriptions")}}>Details</div>
+                <div className="insights-mode-option" onClick={() => {setMode("score")}}>Score A Comp</div>
+                <div className={`insights-mode-bar ${mode === "descriptions" ? "left" : "right"}`}></div>
             </div>
             {mode === "score" ? (
                 <Score characterAttributes={characterAttributes} characters={characters} />
             ) : (
-                <div className="insightsContainer">
-                    <div className="pokemonSelection">
+                <div id="insights-content-container">
+                    <div id="insights-pokemon-select-container">
                         {characters.map(character => (
                             <div 
                                 key={character.pokemon_name} 
-                                className={`characterListDiv`} 
+                                className="insights-pokemon-select" 
                                 onClick={() => setCurrentCharacter(character)}
                             >
                                 <img 
-                                    className={`characterListImg ${character.pokemon_class}`} 
+                                    className={`insights-pokemon-select-image ${character.pokemon_class}`} 
                                     src={`/assets/Draft/headshots/${character.pokemon_name}.png`} 
                                     alt={character.pokemon_name} 
                                 />
                             </div>
                         ))}
                     </div>
-                    <div className="insightData">
-                        <div className="insightNote">
-                            <div className="insightTitle">Notes</div>
-                            <div className="insightText">{currentInsight && currentInsight.text ? currentInsight.text : "No insight Found"}</div>
+                    <div className="insights-data-container">
+                        <div className="insights-data-note">
+                            <div className="insights-data-title">Notes</div>
+                            <div className="insights-data-text">{currentInsight && currentInsight.text ? currentInsight.text : "No insight Found"}</div>
                         </div>
-                        <div className="insightPokemonModel">
-                            <div className="insightTitle">{currentCharacter ? currentCharacter.pokemon_name : null}</div>
+                        <div className="insights-data-pokemon-image">
+                            <div className="insights-data-title">{currentCharacter ? currentCharacter.pokemon_name : null}</div>
                             {currentCharacter ? (<img src={`/assets/models/${currentCharacter.pokemon_name}.png`} />) : null}</div>
-                        <div className="insightExampleMatch">
-                            <a className="insightTitle" href={`${currentInsight && currentInsight.match_link ? currentInsight.match_link : ""}`} target="_blank" rel="noopener noreferrer">{currentInsight && currentInsight.match_title ? currentInsight.match_title : "No Match Found"}</a>
+                        <div className="insights-data-example-match">
+                            <a className="insights-data-title" href={`${currentInsight && currentInsight.match_link ? currentInsight.match_link : ""}`} target="_blank" rel="noopener noreferrer">{currentInsight && currentInsight.match_title ? currentInsight.match_title : "No Match Found"}</a>
                             {currentInsight && currentInsight.match_link ? (
                                 <iframe
                                     src={`${getYTEmbedSrc(currentInsight?.match_link)}?modestbranding=1&rel=0&playsinline=1&origin=${window.location.origin}`}
