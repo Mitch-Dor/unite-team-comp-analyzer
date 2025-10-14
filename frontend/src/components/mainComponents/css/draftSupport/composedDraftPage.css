@@ -1,0 +1,88 @@
+.draft-composed-page-team-draft-container {
+    height: 90%;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding-top: 15px;
+}
+
+#draft-composed-page-middle-parts-container {
+    height: 100%;
+    width: 55%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+#draft-composed-page-timer-container {
+    height: 5%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#draft-composed-page-timer {
+    width: 50%;
+    height: 100%;
+    border: 3px solid black;
+    border-top: none;
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
+#draft-composed-page-draft-board-container {
+    height: 75%;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
+    border: none;
+    background: transparent;
+}
+
+#draft-composed-page-lock-in-container {
+    height: 6%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1%;
+}
+
+#draft-composed-page-lock-in-button {
+    height: 100%;
+    width: 80%;
+    border-top-left-radius: 5vh;
+    border-top-right-radius: 5vh;
+    border-bottom-right-radius: 5vh;
+    border-bottom-left-radius: 5vh;
+    background-color: #cccccc;
+    color: #666666;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: 2px solid #999999;
+    cursor: default;
+    transition: all 0.3s ease;
+}
+
+#draft-composed-page-lock-in-button.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 2px solid #45a049;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+#draft-composed-page-lock-in-button.active:hover {
+    background-color: #45a049;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
+}
+
+@media (max-width: 1024px) {
+    #draft-composed-page-lock-in-button {
+        font-size: 0.8em;
+    }
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Settings from '../../../sideComponents/js/Settings.jsx';
 import { GoArrowLeft } from "react-icons/go";
 import { GoCopy } from "react-icons/go";
+import "../../css/draftSupport/draftRoomCreateJoin.css";
 
 function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputChange, roomIdRef, isConnected, settings, updateSettings, startDraft, user, opposingUser }) {
     const [joiningOrCreating, setJoiningOrCreating] = useState("");
@@ -14,30 +15,30 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
     }, [joiningOrCreating]);
 
     return (
-        <div className="screenCover">
+        <div className="draft-drcj-screen-cover">
             {joiningOrCreating === "" && (
-                <div className="roomCreateJoinContainer">
-                    <div className="roomCreateJoinHeader">
+                <div className="draft-drcj-create-join-container">
+                    <div className="draft-drcj-create-join-header">
                         <h1>Room Create / Join</h1>
                     </div>
-                    <div className="roomCreateJoinContent">
-                        <button className="draftRoomBTN" onClick={() => setJoiningOrCreating("create")}>Create Draft Room</button>
-                        <button className="draftRoomBTN" onClick={() => setJoiningOrCreating("join")}>Join Draft Room</button>
+                    <div className="draft-drcj-create-join-content">
+                        <button className="draft-drcj-connect-button" onClick={() => setJoiningOrCreating("create")}>Create Draft Room</button>
+                        <button className="draft-drcj-connect-button" onClick={() => setJoiningOrCreating("join")}>Join Draft Room</button>
                     </div>
                 </div>
             )}
             {joiningOrCreating === "create" && (
-                <div className="roomCreateJoinContainer">
+                <div className="draft-drcj-create-join-container">
                     {!isConnected && (
-                        <button className="returnToSelectBTN" onClick={() => setJoiningOrCreating("")}>
+                        <button className="draft-drcj-return-to-connect-button" onClick={() => setJoiningOrCreating("")}>
                             <GoArrowLeft />
                         </button>
                     )}
-                    <div className="roomCreateJoinHeader">
+                    <div className="draft-drcj-create-join-header">
                         <h1>{isConnected ? "Room Host: Set The Settings" : (
-                            <div className="roomIDContainer">
+                            <div className="draft-drcj-room-id-container">
                                 Room ID: {roomIdRef.current}
-                                <button className="copyBTN"
+                                <button className="draft-drcj-id-copy-button"
                                     onClick={() => navigator.clipboard.writeText(roomIdRef.current)}
                                 >
                                     <GoCopy />
@@ -45,9 +46,9 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
                             </div>
                         )}</h1>
                     </div>
-                    <div className="roomCreateJoinContent">
+                    <div className="draft-drcj-create-join-content">
                         {isConnected && (
-                            <div className="userInformationContainer">
+                            <div className="draft-drcj-user-information-container">
                                 <p>Hosted By (You): {user ? user.user_name : "Unknown"}</p>
                                 <p>Opposing User: {opposingUser ? opposingUser.user_name : "Unknown"}</p>
                             </div>
@@ -57,32 +58,32 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
                 </div>
             )}
             {joiningOrCreating === "join" && (
-                <div className="roomCreateJoinContainer">
+                <div className="draft-drcj-create-join-container">
                     {!isConnected && (
-                        <button className="returnToSelectBTN" onClick={() => setJoiningOrCreating("")}>
+                        <button className="draft-drcj-return-to-connect-button" onClick={() => setJoiningOrCreating("")}>
                             <GoArrowLeft />
                         </button>
                     )}
-                    <div className="roomCreateJoinHeader">
+                    <div className="draft-drcj-create-join-header">
                         <h1>Join Draft Room</h1>
                     </div>
-                    <div className="roomCreateJoinContent">
+                    <div className="draft-drcj-create-join-content">
                         {!isConnected && (
                             <>
                                 <input 
-                                    id="roomInput"
+                                    id="draft-drcj-room-id-input"
                                 type="text" 
                                 placeholder="Enter Room ID" 
                                 value={inputRoomId}
                                 onChange={handleInputChange}
                                 maxLength="6"
                                 />
-                                <button id="joinRoomBTN" onClick={joinRoom}>Join</button>
+                                <button id="draft-drcj-join-room-button" onClick={joinRoom}>Join</button>
                             </>
                         )}
                         {isConnected && (
                             <>
-                                <div className="userInformationContainer">
+                                <div className="draft-drcj-user-information-container">
                                     <p>Hosted By: {opposingUser ? opposingUser.user_name : "Unknown"}</p>
                                     <p>Opposing User (You): {user ? user.user_name : "Unknown"}</p>
                                 </div>

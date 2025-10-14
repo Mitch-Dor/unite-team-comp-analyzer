@@ -1,6 +1,5 @@
 /* Character class background patterns */
-.All_Rounder .characterPortrait,
-.All_Rounder.characterPortrait,
+.All_Rounder.draft-character-portrait,
 .tier-list-draggable-item.All_Rounder,
 .settings-enable-disable-character-list img.All_Rounder,
 .insights-pokemon-select-image.All_Rounder {
@@ -43,8 +42,7 @@
     );
 }
 
-.Attacker .characterPortrait,
-.Attacker.characterPortrait,
+.Attacker.draft-character-portrait,
 .tier-list-draggable-item.Attacker,
 .settings-enable-disable-character-list img.Attacker,
 .insights-pokemon-select-image.Attacker {
@@ -87,8 +85,7 @@
     );
 }
 
-.Speedster .characterPortrait,
-.Speedster.characterPortrait,
+.Speedster.draft-character-portrait,
 .tier-list-draggable-item.Speedster,
 .settings-enable-disable-character-list img.Speedster,
 .insights-pokemon-select-image.Speedster {
@@ -131,8 +128,7 @@
     );
 }
 
-.Defender .characterPortrait,
-.Defender.characterPortrait,
+.Defender.draft-character-portrait,
 .tier-list-draggable-item.Defender,
 .settings-enable-disable-character-list img.Defender,
 .insights-pokemon-select-image.Defender {
@@ -175,8 +171,7 @@
     );
 }
 
-.Supporter .characterPortrait,
-.Supporter.characterPortrait,
+.Supporter.draft-character-portrait,
 .tier-list-draggable-item.Supporter,
 .settings-enable-disable-character-list img.Supporter,
 .insights-pokemon-select-image.Supporter {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import "../../css/draftSupport/draftFiltering.css";
 
-const Filtering = ({ pokemonList, updateFilteredList, updatePokemonList }) => {
+const DraftFiltering = ({ pokemonList, updateFilteredList, updatePokemonList }) => {
     const [laneFilters, updateLaneFilters] = useState([]);
     const [classFilter, updateClassFilter] = useState("");
     const [searchTerm, setSearchTerm] = useState('');
@@ -80,30 +81,30 @@ const Filtering = ({ pokemonList, updateFilteredList, updatePokemonList }) => {
     }
 
     return (
-        <div className="filtering">
-            <div className="filterRow">
-                <div className="laneFilters">
+        <div className="draft-filtering-container">
+            <div className="draft-filtering-row">
+                <div className="draft-filtering-lane-filters">
                     {possibleLanes.map((lane, index) => {
                         return (
                             <div key={"lane"+index} >
-                                <img title={`${lane}`} src={`./assets/Draft/filterIcons/${lane}.png`} className={`filterIcon ${laneFilters.includes(lane) ? 'active' : ''}`} onClick={() => {doUpdateLaneFilters(lane)}}></img>
+                                <img title={`${lane}`} src={`./assets/Draft/filterIcons/${lane}.png`} className={`draft-filtering-filter-icon ${laneFilters.includes(lane) ? 'active' : ''}`} onClick={() => {doUpdateLaneFilters(lane)}}></img>
                             </div>
                         );
                     })}
                 </div>
-                <div className="classFilters">
+                <div className="draft-filtering-class-filters">
                     {possibleClasses.map((charClass, index) => {
                         return (
                             <div key={"class"+index} >
-                                <img title={`${charClass}`} src={`./assets/Draft/filterIcons/${charClass}.png`} className={`filterIcon ${classFilter === charClass ? 'active' : ''}`} onClick={() => {doUpdateClassFilter(charClass)}}></img>
+                                <img title={`${charClass}`} src={`./assets/Draft/filterIcons/${charClass}.png`} className={`draft-filtering-filter-icon ${classFilter === charClass ? 'active' : ''}`} onClick={() => {doUpdateClassFilter(charClass)}}></img>
                             </div>
                         );
                     })}
                 </div>
             </div>
-            <div className="filterRow">
-                <input type="text" id="searchBar" placeholder="Search..." onChange={(e) => setSearchTerm(e.target.value)}></input>
-                <select className="orderByFilters" onChange={(e) => doReorder(e.target.value)}>
+            <div className="draft-filtering-row">
+                <input type="text" id="draft-filtering-search-bar" placeholder="Search..." onChange={(e) => setSearchTerm(e.target.value)}></input>
+                <select className="draft-filtering-order-by-select" onChange={(e) => doReorder(e.target.value)}>
                     {orderByFilters.map((orderByFilter, index) => {
                         return (
                             <option key={orderByFilter} value={orderByFilter}>{orderByFilter}</option>
@@ -115,4 +116,4 @@ const Filtering = ({ pokemonList, updateFilteredList, updatePokemonList }) => {
     );
 };
 
-export default Filtering;
+export default DraftFiltering;

@@ -79,13 +79,13 @@ function SingleDraft() {
     useEffect(() => {
         if (!loading && draftingActive) {
             if(stateRef.current !== 'done'){
-                const timerElement = document.getElementById("timer");
+                const timerElement = document.getElementById("draft-composed-page-timer");
                 if (timerElement) {
                     timerElement.innerHTML = settings.timer;
                     countdownTimer();
                 }
             } else {
-                const timerElement = document.getElementById("timer");
+                const timerElement = document.getElementById("draft-composed-page-timer");
                 if (timerElement) {
                     timerElement.innerHTML = 'Done';
                 }
@@ -322,7 +322,7 @@ function SingleDraft() {
 
     function countdownTimer() {
         if(stateRef.current !== 'done'){
-            const timer = document.getElementById("timer");
+            const timer = document.getElementById("draft-composed-page-timer");
             if (!timer) return; // Exit if timer element doesn't exist
             
             const currTime = Number(timer.innerHTML);
@@ -435,7 +435,7 @@ function SingleDraft() {
     }
 
   return (
-    <div id="draftContainer">
+    <div id="draft-main-container">
         {!draftingActive && (
             <Settings numUsers={numUsers} setNumUsers={setNumUsers} settings={settings} updateSettings={setSettings} startDraft={setDraftingActive} ></Settings>
         )}

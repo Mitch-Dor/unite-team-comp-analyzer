@@ -1,0 +1,90 @@
+.draft-composed-page-draft-board-characters-container {
+    height: 90%;
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    overflow-y: scroll;
+    color: rgb(255, 255, 255);
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.draft-composed-page-draft-board-characters-container::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+
+.draft-draft-listing-character-container {
+    width: 7%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.draft-draft-listing-character-container.available {
+    cursor: pointer;
+}
+
+.draft-draft-listing-character-container.unavailable {
+    filter: grayscale(1);
+    cursor: not-allowed;
+}
+
+.draft-draft-listing-character-container img.draft-character-portrait {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    border: 1px solid rgb(255, 255, 255);
+    position: relative;
+    z-index: 1;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background-size: 100% 100% !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    object-fit: cover;
+    display: block;
+    box-sizing: border-box;
+}
+
+.draft-draft-listing-character-container h4 {
+    margin: 0;
+    padding: 0.2em 0;
+    background-color: #333;
+    color: white;
+    width: 100%;
+    text-align: center;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    font-size: 0.7em;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+    border: 1px solid rgb(255, 255, 255);
+    border-top: 1px solid #555;
+    display: block;
+}
+
+.draft-draft-listing-character-container.targeted {
+    box-shadow: 0 0 10px gold;
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        box-shadow: 0 0 5px gold;
+    }
+    to {
+        box-shadow: 0 0 15px gold;
+    }
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import HoverInsights from './HoverInsights';
 import { GoArrowSwitch } from "react-icons/go";
+import "../../css/draftSupport/teamDisplay.css";
 
 const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetPokemon, setTeam, pokemonList, settings }) => {
     const [hoveredPokemon, setHoveredPokemon] = useState(null);
@@ -74,7 +75,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
         <>
             {setPosition ? ( /* This is the sandbox mode */
                 <>
-                    <div className="teamBans" id={`${team}Bans`}>
+                    <div className="draft-team-display-bans-container" id={`${team}Bans`}>
                         {["ban1", "ban2", "ban3"].map((banPosition, index) => {
                             const currentBan = bans.find(ban => ban.position === banPosition);
                             return (
@@ -83,7 +84,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                     onContextMenu={(e) => handleClick(e, targetPokemon, team, banPosition)}
                                 >
                                     <img 
-                                        className={`characterPortrait banDisplay ${targetPokemon ? 'selectable' : null}`} 
+                                        className={`draft-character-portrait draft-team-display-bans ${targetPokemon ? 'selectable' : null}`} 
                                         src={currentBan ? `/assets/Draft/headshots/${currentBan?.pokemon?.pokemon_name || ''}.png` : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'} 
                                     />
                                 </div>
@@ -95,7 +96,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                         const relatedPick = currentPick ? specialCase(currentPick.pokemon) : null;
                         return (
                             <div key={index} 
-                                className={`characterSelection ${team}Selection ${currentPick?.pokemon ? '' : 'placeholder'} ${targetPokemon ? 'selectable' : null}`} 
+                                className={`draft-team-display-character-pick ${team}-side ${currentPick?.pokemon ? '' : 'placeholder'} ${targetPokemon ? 'selectable' : null}`} 
                                 onClick={(e) => handleClick(e, targetPokemon, team, pickPosition)}
                                 onContextMenu={(e) => handleClick(e, targetPokemon, team, pickPosition)}
                             >
@@ -105,12 +106,12 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                         <>
                                             <h3>{currentPick.pokemon.pokemon_name}</h3>
                                             {relatedPick && (
-                                                <button className="switchButton" onClick={(e) => {e.stopPropagation(); switchSpecialCase(currentPick, relatedPick, pickPosition);}}>
+                                                <button className="draft-team-display-switch-character-form-buttom" onClick={(e) => {e.stopPropagation(); switchSpecialCase(currentPick, relatedPick, pickPosition);}}>
                                                     <GoArrowSwitch />
                                                 </button>
                                             )}
                                             <img 
-                                                className={`characterPortrait ${currentPick.pokemon.pokemon_class}`} 
+                                                className={`draft-character-portrait ${currentPick.pokemon.pokemon_class}`} 
                                                 src={`/assets/Draft/headshots/${currentPick.pokemon.pokemon_name}.png`} 
                                                 alt={currentPick.pokemon.pokemon_name} 
                                             />
@@ -118,12 +119,12 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                     ) : (
                                         <>
                                             <img 
-                                                className={`characterPortrait ${currentPick.pokemon.pokemon_class}`} 
+                                                className={`draft-character-portrait ${currentPick.pokemon.pokemon_class}`} 
                                                 src={`/assets/Draft/headshots/${currentPick.pokemon.pokemon_name}.png`} 
                                                 alt={currentPick.pokemon.pokemon_name}  
                                             />
                                             {relatedPick && (
-                                                <button className="switchButton" onClick={(e) => {e.stopPropagation(); switchSpecialCase(currentPick, relatedPick, pickPosition);}}>
+                                                <button className="draft-team-display-switch-character-form-buttom" onClick={(e) => {e.stopPropagation(); switchSpecialCase(currentPick, relatedPick, pickPosition);}}>
                                                     <GoArrowSwitch />
                                                 </button>
                                             )}
@@ -134,11 +135,11 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                     team === 'purple' ? (
                                         <>
                                             <h3>Character</h3>
-                                            <img className="characterPortrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
+                                            <img className="draft-character-portrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
                                         </>
                                     ) : (
                                         <>
-                                            <img className="characterPortrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
+                                            <img className="draft-character-portrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
                                             <h3>Character</h3>
                                         </>
                                     )
@@ -149,20 +150,20 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                 </>
             ) : ( /* This is the normal mode */
                 <>
-                    <div className="teamBans" id={`${team}Bans`}>
+                    <div className="draft-team-display-bans-container" id={`${team}Bans`}>
                     {/* Create as many character portraits as there are picks but add blanks so there are 2 total */}
                     {[...bans, ...Array(3 - bans.length).fill(null)].map((pokemon, index) => {
                         return (
                             <div key={index}>
-                                {pokemon ? (
-                                    <>
-                                        <img className="characterPortrait banDisplay" src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} ></img>
-                                    </>
-                                ) : (
-                                    <>
-                                        <img className="characterPortrait banDisplay" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
-                                    </>
-                                )}
+                                <img
+                                    className="draft-character-portrait draft-team-display-bans"
+                                    src={
+                                        pokemon
+                                            ? `/assets/Draft/headshots/${pokemon.pokemon_name}.png`
+                                            : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+                                    }
+                                    alt={pokemon ? pokemon.pokemon_name : 'blank'}
+                                />
                             </div>
                         );
                     })}
@@ -171,24 +172,24 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                 {[...picks, ...Array(5 - picks.length).fill(null)].map((pokemon, index) => {
                     const relatedPick = pokemon ? specialCase(pokemon) : null;
                     return (
-                        <div key={index} className={`characterSelection ${team}Selection ${pokemon ? '' : 'placeholder'}`}>
+                        <div key={index} className={`draft-team-display-character-pick ${team}-side ${pokemon ? '' : 'placeholder'}`}>
                             {pokemon ? (
                                 // Difference between purple and orange is just content is reversed
                                 team === 'purple' ? (
                                     <>
                                         <h3>{pokemon.pokemon_name}</h3>
                                         {relatedPick && (
-                                            <button className="switchButton" onClick={(e) => {e.stopPropagation(); switchSpecialCase(pokemon, relatedPick);}}>
+                                            <button className="draft-team-display-switch-character-form-buttom" onClick={(e) => {e.stopPropagation(); switchSpecialCase(pokemon, relatedPick);}}>
                                                 <GoArrowSwitch />
                                             </button>
                                         )}
-                                        <img className={`characterPortrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} onMouseEnter={(e) => handleMouseEnter(e, pokemon, index)} onMouseLeave={handleMouseLeave} />
+                                        <img className={`draft-character-portrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} onMouseEnter={(e) => handleMouseEnter(e, pokemon, index)} onMouseLeave={handleMouseLeave} />
                                     </>
                                 ) : (
                                     <>
-                                        <img className={`characterPortrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} onMouseEnter={(e) => handleMouseEnter(e, pokemon, index)} onMouseLeave={handleMouseLeave} />
+                                        <img className={`draft-character-portrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} onMouseEnter={(e) => handleMouseEnter(e, pokemon, index)} onMouseLeave={handleMouseLeave} />
                                         {relatedPick && (
-                                            <button className="switchButton" onClick={(e) => {e.stopPropagation(); switchSpecialCase(pokemon, relatedPick);}}>
+                                            <button className="draft-team-display-switch-character-form-buttom" onClick={(e) => {e.stopPropagation(); switchSpecialCase(pokemon, relatedPick);}}>
                                                 <GoArrowSwitch />
                                             </button>
                                         )}
@@ -199,11 +200,11 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                                 team === 'purple' ? (
                                     <>
                                         <h3>Character</h3>
-                                        <img className="characterPortrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
+                                        <img className="draft-character-portrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
                                     </>
                                 ) : (
                                     <>
-                                        <img className="characterPortrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
+                                        <img className="draft-character-portrait" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
                                         <h3>Character</h3>
                                     </>
                                 )
@@ -212,7 +213,7 @@ const TeamDisplay = ({ team, bans, picks, idealTeams, side, setPosition, targetP
                     );
                 })}
                 {hoveredPokemon && (
-                    <div id="hoverDiv" style={ side === 'purple' ? 
+                    <div id="draft-team-display-hover-insight-container" style={ side === 'purple' ? 
                         { top: hoveredIndex === 4 ? hoverPosition.y - 100 : hoverPosition.y, left: hoverPosition.x } : 
                         { top: hoveredIndex === 4 ? hoverPosition.y - 100 : hoverPosition.y, right: `calc(100vw - ${hoverPosition.x}px + 80px)` }} >
                         <HoverInsights pokemon={hoveredPokemon} idealTeam={idealTeams && idealTeams[hoveredIndex] ? idealTeams[hoveredIndex] : null} />

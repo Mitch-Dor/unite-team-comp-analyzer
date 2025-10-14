@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import "../../css/draftSupport/draftAgain.css";
 
 function DraftAgain({draftAgain}){
     const [coverScreen, setCoverScreen] = useState(true);
@@ -6,16 +7,16 @@ function DraftAgain({draftAgain}){
     return (
         <>
         { coverScreen ? (
-            <div id="doneScreenCover">
-                <div id="doneScreen">
+            <div id="draft-draft-again-screen-cover">
+                <div id="draft-draft-again-done-screen-container">
                     <h1>Draft Complete</h1>
-                    <button className="doneScreenBTN" onClick={() => draftAgain()}>Draft Again</button>
-                    <button className="doneScreenBTN" onClick={() => setCoverScreen(false)}>Return To Draft</button>
+                    <button className="draft-draft-again-done-screen-button" onClick={() => draftAgain()}>Draft Again</button>
+                    <button className="draft-draft-again-done-screen-button" onClick={() => setCoverScreen(false)}>Return To Draft</button>
                 </div>
             </div>
         ) : (
-            <div id="returnToRestartScreen">
-                <button id="returnToDraftAgain" onClick={() => setCoverScreen(true)}>Return To Restart</button>
+            <div id="draft-draft-again-return-to-restart-screen-container">
+                <button id="draft-draft-again-show-draft-again-pop-up" onClick={() => setCoverScreen(true)}>Return To Restart</button>
             </div>
         )}
         </>

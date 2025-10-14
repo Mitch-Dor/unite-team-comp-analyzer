@@ -1,4 +1,4 @@
-#settingsScreenCover {
+#settings-screen-cover {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,19 +11,32 @@
     align-items: center;
 }
 
+#draft-room-create-join-settings-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #settings-container {
     position: absolute;
     z-index: 1000;
     border: 1px solid #222;
     background-color: #333;
     color: #f0f0f0;
-    width: 70vw;
+    width: 70%;
     height: auto;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
     font-size: 12px;
+}
+
+#draft-room-create-join-settings-container #settings-container {
+    width: 100%;
+    position: relative;
+    background-color: rgb(40, 40, 40);
 }
 
 #settings-content-container {

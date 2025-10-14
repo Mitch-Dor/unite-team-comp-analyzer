@@ -426,13 +426,13 @@ function MultiDraft() {
     useEffect(() => {
         if (!loading && draftStarted) {
             if(stateRef.current !== 'done'){
-                const timerElement = document.getElementById("timer");
+                const timerElement = document.getElementById("draft-composed-page-timer");
                 if (timerElement) {
                     timerElement.innerHTML = settingsRef.current.timer; // settings.timer
                     countdownTimer();
                 }
             } else {
-                const timerElement = document.getElementById("timer");
+                const timerElement = document.getElementById("draft-composed-page-timer");
                 if (timerElement) {
                     timerElement.innerHTML = 'Done';
                 }
@@ -450,7 +450,7 @@ function MultiDraft() {
 
     function countdownTimer() {
         if(stateRef.current !== 'done'){
-            const timer = document.getElementById("timer");
+            const timer = document.getElementById("draft-composed-page-timer");
             if (!timer) return; // Exit if timer element doesn't exist
             
             const currTime = Number(timer.innerHTML);
@@ -692,7 +692,7 @@ function MultiDraft() {
     }
 
     return (
-        <div id="draftContainer">
+        <div id="draft-main-container">
             {!draftStarted && (
                 <RoomCreateJoin createRoom={handleCreateRoom} joinRoom={handleJoinRoom} inputRoomId={inputRoomId} handleInputChange={handleInputChange} roomIdRef={roomIdRef} isConnected={isConnected} settings={settings} updateSettings={updateSettings} startDraft={startDraft} user={user} opposingUser={opposingUser} />
             )}
@@ -701,7 +701,7 @@ function MultiDraft() {
             )}
             <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updatePokemonList={updatePokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={trySetTargetPokemon} lockIn={tryLockIn} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
             <Home />
-            <div id="roomInfoDisplay">
+            <div id="draft-multi-room-info-display">
                 <h4>Room ID: {roomIdRef.current}</h4>
                 <h4>Connection Status: {connectionStatus}</h4>
                 <h4>Is Host: {isHostRef.current ? "Yes" : "No"}</h4>
@@ -709,19 +709,19 @@ function MultiDraft() {
                 <h4>Opposing User: {opposingUser ? opposingUser.user_name : "Unknown"}</h4>
             </div>
             {isConnected && (
-                <div id="chatContainer" className={`${showChat ? 'full' : 'collapsed'}`}>
+                <div id="draft-multi-chat-container" className={`${showChat ? 'full' : 'collapsed'}`}>
                     {showChat && (
-                        <div id="chatMessages">
+                        <div id="draft-multi-chat-messages">
                             {chat.map((message, index) => (
-                                <div key={index} className={`chatMessage ${message.user === user ? 'self' : 'opponent'}`}>
+                                <div key={index} className={`draft-multi-single-chat-message ${message.user === user ? 'self' : 'opponent'}`}>
                                     {message.message}
                                 </div>
                             ))}
                         </div>
                     )}
-                    <div id="chatBar" className={`${showChat ? 'full' : 'collapsed'}`}>
-                        <button id="toggleChat" onClick={() => setShowChat(!showChat)}>
-                            <IoIosChatboxes className={`chatIcon ${showChat ? 'active' : 'inactive'}`} />
+                    <div id="draft-multi-chat-bar" className={`${showChat ? 'full' : 'collapsed'}`}>
+                        <button id="draft-multi-toggle-chat-button" onClick={() => setShowChat(!showChat)}>
+                            <IoIosChatboxes className={`draft-multi-chat-toggle-icon ${showChat ? 'active' : 'inactive'}`} />
                         </button>
                         <input 
                             type="text" 
