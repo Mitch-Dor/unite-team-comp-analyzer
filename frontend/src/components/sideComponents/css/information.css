@@ -26,6 +26,10 @@
     height: 100%;
     font-size: 1rem;
     overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
 }
 
 #information-bullets::-webkit-scrollbar {
