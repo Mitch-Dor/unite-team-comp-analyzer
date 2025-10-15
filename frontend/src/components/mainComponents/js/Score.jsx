@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchAllCharacterAttributes, rateComp } from './common/http.js';
+import { rateComp } from './common/http.js';
 import TraitDisplay from './scoreSupport/TraitDisplay.jsx';
 import Home from '../../sideComponents/js/Home.jsx';
 import '../css/score.css';

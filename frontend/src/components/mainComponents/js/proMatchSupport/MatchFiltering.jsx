@@ -103,8 +103,18 @@ function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, 
         <select id='pro-match-filtering-player-dropdown' className="pro-match-filtering-dropdown" onChange={(e) => setPlayerFilter(e.target.value)}>
           <option value={defaultPlayer}>{defaultPlayer}</option>
           {players.map((player, index) => (
-            <option key={index} value={player.player_name}>{player.player_name}</option>
-            ))}
+            <option
+              key={index}
+              value={
+                player.player_name.replace(
+                  player.other_names ? ` (${player.other_names})` : "",
+                  ""
+                )
+              }
+            >
+              {player.player_name}
+            </option>
+          ))}
         </select>
         <button className="pro-match-expand-shrink-all-matches-button" onClick={() => setExpandShrinkAllMatches(prev => !prev)}>
             {expandShrinkAllMatches ? "Shrink All" : "Expand All"}

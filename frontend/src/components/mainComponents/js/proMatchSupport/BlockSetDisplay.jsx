@@ -18,7 +18,7 @@ function BlockSetDisplay({ set, advancedDataMode }) {
             
             <div className="block-set-matches-container">
                 {set.matches.map((match, index) => (
-                    <BlockMatchDisplay match={match} advancedDataMode={advancedDataMode} />
+                    <BlockMatchDisplay key={`match-${index}`} match={match} advancedDataMode={advancedDataMode} />
                 ))}
             </div>
             

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import CustomDropdown from '../proMatchSupport/CustomDropdown';
 import { fetchIndividualBattleStats } from '../common/http.js';
 import '../../css/statSupport/battleStatsFiltering.css';
+import { getMove1ForPokemon, getMove2ForPokemon } from '../common/common.js';
 
-function BattleStatsFiltering({ setData, moveData, allPokemon, setKeyPokemon }) {
+function BattleStatsFiltering({ setData, charactersAndMoves, allPokemon, setKeyPokemon }) {
     const [minKills, setMinKills] = useState(0);
     const [minAssists, setMinAssists] = useState(0);
     const [minDealt, setMinDealt] = useState(0);
@@ -42,18 +43,6 @@ function BattleStatsFiltering({ setData, moveData, allPokemon, setKeyPokemon }) 
 
     }, [minKills, minAssists, minDealt, minTaken, minHealed, minScored, lane, pokemon, move1, move2]);
 
-    function lesserMoveData (pokemonName) {
-        const availableMoves = pokemon ? moveData.find(move => move[0].pokemon_name === pokemonName) : null;
-        
-        if (!availableMoves) {
-            return null;
-        }
-
-        return [{move_id: availableMoves[0].move_id, move_name: availableMoves[0].move_name}, {move_id: availableMoves[1].move_id, move_name: availableMoves[1].move_name}, {move_id: availableMoves[2].move_id, move_name: availableMoves[2].move_name}, {move_id: availableMoves[3].move_id, move_name: availableMoves[3].move_name}];
-    }
-
-    const availableMoves = pokemon ? lesserMoveData(pokemon.pokemon_name) : null;
-
     return (
         <div id="battle-stats-filter-container">
             {/* Character Dropdown */}
@@ -73,7 +62,7 @@ function BattleStatsFiltering({ setData, moveData, allPokemon, setKeyPokemon }) 
             <CustomDropdown
                 value={move1}
                 onChange={setMove1}
-                options={availableMoves}
+                options={pokemon ? getMove1ForPokemon(pokemon, charactersAndMoves) : pokemon}
                 placeholder="Move 1 Select"
                 disabled={!pokemon}   
                 path="/assets/Draft/moves"
@@ -83,7 +72,7 @@ function BattleStatsFiltering({ setData, moveData, allPokemon, setKeyPokemon }) 
             <CustomDropdown
                 value={move2}
                 onChange={setMove2}
-                options={availableMoves}
+                options={pokemon ? getMove2ForPokemon(pokemon, charactersAndMoves) : pokemon}
                 placeholder="Move 2 Select"
                 disabled={!pokemon}   
                 path="/assets/Draft/moves"

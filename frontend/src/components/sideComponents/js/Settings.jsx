@@ -37,7 +37,7 @@ function Settings({ numUsers, setNumUsers, settings, updateSettings, startDraft,
     }
 
     const content = (
-        <div id={`${joinCreate ? 'draft-room-create-join-settings-container' : 'settings-screen-cover'}`} onClick={() => {closeSettings ? closeSettings() : null}}>
+        <div id={`${joinCreate ? 'draft-room-create-join-settings-container' : 'settings-screen-cover'}`} onClick={() => closeSettings && closeSettings()}>
             <div id="settings-container">
                 <div id="settings-content-container">
                     <h3>Settings</h3>

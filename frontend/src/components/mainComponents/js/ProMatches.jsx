@@ -4,7 +4,6 @@ import { fetchAllSets, fetchAllEvents, fetchAllTeams, fetchAllPlayers, fetchAllC
 import ProDataInsertModal from './proMatchSupport/ProDataInsertModal';
 import MatchFiltering from './proMatchSupport/MatchFiltering';
 import SlickSetDisplay from './proMatchSupport/SlickSetDisplay';
-import BlockSetDisplay from './proMatchSupport/BlockSetDisplay';
 import Disclaimer from '../../sideComponents/js/Disclaimer';
 import { useLocation } from 'react-router-dom';
 
@@ -68,7 +67,7 @@ function ProMatches() {
 
   return (
     <div id="pro-matches-main-container" className="pro-matches-main-container">
-      {showSubmitForm && <ProDataInsertModal setShowSubmitForm={setShowSubmitForm} setCoreData={setCoreData} coreData={coreData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} />}
+      {showSubmitForm && <ProDataInsertModal setShowSubmitForm={setShowSubmitForm} setCoreData={setCoreData} events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} setEvents={setEvents} setTeams={setTeams} setPlayers={setPlayers} />}
       <div id="pro-matches-matches-container">
         <MatchFiltering events={events} teams={teams} players={players} charactersAndMoves={charactersAndMoves} coreData={coreData} setFilteredData={setFilteredData} expandShrinkAllMatches={expandShrinkAllMatches} setExpandShrinkAllMatches={setExpandShrinkAllMatches} />
         <div className="pro-matches-match-list">

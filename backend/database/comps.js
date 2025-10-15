@@ -345,8 +345,8 @@ class Comps {
                     const sql = `
                         INSERT INTO pro_picks (comp_id, pokemon_id, pick_position, player_id, position_played, move_1_id, move_2_id) VALUES ($1, $2, $3, $4, $5, $6, $7)
                     `;
-                    const pickPromise = new Promise((resolve, reject) => {
-                        client.query(sql, [matchComps[i].comp1, setData.matches[i].team1_picks[j].pokemon_id, setData.matches[i].team1_picks[j].pick_position, setData.matches[i].team1_picks[j].player_id, setData.matches[i].team1_picks[j].position_played, setData.matches[i].team1_picks[j].move_1_id, setData.matches[i].team1_picks[j].move_2_id], (err, res) => {
+                    new Promise((resolve, reject) => {
+                        client.query(sql, [matchComps[i].comp1, setData.matches[i].team1_picks[j].pokemon_id, setData.matches[i].team1_picks[j].pick_position, setData.matches[i].team1_picks[j].player_id, setData.matches[i].team1_picks[j].position_played, setData.matches[i].team1_picks[j].move_1_id, setData.matches[i].team1_picks[j].move_2_id], (err) => {
                             if (err) {
                                 reject(err);
                             } else {
@@ -360,8 +360,8 @@ class Comps {
                     const sql = `
                         INSERT INTO pro_picks (comp_id, pokemon_id, pick_position, player_id, position_played, move_1_id, move_2_id) VALUES ($1, $2, $3, $4, $5, $6, $7)
                     `;
-                    const pickPromise = new Promise((resolve, reject) => {
-                        client.query(sql, [matchComps[i].comp2, setData.matches[i].team2_picks[j].pokemon_id, setData.matches[i].team2_picks[j].pick_position, setData.matches[i].team2_picks[j].player_id, setData.matches[i].team2_picks[j].position_played, setData.matches[i].team2_picks[j].move_1_id, setData.matches[i].team2_picks[j].move_2_id], (err, res) => {
+                    new Promise((resolve, reject) => {
+                        client.query(sql, [matchComps[i].comp2, setData.matches[i].team2_picks[j].pokemon_id, setData.matches[i].team2_picks[j].pick_position, setData.matches[i].team2_picks[j].player_id, setData.matches[i].team2_picks[j].position_played, setData.matches[i].team2_picks[j].move_1_id, setData.matches[i].team2_picks[j].move_2_id], (err) => {
                             if (err) {
                                 reject(err);
                             } else {
@@ -375,8 +375,8 @@ class Comps {
                     const sql = `
                         INSERT INTO pro_bans (comp_id, pokemon_id, ban_position) VALUES ($1, $2, $3)
                     `;
-                    const banPromise = new Promise((resolve, reject) => {
-                        client.query(sql, [matchComps[i].comp1, setData.matches[i].team1_bans[j].pokemon_id, setData.matches[i].team1_bans[j].ban_position], (err, res) => {
+                    new Promise((resolve, reject) => {
+                        client.query(sql, [matchComps[i].comp1, setData.matches[i].team1_bans[j].pokemon_id, setData.matches[i].team1_bans[j].ban_position], (err) => {
                             if (err) {
                                 reject(err);
                             } else {
@@ -390,8 +390,8 @@ class Comps {
                     const sql = `
                         INSERT INTO pro_bans (comp_id, pokemon_id, ban_position) VALUES ($1, $2, $3)
                     `;
-                    const banPromise = new Promise((resolve, reject) => {
-                        client.query(sql, [matchComps[i].comp2, setData.matches[i].team2_bans[j].pokemon_id, setData.matches[i].team2_bans[j].ban_position], (err, res) => {
+                    new Promise((resolve, reject) => {
+                        client.query(sql, [matchComps[i].comp2, setData.matches[i].team2_bans[j].pokemon_id, setData.matches[i].team2_bans[j].ban_position], (err) => {
                             if (err) {
                                 reject(err);
                             } else {
@@ -408,8 +408,8 @@ class Comps {
                     const sql = `
                         INSERT INTO pro_performance (comp_id, pokemon_id, kills, assists, damage_dealt, damage_taken, damage_healed, points_scored) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                     `;
-                    const statPromise = new Promise((resolve, reject) => {
-                        client.query(sql, [matchComps[i].comp1, setData.matches[i].team1_picks[j].pokemon_id, setData.matches[i].team1_picks[j].kills, setData.matches[i].team1_picks[j].assists, setData.matches[i].team1_picks[j].dealt, setData.matches[i].team1_picks[j].taken, setData.matches[i].team1_picks[j].healed, setData.matches[i].team1_picks[j].scored], (err, res) => {
+                    new Promise((resolve, reject) => {
+                        client.query(sql, [matchComps[i].comp1, setData.matches[i].team1_picks[j].pokemon_id, setData.matches[i].team1_picks[j].kills, setData.matches[i].team1_picks[j].assists, setData.matches[i].team1_picks[j].dealt, setData.matches[i].team1_picks[j].taken, setData.matches[i].team1_picks[j].healed, setData.matches[i].team1_picks[j].scored], (err) => {
                             if (err) {
                                 reject(err);
                             } else {
@@ -426,8 +426,8 @@ class Comps {
                     const sql = `
                         INSERT INTO pro_performance (comp_id, pokemon_id, kills, assists, damage_dealt, damage_taken, damage_healed, points_scored) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                     `;
-                    const statPromise = new Promise((resolve, reject) => {
-                        client.query(sql, [matchComps[i].comp2, setData.matches[i].team2_picks[j].pokemon_id, setData.matches[i].team2_picks[j].kills, setData.matches[i].team2_picks[j].assists, setData.matches[i].team2_picks[j].dealt, setData.matches[i].team2_picks[j].taken, setData.matches[i].team2_picks[j].healed, setData.matches[i].team2_picks[j].scored], (err, res) => {
+                    new Promise((resolve, reject) => {
+                        client.query(sql, [matchComps[i].comp2, setData.matches[i].team2_picks[j].pokemon_id, setData.matches[i].team2_picks[j].kills, setData.matches[i].team2_picks[j].assists, setData.matches[i].team2_picks[j].dealt, setData.matches[i].team2_picks[j].taken, setData.matches[i].team2_picks[j].healed, setData.matches[i].team2_picks[j].scored], (err) => {
                             if (err) {
                                 reject(err);
                             } else {
@@ -443,10 +443,8 @@ class Comps {
             return {set_id: setId, match_ids: matchIds};
 
         } catch (error) {
-
             await client.query('ROLLBACK'); // rollback automatically on any error
-            throw err;
-
+            throw error;
         } finally {
             client.release();
         }

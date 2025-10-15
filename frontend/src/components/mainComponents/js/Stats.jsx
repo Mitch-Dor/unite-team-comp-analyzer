@@ -8,6 +8,7 @@ import BattleStatsDisplay from './statSupport/BattleStatsDisplay.jsx';
 import Home from '../../sideComponents/js/Home.jsx';
 import Disclaimer from '../../sideComponents/js/Disclaimer.jsx';
 import '../css/stats.css';
+import { pokemonToMovesetsDictionary } from './common/common.js';
 
 function Stats() {
     const [events, setEvents] = useState([]);
@@ -15,8 +16,8 @@ function Stats() {
     const [players, setPlayers] = useState([]);
     const [regions, setRegions] = useState([]);
     const [allPokemon, setAllPokemon] = useState([]);
-    const [moveData, setMoveData] = useState([]);
-    const [rawMoveData, setRawMoveData] = useState([]);
+    const [movesets, setMovesets] = useState([]);
+    const [charactersAndMoves, setCharactersAndMoves] = useState([]);
     const [draftData, setDraftData] = useState([]);
     const [draftOrderBy, setDraftOrderBy] = useState("all");
     const [battleData, setBattleData] = useState([]);
@@ -32,9 +33,13 @@ function Stats() {
             try {
                 // Fetch all data to prepopulate dropdowns
                 const fetchedEvents = await fetchAllEvents();
+                setEvents(fetchedEvents);
                 const fetchedTeams = await fetchAllTeams();
+                setTeams(fetchedTeams);
                 const fetchedPlayers = await fetchAllPlayers();
-                const fetchedCharactersAndMoves = await fetchAllCharactersAndMoves();  
+                setPlayers(fetchedPlayers);
+                const fetchedCharactersAndMoves = await fetchAllCharactersAndMoves();
+                setCharactersAndMoves(fetchedCharactersAndMoves);  
                 // Only add unique regions
                 const fetchedRegions = [...new Set(fetchedTeams.map((team) => team.team_region))];
                 setRegions(fetchedRegions.sort((a, b) => a.localeCompare(b)));
@@ -42,51 +47,9 @@ function Stats() {
                 // Get unique pokemon_name and pokemon_id combinations
                 const uniquePokemon = [...new Set(fetchedCharactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id, release_date: new Date(char.release_date)})))].map(str => JSON.parse(str)); 
                 setAllPokemon(uniquePokemon);
-                // Sort all in alphabetical order
-                setEvents(fetchedEvents);
-                setTeams(fetchedTeams);
-                setPlayers(fetchedPlayers);
                 // Accumulate all the moves for each character
-                const cumulativeMoves = [];
-                const rawMovesData = [];
-                for (const character of uniquePokemon) {
-                    const characterMoves = fetchedCharactersAndMoves.filter(move => move.pokemon_name === character.pokemon_name);
-                    rawMovesData.push(characterMoves);
-                    const moveObj = {
-                        pokemon_name: character.pokemon_name,
-                        move_1_1: characterMoves[0].move_name,
-                    };
-
-                    switch (character.pokemon_name) {
-                        // 2 move pokemon
-                        case "Mew": 
-                        case "Urshifu_SS": 
-                        case "Urshifu_RS":
-                        case "Blaziken":
-                            moveObj.move_2_1 = characterMoves[1].move_name;
-                            moveObj.move_combos = [[characterMoves[0].move_name, characterMoves[1].move_name]];
-                            break;
-
-                        // 3 move pokemon
-                        case "Scyther":
-                        case "Scizor":
-                            moveObj.move_2_1 = characterMoves[1].move_name;
-                            moveObj.move_2_2 = characterMoves[2].move_name;
-                            moveObj.move_combos = [[characterMoves[0].move_name, characterMoves[1].move_name], [characterMoves[0].move_name, characterMoves[2].move_name]];
-                            break;
-
-                        // 4 move pokemon
-                        default: 
-                            moveObj.move_1_2 = characterMoves[1].move_name;
-                            moveObj.move_2_1 = characterMoves[2].move_name;
-                            moveObj.move_2_2 = characterMoves[3].move_name;
-                            moveObj.move_combos = [[characterMoves[0].move_name, characterMoves[2].move_name], [characterMoves[0].move_name, characterMoves[3].move_name], [characterMoves[1].move_name, characterMoves[2].move_name], [characterMoves[1].move_name, characterMoves[3].move_name]];
-                            break;
-                    }
-                    cumulativeMoves.push(moveObj);
-                }
-                setRawMoveData(rawMovesData);
-                setMoveData(cumulativeMoves);
+                const movesets = pokemonToMovesetsDictionary(fetchedCharactersAndMoves);
+                setMovesets(movesets);
 
                 const fetchedOverallBattleData = await fetchOverallBattleStats();
                 setOverallBattleData(fetchedOverallBattleData);
@@ -140,7 +103,7 @@ function Stats() {
             <>
                 {/* Draft Mode */}
                 <div id="stats-display-header-container">
-                    <DraftStatsFiltering events={events} teams={teams} players={players} regions={regions} setData={setDraftData} moveData={moveData} allPokemon={allPokemon} setPopUpText={setPopUpText} />
+                    <DraftStatsFiltering events={events} teams={teams} players={players} regions={regions} setData={setDraftData} movesets={movesets} allPokemon={allPokemon} setPopUpText={setPopUpText} />
                 </div>
                 <div id="stats-display-container">
                     <StatsOrdering setOrderBy={setDraftOrderBy} orderingArray={[{value: 'all', title: 'All Stats'}, {value: 'ban', title: 'Ban Rate'}, {value: 'pick', title: 'Pick Rate'}, {value: 'presence', title: 'Presence'}, {value: 'win', title: 'Win Rate'}, {value: 'pickOrder', title: 'Pick Order'}]} />
@@ -188,7 +151,7 @@ function Stats() {
                 {/* Battle Mode */}
                 {battleMode === "individual" && (
                     <div id="stats-display-header-container">
-                        <BattleStatsFiltering setData={setBattleData} moveData={rawMoveData} allPokemon={allPokemon} setKeyPokemon={setKeyPokemon} />
+                        <BattleStatsFiltering setData={setBattleData} charactersAndMoves={charactersAndMoves} allPokemon={allPokemon} setKeyPokemon={setKeyPokemon} />
                     </div>
                 )}
                 <div id="stats-display-container" className={`${battleMode !== 'individual' ? 'full-screen' : ''}`}>
@@ -252,7 +215,7 @@ function Stats() {
                                         })
                                         .map((character, index) => (
                                             <div key={index}>
-                                                <BattleStatsDisplay character={character} mode={battleMode} orderBy={battleOrderBy} totalData={battleData}></BattleStatsDisplay>
+                                                <BattleStatsDisplay character={character} mode={battleMode}></BattleStatsDisplay>
                                             </div>
                                         ))
                                     }

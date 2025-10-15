@@ -2,6 +2,7 @@ import "../../css/proMatchSupport/compDisplay.css";
 
 import { FaCrown } from "react-icons/fa";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function SlickCompDisplay({ picks, bans, team_name, team_region, did_win, team1_name, team2_name, side }) {
     const totalDealt = picks.reduce((acc, pick) => acc + pick.dealt, 0);
     const totalTaken = picks.reduce((acc, pick) => acc + pick.taken, 0);

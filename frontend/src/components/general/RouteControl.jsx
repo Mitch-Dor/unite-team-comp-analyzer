@@ -5,7 +5,6 @@ import { Routes, Route } from 'react-router-dom';
 import MainPage from '../mainComponents/js/Main';
 import SingleDraft from '../mainComponents/js/SingleDraft';
 import MultiDraft from '../mainComponents/js/MultiDraft';
-import ScoreComp from '../mainComponents/js/Score';
 import Insights from '../mainComponents/js/Insights';
 import Stats from '../mainComponents/js/Stats';
 import TierList from '../mainComponents/js/TierList';

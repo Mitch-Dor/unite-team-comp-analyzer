@@ -5,7 +5,7 @@ export function getCharactersMovesDictionary(charactersAndMoves) {
         if (!acc[char.pokemon_name]) {
             acc[char.pokemon_name] = [];
         }
-        acc[char.pokemon_name].push({ move_name: char.move_name, move_id: char.move_id });
+        acc[char.pokemon_name].push({ move_name: char.move_name, move_id: char.move_id, move_position: char.move_position });
         return acc;
     }, {});
 
@@ -35,4 +35,50 @@ export function getInversePokemon(pokemon, pokemonList) {
         otherPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === 'Urshifu_SS');
     }
     return otherPokemon
+}
+
+export function getMove1ForPokemon(pokemon, charactersAndMoves) {
+    const first_move_options = charactersAndMoves
+        .filter(item =>
+            item.pokemon_name === pokemon.pokemon_name && item.move_position === 1
+        )
+        .map(item => ({
+            move_name: item.move_name,
+            move_id: item.move_id
+        }));
+    return first_move_options;
+}
+
+export function getMove2ForPokemon(pokemon, charactersAndMoves) {
+    const second_move_options = charactersAndMoves
+        .filter(item =>
+            item.pokemon_name === pokemon.pokemon_name && item.move_position === 2
+        )
+        .map(item => ({
+            move_name: item.move_name,
+            move_id: item.move_id
+        }));
+    return second_move_options;
+}
+
+export function pokemonToMovesetsDictionary(charactersAndMoves) {
+    const uniquePokemon = getUniquePokemon(charactersAndMoves);
+    const movesetsDict = {};
+
+    uniquePokemon.forEach(pokemon => {
+        const move1Options = getMove1ForPokemon(pokemon, charactersAndMoves);
+        const move2Options = getMove2ForPokemon(pokemon, charactersAndMoves);
+
+        // Make all permutations (move1 first, then move2)
+        const combos = [];
+        move1Options.forEach(m1 => {
+            move2Options.forEach(m2 => {
+                combos.push([m1, m2]);
+            });
+        });
+
+        movesetsDict[pokemon.pokemon_name] = combos;
+    });
+
+    return movesetsDict;
 }

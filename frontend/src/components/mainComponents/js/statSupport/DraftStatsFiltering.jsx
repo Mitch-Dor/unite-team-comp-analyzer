@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchDraftStats } from '../common/http.js';
 import '../../css/statSupport/draftStatsFiltering.css';
 
-function DraftStatsFiltering({ events, teams, players, regions, setData, moveData, allPokemon, setPopUpText }) {
+function DraftStatsFiltering({ events, teams, players, regions, setData, movesets, allPokemon, setPopUpText }) {
     const [selectedEvent, setSelectedEvent] = useState("");
     const [selectedRegion, setSelectedRegion] = useState("");
     const [selectedTeam, setSelectedTeam] = useState("");
@@ -29,19 +29,19 @@ function DraftStatsFiltering({ events, teams, players, regions, setData, moveDat
                     const rowCopy = { ...row, movesets: [...row.movesets || []] };
                     
                     // Find the corresponding moveObj but don't modify it
-                    const moveObj = moveData.find(move => move.pokemon_name === row.pokemon_name);
-                    if (moveObj) {
+                    const foundMovesets = movesets[row.pokemon_name];
+                    if (foundMovesets) {
                         // Add missing move combinations to the row's movesets
-                        for (const moveCombo of moveObj.move_combos) {
+                        foundMovesets.forEach(movesetData => {
                             const found = rowCopy.movesets.find(moveSet => 
-                                (moveSet.move_1_name === moveCombo[0] && moveSet.move_2_name === moveCombo[1])
+                                ((moveSet.move_1_name === movesetData[0].move_name || moveSet.move_2_name === movesetData[0].move_name) && (moveSet.move_1_name === movesetData[1].move_name || moveSet.move_2_name === movesetData[1].move_name))
                             );
                             
                             if (!found) {
                                 // Add missing combo to this row's movesets only
                                 rowCopy.movesets.push({
-                                    move_1_name: moveCombo[0],
-                                    move_2_name: moveCombo[1],
+                                    move_1_name: movesetData[0].move_name,
+                                    move_2_name: movesetData[1].move_name,
                                     moveset_count: 0,
                                     moveset_wins: 0,
                                     pick_rate: 0,
@@ -52,7 +52,7 @@ function DraftStatsFiltering({ events, teams, players, regions, setData, moveDat
                                 found.pick_rate = parseFloat(((found.moveset_count / row.total_picks) * 100).toFixed(1));
                                 found.win_rate = parseFloat(((found.moveset_wins / found.moveset_count) * 100).toFixed(1));
                             }
-                        }
+                        });
                     }
                     // Calculate Percentages (Win Rate, Pick Rate, Ban Rate, Presence)
                     rowCopy.ban_rate = parseFloat(((rowCopy.total_bans / rowCopy.total_matches) * 100).toFixed(1));
@@ -74,7 +74,7 @@ function DraftStatsFiltering({ events, teams, players, regions, setData, moveDat
             .catch(error => {
                 console.error("Error fetching draft stats:", error);
             });
-    }, [selectedEvent, selectedRegion, selectedTeam, selectedPlayer, dateLower, dateUpper, setData, moveData]);
+    }, [selectedEvent, selectedRegion, selectedTeam, selectedPlayer, dateLower, dateUpper, setData, movesets]);
   
     return (
         <div id="draft-stats-filter-container">
@@ -101,7 +101,7 @@ Date: Limits the search to events that happened within the specified time range.
                     <label htmlFor="draft-stats-date-lower-select">Date Upper</label>
                     <input id="draft-stats-date-upper-select" name="dateSelectUpper" type="date" onChange={(e) => setDateUpper(e.target.value)}></input> 
                 </div>
-                <div className="stats-info-button" onClick={ () => {setPopUpText(`For most relevant stats on a particular Pokemon (because total matches by default may include matches from before the Pokemon was released), set lower date bound to \' [RELEASE DATE]\', in the settings using the release dates provided:\n\n ${allPokemon
+                <div className="stats-info-button" onClick={ () => {setPopUpText(`For most relevant stats on a particular Pokemon (because total matches by default may include matches from before the Pokemon was released), set lower date bound to '[RELEASE DATE]', in the settings using the release dates provided:\n\n ${allPokemon
                     .map((char) => {const date = new Date(char.release_date);
                     return `${char.pokemon_name}: ${date.toLocaleDateString('en-US', {
                         year: 'numeric',

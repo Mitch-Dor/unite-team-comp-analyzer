@@ -4,7 +4,7 @@ import CustomDropdown from './CustomDropdown';
 import '../../css/proMatchSupport/proDataInsertModal.css';
 import { getCharactersMovesDictionary, getUniquePokemon } from '../common/common';
 
-function ProDataInsertModal({ setShowSubmitForm, coreData, setCoreData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers }) {
+function ProDataInsertModal({ setShowSubmitForm, setCoreData, events, teams, players, charactersAndMoves, setEvents, setTeams, setPlayers }) {
     const [setInsertion, setSetInsertion] = useState(null);
     const [eventInsertion, setEventInsertion] = useState(false);
     const [teamInsertion, setTeamInsertion] = useState(false);
@@ -41,7 +41,6 @@ function ProDataInsertModal({ setShowSubmitForm, coreData, setCoreData, events, 
     function submitComp() {
         let errorMsg = "Missing Fields:";
         let errorCount = 0;
-        let i = 1;
 
         // Check which data is trying to be inserted
         switch (creationState) {
@@ -1014,7 +1013,7 @@ function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, 
                         value={move1}
                         id={`pdim-match-${matchNumber}-comp-${compNumber}-pick-${pickNumber}-move-1-dropdown`}
                         onChange={setMove1}
-                        options={availableMoves}
+                        options={availableMoves?.filter(move => move.move_position === 1)}
                         placeholder="Move 1 Select"
                         disabled={character?.pokemon_name === ""}   
                         path="/assets/Draft/moves"
@@ -1027,7 +1026,7 @@ function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, 
                     value={move2}
                     id={`pdim-match-${matchNumber}-comp-${compNumber}-pick-${pickNumber}-move-2-dropdown`}
                     onChange={setMove2}
-                    options={availableMoves}
+                    options={availableMoves?.filter(move => move.move_position === 2)}
                     placeholder="Move 2 Select"
                     disabled={character?.pokemon_name === ""}   
                     path="/assets/Draft/moves"

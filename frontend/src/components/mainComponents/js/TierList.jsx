@@ -404,7 +404,11 @@ function TierList() {
             <div className={`tier-list-pokemon-assign-moves-button ${setMovesPokemon === item ? 'close' : ''}`}
               onClick={(e) => {
                 e.stopPropagation();
-                setMovesPokemon === item ? setSetMovesPokemon(null) : setSetMovesPokemon(item);
+                if (setMovesPokemon === item) {
+                  setSetMovesPokemon(null);
+                } else {
+                  setSetMovesPokemon(item);
+                }
               }}>{setMovesPokemon === item ? '-' : '+'}
             </div>
             <div className="tier-list-pokemon-assigned-moves-container">
@@ -501,7 +505,7 @@ function TierList() {
       >
         {loading ? 'Loading...' : 'Empty Tiers'}
       </button>
-      <div className="tier-list-moves-mode-container" title="Moves Mode" onClick={() => {movesMode === "off" ? setMovesMode("on") : setMovesMode("off")}}>
+      <div className="tier-list-moves-mode-container" title="Moves Mode" onClick={() => {setMovesMode(movesMode === "off" ? "on" : "off")}}>
         <div className={`tier-list-moves-mode-slider-container ${movesMode}`}>
           <div className={`tier-list-moves-mode-slider ${movesMode}`}></div>
         </div>

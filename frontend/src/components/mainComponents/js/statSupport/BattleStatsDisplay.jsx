@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -21,10 +20,10 @@ ChartJS.register(
   Legend
 );
 
-function BattleStatsDisplay({ character, match, mode, orderBy, totalData }) {
+function BattleStatsDisplay({ character, match, mode }) {
   return (
     <div className="battle-stats-display-container">
-      {mode === 'allPokemon' && <AllPokemonChart data={character} orderBy={orderBy} totalData={totalData} />}
+      {mode === 'allPokemon' && <AllPokemonChart data={character} />}
       {mode === 'individual' && <MatchDisplaysChart data={match} />}
     </div>
   );
@@ -35,7 +34,7 @@ function BattleStatsDisplay({ character, match, mode, orderBy, totalData }) {
   // dealt, taken, healed as white text on colored bars
   // number of times picked in each role as a bar chart
 // When orderBy is not "all", make it one long graph the user can scroll down that has just that value shown on a bar graph 
-function AllPokemonChart({ data, orderBy, totalData }) {
+function AllPokemonChart({ data }) {
   let chartData = {};
   const numDataPoints = parseInt(data.num_times_top) + parseInt(data.num_times_exp_share_top) + parseInt(data.num_times_jungle) + parseInt(data.num_times_bot) + parseInt(data.num_times_exp_share_bot);
   chartData = {

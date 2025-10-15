@@ -113,7 +113,7 @@ export default function Inights() {
                                     src={`${getYTEmbedSrc(currentInsight?.match_link)}?modestbranding=1&rel=0&playsinline=1&origin=${window.location.origin}`}
                                     width="80%"
                                     height="60%"
-                                    aspectRatio="16 / 9"
+                                    style={{ aspectRatio: "16 / 9" }}
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
