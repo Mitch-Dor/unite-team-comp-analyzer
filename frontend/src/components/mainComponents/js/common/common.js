@@ -21,3 +21,18 @@ export function getCharactersMovesDictionary(charactersAndMoves) {
 export function getUniquePokemon(charactersAndMoves) {
     return [...new Set(charactersAndMoves.map(char => JSON.stringify({pokemon_name: char.pokemon_name, pokemon_id: char.pokemon_id})))].map(str => JSON.parse(str));
 }
+
+// Function for maintaining Pokemon that have to choose which Pokemon they become
+export function getInversePokemon(pokemon, pokemonList) {
+    let otherPokemon = null;
+    if (pokemon.pokemon_name === 'Scyther'){
+        otherPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === 'Scizor');
+    } else if (pokemon.pokemon_name === 'Scizor'){
+        otherPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === 'Scyther');
+    } else if (pokemon.pokemon_name === 'Urshifu_SS'){
+        otherPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === 'Urshifu_RS');
+    } else if (pokemon.pokemon_name === 'Urshifu_RS'){
+        otherPokemon = pokemonList.find(pokemon => pokemon.pokemon_name === 'Urshifu_SS');
+    }
+    return otherPokemon
+}

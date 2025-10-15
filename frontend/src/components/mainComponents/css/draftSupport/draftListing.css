@@ -1,5 +1,5 @@
 .draft-composed-page-draft-board-characters-container {
-    height: 90%;
+    height: 88%;
     width: 100%;
     display: flex;
     flex-flow: row wrap;
@@ -24,6 +24,7 @@
     align-items: center;
     justify-content: flex-start;
     position: relative;
+    border-radius: 4px;
 }
 
 .draft-draft-listing-character-container.available {
@@ -37,17 +38,17 @@
 
 .draft-draft-listing-character-container img.draft-character-portrait {
     width: 100%;
-    height: 100%;
     aspect-ratio: 1/1;
     border: 1px solid rgb(255, 255, 255);
     position: relative;
     z-index: 1;
+    border-radius: 4px;
     border-bottom: none;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    background-size: 100% 100% !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     object-fit: cover;
     display: block;
     box-sizing: border-box;
@@ -55,7 +56,7 @@
 
 .draft-draft-listing-character-container h4 {
     margin: 0;
-    padding: 0.2em 0;
+    padding: 2px 0;
     background-color: #333;
     color: white;
     width: 100%;
@@ -63,16 +64,31 @@
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     font-size: 0.7em;
-    line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     box-sizing: border-box;
-    position: relative;
     z-index: 2;
+    /* Below Syling + The Styling Block Below (... h4::before) needed to make gray top border not go over white border on left and right */
     border: 1px solid rgb(255, 255, 255);
-    border-top: 1px solid #555;
+    border-top: none;
+    border-left: 1px solid rgb(255, 255, 255);
+    border-right: 1px solid rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(255, 255, 255);
+    position: relative;
     display: block;
+}
+
+.draft-draft-listing-character-container h4::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 1px;
+    right: 1px;
+    height: 1px;
+    background: #555;
+    z-index: 1;
+    border-radius: 0 0 0 0;
 }
 
 .draft-draft-listing-character-container.targeted {
@@ -86,5 +102,20 @@
     }
     to {
         box-shadow: 0 0 15px gold;
+    }
+}
+
+@media (max-width: 1024px) {
+    .draft-composed-page-draft-board-characters-container {
+        gap: 3px;
+    }
+    .draft-draft-listing-character-container {
+        width: 12%;
+    }
+}
+
+@media (max-width: 720px) {
+    .draft-draft-listing-character-container {
+        width: 20%;
     }
 }

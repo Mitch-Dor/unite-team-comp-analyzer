@@ -90,7 +90,7 @@ function Main() {
                 )}
                 <button id="proMatches" className="main-core-component-button main-directory-button" onClick={() => navigate('/pro-matches', {state: {user: user}})}>Pro Matches</button>
             </div>
-            <div class="main-directory-buttons-row">
+            <div className="main-directory-buttons-row">
                 <button id="settings" className="main-setting-button main-directory-button" onClick={() => setSettingsActive(!settingsActive)}>Draft Settings</button>
             </div>
         </div>

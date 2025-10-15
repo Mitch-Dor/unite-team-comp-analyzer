@@ -11,11 +11,9 @@ const HoverInsights = ({ pokemon, idealTeam }) => {
                     {/* eslint-disable-next-line react/no-unescaped-entities */}
                     <p>AI's Ideal Team:</p>
                     <div className="draft-hover-insights-ideal-team-pokemon-container">
-                    {idealTeam && idealTeam.map((pokemon, index) => (
-                        <div key={index} className="draft-hover-insights-ideal-team-pokemon">
-                            <img className={`${pokemon.pokemon_class} draft-character-portrait`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
-                        </div>
-                    ))}
+                        {idealTeam && idealTeam.map((pokemon, index) => (
+                            <img key={index} className={`draft-hover-insights-ideal-team-pokemon ${pokemon.pokemon_class} draft-character-portrait`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
+                        ))}
                     </div>
                 </div>
             )}

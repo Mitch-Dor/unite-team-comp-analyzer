@@ -8,34 +8,32 @@
 }
 
 .draft-filtering-row {
-    width: calc(100% - 40px);
+    width: 100%;
     height: 50%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 20px;
 }
 
 .draft-filtering-lane-filters, .draft-filtering-class-filters {
-    height: 100%;
-    max-height: 20px;
-    width: 30%;
+    max-height: 100%;
+    width: 50%;
     display: flex;
-    justify-content: space-around;
     align-items: center;
+    gap: 5px;
 }
 
-.draft-filtering-lane-filters img {
-    width: clamp(16px, 1.5vw, 24px);
-    height: clamp(16px, 1.5vw, 24px);
-    cursor: pointer;
-    padding: 2px;
-    box-sizing: border-box;
+.draft-filtering-lane-filters {
+    justify-content: flex-start;
 }
 
-.draft-filtering-class-filters img {
-    width: clamp(16px, 1.5vw, 24px);
-    height: clamp(16px, 1.5vw, 24px);
+.draft-filtering-class-filters {
+    justify-content: flex-end;
+}
+
+.draft-filtering-filter-icon {
+    width: 20px;
+    height: 20px;
     cursor: pointer;
     padding: 2px;
     box-sizing: border-box;
@@ -49,28 +47,34 @@
     height: 100%;
     max-height: 20px;
     width: 60%;
-    border: 2px solid black;
-    font-size: 0.8em;
-    padding: 0 0.5em;
+    border: 1px solid black;
+    padding: 4px;
     box-sizing: border-box;
 }
 
-.draft-filtering-order-by-select {
+#draft-filtering-order-by-select {
     height: 100%;
     max-height: 20px;
     width: 30%;
-    font-size: 0.6em;
+    border: 1px solid black;
 }
 
-/* Media queries for better responsiveness */
 @media (max-width: 1024px) {
-    .draft-filtering-lane-filters img, .draft-filtering-class-filters img {
-        max-width: 100%/5;
-        max-height: 100%;
-        aspect-ratio: 1/1;
+    .draft-filtering-row {
+        align-items: flex-start;
     }
     
-    #draft-filtering-search-bar {
+    #draft-filtering-search-bar, #draft-filtering-order-by-select {
+        max-height: 15px;
         font-size: 0.8em;
+    }
+
+    .draft-filtering-lane-filters, .draft-filtering-class-filters {
+        gap: 2px;
+    }
+
+    .draft-filtering-filter-icon {
+        width: 15px;
+        height: 15px;
     }
 }

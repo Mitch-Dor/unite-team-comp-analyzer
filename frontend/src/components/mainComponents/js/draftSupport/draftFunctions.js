@@ -2,7 +2,7 @@
 // This file serves as a utility module for draft-related functions.
 // Other files can import these functions to use them in their own logic.
 
-// Function to check if a given Pokemon is a special case
+// Function to check if a given Pokemon is a special case for the purposes of if it is still available (true = unavailable | false = available)
 function checkIfSpecialCase(pokemon, team1Bans, team2Bans, team1Picks, team2Picks) {
     if (pokemon.pokemon_name === 'Scyther' && (team1Bans.some(ban => ban.pokemon_name === 'Scizor') || team2Bans.some(ban => ban.pokemon_name === 'Scizor') || team1Picks.some(pick => pick.pokemon_name === 'Scizor') || team2Picks.some(pick => pick.pokemon_name === 'Scizor'))) {
         return true;

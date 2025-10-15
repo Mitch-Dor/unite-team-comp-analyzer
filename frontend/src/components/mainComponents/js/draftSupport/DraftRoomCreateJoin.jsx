@@ -16,6 +16,7 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
 
     return (
         <div className="draft-drcj-screen-cover">
+            {/* No Mode Selected Yet */}
             {joiningOrCreating === "" && (
                 <div className="draft-drcj-create-join-container">
                     <div className="draft-drcj-create-join-header">
@@ -27,6 +28,7 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
                     </div>
                 </div>
             )}
+            {/* Hosting */}
             {joiningOrCreating === "create" && (
                 <div className="draft-drcj-create-join-container">
                     {!isConnected && (
@@ -57,6 +59,7 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
                     </div>
                 </div>
             )}
+            {/* Joining */}
             {joiningOrCreating === "join" && (
                 <div className="draft-drcj-create-join-container">
                     {!isConnected && (
@@ -68,7 +71,7 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
                         <h1>Join Draft Room</h1>
                     </div>
                     <div className="draft-drcj-create-join-content">
-                        {!isConnected && (
+                        {!isConnected ? (
                             <>
                                 <input 
                                     id="draft-drcj-room-id-input"
@@ -80,8 +83,7 @@ function DraftRoomCreateJoin({ createRoom, joinRoom, inputRoomId, handleInputCha
                                 />
                                 <button id="draft-drcj-join-room-button" onClick={joinRoom}>Join</button>
                             </>
-                        )}
-                        {isConnected && (
+                        ) : (
                             <>
                                 <div className="draft-drcj-user-information-container">
                                     <p>Hosted By: {opposingUser ? opposingUser.user_name : "Unknown"}</p>

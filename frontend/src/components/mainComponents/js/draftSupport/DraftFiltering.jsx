@@ -84,33 +84,29 @@ const DraftFiltering = ({ pokemonList, updateFilteredList, updatePokemonList }) 
         <div className="draft-filtering-container">
             <div className="draft-filtering-row">
                 <div className="draft-filtering-lane-filters">
-                    {possibleLanes.map((lane, index) => {
+                    {possibleLanes.map(lane => {
                         return (
-                            <div key={"lane"+index} >
-                                <img title={`${lane}`} src={`./assets/Draft/filterIcons/${lane}.png`} className={`draft-filtering-filter-icon ${laneFilters.includes(lane) ? 'active' : ''}`} onClick={() => {doUpdateLaneFilters(lane)}}></img>
-                            </div>
+                            <img key={"lane-"+lane} title={`${lane}`} src={`./assets/Draft/filterIcons/${lane}.png`} className={`draft-filtering-filter-icon ${laneFilters.includes(lane) ? 'active' : ''}`} onClick={() => {doUpdateLaneFilters(lane)}}></img>
                         );
                     })}
                 </div>
                 <div className="draft-filtering-class-filters">
-                    {possibleClasses.map((charClass, index) => {
+                    {possibleClasses.map(charClass => {
                         return (
-                            <div key={"class"+index} >
-                                <img title={`${charClass}`} src={`./assets/Draft/filterIcons/${charClass}.png`} className={`draft-filtering-filter-icon ${classFilter === charClass ? 'active' : ''}`} onClick={() => {doUpdateClassFilter(charClass)}}></img>
-                            </div>
+                            <img key={"class-"+charClass} title={`${charClass}`} src={`./assets/Draft/filterIcons/${charClass}.png`} className={`draft-filtering-filter-icon ${classFilter === charClass ? 'active' : ''}`} onClick={() => {doUpdateClassFilter(charClass)}}></img>
                         );
                     })}
                 </div>
             </div>
             <div className="draft-filtering-row">
-                <input type="text" id="draft-filtering-search-bar" placeholder="Search..." onChange={(e) => setSearchTerm(e.target.value)}></input>
-                <select className="draft-filtering-order-by-select" onChange={(e) => doReorder(e.target.value)}>
-                    {orderByFilters.map((orderByFilter, index) => {
+                <select id="draft-filtering-order-by-select" onChange={(e) => doReorder(e.target.value)}>
+                    {orderByFilters.map(orderByFilter => {
                         return (
                             <option key={orderByFilter} value={orderByFilter}>{orderByFilter}</option>
                         )
                     })}
                 </select>
+                <input type="text" id="draft-filtering-search-bar" placeholder="Search..." onChange={(e) => setSearchTerm(e.target.value)}></input>
             </div>
         </div>
     );
