@@ -38,7 +38,6 @@ function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, 
       const filteredData = baseData.map(set => {
         // Filter through matches in sets
         const filteredMatches = set.matches.filter(comp => {
-          console.log(comp);
           return (eventFilter === defaultEvent || set.event_name === eventFilter)
             && (characterFilter === defaultCharacter || comp.team1_picks.some(pick => pick.pokemon_name === characterFilter.pokemon_name) || comp.team2_picks.some(pick => pick.pokemon_name === characterFilter.pokemon_name))
             && (regionFilter === defaultRegion || comp.team1_region === regionFilter || comp.team2_region === regionFilter)
