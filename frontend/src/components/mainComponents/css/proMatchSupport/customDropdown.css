@@ -4,11 +4,12 @@
     height: 100%;
     font-size: 14px;
     color: white;
-    font-family: Verdana, Geneva, Tahoma, sans-serif
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .custom-dropdown-dropdown-button {
     padding: 8px;
+    height: 100%;
     width: 100%;
     background-color: #333;
     border: 1px solid #555;
@@ -20,6 +21,7 @@
     align-items: center;
     justify-content: space-between;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .custom-dropdown-dropdown-button:disabled {

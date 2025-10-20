@@ -74,16 +74,14 @@ function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, 
         </select>
         <div className="pro-match-filtering-custom-dropdown-container">
           {/* Sort by Pokemon */}
-          <div id="sorting-pokemon-dropdown">
-            <CustomDropdown
-              value={characterFilter}
-              onChange={setCharacterFilter}
-              options={characters}
-              placeholder={defaultCharacter}
-              disabled={false}
-              path="/assets/Draft/headshots"
-            />
-          </div>
+          <CustomDropdown
+            value={characterFilter}
+            onChange={setCharacterFilter}
+            options={characters}
+            placeholder={defaultCharacter}
+            disabled={false}
+            path="/assets/Draft/headshots"
+          />
         </div>
         {/* Sort by Region */}
         <select id='pro-match-filtering-region-dropdown' className="pro-match-filtering-dropdown" onChange={(e) => setRegionFilter(e.target.value)}>
