@@ -64,6 +64,7 @@ h3 {
     top: 3px;
     max-width: 20%;
     height: calc(100% - 10px);
+    font-size: 0.9em;
 }
 
 .stats-on-dropdown-label {
