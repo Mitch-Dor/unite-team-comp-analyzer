@@ -32,6 +32,7 @@ function TierList() {
   const [customNameTiers, setCustomNameTiers] = useState(['S', 'A', 'B', 'C', 'D', 'E', 'F']);
   const [selectedPokemon, setSelectedPokemon] = useState();
   const [movesMode, setMovesMode] = useState("off");
+  const [showAddMovesButton, setShowAddMovesButton] = useState(true);
   const [setMovesPokemon, setSetMovesPokemon] = useState(null);
   const [addPokemon, setAddPokemon] = useState("none");
   const assignedRef = useRef(null);
@@ -401,16 +402,18 @@ function TierList() {
         />
         {movesMode==="on" && (
           <>
-            <div className={`tier-list-pokemon-assign-moves-button ${setMovesPokemon === item ? 'close' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (setMovesPokemon === item) {
-                  setSetMovesPokemon(null);
-                } else {
-                  setSetMovesPokemon(item);
-                }
-              }}>{setMovesPokemon === item ? '-' : '+'}
-            </div>
+            {showAddMovesButton && (
+              <div className={`tier-list-pokemon-assign-moves-button ${setMovesPokemon === item ? 'close' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (setMovesPokemon === item) {
+                    setSetMovesPokemon(null);
+                  } else {
+                    setSetMovesPokemon(item);
+                  }
+                }}>{setMovesPokemon === item ? '-' : '+'}
+              </div>
+            )}
             <div className="tier-list-pokemon-assigned-moves-container">
               {item.moves.map((move, i) => (
                 <div
@@ -505,6 +508,9 @@ function TierList() {
       >
         {loading ? 'Loading...' : 'Empty Tiers'}
       </button>
+      <div className="tier-list-show-add-moves-button-button" title="Display Add Moves Button On Pokemon" onClick={() => {setShowAddMovesButton(prev => !prev)}}>
+        <div className={`tier-list-pokemon-assign-moves-button ${showAddMovesButton === false ? 'no-display' : ''}`}>+</div>
+      </div>
       <div className="tier-list-moves-mode-container" title="Moves Mode" onClick={() => {setMovesMode(movesMode === "off" ? "on" : "off")}}>
         <div className={`tier-list-moves-mode-slider-container ${movesMode}`}>
           <div className={`tier-list-moves-mode-slider ${movesMode}`}></div>

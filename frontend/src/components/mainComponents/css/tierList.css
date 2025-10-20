@@ -372,6 +372,35 @@
     background-color: white;
 }
 
+.tier-list-show-add-moves-button-button {
+    position: absolute;
+    bottom: -30px;
+    right: 210px;
+    width: 30px;
+    height: 30px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: white;
+    background-color: rgb(42, 41, 41);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: none;
+    box-sizing: border-box;
+}
+
+.tier-list-show-add-moves-button-button .tier-list-pokemon-assign-moves-button {
+    position: relative;
+    top: 0;
+    right: 0;
+    box-sizing: border-box;
+}
+
+.tier-list-show-add-moves-button-button .tier-list-pokemon-assign-moves-button.no-display {
+    background-color: rgba(255, 50, 50, 0.6)
+}
+
 .tier-list-export-to-PDF-button {
     position: absolute;
     bottom: -30px;
@@ -518,10 +547,6 @@
         right: 12px;
     }
 
-    .tier-list-export-to-PDF-button {
-        right: 77px;
-    }
-
     .tier-list-moves-mode-container {
         right: 112px;
     }
@@ -540,6 +565,17 @@
 
     .tier-list-category-add-pokemon-container {
         aspect-ratio: 5/3;
+    }
+
+    /* Export to PDF doesn't work on mobile so don't even show it. Makes space for show-add-moves-button-button anyway */
+
+    .tier-list-show-add-moves-button-button {
+        bottom: -30px;
+        right: 77px;
+    }
+
+    .tier-list-export-to-PDF-button {
+        display: none;
     }
 
 }
