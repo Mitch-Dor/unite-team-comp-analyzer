@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import CustomDropdown from "./CustomDropdown";
 import Home from "../../../sideComponents/js/Home";
+import "../../css/proMatchSupport/matchFiltering.css";
 
 function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, setFilteredData, expandShrinkAllMatches, setExpandShrinkAllMatches }) {
     const [regions, setRegions] = useState([]);
@@ -37,8 +38,9 @@ function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, 
       const filteredData = baseData.map(set => {
         // Filter through matches in sets
         const filteredMatches = set.matches.filter(comp => {
+          console.log(comp);
           return (eventFilter === defaultEvent || set.event_name === eventFilter)
-            && (characterFilter === defaultCharacter || comp.team1_picks.some(pick => pick.pokemon_name === characterFilter.pokemon_name) || comp.team2_pokemon.some(pick => pick.pokemon_name === characterFilter.pokemon_name))
+            && (characterFilter === defaultCharacter || comp.team1_picks.some(pick => pick.pokemon_name === characterFilter.pokemon_name) || comp.team2_picks.some(pick => pick.pokemon_name === characterFilter.pokemon_name))
             && (regionFilter === defaultRegion || comp.team1_region === regionFilter || comp.team2_region === regionFilter)
             && (teamFilter === defaultTeam || comp.team1_name === teamFilter || comp.team2_name === teamFilter)
             && (playerFilter === defaultPlayer || comp.team1_picks.some(pick => pick.player_name === playerFilter) || comp.team2_picks.some(pick => pick.player_name === playerFilter));
