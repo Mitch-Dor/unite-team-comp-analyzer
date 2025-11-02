@@ -32,6 +32,7 @@
 
 - Add headshot asset
 - Add move assets
+- Add model asset
 - Add to playable_characters table in db editor
 - Add to pokemon_moves table in db editor
 - Add to pokemon_attributes in db editor

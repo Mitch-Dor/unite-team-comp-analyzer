@@ -69,9 +69,9 @@ function MatchFiltering({ events, teams, players, charactersAndMoves, coreData, 
         {/* Sort by Event */}
         <select id='pro-match-filtering-event-dropdown' className="pro-match-filtering-dropdown" onChange={(e) => setEventFilter(e.target.value)}>
           <option value={defaultEvent}>{defaultEvent}</option>
-        {events.map((event, index) => (
-          <option key={index} value={event.event_name}>{event.event_name}</option>
-        ))}
+          {events.map((event, index) => (
+            <option key={index} value={event.event_name}>{event.event_name}</option>
+          ))}
         </select>
         <div className="pro-match-filtering-custom-dropdown-container">
           {/* Sort by Pokemon */}

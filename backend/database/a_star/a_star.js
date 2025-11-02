@@ -662,19 +662,19 @@ function assignRoles(team) {
 
     console.log(positions);
 
-    function findOnlyPossibleCandidatesByProspective() {
+    function findOnlyPossibleCandidatesByProspective(arrayOfPositions) {
         let didChangeAtAll = false;
         let loopCount = 0;
         // Look for positions that only have one option
         while(loopCount < 10) {
             let shouldExit = true;
-            for (const position of positions) {
+            for (const position of arrayOfPositions) {
                 if (position.prospective.length === 1 && position.assigned === null) {
                     shouldExit = false;
                     didChangeAtAll = true;
                     position.assigned = position.prospective[0];
                     position.prospective = [];
-                    for (const otherPosition of positions) {
+                    for (const otherPosition of arrayOfPositions) {
                         const idx = otherPosition.prospective.findIndex(
                             (p) => p.pokemon_name === position.assigned.pokemon_name
                         );
@@ -689,10 +689,10 @@ function assignRoles(team) {
         return didChangeAtAll;
     }
 
-    function getUnassignedPokemon() {
+    function getUnassignedPokemon(arrayOfPositions) {
         return team.filter(pokemon => {
             let unassigned = true;
-            positions.forEach(position => {
+            arrayOfPositions.forEach(position => {
                 if(position.assigned === pokemon){
                     unassigned = false;
                 }
@@ -701,18 +701,18 @@ function assignRoles(team) {
         })
     }
 
-    function findOnlyPossibleCandidatesByPokemon() {
+    function findOnlyPossibleCandidatesByPokemon(arrayOfPositions) {
         let loopCount = 0;
         let didChangeAtAll = false;
         while (loopCount < 10) {
             // Now look for pokemon that only appear in one position
             let shouldExit = true;
             // Get unassigned Pokemon
-            const unassignedPokemon = getUnassignedPokemon();
+            const unassignedPokemon = getUnassignedPokemon(arrayOfPositions);
             
             // Map each unassigned Pokémon to the positions they appear in
             const pokemonToPositions = unassignedPokemon.map(pokemon => {
-                const possiblePositions = positions
+                const possiblePositions = arrayOfPositions
                     .filter(pos => pos.prospective.some(p => p.pokemon_name === pokemon.pokemon_name))
                     .map(pos => pos.name);
 
@@ -743,45 +743,104 @@ function assignRoles(team) {
         return didChangeAtAll;
     }
 
-    function checkIfDefinitePositions() {
+    function checkIfDefinitePositions(arrayOfPositions) {
         // Run these in a loop because they may cause each other to be able to fill more spots
         let changed;
         do {
             changed = false;
-            changed ||= findOnlyPossibleCandidatesByProspective();
-            changed ||= findOnlyPossibleCandidatesByPokemon();
+            changed ||= findOnlyPossibleCandidatesByProspective(arrayOfPositions);
+            changed ||= findOnlyPossibleCandidatesByPokemon(arrayOfPositions);
         } while (changed);
     }
 
-    checkIfDefinitePositions();
+    // A* Algorithm to try and fill remaining spots. Prioritize best lanes, then can lanes, then finally everything else
+    function tryFill(open, closed) {
+        const bestOption = open.pop().positions;
+        // If the best option has all its spots filled, that is the best option
+        let shouldExit = true;
+        for (const position of bestOption) {
+            if (position.assigned === null) {
+                shouldExit = false;
+            }
+        }
+        if (shouldExit) {
+            return bestOption;
+        }
 
-    console.log("Before fill");
-    console.log(positions);
-
-    // There are no "certain" placements so we're going to have to just place something and then test to see if it lets the rest fill out
-    // Start by seeing if we can maximize "best positions"
-    // Then just place where it is possible
-    // If there is a Pokemon whose categories were all taken, set it aside to be placed last
-    // Recursive backtracking with bestLane prioritization
-    // A* Algorithm
-    function tryFill(array) {
-        const unassignedPokemon = getUnassignedPokemon();
+        // Assign the next Pokemon
+        const unassignedPokemon = getUnassignedPokemon(bestOption);
         for (const pokemon of unassignedPokemon) {
-            
+            // Start by putting unassigned pokemon with bestLanes available in those lanes
+            switch (pokemon.attributes.bestLane) {
+                case "TopLane":
+                    if (bestOption[0].assigned === null) {
+                        bestOption[0].assigned = pokemon;
+                        bestOption[0].prospective = [];
+                        checkIfDefinitePositions(bestOption);
+                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                    }
+                    break;
+                case "EXPShareTop":
+                    if (bestOption[1].assigned === null) {
+                        bestOption[1].assigned = pokemon;
+                        bestOption[1].prospective = [];
+                        checkIfDefinitePositions(bestOption);
+                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                    }
+                    break;
+                case "JungleCarry": 
+                    if (bestOption[2].assigned === null) {
+                        bestOption[2].assigned = pokemon;
+                        bestOption[2].prospective = [];
+                        checkIfDefinitePositions(bestOption);
+                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                    }
+                    break;
+                case "BottomCarry":
+                    if (bestOption[3].assigned === null) {
+                        bestOption[3].assigned = pokemon;
+                        bestOption[3].prospective = [];
+                        checkIfDefinitePositions(bestOption);
+                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                    }
+                    break;
+                case "EXPShareBot":
+                    if (bestOption[4].assigned === null) {
+                        bestOption[4].assigned = pokemon;
+                        bestOption[4].prospective = [];
+                        checkIfDefinitePositions(bestOption);
+                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                    }
+                    break;
+            }
+            // We've handled all the bestLane assignments, now create objects for everywhere the Pokemon *can* go
+            if (pokemon.attributes.canTopLaneCarry) {
+
+            }
+            if (pokemon.attributes.canExpShare) {
+                // Insert into both EXP Share roles
+            }
+            if (pokemon.attributes.canJungleCarry) {
+
+            }
+            if (pokemon.attributes.canBottomLaneCarry) {
+
+            }
+            // If we somehow don't have a good composition still, take the comp with the most positions filled, then the best score. The remaining Pokemon need to be randomly assigned.
         }
         
     }
 
-    function tryFillHeuristic() {
+    function tryFillHeuristic(arrayOfPositions) {
         let value = 0;
-        for (const position of positions) {
+        for (const position of arrayOfPositions) {
             if (position.assigned) {
                 if((position.assigned.attributes.bestLane === "TopLane" && position.name === "topCarry")
                 || (position.assigned.attributes.bestLane === "EXPShareTop" && position.name === "topExpShare")
                 || (position.assigned.attributes.bestLane === "JungleCarry" && position.name === "jungle")
                 || (position.assigned.attributes.bestLane === "BottomCarry" && position.name === "botCarry")
                 || (position.assigned.attributes.bestLane === "EXPShareBot" && position.name === "botExpShare")) {
-                    value += 5;
+                    value += 1;
                 }
                 else if((position.assigned.attributes.canTopLaneCarry === "Yes" && position.name === "topCarry")
                     || (position.assigned.attributes.canExpShare === "Yes" && position.name === "topExpShare")
@@ -790,14 +849,17 @@ function assignRoles(team) {
                     || (position.assigned.attributes.canExpShare === "Yes" && position.name === "botExpShare")) {
                     value += 3;
                 } else {
-                    value += 1;
+                    value += 9;
                 }
             } 
         }
         return value;
     }
 
-    tryFill();
+    let open = new MinHeap();
+    let closed = new Set();
+    open.push({positions: structuredClone(positions), score: tryFillHeuristic(positions)})
+    const positionAssignments = tryFill(open, closed);
     return positions;
 }
 
