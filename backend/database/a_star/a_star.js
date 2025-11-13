@@ -374,8 +374,6 @@ function heuristic_synergy_score(yourTeam){
         totalPoints += 100;
     }
 
-    console.log(assignRoles(yourTeam))
-
     // If we don't have these best roles it's bad
     // EXP Shares are generally more important to have on their proper role
     // This will also trend the model towards picking EXP Shares early unless there is a good counter elsewhere which is generally good
@@ -660,7 +658,14 @@ function assignRoles(team) {
         if (pokemon.attributes.canExpShare === "Yes") positions[4].prospective.push(pokemon);
     }
 
-    console.log(positions);
+    function removeCandidateFromAllProspectives(arrayOfPositions, pokemon) {
+        for (const otherPosition of arrayOfPositions) {
+            const idx = otherPosition.prospective.findIndex(
+                (p) => p.pokemon_id === pokemon.pokemon_id
+            );
+            if (idx !== -1) otherPosition.prospective.splice(idx, 1);
+        }
+    }
 
     function findOnlyPossibleCandidatesByProspective(arrayOfPositions) {
         let didChangeAtAll = false;
@@ -672,14 +677,10 @@ function assignRoles(team) {
                 if (position.prospective.length === 1 && position.assigned === null) {
                     shouldExit = false;
                     didChangeAtAll = true;
-                    position.assigned = position.prospective[0];
+                    const pokemon = position.prospective[0]
+                    position.assigned = pokemon;
                     position.prospective = [];
-                    for (const otherPosition of arrayOfPositions) {
-                        const idx = otherPosition.prospective.findIndex(
-                            (p) => p.pokemon_name === position.assigned.pokemon_name
-                        );
-                        if (idx !== -1) otherPosition.prospective.splice(idx, 1);
-                    }
+                    removeCandidateFromAllProspectives(arrayOfPositions, pokemon);
                 }
             }
             loopCount++;
@@ -693,7 +694,7 @@ function assignRoles(team) {
         return team.filter(pokemon => {
             let unassigned = true;
             arrayOfPositions.forEach(position => {
-                if(position.assigned === pokemon){
+                if(position.assigned && position.assigned.pokemon_id === pokemon.pokemon_id){
                     unassigned = false;
                 }
             })
@@ -729,11 +730,7 @@ function assignRoles(team) {
                     shouldExit = false;
                     didChangeAtAll = true;
                     // Remove this Pokémon from all other prospective lists
-                    for (const other of positions) {
-                        other.prospective = other.prospective.filter(
-                            p => p.pokemon_name !== pokemon.pokemon_name
-                        );
-                    }
+                    removeCandidateFromAllProspectives(arrayOfPositions, pokemon);
                 }
             }
             loopCount++;
@@ -754,7 +751,7 @@ function assignRoles(team) {
     }
 
     // A* Algorithm to try and fill remaining spots. Prioritize best lanes, then can lanes, then finally everything else
-    function tryFill(open, closed) {
+    function tryFill(open) {
         const bestOption = open.pop().positions;
         // If the best option has all its spots filled, that is the best option
         let shouldExit = true;
@@ -767,68 +764,108 @@ function assignRoles(team) {
             return bestOption;
         }
 
+        function createNewOption(open, bestOption, pokemon, index) {
+            const newOption = structuredClone(bestOption);
+            newOption[index].assigned = pokemon;
+            newOption[index].prospective = [];
+            removeCandidateFromAllProspectives(newOption, pokemon);
+            checkIfDefinitePositions(newOption);
+            open.push({positions: newOption, score: tryFillHeuristic(newOption)});
+            return true;
+        }
+        
         // Assign the next Pokemon
         const unassignedPokemon = getUnassignedPokemon(bestOption);
+        let anyChange = false;
         for (const pokemon of unassignedPokemon) {
+            let shouldStop = false;
             // Start by putting unassigned pokemon with bestLanes available in those lanes
             switch (pokemon.attributes.bestLane) {
                 case "TopLane":
                     if (bestOption[0].assigned === null) {
-                        bestOption[0].assigned = pokemon;
-                        bestOption[0].prospective = [];
-                        checkIfDefinitePositions(bestOption);
-                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                        createNewOption(open, bestOption, pokemon, 0);
+                        shouldStop = true;
                     }
                     break;
                 case "EXPShareTop":
                     if (bestOption[1].assigned === null) {
-                        bestOption[1].assigned = pokemon;
-                        bestOption[1].prospective = [];
-                        checkIfDefinitePositions(bestOption);
-                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                        createNewOption(open, bestOption, pokemon, 1);
+                        shouldStop = true;
                     }
                     break;
                 case "JungleCarry": 
                     if (bestOption[2].assigned === null) {
-                        bestOption[2].assigned = pokemon;
-                        bestOption[2].prospective = [];
-                        checkIfDefinitePositions(bestOption);
-                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                        createNewOption(open, bestOption, pokemon, 2);
+                        shouldStop = true;
                     }
                     break;
                 case "BottomCarry":
                     if (bestOption[3].assigned === null) {
-                        bestOption[3].assigned = pokemon;
-                        bestOption[3].prospective = [];
-                        checkIfDefinitePositions(bestOption);
-                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                        createNewOption(open, bestOption, pokemon, 3);
+                        shouldStop = true;
                     }
                     break;
                 case "EXPShareBot":
                     if (bestOption[4].assigned === null) {
-                        bestOption[4].assigned = pokemon;
-                        bestOption[4].prospective = [];
-                        checkIfDefinitePositions(bestOption);
-                        open.push({positions: structuredClone(bestOption), score: tryFillHeuristic(bestOption)});
+                        createNewOption(open, bestOption, pokemon, 4);
+                        shouldStop = true;
                     }
                     break;
             }
-            // We've handled all the bestLane assignments, now create objects for everywhere the Pokemon *can* go
-            if (pokemon.attributes.canTopLaneCarry) {
-
+            if (shouldStop) {
+                anyChange = true;
             }
-            if (pokemon.attributes.canExpShare) {
-                // Insert into both EXP Share roles
+            if (!shouldStop) {
+                // Only start doing pokemon that *can* play the lanes, even though it's not their best once all the bests are in place.
+                // We've handled all the bestLane assignments, now create objects for everywhere the Pokemon *can* go
+                if (pokemon.attributes.canTopLaneCarry === "Yes") {
+                    // If position is open:
+                    if (bestOption[0].assigned === null) {
+                        createNewOption(open, bestOption, pokemon, 0);
+                        anyChange = true;
+                    }
+                }
+                if (pokemon.attributes.canExpShare === "Yes") {
+                    // Insert into both EXP Share roles
+                    if (bestOption[1].assigned === null) {
+                        createNewOption(open, bestOption, pokemon, 1);
+                        anyChange = true;
+                    }
+                    if (bestOption[4].assigned === null) {
+                        createNewOption(open, bestOption, pokemon, 4);
+                        anyChange = true;
+                    }
+                }
+                if (pokemon.attributes.canJungleCarry === "Yes") {
+                    if (bestOption[2].assigned === null) {
+                        createNewOption(open, bestOption, pokemon, 2);
+                        anyChange = true;
+                    }
+                }
+                if (pokemon.attributes.canBottomLaneCarry === "Yes") {
+                    if (bestOption[3].assigned === null) {
+                        createNewOption(open, bestOption, pokemon, 3);
+                        anyChange = true;
+                    }
+                }
             }
-            if (pokemon.attributes.canJungleCarry) {
-
+        }    
+        if (!anyChange) {
+            // If there's nothing that could be placed at all, place the remaining pokemon randomly
+            const newOption = structuredClone(bestOption);
+            for (const pokemon of unassignedPokemon) {
+                let isAssigned = false;
+                for (let i = 0; i < 5; i++) {
+                    if (!isAssigned && bestOption[i].assigned === null) {
+                        newOption[i].assigned = pokemon;
+                        newOption[i].prospective = [];
+                        isAssigned = true;
+                    }
+                }
             }
-            if (pokemon.attributes.canBottomLaneCarry) {
-
-            }
-            // If we somehow don't have a good composition still, take the comp with the most positions filled, then the best score. The remaining Pokemon need to be randomly assigned.
+            open.push({positions: newOption, score: tryFillHeuristic(newOption)});
         }
-        
+        return tryFill(open);
     }
 
     function tryFillHeuristic(arrayOfPositions) {
@@ -857,10 +894,9 @@ function assignRoles(team) {
     }
 
     let open = new MinHeap();
-    let closed = new Set();
-    open.push({positions: structuredClone(positions), score: tryFillHeuristic(positions)})
-    const positionAssignments = tryFill(open, closed);
-    return positions;
+    open.push({positions: structuredClone(positions), score: tryFillHeuristic(positions)});
+    const positionAssignments = tryFill(open);
+    return positionAssignments;
 }
 
 // Helper function to get all permutations of an array
