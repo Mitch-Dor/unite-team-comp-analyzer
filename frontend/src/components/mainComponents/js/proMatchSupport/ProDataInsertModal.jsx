@@ -892,7 +892,7 @@ function CompInsertion({ resetKey, match, setMatch, teams, players, availablePok
                             });
                         }}
                         options={[{ pokemon_id: 0, pokemon_name: "None" }, ...availablePokemon]}
-                        placeholder={`Ban ${banPosition} Select`}
+                        placeholder={`Ban ${banPosition + 1} Select`}
                         disabled={false}
                         path="/assets/Draft/headshots"
                     />
@@ -1035,7 +1035,7 @@ function Pick({ character, move1, move2, player, stats, setCharacter, setMove1, 
                 </div>
                 {/* Player Dropdown */}
                 <select id={`pdim-match-${matchNumber}-comp-${compNumber}-pick-${pickNumber}-player-dropdown`} value={player ? JSON.stringify(player) : ""} onChange={(e) => setPlayer(JSON.parse(e.target.value))}>
-                    <option value="">Player Select</option>
+                    <option value="">{player.player_name !== "" ? player.player_name : "Player Select"}</option>
                     {players.map(player => (
                         <option key={player.player_id} value={JSON.stringify({player_id: player.player_id, player_name: player.player_name})}>
                             {player.player_name}
