@@ -165,7 +165,7 @@ function TierList() {
     });
 
     if (admin) {
-      insertTierListEntry(targetTier, itemData.id);
+      insertTierListEntry(targetTier, itemData.pokemon_id);
     }
   };
 
@@ -195,46 +195,25 @@ function TierList() {
         D: [],
         E: [],
         F: [],
-        unassigned: [] // Start with empty unassigned
+        unassigned: []
       };
 
-      // First, collect all pokemon from the pokemonList to ensure we have them all
-      const allCharacters = pokemonList.map((pokemon, index) => ({
-        id: index,
-        pokemon_id: pokemon.pokemon_id,
-        tier: 'unassigned',
-        pokemon_name: pokemon.pokemon_name,
-        pokemon_class: pokemon.pokemon_class,
-        pokedex_number: pokemon.pokedex_number,
-        moves: []
-      }));
-      
-      // Create a set of IDs for quick lookup
-      const characterIdsSet = new Set(allCharacters.map(char => char.id));
-      
-      // Apply tier entries
-      tierEntries.forEach(entry => {
-        const pokemonId = entry.pokemon_id;
-        const targetTier = entry.tier_name;
+      tierEntries.forEach((pokemonListing, index) => {
+        const tier = pokemonListing.tier_name;
         
-        // Find the Pokemon in our list
-        const pokemonIndex = allCharacters.findIndex(p => p.id === pokemonId);
-        
-        if (pokemonIndex !== -1) {
-          // Found the pokemon - add to appropriate tier and mark as processed
-          const pokemon = allCharacters[pokemonIndex];
-          newItems[targetTier].push({...pokemon, tier: targetTier});
-          // Remove from our tracking set
-          characterIdsSet.delete(pokemonId);
+        // Add to the appropriate tier if it exists
+        if (newItems[tier]) {
+          newItems[tier].push({
+            id: index,
+            tier: tier,
+            pokemon_name: pokemonListing.pokemon_name,
+            pokedex_number: pokemonListing.pokedex_number,
+            pokemon_class: pokemonListing.pokemon_class,
+            pokemon_id: pokemonListing.pokemon_id,
+            moves: []
+          });
         }
       });
-      
-      // Any IDs still in the set need to be added to unassigned
-      for (const character of allCharacters) {
-        if (characterIdsSet.has(character.id)) {
-          newItems.unassigned.push(character);
-        }
-      }
       
       setItems(newItems);
       setLoading(false);
