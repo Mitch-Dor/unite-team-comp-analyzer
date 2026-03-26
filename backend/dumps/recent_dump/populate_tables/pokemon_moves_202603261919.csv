@@ -1,0 +1,340 @@
+"move_id","move_name","pokemon_id","move_position"
+63,Stealth Rock,16,2
+30,Pursuit,8,1
+66,Flail,17,1
+68,Yawn,17,2
+36,Telekinesis,9,2
+4,Feint,1,2
+74,Thunder,19,1
+41,Sludge Bomb,11,1
+9,Dream Eater,3,1
+11,Shadow Ball,3,2
+46,Power-Up Punch,12,1
+14,Air Slash,4,1
+49,Flame Charge,13,1
+51,Fly,13,2
+19,Blizzard,5,2
+54,Leaf Tornado,14,1
+22,Sing,6,1
+126,Trick,32,1
+136,Water Pulse,34,2
+60,Surf,15,2
+62,Shell Smash,16,1
+38,Psychic,10,1
+65,Heavy Slam,17,1
+33,Scald,9,1
+35,Amnesia,9,2
+43,Solarbeam,11,2
+79,Discharge,20,2
+39,Barrier,10,2
+48,Close Combat,12,2
+76,Thunderbolt,19,2
+78,Spark,20,1
+87,Egg Bomb,22,2
+47,Bone Rush,12,2
+90,Water Spout,23,1
+92,Rapid Spin,23,2
+52,Brave Bird,13,2
+95,High Horsepower,24,2
+55,Cotton Guard,14,2
+133,Whirlpool,34,1
+82,Moonblast,21,1
+67,Block,17,2
+138,Stored Power,35,1
+70,Fire Punch,18,1
+141,Fire Blast,36,1
+73,Electro Ball,19,1
+144,Flame Charge,36,2
+146,Icy Wind,37,1
+71,Fire Blast,18,2
+149,Leech Life,38,1
+81,Psychic,21,1
+152,Smack Down,38,2
+85,Soft-Boiled,22,1
+86,Safeguard,22,1
+147,Ice Shard,37,2
+89,Hydro Pump,23,1
+84,Future Sight,21,2
+101,Stuff Cheeks,26,1
+94,Ice Fang,24,1
+131,Dragon Tail,33,2
+97,Mystical Fire,25,1
+99,Draining Kiss,25,2
+100,Calm Mind,25,2
+102,Covet,26,1
+104,Belch,26,2
+105,Razor Leaf,27,1
+107,Leaf Storm,27,2
+108,Shadow Sneak,27,2
+110,Stomp,28,1
+120,Pain Split,30,2
+113,Dragon Dance,29,1
+115,Hyper Beam,29,2
+116,Outrage,29,2
+118,Curse,30,1
+121,Sacred Sword,31,1
+123,Wide Guard,31,2
+158,Move 2,40,2
+127,Phantom Force,32,2
+129,Flash Cannon,33,1
+130,Dragon Pulse,33,1
+124,Iron Head,31,2
+132,Stealth Rock,33,2
+134,Aqua Tail,34,1
+160,Drill Peck,41,1
+137,Psyshock,35,1
+139,Psybeam,35,2
+140,Future Sight,35,2
+142,Mystical Fire,36,1
+143,Fire Spin,36,2
+145,Icicle Spear,37,1
+155,Ancient Power,39,2
+148,Freeze Dry,37,2
+150,Superpower,38,1
+151,Lunge,38,2
+153,Dark Pulse,39,1
+112,Grassy Glide,28,2
+162,Jump Kick,41,2
+156,Sand Tomb,39,2
+157,Move 1,40,1
+159,Tri Attack,41,1
+161,Agility,41,2
+315,Flare Blitz,82,2
+317,Whirlpool,83,1
+319,Heavy Slam,83,2
+321,Muddy Water,84,1
+323,Flip Turn,84,2
+199,Power Whip,52,2
+192,Grass Knot,50,2
+170,Draining Kiss,44,1
+195,Agility,51,2
+164,Double Hit,42,2
+165,Swords Dance,42,2
+167,Double Hit,43,2
+186,Phantom Force,49,1
+169,Moonlight,44,1
+172,Follow Me,44,2
+173,Night Slash,45,1
+175,Shadow Claw,45,2
+176,Cut,45,2
+178,Shadow Sneak,46,1
+180,Confuse Ray,46,2
+181,Wicked Blow,47,1
+183,Surging Strikes,48,1
+194,Sacred Sword,51,1
+185,Dragon Dance,49,1
+197,Muddy Water,52,1
+188,Shadow Ball,49,2
+191,Magical Leaf,50,2
+189,Floral Healing,50,1
+200,Acid Spray,52,2
+202,Perish Song,53,1
+204,Ice Beam,53,2
+205,Flamethrower,54,1
+207,Poltergeist,54,2
+208,Imprison,54,2
+210,Foul Play,55,1
+211,Wish,55,2
+213,Razor Leaf,56,1
+215,Aerial Ace,56,2
+216,Leaf Blade,56,2
+218,Acrobatics,57,1
+220,Liquidation,57,2
+221,Future Sight,58,1
+223,Recover,58,2
+224,Teleport,58,2
+226,Psystrike,59,1
+227,Recover,59,2
+229,Move 1,60,1
+230,Move 2,60,2
+232,Shadow Claw,61,1
+234,Trick Room,61,2
+235,Flower Trick,62,1
+237,Double Team,62,2
+239,Meteor Mash,63,1
+240,Gyro Ball,63,1
+242,Magnet Rise,63,2
+243,Waterfall,64,1
+245,Dragon Breath,64,2
+247,Charge Beam,65,1
+248,Electro Drift,65,1
+250,Parabolic Charge,65,2
+252,Iron Head,66,1
+253,No Retreat,66,2
+255,Bitter Blade,67,1
+256,Psycho Cut,67,1
+258,Flame Charge,67,2
+260,Sky Attack,68,1
+261,Fly,68,2
+307,Sacred Fire,68,2
+263,Fire Spin,69,1
+265,Flame Charge,69,2
+267,Dark Void,70,1
+268,Shadow Claw,70,1
+270,Dark Pulse,70,2
+271,Surf,71,1
+273,Disable,71,2
+274,Psychic,71,2
+276,Thief,72,1
+278,Smack Down,72,2
+279,Dazzling Gleam,73,1
+281,Agility,73,2
+282,Smart Strike,73,2
+284,Surf,74,1
+286,Icy Wind,74,2
+287,Stored Power,75,1
+289,Psychic,75,2
+290,Thunderbolt,75,2
+292,Recover,76,1
+293,Dazzling Gleam,76,2
+295,Dragon Pulse,77,1
+297,Luster Purge,77,2
+298,Telekinesis,77,2
+300,Dragon Breath,78,1
+301,Mist Ball,78,2
+303,Thnder Punch,79,1
+305,Volt Switch,79,2
+306,Mach Punch,79,2
+309,Aqua Jet,80,1
+310,Hydro Cannon,80,2
+314,Fire Punch,82,1
+326,Flamethrower,86,1
+327,Fire Blast,86,2
+328,Pay Day,87,1
+57,Double Team,15,1
+58,Smokescreen,15,1
+59,Water Shuriken,15,2
+61,Rock Tomb,16,1
+1,Pyro Ball,1,1
+2,Blaze Kick,1,1
+3,Flame Charge,1,2
+64,X-Scissor,16,2
+5,Dig,2,1
+6,Dragon Rush,2,1
+7,Earthquake,2,2
+8,Dragon Claw,2,2
+10,Hex,3,1
+12,Sludge Bomb,3,2
+69,Flamethrower,18,1
+13,Hurricane,4,1
+15,Surf,4,2
+16,Dive,4,2
+17,Avalanche,5,1
+72,Flare Blitz,18,2
+18,Dazzling Gleam,5,1
+20,Aurora Veil,5,2
+21,Rollout,6,1
+23,Double Slap,6,2
+75,Volt Tackle,19,2
+24,Dazzling Gleam,6,2
+25,Dynamic Punch,7,1
+26,Submission,7,1
+27,Close Combat,7,2
+28,Cross Chop,7,2
+29,Night Slash,8,1
+31,Psycho Cut,8,2
+32,Sucker Punch,8,2
+34,Surf,9,1
+77,Volt Switch,20,1
+37,Confusion,10,1
+40,Power Swap,10,2
+42,Giga Drain,11,1
+44,Petal Dance,11,2
+45,Extreme Speed,12,1
+119,Horn Leech,30,2
+50,Aerial Ace,13,1
+53,Pollen Puff,14,1
+56,Cotton Spore,14,2
+80,Wild Charge,20,2
+83,Psyshock,21,2
+88,Helping Hand,22,2
+91,Surf,23,2
+93,Icicle Crash,24,1
+96,Earthquake,24,2
+98,Hyper Voice,25,1
+103,Bullet Seed,26,2
+106,Spirit Shackle,27,1
+109,Triple Axel,28,1
+111,Trop Kick,28,2
+312,Power-Up Punch,81,1
+114,Extreme Speed,29,1
+117,Wood Hammer,30,1
+122,Shadow Claw,31,1
+125,Hyperspace Hole,32,1
+128,Shadow Ball,32,2
+135,Play Rough,34,2
+168,Swords Dance,43,2
+154,Stone Edge,39,1
+193,Metal Claw,51,1
+163,Bullet Punch,42,1
+177,Knock Off,46,1
+166,Dual Wingbeat,43,1
+184,Liquidation,48,2
+171,Gravity,44,2
+313,Close Combat,81,2
+174,Feint Attack,45,1
+179,Feint Attack,46,2
+196,Play Rough,51,2
+182,Throat Chop,47,2
+187,Dragon Breath,49,2
+318,Anchor Shot,83,2
+190,Sweet Kiss,50,1
+198,Dragon Pulse,52,1
+201,Water Pulse,53,1
+203,Bubble Beam,53,2
+206,Overheat,54,1
+209,Mean Look,55,1
+212,Snarl,55,2
+214,Solar Blade,56,1
+217,Fell Stinger,57,1
+219,Snipe Shot,57,2
+222,Psystrike,58,1
+225,Future Sight,59,1
+228,Teleport,59,2
+322,Aqua Ring,84,2
+325,Waterfall,85,2
+329,Fury Swipes,87,1
+330,Feint Attack,87,2
+331,Assurance,87,2
+333,Leaf Blade,88,1
+334,Brutal Swing,88,2
+336,Thunderbolt,89,1
+338,Heat Wave,90,1
+339,Sky Attack,90,2
+231,Play Rough,61,1
+233,Shadow Sneak,61,2
+236,Night Slash,62,1
+238,Trailblaze,62,2
+241,Zen Headbutt,63,2
+244,Bounce,64,1
+246,Aqua Tail,64,2
+249,Thunder,65,2
+251,Megahorn,66,1
+254,Beat Up,66,2
+257,Phantom Force,67,2
+259,Flamethrower,68,1
+262,Fire Spin,68,2
+264,Armor Cannon,69,1
+266,Psyshock,69,2
+269,Nasty Plot,70,2
+272,Bubble Beam,71,1
+275,Ice Hammer,72,1
+277,Gigaton Hammer,72,2
+280,Fairy Wind,73,1
+283,Whirlpool,74,1
+285,Ice Beam,74,2
+288,Electro Ball,75,1
+291,Decorate,76,1
+294,Sweet Scent,76,2
+296,Draco Meteor,77,1
+299,Dragon Pulse,78,1
+302,Dragon Cheer,78,2
+304,Supercell Slam,79,1
+308,Metal Claw,80,1
+311,Whirlpool,80,2
+316,Power Whip,83,1
+320,Hydro Pump,84,1
+324,Dragon Breath,85,1
+332,Fury Cutter,88,1
+335,Detect,88,2
+337,Zap Cannon,89,2
