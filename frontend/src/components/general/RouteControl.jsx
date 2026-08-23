@@ -12,6 +12,7 @@ import Traits from '../mainComponents/js/Traits';
 import ProMatches from '../mainComponents/js/ProMatches';
 import Login from '../sideComponents/js/Login';
 import DraftSandbox from '../mainComponents/js/DraftSandbox';
+import UTA_Main from '../UTA_Components/main_components/js/UTA_Main';
 
 function RouteControl() {
   return (
@@ -26,6 +27,7 @@ function RouteControl() {
         <Route exact path='/traits' element={<Traits />} />
         <Route exact path='/pro-matches' element={<ProMatches />} />
         <Route exact path='/login' element={<Login />} />
+        <Route exact path='/UTA' element={<UTA_Main />} />
       </Routes>
   );
 }

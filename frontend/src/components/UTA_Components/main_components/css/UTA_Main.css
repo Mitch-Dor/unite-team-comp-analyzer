@@ -1,0 +1,42 @@
+.UTA-Main-Page-Container {
+    font-size: 20px;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.UTA-Logo {
+    height: 40%;
+    width: auto;
+}
+
+.Directory-Button-Container {
+    width: 80%;
+    height: 50%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.UTA-Directory-Button {
+    width: 33%;
+    margin: 40px;
+    box-sizing: border-box;
+    height: 60px;
+    font-size: 1.3em;
+    background-color: #8170af;
+    border: 2px solid black;
+    color: rgb(230, 230, 230);
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.UTA-Directory-Button:hover {
+    background-color: #6e6096;
+    color: white;
+    border: 2px solid rgb(26, 26, 26);
+}
