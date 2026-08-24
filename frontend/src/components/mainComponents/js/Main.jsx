@@ -5,6 +5,7 @@ import '../css/base.css';
 import Settings from '../../sideComponents/js/Settings';
 import Login from '../../sideComponents/js/Login';
 import Information from '../../sideComponents/js/Information';
+import TileBackground from '../../UTA_Components/helper_components/TileBackground.jsx';
 import { IoMdAlert } from "react-icons/io";
 import { isAdmin } from './common/http.js';
 
@@ -53,9 +54,9 @@ function Main() {
   }
 
   function setBackground(pngPath){
-    const mainContainer = document.getElementById("main-base-container");
-    if (mainContainer) {
-      mainContainer.style.backgroundImage = `url(${pngPath})`;
+    const bgContainer = document.getElementById("scrollingBackground");
+    if (bgContainer) {
+      bgContainer.style.backgroundImage = `url(${pngPath})`;
     }
   }
 
@@ -64,14 +65,12 @@ function Main() {
   }, []);
 
   return (
-    <div id="main-base-container" className="scrollingBackground">
+    <div id="main-base-container">
+        {/* <TileBackground /> */}
+        <div id="backgroundBlackCover"/>
+        <div id="scrollingBackground"/>
         <div id="main-top-buttons-container">
-            <button id="main-report-button" className="main-top-buttons" onClick={() => window.open("https://forms.gle/CcD2mnziUqcEsy56A", "_blank")}>
-              <IoMdAlert style={{ width: '100%', height: '100%' }} />
-            </button>
-            <div id="main-info-button" className="main-top-buttons">
-              <Information />
-            </div>
+            <div id="main-info-button"><Information /></div>
             <Login setUser={setUser} />
         </div>
         <div id="main-title-container"></div>
