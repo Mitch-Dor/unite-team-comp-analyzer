@@ -75,23 +75,13 @@ function Main() {
         </div>
         <div id="main-title-container"></div>
         <div id="main-directory-buttons-container">
-            <div className="main-directory-buttons-row">
                 <button id="SingleDraft" className="main-core-component-button main-directory-button main-draft-button" onClick={() => navigate('/single-draft', {state: {numUsers: numUsers, settings: settings}})}>Single Draft</button>
                 <button id="DraftSandbox" className="main-core-component-button main-directory-button main-draft-button" onClick={() => navigate('/draft-sandbox')}>Draft Sandbox</button>
-                <button id="MultiDraft" className="main-core-component-button main-directory-button main-draft-button" onClick={() => navigate('/multi-draft', {state: {settings: settings, user: user}})}>Multiplayer Draft</button>
-            </div>
-            <div className="main-directory-buttons-row">
                 <button id="tierList" className="main-core-component-button main-directory-button" onClick={() => navigate('/tier-list', {state: {user: user}})}>Tier List</button>
                 <button id="compScoreBTN" className="main-core-component-button main-directory-button" onClick={() => navigate('/insights')}>Insights</button>
-                <button id="stats" className="main-core-component-button main-directory-button" onClick={() => navigate('/stats')}>Stats</button>
                 {admin && (
                   <button id="traits" className="main-core-component-button main-directory-button" onClick={() => navigate('/traits', {state: {user: user}})}>Traits</button>
                 )}
-                <button id="proMatches" className="main-core-component-button main-directory-button" onClick={() => navigate('/pro-matches', {state: {user: user}})}>Pro Matches</button>
-            </div>
-            <div className="main-directory-buttons-row">
-                <button id="settings" className="main-setting-button main-directory-button" onClick={() => setSettingsActive(!settingsActive)}>Draft Settings</button>
-            </div>
         </div>
         <div id="main-nametag">Created by Mitchell Dorward</div>
         { settingsActive && (
