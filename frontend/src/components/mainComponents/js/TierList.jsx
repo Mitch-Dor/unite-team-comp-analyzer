@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../css/tierList.css';
 import '../css/classBackgrounds.css';
 import { fetchCharacterDraftInfo, fetchAllTierListEntries, fetchAllCharactersAndMoves } from './common/http.js';
-import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import Home from '../../sideComponents/js/Home.jsx';
 import { getCharactersMovesDictionary } from './common/common.js';
 import TileBackground from '../../../components/UTA_Components/helper_components/TileBackground.jsx';
@@ -119,24 +118,43 @@ function TierList() {
     e.currentTarget.classList.remove('drag-over');
   };
 
-  function handleDrop(e, targetTier) {
-    e.preventDefault();
-    e.currentTarget.classList.remove('drag-over');
-    
-    const itemData = JSON.parse(e.dataTransfer.getData('text/plain'));
-    const sourceTier = itemData.tier;
-    
-    if (sourceTier === targetTier) return;
-
+  function moveItem(itemData, targetTier, beforeId) {
     setItems(prevItems => {
-      const newItems = { ...prevItems };
-      // Remove from source tier
-      newItems[sourceTier] = newItems[sourceTier].filter(item => item.id !== itemData.id);
-      // Add to target tier
-      newItems[targetTier] = [...newItems[targetTier], { ...itemData, tier: targetTier }]; 
-      return newItems;
+        const newItems = { ...prevItems };
+        // Remove from source (this also handles same-tier reordering correctly,
+        // since we always re-read newItems[targetTier] *after* this removal)
+        newItems[itemData.tier] = newItems[itemData.tier].filter(i => i.id !== itemData.id);
+
+        const movedItem = { ...itemData, tier: targetTier };
+        const targetArray = [...newItems[targetTier]];
+
+        if (beforeId !== null) {
+            const insertAt = targetArray.findIndex(i => i.id === beforeId);
+            targetArray.splice(insertAt === -1 ? targetArray.length : insertAt, 0, movedItem);
+        } else {
+            targetArray.push(movedItem);
+        }
+
+        newItems[targetTier] = targetArray;
+        return newItems;
     });
-  };
+  }
+
+  function handleDropAtGap(e, targetTier, beforeId) {
+      const itemData = JSON.parse(e.dataTransfer.getData('text/plain'));
+      if (itemData.tier === targetTier && itemData.id === beforeId) return; // no-op
+      moveItem(itemData, targetTier, beforeId);
+  }
+
+  // Keep this for drops that land on the container itself, not on a specific gap —
+  // falls back to append-to-end, same as today's behavior.
+  function handleDrop(e, targetTier) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      const itemData = JSON.parse(e.dataTransfer.getData('text/plain'));
+      if (itemData.tier === targetTier) return;
+      moveItem(itemData, targetTier, null);
+  }
 
   const classSections = [
     { class: 'Attacker', title: 'Attackers' },
@@ -355,6 +373,26 @@ function TierList() {
     );
   }
 
+  function DropGap({ tier, beforeId, onDropGap }) {
+    return (
+      <div
+        className="tier-list-drop-gap"
+        onDragOver={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          e.currentTarget.classList.add('gap-active');
+        }}
+        onDragLeave={(e) => e.currentTarget.classList.remove('gap-active')}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation(); // don't also trigger the container's onDrop
+          e.currentTarget.classList.remove('gap-active');
+          onDropGap(e, tier, beforeId);
+        }}
+      />
+    );
+  }
+
   return (
     <div id="tier-list-main-container">
       <div id="tier-list-background-cover">
@@ -373,8 +411,16 @@ function TierList() {
                 onDrop={(e) => handleDrop(e, tier)}
                 onClick={() => {handleClickPokemon(tier)}}
               >
-                {items[tier].sort((a, b) => a.pokedex_number - b.pokedex_number).map(item => (
-                  <DraggableItem key={item.id} item={item} />
+                <DropGap tier={tier} beforeId={items[tier][0]?.id ?? null} onDropGap={handleDropAtGap} />
+                {items[tier].map((item, idx) => (
+                  <React.Fragment key={item.id}>
+                    <DraggableItem item={item} />
+                    <DropGap
+                      tier={tier}
+                      beforeId={items[tier][idx + 1]?.id ?? null}
+                      onDropGap={handleDropAtGap}
+                    />
+                  </React.Fragment>
                 ))}
               </div>
             </div>
