@@ -1,18 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 import '../css/tierList.css';
 import '../css/classBackgrounds.css';
-import { fetchCharacterDraftInfo, fetchAllTierListEntries, insertTierListEntry, isAdmin, fetchAllCharactersAndMoves } from './common/http.js';
+import { fetchCharacterDraftInfo, fetchAllTierListEntries, fetchAllCharactersAndMoves } from './common/http.js';
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
-import { FaFilePdf } from "react-icons/fa";
 import Home from '../../sideComponents/js/Home.jsx';
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import { getCharactersMovesDictionary } from './common/common.js';
+import TileBackground from '../../../components/UTA_Components/helper_components/TileBackground.jsx';
 
 function TierList() {
-  const location = useLocation();
-  const { user } = location.state || {};
   const [pokemonList, updatePokemonList] = useState([]);
   const [pokemonToMoves, setPokemonToMoves] = useState([]);
   const [items, setItems] = useState({
@@ -25,9 +20,7 @@ function TierList() {
     F: [],
     unassigned: []
   });
-  const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [heightShiftAmount, setHeightShiftAmount] = useState(0);
   const tiers = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
   const [customNameTiers, setCustomNameTiers] = useState(['S', 'A', 'B', 'C', 'D', 'E', 'F']);
   const [selectedPokemon, setSelectedPokemon] = useState();
@@ -64,22 +57,6 @@ function TierList() {
     fetchCharacterListing();
     fetchCharacterMovesDict();
   }, []); 
-
-  useEffect(() => {
-    async function checkAdmin() {
-      if (user) {
-        const admin = await isAdmin();
-        setAdmin(admin);
-      }
-    }
-    checkAdmin();
-  }, [user]);
-
-  useEffect(() => {
-    if (admin) {
-      applyDefaultTiers();
-    }
-  }, [pokemonList, admin]);
 
   useEffect(() => {
     if (pokemonList.length === 0) return;
@@ -129,10 +106,6 @@ function TierList() {
     setLocalStorage('tierNames', customNameTiers);
   }, [customNameTiers]);
 
-  useEffect(() => {
-    document.documentElement.style.setProperty('--height-shift-amount', `${heightShiftAmount}%`);
-  }, [heightShiftAmount]);
-
   function handleDragStart(e, item) {
     e.dataTransfer.setData('text/plain', JSON.stringify(item));
   };
@@ -163,10 +136,6 @@ function TierList() {
       newItems[targetTier] = [...newItems[targetTier], { ...itemData, tier: targetTier }]; 
       return newItems;
     });
-
-    if (admin) {
-      insertTierListEntry(targetTier, itemData.pokemon_id);
-    }
   };
 
   const classSections = [
@@ -269,70 +238,7 @@ function TierList() {
       newItems[targetTier] = [...newItems[targetTier], { ...itemData, tier: targetTier }]; 
       return newItems;
     });
-
-    if (admin) {
-      insertTierListEntry(targetTier, itemData.id);
-    }
   }
-
-  async function handleExportPDF() {
-    const input = assignedRef.current;
-    if (!input) return;
-  
-    // Temporarily expand the div to full height
-    const originalHeight = input.style.height;
-    const originalOverflow = input.style.overflow;
-    input.style.height = `${input.scrollHeight}px`;
-    input.style.overflow = "visible";
-  
-    // Load background
-    const background = await new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = "/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png";
-      img.crossOrigin = "anonymous";
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-    });
-  
-    // Capture the div
-    const canvas = await html2canvas(input, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: null,
-    });
-  
-    // Restore original styles
-    input.style.height = originalHeight;
-    input.style.overflow = originalOverflow;
-  
-    // Combine with background
-    const combinedCanvas = document.createElement("canvas");
-    combinedCanvas.width = canvas.width;
-    combinedCanvas.height = canvas.height;
-    const ctx = combinedCanvas.getContext("2d");
-    ctx.drawImage(background, 0, 0, combinedCanvas.width, combinedCanvas.height);
-    ctx.drawImage(canvas, 0, 0);
-  
-    const imgData = combinedCanvas.toDataURL("image/png");
-  
-    // Generate PDF
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (combinedCanvas.height * pdfWidth) / combinedCanvas.width;
-  
-    let heightLeft = pdfHeight;
-    let position = 0;
-  
-    while (heightLeft > 0) {
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-      heightLeft -= pdf.internal.pageSize.getHeight();
-      position -= pdf.internal.pageSize.getHeight();
-      if (heightLeft > 0) pdf.addPage();
-    }
-  
-    window.open(pdf.output("bloburl"), "_blank");
-  }
-  
 
   function setLocalStorage(name, value, days = 7) {
     if (name === 'tierList') {
@@ -451,65 +357,32 @@ function TierList() {
 
   return (
     <div id="tier-list-main-container">
-    {admin && (
-      <div className="tier-list-admin-warning">Warning: As an admin user, your changes will update the database.</div>
-    )}
-    <div id="tier-list-assigned-section-container" className="tier-list-section-container assigned">
-      <div ref={assignedRef} className="tier-list-assigned-section">
-        {tiers.map((tier, index) => (
-          <div key={tier} className="tier-list-category">
-            <div className="tier-list-category-label" contentEditable="true" suppressContentEditableWarning onBlur={(e) => {setCustomNameTiers(prevTiers => prevTiers.map((t, i) => i === index ? e.target.textContent : t))}}>{customNameTiers[index] === tier ? tier : customNameTiers[index]}</div>
-            <div
-              className={`tier-list-category-content ${selectedPokemon ? "selectable" : ""}`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={(e) => handleDrop(e, tier)}
-              onClick={() => {handleClickPokemon(tier)}}
-            >
-              {items[tier].sort((a, b) => a.pokedex_number - b.pokedex_number).map(item => (
-                <DraggableItem key={item.id} item={item} />
-              ))}
+      <div id="tier-list-background-cover">
+        < TileBackground />
+      </div>
+      <div id="tier-list-main-content-container">
+        {/* Assigned Section */}
+        <div ref={assignedRef} id="tier-list-assigned-section-container">
+          {tiers.map((tier, index) => (
+            <div key={tier} className="tier-list-category">
+              <div className="tier-list-category-label" contentEditable="true" suppressContentEditableWarning onBlur={(e) => {setCustomNameTiers(prevTiers => prevTiers.map((t, i) => i === index ? e.target.textContent : t))}}>{customNameTiers[index] === tier ? tier : customNameTiers[index]}</div>
+              <div
+                className={`tier-list-category-content ${selectedPokemon ? "selectable" : ""}`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, tier)}
+                onClick={() => {handleClickPokemon(tier)}}
+              >
+                {items[tier].sort((a, b) => a.pokedex_number - b.pokedex_number).map(item => (
+                  <DraggableItem key={item.id} item={item} />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <button 
-        className="tier-list-default-tiers-button" 
-        onClick={applyDefaultTiers}
-        disabled={loading}
-      >
-        {loading ? 'Loading...' : 'Apply Default Tiers'}
-      </button>
-      <button 
-        className="tier-list-empty-tiers-button" 
-        onClick={emptyTiers}
-        disabled={loading}
-      >
-        {loading ? 'Loading...' : 'Empty Tiers'}
-      </button>
-      <div className="tier-list-show-add-moves-button-button" title="Display Add Moves Button On Pokemon" onClick={() => {setShowAddMovesButton(prev => !prev)}}>
-        <div className={`tier-list-pokemon-assign-moves-button ${showAddMovesButton === false ? 'no-display' : ''}`}>+</div>
-      </div>
-      <div className="tier-list-moves-mode-container" title="Moves Mode" onClick={() => {setMovesMode(movesMode === "off" ? "on" : "off")}}>
-        <div className={`tier-list-moves-mode-slider-container ${movesMode}`}>
-          <div className={`tier-list-moves-mode-slider ${movesMode}`}></div>
+          ))}
         </div>
-      </div>
-      <button className="tier-list-export-to-PDF-button" onClick={handleExportPDF}>
-        <FaFilePdf/>
-      </button>
-      <div className="tier-list-category-height-adjust-container">
-        <button className="tier-list-category-height-adjust-button" disabled={heightShiftAmount === -30} onClick={() => {setHeightShiftAmount(prev => prev !== -30 ? prev - 10 : prev);}}>
-          <SlArrowUp />
-        </button>
-        <button className="tier-list-category-height-adjust-button" disabled={heightShiftAmount === 30} onClick={() => {setHeightShiftAmount(prev => prev !== 30 ? prev + 10 : prev);}}>
-          <SlArrowDown />
-        </button>
-      </div>
-    </div>
-    
-    <div id="tier-list-unassigned-section-container" className="tier-list-section-container">
-      <div className={"tier-list-unassigned-section"}>
+        
+        {/* Unassigned Section */}
+    <div id="tier-list-unassigned-section-container">
         {classSections.map(({ class: className, title }) => (
           <div key={className} className="tier-list-category">
             <div className="tier-list-category-label">
@@ -579,8 +452,33 @@ function TierList() {
           </div>
         ))}
       </div>
-    </div>
-    <Home />
+      </div>
+      <div id="tier-list-buttons-container">
+        < Home />
+        <button 
+          className="tier-list-default-tiers-button" 
+          onClick={applyDefaultTiers}
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Apply Default Tiers'}
+        </button>
+        <button 
+          className="tier-list-empty-tiers-button" 
+          onClick={emptyTiers}
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Empty Tiers'}
+        </button>
+        <div className="tier-list-show-add-moves-button-button" title="Display Add Moves Button On Pokemon" onClick={() => {setShowAddMovesButton(prev => !prev)}}>
+          <div className={`tier-list-pokemon-assign-moves-button ${showAddMovesButton === false ? 'no-display' : ''}`}>+</div>
+        </div>
+        <div className="tier-list-moves-mode-container" title="Moves Mode" onClick={() => {setMovesMode(movesMode === "off" ? "on" : "off")}}>
+          <div className={`tier-list-moves-mode-slider-container ${movesMode}`}>
+            <div className={`tier-list-moves-mode-slider ${movesMode}`}></div>
+          </div>
+        </div>
+        <div id="tier-list-unite-pro-logo">Unite-Pro</div>
+      </div>
     </div>
   );
 }
