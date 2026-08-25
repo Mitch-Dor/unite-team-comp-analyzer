@@ -2,17 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
 import { fetchCharacterDraftInfo, runAStarAlgorithm, fetchAllTierListEntries } from './common/http.js';
-import Home from '../../sideComponents/js/Home.jsx';
-import Settings from '../../sideComponents/js/Settings.jsx';
 import '../css/draft.css';
 import '../css/classBackgrounds.css';
-import DraftAgain from './draftSupport/DraftAgain.jsx';
 import { genRandomPokemon, checkIfSpecialCase } from './draftSupport/draftFunctions.js';
 
 function SingleDraft() {
     const location = useLocation();
     const [draftingActive, setDraftingActive] = useState(false);
-    const [numUsers, setNumUsers] = useState(location.state.numUsers);
     const [settings, setSettings] = useState(location.state.settings);
     const [pokemonList, updatePokemonList] = useState([]);
     const [filteredList, updateFilteredList] = useState([]);
@@ -112,8 +108,8 @@ function SingleDraft() {
         if (targetPokemon !== null && stateRef.current !== 'done'){
             // Determine if it's AI's turn
             const isAITurn = 
-                numUsers === 0 || // All AI
-                (numUsers === 1 && (
+                settings.numUsers === 0 || // All AI
+                (settings.numUsers === 1 && (
                     (settings.userTurn === "first" && stateRef.current.includes("team2")) || 
                     (settings.userTurn === "second" && stateRef.current.includes("team1"))
                 ));
@@ -131,10 +127,10 @@ function SingleDraft() {
             return;
         }
         if (!stateRef.current.includes("Ban") && !stateRef.current.includes("done")){ // Don't generate during ban phase
-            if (numUsers == 2){
+            if (settings.numUsers == 2){
                 // It is a user turn so generate an ideal team each time
                 genIdealTeam();
-            } else if (numUsers == 1) {
+            } else if (settings.numUsers == 1) {
                 if ((settings.userTurn === "first" && stateRef.current.includes("team1")) || (settings.userTurn === "second" && stateRef.current.includes("team2"))){
                     // It is a user turn so generate an ideal team each time
                     genIdealTeam();
@@ -153,8 +149,8 @@ function SingleDraft() {
         if (stateRef.current.includes("Ban") && !loading && pokemonList.length > 0){
             // Determine if it's AI's turn to ban
             const isAIBanTurn = 
-                numUsers === 0 || // All AI
-                (numUsers === 1 && (
+                settings.numUsers === 0 || // All AI
+                (settings.numUsers === 1 && (
                     (settings.userTurn === "first" && stateRef.current.includes("team2")) || 
                     (settings.userTurn === "second" && stateRef.current.includes("team1"))
                 ));
@@ -193,13 +189,13 @@ function SingleDraft() {
 
     useEffect(() => {
         if (idealTeams1.length > 0 || idealTeams2.length > 0){
-            if (numUsers == 0 || (numUsers == 1 && stateRef.current.includes("team1") && settings.userTurn === "second") || (numUsers == 1 && stateRef.current.includes("team2") && settings.userTurn === "first")){
+            if (settings.numUsers == 0 || (settings.numUsers == 1 && stateRef.current.includes("team1") && settings.userTurn === "second") || (settings.numUsers == 1 && stateRef.current.includes("team2") && settings.userTurn === "first")){
                 // If it is AI's turn, pick the next pokemon from their latest ideal team after a delay
                 // Set a timeout for 3 seconds before executing AI pick
                 
                 aiPickTimeoutRef.current = setTimeout(() => {
                     // Choose the first Pokemon
-                    if (numUsers == 1) {
+                    if (settings.numUsers == 1) {
                         if (settings.userTurn === "second" && stateRef.current.includes("team1")) {
                             if (idealTeams1.length > 0) {
                                 const nextPokemon = pickAI(idealTeams1[idealTeams1.length - 1]);
@@ -211,7 +207,7 @@ function SingleDraft() {
                                 setTargetPokemon(nextPokemon);
                             }
                         }
-                    } else if (numUsers == 0) {
+                    } else if (settings.numUsers == 0) {
                         if (stateRef.current.includes("team1")) {
                             if (idealTeams1.length > 0) {
                                 const nextPokemon = pickAI(idealTeams1[idealTeams1.length - 1]);
@@ -239,8 +235,8 @@ function SingleDraft() {
     // Handle the case where the AI needs to pick twice in a row
     useEffect(() => {
         const isAITurn = 
-                numUsers === 0 || // All AI
-                (numUsers === 1 && (
+                settings.numUsers === 0 || // All AI
+                (settings.numUsers === 1 && (
                     (settings.userTurn === "first" && stateRef.current.includes("team2")) || 
                     (settings.userTurn === "second" && stateRef.current.includes("team1"))
                 ));
@@ -436,14 +432,7 @@ function SingleDraft() {
 
   return (
     <div id="draft-main-container">
-        {!draftingActive && (
-            <Settings numUsers={numUsers} setNumUsers={setNumUsers} settings={settings} updateSettings={setSettings} startDraft={setDraftingActive} ></Settings>
-        )}
-        {stateRef.current === 'done' && (
-            <DraftAgain draftAgain={draftAgain} />
-        )}
-        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updatePokemonList={updatePokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} numUsers={numUsers} settings={settings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
-        <Home />
+        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updatePokemonList={updatePokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} settings={settings} setSettings={setSettings} filteredList={filteredList} stateRef={stateRef} idealTeams1={idealTeams1} idealTeams2={idealTeams2} setTeam1Picks={updateTeam1Picks} setTeam2Picks={updateTeam2Picks} />
     </div>
   );
 }

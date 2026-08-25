@@ -2,18 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/main.css';
 import '../css/base.css';
-import Settings from '../../sideComponents/js/Settings';
 import Login from '../../sideComponents/js/Login';
 import Information from '../../sideComponents/js/Information';
-import TileBackground from '../../UTA_Components/helper_components/TileBackground.jsx';
-import { IoMdAlert } from "react-icons/io";
 import { isAdmin } from './common/http.js';
 
 
 function Main() {
-  const [numUsers, setNumUsers] = useState(2);
-  const [settings, setSettings] = useState({timer: 25, userTurn: "first", disallowedCharacters: []});
-  const [settingsActive, setSettingsActive] = useState(false);
+  const [hoveredButton, setHoveredButton] = useState(null);
   const [user, setUser] = useState(null);
   const [admin, setAdmin] = useState(false);
   const navigate = useNavigate();
@@ -66,7 +61,6 @@ function Main() {
 
   return (
     <div id="main-base-container">
-        {/* <TileBackground /> */}
         <div id="backgroundBlackCover"/>
         <div id="scrollingBackground"/>
         <div id="main-top-buttons-container">
@@ -75,18 +69,34 @@ function Main() {
         </div>
         <div id="main-title-container"></div>
         <div id="main-directory-buttons-container">
-                <button id="SingleDraft" className="main-core-component-button main-directory-button main-draft-button" onClick={() => navigate('/single-draft', {state: {numUsers: numUsers, settings: settings}})}>Single Draft</button>
-                <button id="DraftSandbox" className="main-core-component-button main-directory-button main-draft-button" onClick={() => navigate('/draft-sandbox')}>Draft Sandbox</button>
-                <button id="tierList" className="main-core-component-button main-directory-button" onClick={() => navigate('/tier-list', {state: {user: user}})}>Tier List</button>
-                <button id="compScoreBTN" className="main-core-component-button main-directory-button" onClick={() => navigate('/insights')}>Insights</button>
+                <button id="SingleDraft-DirectoryButton" className="main-directory-button" onMouseEnter={() => {setHoveredButton("singleDraft")}} onMouseLeave={() => {setHoveredButton(null)}} onClick={() => navigate('/single-draft')}>Single Draft</button>
+                <button id="DraftSandbox-DirectoryButton" className="main-directory-button" onMouseEnter={() => {setHoveredButton("sandboxDraft")}} onMouseLeave={() => {setHoveredButton(null)}} onClick={() => navigate('/draft-sandbox')}>Draft Sandbox</button>
+                <button id="tierList-DirectoryButton" className="main-directory-button" onMouseEnter={() => {setHoveredButton("tierList")}} onMouseLeave={() => {setHoveredButton(null)}} onClick={() => navigate('/tier-list')}>Tier List</button>
+                <button id="compScoreBTN-DirectoryButton" className="main-directory-button" onMouseEnter={() => {setHoveredButton("insights")}} onMouseLeave={() => {setHoveredButton(null)}} onClick={() => navigate('/insights')}>Insights</button>
                 {admin && (
                   <button id="traits" className="main-core-component-button main-directory-button" onClick={() => navigate('/traits', {state: {user: user}})}>Traits</button>
                 )}
         </div>
+        <div id="preview-container" className={hoveredButton !== null ? hoveredButton.includes("Draft") ? "purple" : "orange" : ""}>
+          <svg width="0" height="0" style={{ position: 'absolute' }}>
+            <defs>
+              <clipPath id="curvedBlob" clipPathUnits="objectBoundingBox">
+                <path d="
+                  M 0.92,0.5
+                  Q 0.98,0.775 0.71,0.87
+                  Q 0.5,1.05 0.29,0.87
+                  Q 0.024,0.775 0.08,0.5
+                  Q 0.024,0.225 0.29,0.13
+                  Q 0.5,-0.05 0.71,0.13
+                  Q 0.976,0.225 0.92,0.5
+                  Z
+                " />
+              </clipPath>
+            </defs>
+          </svg>
+          {/* <video></video> */}
+        </div>
         <div id="main-nametag">Created by Mitchell Dorward</div>
-        { settingsActive && (
-          <Settings settings={settings} updateSettings={setSettings} numUsers={numUsers} setNumUsers={setNumUsers} closeSettings={() => {setSettingsActive(false)}} ></Settings>
-        )}
     </div>
   );
 }

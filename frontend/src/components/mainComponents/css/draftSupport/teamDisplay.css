@@ -1,65 +1,130 @@
 .draft-team-display-bans-container { 
     width: 100%;
-    height: 4%;
+    height: 10%;
     display: flex;
-    align-items: center;
-    justify-content: space-around;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: rgb(51, 51, 51);
+}
+
+.draft-character-model {
+    object-fit: contain;
+    max-height: 100%;
+    max-width: 100%;
+    z-index: 5;
+    aspect-ratio: 1/ 1;
+    object-fit: contain;
+}
+
+.draft-team-display-character-pick .draft-character-portrait {
+    position: absolute;
+    z-index: 5;
+    object-fit: contain;
+    max-height: 30%;
+    max-width: 30%;
+    aspect-ratio: 1/1;
+    box-sizing: border-box;
+    border: 1px solid black;
+}
+
+.draft-team-display-character-pick.purple-side .draft-character-portrait {
+    top: 5px;
+    right: 5px;
+}
+
+.draft-team-display-character-pick.orange-side .draft-character-portrait {
+    top: 5px;
+    left: 5px;
 }
 
 .draft-team-display-bans {
     filter: grayscale(1);
-    background-color: rgb(201, 201, 201);
-    height: 30px;
-    max-height: 100%;
-    aspect-ratio: 1 / 1;
-    box-sizing: border-box;
+    height: 100%;
+    width: 33%;
+}
+
+.draft-team-display-bans:nth-child(2) {
+    border-left: 1px dashed rgba(68, 68, 68, 0.6);
+    border-right: 1px dashed rgba(68, 68, 68, 0.6);
 }
 
 .draft-team-display-bans.selectable {
     cursor: pointer;
-    border: 3px solid gold;
+    border: 1px solid gold;
     box-shadow: 0 0 10px gold;
     animation: pulse 1s infinite alternate;
 }
 
-.draft-team-display-character-pick {
-    height: 16%;
+.draft-team-display-picks-container {
+    height: 90%;
     width: 100%;
-    padding: 10px;
-    border: solid 3px black;
+    display: flex;
+    flex-direction: column;
+}
+
+.draft-team-display-character-pick {
+    height: 20%;
+    width: 100%;
+    border-top: solid 2px black;
     display: flex;
     align-items: center;
-    max-height: 16%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    background-color: rgb(82, 81, 83);
 }
 
 .draft-team-display-character-pick h3 {
-    margin: 0;
-    display: inline-block;
-    width: auto;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 50%;
-    writing-mode: horizontal-tb;
-    text-decoration: none;
+    position: absolute;
+    font-size: 1em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    z-index: 6;
 }
 
-.draft-team-display-character-pick img {
-    width: min(calc(50% - 10px), calc(100% - 10px));
-    max-height: calc(100% - 5px);
-    aspect-ratio: 1/ 1;
+.draft-team-display-character-pick.purple-side h3 {
+    bottom: 5px;
+    right: 5px;
+}
+
+.draft-team-display-character-pick.orange-side h3 {
+    bottom: 5px;
+    left: 5px;
+}
+
+.class-background-smear {
+    position: absolute;
+    z-index: 4;
+    top: 0;
+    left: 0;
+    width: 170%;
+    height: 100%;
+    transform: translateX(-20%);
     object-fit: cover;
-    box-sizing: border-box;
+    -webkit-mask-image: url(/assets/Smear.png);
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: url(/assets/Smear.png);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-mode: luminance;
+    mask-mode: luminance;
+}
+
+.class-background-smear.orange {
+    background: linear-gradient(90deg, #ad6f35, #c45c07);
+}
+
+.class-background-smear.purple {
+    background: linear-gradient(90deg, #6a338a, #430a72);
 }
 
 .draft-team-display-character-pick.selectable {
     cursor: pointer;
-    border: 3px solid gold;
+    border: 1px solid gold;
     box-shadow: 0 0 10px gold;
     animation: pulse 1s infinite alternate;
 }
@@ -71,6 +136,7 @@
 }
 
 .draft-team-display-switch-character-form-buttom {
+    position: absolute;
     width: 20px;
     height: 20px;
     background-color: #3a3a3a;
@@ -85,59 +151,221 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    z-index: 6;
+}
+
+.orange-side .draft-team-display-switch-character-form-buttom {
+    top: 5px;
+    right: 5px;
+}
+
+.purple-side .draft-team-display-switch-character-form-buttom {
+    top: 5px;
+    left: 5px;
 }
 
 .draft-team-display-switch-character-form-buttom:hover {
+    cursor: pointer;
     transform: scale(1.1);
     transition: all 0.3s ease;
 }
 
-.draft-team-display-character-pick.purple-side {
-    background-color: rgb(194, 161, 228);
-    border-left: none;
+.draft-team-display-character-pick.All_Rounder {
+    background-image: linear-gradient(
+        45deg,
+        rgb(82, 81, 83) 0%,
+        rgb(82, 81, 83) 10%,
+        rgb(94, 36, 117) 10%,
+        rgb(94, 36, 117) 11%,
+        rgb(82, 81, 83) 11%,
+        rgb(82, 81, 83) 21%,
+        rgb(94, 36, 117) 21%,
+        rgb(94, 36, 117) 22%,
+        rgb(82, 81, 83) 22%,
+        rgb(82, 81, 83) 32%,
+        rgb(94, 36, 117) 32%,
+        rgb(94, 36, 117) 33%,
+        rgb(82, 81, 83) 33%,
+        rgb(82, 81, 83) 43%,
+        rgb(94, 36, 117) 43%,
+        rgb(94, 36, 117) 44%,
+        rgb(82, 81, 83) 44%,
+        rgb(82, 81, 83) 54%,
+        rgb(94, 36, 117) 54%,
+        rgb(94, 36, 117) 55%,
+        rgb(82, 81, 83) 55%,
+        rgb(82, 81, 83) 65%,
+        rgb(94, 36, 117) 65%,
+        rgb(94, 36, 117) 66%,
+        rgb(82, 81, 83) 66%,
+        rgb(82, 81, 83) 76%,
+        rgb(94, 36, 117) 76%,
+        rgb(94, 36, 117) 77%,
+        rgb(82, 81, 83) 77%,
+        rgb(82, 81, 83) 87%,
+        rgb(94, 36, 117) 87%,
+        rgb(94, 36, 117) 88%,
+        rgb(82, 81, 83) 88%,
+        rgb(82, 81, 83) 100%
+    );
 }
 
-.draft-team-display-character-pick.orange-side {
-    flex-direction: row-reverse;
-    background-color: rgb(225, 165, 106);
-    border-right: none;
+.draft-team-display-character-pick.Speedster {
+    background-image: linear-gradient(
+        45deg,
+        rgb(82, 81, 83) 0%,
+        rgb(82, 81, 83) 10%,
+        rgb(96, 189, 206) 10%,
+        rgb(96, 189, 206) 11%,
+        rgb(82, 81, 83) 11%,
+        rgb(82, 81, 83) 21%,
+        rgb(96, 189, 206) 21%,
+        rgb(96, 189, 206) 22%,
+        rgb(82, 81, 83) 22%,
+        rgb(82, 81, 83) 32%,
+        rgb(96, 189, 206) 32%,
+        rgb(96, 189, 206) 33%,
+        rgb(82, 81, 83) 33%,
+        rgb(82, 81, 83) 43%,
+        rgb(96, 189, 206) 43%,
+        rgb(96, 189, 206) 44%,
+        rgb(82, 81, 83) 44%,
+        rgb(82, 81, 83) 54%,
+        rgb(96, 189, 206) 54%,
+        rgb(96, 189, 206) 55%,
+        rgb(82, 81, 83) 55%,
+        rgb(82, 81, 83) 65%,
+        rgb(96, 189, 206) 65%,
+        rgb(96, 189, 206) 66%,
+        rgb(82, 81, 83) 66%,
+        rgb(82, 81, 83) 76%,
+        rgb(96, 189, 206) 76%,
+        rgb(96, 189, 206) 77%,
+        rgb(82, 81, 83) 77%,
+        rgb(82, 81, 83) 87%,
+        rgb(96, 189, 206) 87%,
+        rgb(96, 189, 206) 88%,
+        rgb(82, 81, 83) 88%,
+        rgb(82, 81, 83) 100%
+    );
 }
 
-#draft-team-display-hover-insight-container {
-    position: absolute;
-    z-index: 1000;
-    pointer-events: 'none'; /* Prevent blocking other elements */
+.draft-team-display-character-pick.Supporter {
+    background-image: linear-gradient(
+        45deg,
+        rgb(82, 81, 83) 0%,
+        rgb(82, 81, 83) 10%,
+        rgb(231, 235, 30) 10%,
+        rgb(231, 235, 30) 11%,
+        rgb(82, 81, 83) 11%,
+        rgb(82, 81, 83) 21%,
+        rgb(231, 235, 30) 21%,
+        rgb(231, 235, 30) 22%,
+        rgb(82, 81, 83) 22%,
+        rgb(82, 81, 83) 32%,
+        rgb(231, 235, 30) 32%,
+        rgb(231, 235, 30) 33%,
+        rgb(82, 81, 83) 33%,
+        rgb(82, 81, 83) 43%,
+        rgb(231, 235, 30) 43%,
+        rgb(231, 235, 30) 44%,
+        rgb(82, 81, 83) 44%,
+        rgb(82, 81, 83) 54%,
+        rgb(231, 235, 30) 54%,
+        rgb(231, 235, 30) 55%,
+        rgb(82, 81, 83) 55%,
+        rgb(82, 81, 83) 65%,
+        rgb(231, 235, 30) 65%,
+        rgb(231, 235, 30) 66%,
+        rgb(82, 81, 83) 66%,
+        rgb(82, 81, 83) 76%,
+        rgb(231, 235, 30) 76%,
+        rgb(231, 235, 30) 77%,
+        rgb(82, 81, 83) 77%,
+        rgb(82, 81, 83) 87%,
+        rgb(231, 235, 30) 87%,
+        rgb(231, 235, 30) 88%,
+        rgb(82, 81, 83) 88%,
+        rgb(82, 81, 83) 100%
+    );
 }
 
-@media (max-width: 1024px) {
-    .draft-team-display-bans {
-        height: 20px;
-        width: 20px;
-    }
+.draft-team-display-character-pick.Defender {
+    background-image: linear-gradient(
+        45deg,
+        rgb(82, 81, 83) 0%,
+        rgb(82, 81, 83) 10%,
+        rgb(40, 146, 36) 10%,
+        rgb(40, 146, 36) 11%,
+        rgb(82, 81, 83) 11%,
+        rgb(82, 81, 83) 21%,
+        rgb(40, 146, 36) 21%,
+        rgb(40, 146, 36) 22%,
+        rgb(82, 81, 83) 22%,
+        rgb(82, 81, 83) 32%,
+        rgb(40, 146, 36) 32%,
+        rgb(40, 146, 36) 33%,
+        rgb(82, 81, 83) 33%,
+        rgb(82, 81, 83) 43%,
+        rgb(40, 146, 36) 43%,
+        rgb(40, 146, 36) 44%,
+        rgb(82, 81, 83) 44%,
+        rgb(82, 81, 83) 54%,
+        rgb(40, 146, 36) 54%,
+        rgb(40, 146, 36) 55%,
+        rgb(82, 81, 83) 55%,
+        rgb(82, 81, 83) 65%,
+        rgb(40, 146, 36) 65%,
+        rgb(40, 146, 36) 66%,
+        rgb(82, 81, 83) 66%,
+        rgb(82, 81, 83) 76%,
+        rgb(40, 146, 36) 76%,
+        rgb(40, 146, 36) 77%,
+        rgb(82, 81, 83) 77%,
+        rgb(82, 81, 83) 87%,
+        rgb(40, 146, 36) 87%,
+        rgb(40, 146, 36) 88%,
+        rgb(82, 81, 83) 88%,
+        rgb(82, 81, 83) 100%
+    );
+}
 
-    .orange-side.draft-team-display-character-pick h3 {
-        rotate: 180deg;
-    }
-
-    .draft-team-display-character-pick {
-        position: relative;
-        padding: 4px;
-    }
-
-    .draft-team-display-character-pick h3 {
-        font-size: 0.8em;
-        writing-mode: vertical-lr;
-        width: 20%;
-    }
-
-    .draft-team-display-character-pick img {
-        width: 70%;
-    }
-
-    .draft-team-display-switch-character-form-buttom {
-        position: absolute;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
+.draft-team-display-character-pick.Attacker {
+    background-image: linear-gradient(
+        45deg,
+        rgb(82, 81, 83) 0%,
+        rgb(82, 81, 83) 10%,
+        rgb(170, 74, 71) 10%,
+        rgb(170, 74, 71) 11%,
+        rgb(82, 81, 83) 11%,
+        rgb(82, 81, 83) 21%,
+        rgb(170, 74, 71) 21%,
+        rgb(170, 74, 71) 22%,
+        rgb(82, 81, 83) 22%,
+        rgb(82, 81, 83) 32%,
+        rgb(170, 74, 71) 32%,
+        rgb(170, 74, 71) 33%,
+        rgb(82, 81, 83) 33%,
+        rgb(82, 81, 83) 43%,
+        rgb(170, 74, 71) 43%,
+        rgb(170, 74, 71) 44%,
+        rgb(82, 81, 83) 44%,
+        rgb(82, 81, 83) 54%,
+        rgb(170, 74, 71) 54%,
+        rgb(170, 74, 71) 55%,
+        rgb(82, 81, 83) 55%,
+        rgb(82, 81, 83) 65%,
+        rgb(170, 74, 71) 65%,
+        rgb(170, 74, 71) 66%,
+        rgb(82, 81, 83) 66%,
+        rgb(82, 81, 83) 76%,
+        rgb(170, 74, 71) 76%,
+        rgb(170, 74, 71) 77%,
+        rgb(82, 81, 83) 77%,
+        rgb(82, 81, 83) 87%,
+        rgb(170, 74, 71) 87%,
+        rgb(170, 74, 71) 88%,
+        rgb(82, 81, 83) 88%,
+        rgb(82, 81, 83) 100%
+    );
 }

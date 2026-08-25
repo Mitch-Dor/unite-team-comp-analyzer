@@ -1,7 +1,7 @@
 import React from 'react';
 import "../../css/draftSupport/draftListing.css";
 
-const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, numUsers, settings, targetPokemon, setTargetPokemon }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
+const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, settings, targetPokemon, setTargetPokemon }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
 
     function isUnavailablePokemon(pokemon){
         // Special cases for Pokemon that are technically grouped as one in the game but are separate in my database
@@ -48,10 +48,10 @@ const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Pick
         // Check if the pokemon is already picked/banned
         const isUnavailable = isUnavailablePokemon(pokemon);
         if (draftState !== 'done' && !isUnavailable){
-            if(numUsers == 2) {
+            if(settings.numUsers == 2) {
                 // It's definitely a user turn
                 setTargetPokemon(pokemon);
-            } else if (numUsers == 1) {
+            } else if (settings.numUsers == 1) {
                 if ((settings.userTurn === "first" && draftState.includes("team1")) || (settings.userTurn === "second" && draftState.includes("team2"))){
                     // There is an AI but it's the user's turn
                     setTargetPokemon(pokemon);
@@ -66,12 +66,12 @@ const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Pick
     const displayList = (draftState?.includes("Ban") || draftState === "") ? [{ pokemon_name: "none", pokemon_class: "none"}, ...pokemonList] : pokemonList;
 
     return (
-        <div className="draft-composed-page-draft-board-characters-container">
+        <div id="draft-board-characters-container">
             {pokemonList && pokemonList.length > 0 ? (
                 displayList.map(pokemon => {
                     const isUnavailable = isUnavailablePokemon(pokemon);
                     return (
-                        <div key={pokemon.pokemon_name} className={`draft-draft-listing-character-container ${isUnavailable ? 'unavailable' : 'available'} ${targetPokemon === pokemon ? 'targeted' : ''}`} onClick={() => {handleTargetPokemon(pokemon)}}>
+                        <div key={pokemon.pokemon_name} className={`draft-listing-character-container ${isUnavailable ? 'unavailable' : 'available'} ${targetPokemon === pokemon ? 'targeted' : ''}`} onClick={() => {handleTargetPokemon(pokemon)}}>
                             <img className={`draft-character-portrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
                             <h4>{pokemon.pokemon_name}</h4>
                         </div>

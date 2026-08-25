@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
 import { fetchCharacterDraftInfo } from './common/http.js';
-import Home from '../../sideComponents/js/Home.jsx';
 import '../css/draft.css';
 import '../css/classBackgrounds.css';
 
@@ -13,6 +12,10 @@ function DraftSandbox() {
     const [team2Bans, updateTeam2Bans] = useState([]);
     const [team1Picks, updateTeam1Picks] = useState([]);
     const [team2Picks, updateTeam2Picks] = useState([]);
+    const [settings, setSettings] = useState({
+        numUsers: 2,
+        disallowedCharacters: [],
+    })
     const [loading, setLoading] = useState(true); // Handles while we're loading pokemonList
     
     // Populates pokemonList with the return data from fetchCharacterDraftInfo() like name, class, id (status is initialized to none but will be changed to team1, team2, ban1, or ban2 to know where to place it and to gray it out) when the component first mounts.
@@ -84,6 +87,14 @@ function DraftSandbox() {
         }
         setTargetPokemon(null);
     }
+
+    function resetDraft() {
+        updateTeam1Bans([]);
+        updateTeam2Bans([]);
+        updateTeam1Picks([]);
+        updateTeam2Picks([]);
+        setTargetPokemon(null);
+    }
     
 
     // Loading message while we're waiting on pokemonList
@@ -92,17 +103,7 @@ function DraftSandbox() {
     }
 
     return (
-        <div id="draft-main-container">
-            <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updatePokemonList={updatePokemonList} updateFilteredList={updateFilteredList} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} setPosition={setPosition} filteredList={filteredList} />
-            <Home />
-            <button id="draft-sandbox-start-over-button" onClick={() => {
-                updateTeam1Bans([]);
-                updateTeam2Bans([]);
-                updateTeam1Picks([]);
-                updateTeam2Picks([]);
-                setTargetPokemon(null);
-            }}>Start Over</button>
-        </div>
+        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updatePokemonList={updatePokemonList} updateFilteredList={updateFilteredList} settings={settings} setSettings={setSettings} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} setPosition={setPosition} filteredList={filteredList} resetDraft={resetDraft} />
     );
 }
 

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import "../css/insights.css";
 import "../css/classBackgrounds.css";
 import { fetchAllCharacterAttributes, fetchAllInsights } from "./common/http";
-import Score from "./Score";
 import Home from "../../sideComponents/js/Home";
 
 export default function Inights() {
@@ -80,7 +79,7 @@ export default function Inights() {
                 <div className={`insights-mode-bar ${mode === "descriptions" ? "left" : "right"}`}></div>
             </div>
             {mode === "score" ? (
-                <Score characterAttributes={characterAttributes} characters={characters} />
+                <></>
             ) : (
                 <div id="insights-content-container">
                     <div id="insights-pokemon-select-container">
