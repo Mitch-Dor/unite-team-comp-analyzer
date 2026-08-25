@@ -7,11 +7,8 @@ import '../css/classBackgrounds.css';
 function DraftSandbox() {
     const [pokemonList, updatePokemonList] = useState([]);
     const [filteredList, updateFilteredList] = useState([]);
-    const [targetPokemon, setTargetPokemon] = useState(null);
-    const [team1Bans, updateTeam1Bans] = useState([]);
-    const [team2Bans, updateTeam2Bans] = useState([]);
-    const [team1Picks, updateTeam1Picks] = useState([]);
-    const [team2Picks, updateTeam2Picks] = useState([]);
+    const [purpleTeamDraft, setPurpleTeamDraft] = useState({bans: [], picks: []});
+    const [orangeTeamDraft, setOrangeTeamDraft] = useState({bans: [], picks: []});
     const [settings, setSettings] = useState({
         numUsers: 2,
         disallowedCharacters: [],
@@ -35,65 +32,9 @@ function DraftSandbox() {
         fetchCharacterListing(); // Call the fetch function to populate pokemonList
     }, []); // Empty dependency array ensures this runs once when the component mounts
 
-    function setPosition(pokemon, team, position){
-        if (!pokemon){
-            // Remove the pokemon from the team
-            if (position.includes('ban')){
-                if (team === 'purple'){
-                    updateTeam1Bans(prevBans => prevBans.filter(item => item.position !== position));
-                } else if (team === 'orange'){
-                    updateTeam2Bans(prevBans => prevBans.filter(item => item.position !== position));
-                }
-            } else if (position.includes('pick')){
-                if (team === 'purple'){
-                    updateTeam1Picks(prevPicks => prevPicks.filter(item => item.position !== position));
-                } else if (team === 'orange'){
-                    updateTeam2Picks(prevPicks => prevPicks.filter(item => item.position !== position));
-                }
-            }
-        } else {
-            switch(team){
-                case 'purple': // Team 1
-                    if(position.includes('ban')){
-                        updateTeam1Bans(prevBans => {
-                            // Remove any existing pokemon with the same position
-                            const filtered = prevBans.filter(item => item.position !== position);
-                            return [...filtered, {pokemon, position: position}];
-                        });
-                    } else if(position.includes('pick')){
-                        updateTeam1Picks(prevPicks => {
-                            // Remove any existing pokemon with the same position
-                            const filtered = prevPicks.filter(item => item.position !== position);
-                            return [...filtered, {pokemon, position: position}];
-                        });
-                    }
-                    break; // Add break to prevent fall-through
-                case 'orange': // Team 2
-                    if(position.includes('ban')){
-                        updateTeam2Bans(prevBans => {
-                            // Remove any existing pokemon with the same position
-                            const filtered = prevBans.filter(item => item.position !== position);
-                            return [...filtered, {pokemon, position: position}];
-                        });
-                    } else if(position.includes('pick')){
-                        updateTeam2Picks(prevPicks => {
-                            // Remove any existing pokemon with the same position
-                            const filtered = prevPicks.filter(item => item.position !== position);
-                            return [...filtered, {pokemon, position: position}];
-                        });
-                    }
-                    break; // Add break to prevent fall-through
-            }
-        }
-        setTargetPokemon(null);
-    }
-
     function resetDraft() {
-        updateTeam1Bans([]);
-        updateTeam2Bans([]);
-        updateTeam1Picks([]);
-        updateTeam2Picks([]);
-        setTargetPokemon(null);
+        setPurpleTeamDraft({bans: [], picks: []});
+        setOrangeTeamDraft({bans: [], picks: []});
     }
     
 
@@ -103,7 +44,7 @@ function DraftSandbox() {
     }
 
     return (
-        <ComposedDraftPage team1Bans={team1Bans} team1Picks={team1Picks} team2Bans={team2Bans} team2Picks={team2Picks} pokemonList={pokemonList} updatePokemonList={updatePokemonList} updateFilteredList={updateFilteredList} settings={settings} setSettings={setSettings} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} setPosition={setPosition} filteredList={filteredList} resetDraft={resetDraft} />
+        <ComposedDraftPage mode={'sandbox'} purpleTeamDraft={purpleTeamDraft} orangeTeamDraft={orangeTeamDraft} setPurpleTeamDraft={setPurpleTeamDraft} setOrangeTeamDraft={setOrangeTeamDraft} pokemonList={pokemonList} updatePokemonList={updatePokemonList} updateFilteredList={updateFilteredList} lockIn={null} settings={settings} setSettings={setSettings} filteredList={filteredList} draftState={null} resetDraft={resetDraft} />
     );
 }
 

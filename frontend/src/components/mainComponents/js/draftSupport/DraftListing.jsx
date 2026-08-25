@@ -1,50 +1,37 @@
 import React from 'react';
 import "../../css/draftSupport/draftListing.css";
+import { getInversePokemon } from '../common/common';
 
-const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, draftState, settings, targetPokemon, setTargetPokemon }) => { // Adding {} around this destructures the props. Otherwise everything will just be in one props obejct
+const NONE_POKEMON = { pokemon_name: "none", pokemon_class: "none" };
+
+const DraftListing = ({ mode, pokemonList, purpleTeamDraft, orangeTeamDraft, draftState, settings, targetPokemon, setTargetPokemon, lockIn }) => {
 
     function isUnavailablePokemon(pokemon){
         // Special cases for Pokemon that are technically grouped as one in the game but are separate in my database
+        if(pokemon === NONE_POKEMON){
+            return false;
+        }
+        
         let specialCaseUnavailable = false;
-        switch (pokemon.pokemon_name){
-            case 'Scyther':
-                if (team1Bans.some(item => item.pokemon_name === 'Scizor' || (item.pokemon && item.pokemon.pokemon_name === 'Scizor')) || team2Bans.some(item => item.pokemon_name === 'Scizor' || (item.pokemon && item.pokemon.pokemon_name === 'Scizor')) || team1Picks.some(item => item.pokemon_name === 'Scizor' || (item.pokemon && item.pokemon.pokemon_name === 'Scizor')) || team2Picks.some(item => item.pokemon_name === 'Scizor' || (item.pokemon && item.pokemon.pokemon_name === 'Scizor'))){
-                    specialCaseUnavailable = true;
-                }
-                break;
-            case 'Scizor':
-                if (team1Bans.some(item => item.pokemon_name === 'Scyther' || (item.pokemon && item.pokemon.pokemon_name === 'Scyther')) || team2Bans.some(item => item.pokemon_name === 'Scyther' || (item.pokemon && item.pokemon.pokemon_name === 'Scyther')) || team1Picks.some(item => item.pokemon_name === 'Scyther' || (item.pokemon && item.pokemon.pokemon_name === 'Scyther')) || team2Picks.some(item => item.pokemon_name === 'Scyther' || (item.pokemon && item.pokemon.pokemon_name === 'Scyther'))){
-                    specialCaseUnavailable = true;
-                }
-                break;
-            case 'Urshifu_SS':
-                if (team1Bans.some(item => item.pokemon_name === 'Urshifu_RS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_RS')) || team2Bans.some(item => item.pokemon_name === 'Urshifu_RS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_RS')) || team1Picks.some(item => item.pokemon_name === 'Urshifu_RS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_RS')) || team2Picks.some(item => item.pokemon_name === 'Urshifu_RS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_RS'))){
-                    specialCaseUnavailable = true;
-                }
-                break;
-            case 'Urshifu_RS':
-                if (team1Bans.some(item => item.pokemon_name === 'Urshifu_SS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_SS')) || team2Bans.some(item => item.pokemon_name === 'Urshifu_SS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_SS')) || team1Picks.some(item => item.pokemon_name === 'Urshifu_SS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_SS')) || team2Picks.some(item => item.pokemon_name === 'Urshifu_SS' || (item.pokemon && item.pokemon.pokemon_name === 'Urshifu_SS'))){
-                    specialCaseUnavailable = true;
-                }
-                break;
+        const inversePokemon = getInversePokemon(pokemon, pokemonList);
+        if (inversePokemon && (purpleTeamDraft.bans.some(item => item.pokemon === inversePokemon) || orangeTeamDraft.bans.some(item => item.pokemon === inversePokemon) || purpleTeamDraft.picks.some(item => item.pokemon === inversePokemon) || orangeTeamDraft.picks.some(item => item.pokemon === inversePokemon))) {
+            specialCaseUnavailable = true;
         }
-        if (settings){
-            return specialCaseUnavailable ||
-                team1Bans.includes(pokemon) || 
-                team2Bans.includes(pokemon) || 
-                team1Picks.includes(pokemon) || 
-                team2Picks.includes(pokemon) || 
-                settings.disallowedCharacters.includes(pokemon.pokemon_name);
-        } else {
-            return specialCaseUnavailable ||
-                team1Bans.some(item => item.pokemon === pokemon) || 
-                team2Bans.some(item => item.pokemon === pokemon) || 
-                team1Picks.some(item => item.pokemon === pokemon) || 
-                team2Picks.some(item => item.pokemon === pokemon);
-        }
+        return specialCaseUnavailable ||
+            purpleTeamDraft.bans.some(item => item.pokemon === pokemon) || 
+            orangeTeamDraft.bans.some(item => item.pokemon === pokemon) || 
+            purpleTeamDraft.picks.some(item => item.pokemon === pokemon) || 
+            orangeTeamDraft.picks.some(item => item.pokemon === pokemon) ||
+            settings.disallowedCharacters.includes(pokemon.pokemon_name);
     }
 
     function handleTargetPokemon(pokemon){
+        if (targetPokemon && targetPokemon === pokemon && mode !== 'sandbox') {
+            lockIn(pokemon);
+            setTargetPokemon(null);
+            return;
+        }
+
         // Check if the pokemon is already picked/banned
         const isUnavailable = isUnavailablePokemon(pokemon);
         if (draftState !== 'done' && !isUnavailable){
@@ -63,7 +50,7 @@ const DraftListing = ({ pokemonList, team1Bans, team2Bans, team1Picks, team2Pick
         }
     }
 
-    const displayList = (draftState?.includes("Ban") || draftState === "") ? [{ pokemon_name: "none", pokemon_class: "none"}, ...pokemonList] : pokemonList;
+    const displayList = (draftState?.includes("Ban") || draftState === "") ? [NONE_POKEMON, ...pokemonList] : pokemonList;
 
     return (
         <div id="draft-board-characters-container">

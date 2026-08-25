@@ -55,6 +55,9 @@
     display: block;
     box-sizing: border-box;
 }
+.draft-character-portrait.none {
+    background-color: #686868;
+}
 
 .draft-listing-character-container h4 {
     margin: 0;

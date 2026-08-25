@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import DraftListing from './DraftListing';
 import TeamDisplay from './TeamDisplay.jsx';
 import DraftFiltering from './DraftFiltering.jsx';
@@ -5,31 +6,37 @@ import Home from "../../../sideComponents/js/Home";
 import Settings from '../../../sideComponents/js/Settings.jsx';
 import "../../css/draftSupport/composedDraftPage.css";
 import { MdOutlineRestartAlt } from "react-icons/md";
+import { FaPlay } from 'react-icons/fa'; 
 
-function ComposedDraftPage({ team1Bans, team1Picks, team2Bans, team2Picks, pokemonList, updatePokemonList, updateFilteredList, targetPokemon, setTargetPokemon, lockIn, settings, setSettings, filteredList, stateRef, setPosition, setTeam1Picks, setTeam2Picks, resetDraft }) {
+function ComposedDraftPage({ mode, purpleTeamDraft, setPurpleTeamDraft, orangeTeamDraft, setOrangeTeamDraft, pokemonList, updatePokemonList, updateFilteredList, lockIn, settings, setSettings, filteredList, draftState, resetDraft, startDraft }) {
+    const [targetPokemon, setTargetPokemon] = useState(null);
+    
     return (
         <div id="draft-page-container">
             <div id="draft-left-column-container" className="draft-side-container">
                 <div className="draft-corner-information-container">
-                    <div id="draft-timer">{lockIn ? 'Waiting for draft to start...' : 'No Timer'}</div> 
+                    <div id="draft-timer"></div> 
                     <div id="draft-page-logo">Unite-Pro</div>
                 </div>
                 <div id="purple-team-container" className="draft-team-container">
-                    <TeamDisplay team={'purple'} bans={team1Bans} picks={team1Picks} setPosition={setPosition} targetPokemon={targetPokemon} setTeam={setTeam1Picks} pokemonList={pokemonList} settings={settings} ></TeamDisplay>
+                    <TeamDisplay mode={mode} team={'purple'} draft={purpleTeamDraft} setDraft={setPurpleTeamDraft} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} pokemonList={pokemonList} settings={settings} ></TeamDisplay>
                 </div>
             </div>
             <div id="draft-middle-parts-container">
                 <DraftFiltering pokemonList={pokemonList} updateFilteredList={updateFilteredList} updatePokemonList={updatePokemonList} />
-                <DraftListing pokemonList={filteredList} team1Bans={team1Bans} team2Bans={team2Bans} team1Picks={team1Picks} team2Picks={team2Picks} draftState={stateRef ? stateRef.current : null} settings={settings} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} />
+                <DraftListing mode={mode} pokemonList={filteredList} purpleTeamDraft={purpleTeamDraft} orangeTeamDraft={orangeTeamDraft} draftState={draftState} settings={settings} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} lockIn={lockIn} />
             </div>
             <div id="draft-right-column-container"  className="draft-side-container">
                 <div className="draft-corner-information-container">
                     <Home />
-                    <Settings pokemonList={pokemonList} settings={settings} updateSettings={setSettings} />
+                    <Settings pokemonList={pokemonList} settings={settings} updateSettings={setSettings} mode={mode} />
                     <button id="draft-restart-button" onClick={() => {resetDraft()}}><MdOutlineRestartAlt /></button>
+                    {mode === "standard" && (
+                        <button id="draft-start-button" onClick={() => {startDraft()}}>< FaPlay /></button>
+                    )}
                 </div>
                 <div id="orange-team-container" className="draft-team-container">
-                    <TeamDisplay team={'orange'} bans={team2Bans} picks={team2Picks} setPosition={setPosition} targetPokemon={targetPokemon} setTeam={setTeam2Picks} pokemonList={pokemonList} settings={settings} ></TeamDisplay>
+                    <TeamDisplay mode={mode} team={'orange'} draft={orangeTeamDraft} setDraft={setOrangeTeamDraft} targetPokemon={targetPokemon} setTargetPokemon={setTargetPokemon} pokemonList={pokemonList} settings={settings} ></TeamDisplay>
                 </div>
             </div>
         </div>

@@ -56,7 +56,8 @@
     font-family: 'Times New Roman', Times, serif;
     font-size: 1.5em;
 }
-#draft-restart-button {
+
+#draft-restart-button, #draft-start-button {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -65,7 +66,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
+    font-size: 16px;
     border: 1px solid rgba(0, 0, 0, 0.5);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }

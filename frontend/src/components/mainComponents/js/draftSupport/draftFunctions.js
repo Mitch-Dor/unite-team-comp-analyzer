@@ -3,45 +3,44 @@
 // Other files can import these functions to use them in their own logic.
 
 // Function to check if a given Pokemon is a special case for the purposes of if it is still available (true = unavailable | false = available)
-function checkIfSpecialCase(pokemon, team1Bans, team2Bans, team1Picks, team2Picks) {
-    if (pokemon.pokemon_name === 'Scyther' && (team1Bans.some(ban => ban.pokemon_name === 'Scizor') || team2Bans.some(ban => ban.pokemon_name === 'Scizor') || team1Picks.some(pick => pick.pokemon_name === 'Scizor') || team2Picks.some(pick => pick.pokemon_name === 'Scizor'))) {
+function checkIfSpecialCase(pokemon, purpleTeamDraft, orangeTeamDraft) {
+    if (pokemon.pokemon_name === 'Scyther' && (purpleTeamDraft.bans.some(ban => ban.pokemon.pokemon_name === 'Scizor') || orangeTeamDraft.bans.some(ban => ban.pokemon.pokemon_name === 'Scizor') || purpleTeamDraft.picks.some(pick => pick.pokemon.pokemon_name === 'Scizor') || orangeTeamDraft.picks.some(pick => pick.pokemon.pokemon_name === 'Scizor'))) {
         return true;
-    } else if (pokemon.pokemon_name === 'Scizor' && (team1Bans.some(ban => ban.pokemon_name === 'Scyther') || team2Bans.some(ban => ban.pokemon_name === 'Scyther') || team1Picks.some(pick => pick.pokemon_name === 'Scyther') || team2Picks.some(pick => pick.pokemon_name === 'Scyther'))) {
+    } else if (pokemon.pokemon_name === 'Scizor' && (purpleTeamDraft.bans.some(ban => ban.pokemon.pokemon_name === 'Scyther') || orangeTeamDraft.bans.some(ban => ban.pokemon.pokemon_name === 'Scyther') || purpleTeamDraft.picks.some(pick => pick.pokemon.pokemon_name === 'Scyther') || orangeTeamDraft.picks.some(pick => pick.pokemon.pokemon_name === 'Scyther'))) {
         return true;
-    } else if (pokemon.pokemon_name === 'Urshifu_SS' && (team1Bans.some(ban => ban.pokemon_name === 'Urshifu_RS') || team2Bans.some(ban => ban.pokemon_name === 'Urshifu_RS') || team1Picks.some(pick => pick.pokemon_name === 'Urshifu_RS') || team2Picks.some(pick => pick.pokemon_name === 'Urshifu_RS'))) {
+    } else if (pokemon.pokemon_name === 'Urshifu_SS' && (purpleTeamDraft.bans.some(ban => ban.pokemon.pokemon_name === 'Urshifu_RS') || orangeTeamDraft.bans.some(ban => ban.pokemon.pokemon_name === 'Urshifu_RS') || purpleTeamDraft.picks.some(pick => pick.pokemon.pokemon_name === 'Urshifu_RS') || orangeTeamDraft.picks.some(pick => pick.pokemon.pokemon_name === 'Urshifu_RS'))) {
         return true;
-    } else if (pokemon.pokemon_name === 'Urshifu_RS' && (team1Bans.some(ban => ban.pokemon_name === 'Urshifu_SS') || team2Bans.some(ban => ban.pokemon_name === 'Urshifu_SS') || team1Picks.some(pick => pick.pokemon_name === 'Urshifu_SS') || team2Picks.some(pick => pick.pokemon_name === 'Urshifu_SS') )) {
+    } else if (pokemon.pokemon_name === 'Urshifu_RS' && (purpleTeamDraft.bans.some(ban => ban.pokemon.pokemon_name === 'Urshifu_SS') || orangeTeamDraft.bans.some(ban => ban.pokemon.pokemon_name === 'Urshifu_SS') || purpleTeamDraft.picks.some(pick => pick.pokemon.pokemon_name === 'Urshifu_SS') || orangeTeamDraft.picks.some(pick => pick.pokemon.pokemon_name === 'Urshifu_SS') )) {
         return true;
     }
     return false;
 }
 
 // Function to generate a random Pokemon that is not banned or picked
-function genRandomPokemon(pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, disallowedCharacters) {
+function genRandomPokemon(pokemonList, purpleTeamDraft, orangeTeamDraft, disallowedCharacters) {
     if (pokemonList.length === 0) {
         console.error("Cannot generate random Pokemon: pokemonList is empty");
         return null;
     }
     
+    const isTaken = (p) =>
+        purpleTeamDraft.bans.some(item => item.pokemon === p) ||
+        purpleTeamDraft.picks.some(item => item.pokemon === p) ||
+        orangeTeamDraft.bans.some(item => item.pokemon === p) ||
+        orangeTeamDraft.picks.some(item => item.pokemon === p);
+
     const randIndex = Math.floor(Math.random() * pokemonList.length);
     const pokemon = pokemonList[randIndex];
-    if (!team1Bans.includes(pokemon) && 
-        !team2Bans.includes(pokemon) && 
-        !team1Picks.includes(pokemon) && 
-        !team2Picks.includes(pokemon) && 
+    if (!isTaken(pokemon) && 
         !disallowedCharacters.includes(pokemon.pokemon_name) &&
-        !checkIfSpecialCase(pokemon, team1Bans, team2Bans, team1Picks, team2Picks)) {
+        !checkIfSpecialCase(pokemon, purpleTeamDraft, orangeTeamDraft)) {
         return pokemon;
     } 
     
-    // Safety check to prevent infinite recursion
     let availableOptions = pokemonList.filter(p => 
-        !team1Bans.includes(p) && 
-        !team2Bans.includes(p) && 
-        !team1Picks.includes(p) && 
-        !team2Picks.includes(p) && 
+        !isTaken(p) &&
         !disallowedCharacters.includes(p.pokemon_name) &&
-        !checkIfSpecialCase(p, team1Bans, team2Bans, team1Picks, team2Picks)
+        !checkIfSpecialCase(p, purpleTeamDraft, orangeTeamDraft)
     );
     
     if (availableOptions.length === 0) {
@@ -49,7 +48,7 @@ function genRandomPokemon(pokemonList, team1Bans, team2Bans, team1Picks, team2Pi
         return null;
     }
     
-    return genRandomPokemon(pokemonList, team1Bans, team2Bans, team1Picks, team2Picks, disallowedCharacters);
+    return genRandomPokemon(pokemonList, purpleTeamDraft, orangeTeamDraft, disallowedCharacters);
 }
 
 // Export the functions for use in other modules

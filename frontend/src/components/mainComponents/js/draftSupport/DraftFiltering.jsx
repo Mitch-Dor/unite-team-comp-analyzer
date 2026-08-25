@@ -102,7 +102,7 @@ const DraftFiltering = ({ pokemonList, updateFilteredList, updatePokemonList }) 
                 <select id="draft-filtering-order-by-select" onChange={(e) => doReorder(e.target.value)}>
                     {orderByFilters.map(orderByFilter => {
                         return (
-                            <option key={orderByFilter} value={orderByFilter}>{orderByFilter}</option>
+                            <option key={orderByFilter} value={orderByFilter}>{orderByFilter.charAt(0).toUpperCase() + orderByFilter.slice(1)}</option>
                         )
                     })}
                 </select>
