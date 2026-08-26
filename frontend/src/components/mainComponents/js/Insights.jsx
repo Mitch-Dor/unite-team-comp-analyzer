@@ -104,8 +104,8 @@ export default function Inights() {
                             <LevelStrengthChart />
                         </div>
                         <div className="insights-data-pokemon-image">
-                            <div className="insights-data-title">{currentCharacter ? currentCharacter.pokemon_name : null}</div>
-                            {currentCharacter ? (<img src={`/assets/models/${currentCharacter.pokemon_name}.png`} />) : null}
+                            <div className="insights-data-title">{currentCharacter ? currentCharacter.pokemon_name : "Placeholder"}</div>
+                            {currentCharacter ? (<img className="insights-data-pokemon-model" src={`/assets/models/${currentCharacter.pokemon_name}.png`} />) : null}
                         </div>
                     </div>
                     <div className="insights-data-example-match">

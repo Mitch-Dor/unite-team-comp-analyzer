@@ -38,3 +38,24 @@
     object-fit: contain;
     border-radius: 50%;
 }
+
+.insights-data-subtitle {
+    font-size: 1.2em;
+}
+
+.insights-notes-text {
+    width: 100%;
+    max-height: 60%;
+    border-bottom: 1px solid rgba(214, 214, 214, 0.1);
+}
+
+.insights-notes-best-partners {
+    border-right: 1px solid rgba(214, 214, 214, 0.1);
+}
+
+.insights-notes-best-partners, .insights-notes-traits {
+    width: 50%;
+    min-height: 40%;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
