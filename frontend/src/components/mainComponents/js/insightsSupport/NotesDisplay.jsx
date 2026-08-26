@@ -1,10 +1,13 @@
-import { getCharactersMovesDictionary } from "../common/common";
+import React, {useState} from 'react';
+import { createPortal } from "react-dom";
 import "../../css/insightsSupport/notesDisplay.css";
 
 export default function NoteDisplay({noteData, characters}) {
+    const [hoveredPokemon, setHoveredPokemon] = useState(null);
+
     const mockNotesData = {
         note: ":Venusaur: has two very distinct modes. :Venusaur_Solarbeam: lets him out range and :poke_good: almost anything in the game. Meanwhile, :Venusaur_Giga_Drain: + :Venusaur_Petal_Dance: turns him into a brawling behemoth with great :sustain_good:. Both movesets require him to :scale_meh: late into the game, so there needs to be a plan for getting him online through ganks or jungle scaling. :Venusaur:'s ult is very high :burst_good: damage and does very well into :sustain_meh: comps that make use of healing supports like :Clefable:. :Venusaur:'s poke is also special because it cannot be blocked, unlike other poke like :Inteleon_Snipe_Shot:. :Venusaur:'s main drawback is his lack of :mobility_bad:, so enemy comps with strong :dive_bad: / :engage_bad: potential can be tough to deal with alone.",
-        good_teammates: [{pokemon: "Eldegoss", reason: "Decent early game and good anti-dive with its ult."}],
+        good_teammates: [{pokemon: "Eldegoss", reason: "Decent early game and good anti-dive with its ult."}, {pokemon: "Snorlax", reason: "Snorlax has very strong peel or engage making it flexible for supporting either moveset Venusaur wants to play."}],
         traits: ["long_range", "large_aoe_damage", "immobile", "burst", "weak_early", "strong_late"]
     };
 
@@ -39,9 +42,43 @@ export default function NoteDisplay({noteData, characters}) {
         }
     });
 
-    const bestPartners = null;
+    const bestPartners = mockNotesData.good_teammates.map((teammate) => (
+        <div key={teammate.pokemon} className="best-partner-container">
+            <div
+                className="best-partner-icon"
+                onMouseOver={() => setHoveredPokemon(teammate.pokemon)}
+                onMouseLeave={() => setHoveredPokemon(null)}
+            >
+                <img src={`assets/Draft/headshots/${teammate.pokemon}.png`} />
+            </div>
+            <div
+                className="best-partner-description"
+                style={{
+                    visibility: hoveredPokemon === teammate.pokemon ? "visible" : "hidden",
+                }}
+            >
+                {teammate.reason}
+            </div>
+        </div>
+    ));
 
-    const traits = null;
+    function traitsToColor(trait) {
+        switch(trait) {
+            case 'long_range': return 'green';
+            case 'large_aoe_damage': return 'green';
+            case 'immobile': return 'red';
+            case 'burst': return 'gray';
+            case 'weak_early': return 'red';
+            case 'strong_late': return 'green';
+            default: return 'gray;'
+        }
+    }
+
+    const toTitleCase = (str) => str.replaceAll("_", " ").replace(/(^|\s)\S/g, (letter) => letter.toUpperCase());
+
+    const traits = mockNotesData.traits.map((trait) => (
+        <div key={trait} className={`insights-trait-pill ${traitsToColor(trait)}`}>{toTitleCase(trait)}</div>
+    ));
 
     return (
         <>
@@ -52,7 +89,9 @@ export default function NoteDisplay({noteData, characters}) {
             </div>
             <div className="insights-notes-traits">
                 <div className="insights-data-subtitle">Traits</div>
-                {traits}
+                <div className="insights-data-traits">
+                    {traits}
+                </div>
             </div>
         </>
     );
