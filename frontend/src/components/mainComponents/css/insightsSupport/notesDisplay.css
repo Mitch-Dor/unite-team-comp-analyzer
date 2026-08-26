@@ -1,0 +1,40 @@
+.pillText {
+    background-color: rgba(50, 50, 50, 0.8);
+    font-weight: bold;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    font-size: 0.75em;
+}
+
+.pillText.bad {
+    background-color: rgba(255, 0, 0, 0.801);
+}
+
+.pillText.meh {
+    background-color: rgba(255, 145, 0, 0.801);
+}
+
+.pillText.good {
+    background-color: rgba(21, 160, 21, 0.801);
+}
+
+.insights-characterIcon, .insights-characterMoveIcon {
+    width: 20px;
+    height: 20px;
+    background-color: rgba(50, 50, 50, 0.8);
+    border-radius: 50%;
+    padding: 2px;
+    border: 1px solid white;
+    box-sizing: border-box;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.insights-characterIcon img, .insights-characterMoveIcon img {
+    height: 16px;
+    width: 16px;
+    object-fit: contain;
+    border-radius: 50%;
+}
