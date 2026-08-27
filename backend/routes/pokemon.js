@@ -44,6 +44,8 @@ module.exports = function (app, middleware, database) {
         });
     });
 
+    //// INSIGHTS ////
+
     app.put('/PUTallInsights', (req, res) => {
         database.pokemon.updateInsights(req.body.pokemon_id, req.body.data).then(data => {
             res.json(data);
@@ -70,6 +72,48 @@ module.exports = function (app, middleware, database) {
         })
         .catch(error => {
             console.error('Error updating character trait:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    //// DIRECT TABLE FETCHING (ADMIN)
+
+    app.get('/GETtableDraftInformation', (req, res) => {
+        database.pokemon.getTableDraftInformation().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching character traits:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.get('/GETtableInsights', (req, res) => {
+        database.pokemon.getTableInsights().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching character traits:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.get('/GETtableTraits', (req, res) => {
+        database.pokemon.getTableTraits().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching character traits:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.get('/GETIDNameMapping', (req, res) => {
+        database.pokemon.getIDNameMapping().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching character traits:', error);
             res.sendStatus(401);
         });
     });

@@ -131,3 +131,53 @@ export async function updateCharacterTrait(pokemonId, column, value) {
     const characterTraitDataJson = await characterTraitData.json();
     return characterTraitDataJson;
 }
+
+//// ADMIN ////
+
+export async function fetchTableDraftInformation() {
+    const tableData = await fetch(routes.GET_TABLE_DRAFT_INFORMATION, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const tableDataJson = await tableData.json();
+    return tableDataJson;
+}
+
+export async function fetchTableInsights() {
+    const tableData = await fetch(routes.GET_TABLE_INSIGHTS, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const tableDataJson = await tableData.json();
+    return tableDataJson;
+}
+
+export async function fetchTableTraits() {
+    const tableData = await fetch(routes.GET_TABLE_TRAITS, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const tableDataJson = await tableData.json();
+    return tableDataJson;
+}
+
+export async function fetchIDNameMapping() {
+    const mapData = await fetch(routes.GET_ID_NAME_MAPPING, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    const mapDataJson = await mapData.json();
+    return mapDataJson;
+}

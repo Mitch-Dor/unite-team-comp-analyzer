@@ -24,4 +24,10 @@ export const routes = {
     //// TRAITS ROUTES ////
     GET_ALL_TRAITS: `${getBaseUrl()}/GETallCharacterTraits`,
     PUT_CHARACTER_TRAIT: `${getBaseUrl()}/PUTCharacterTrait`,
+
+    //// ADMIN ROUTES ////
+    GET_TABLE_DRAFT_INFORMATION: `${getBaseUrl()}/GETtableDraftInformation`,
+    GET_TABLE_INSIGHTS: `${getBaseUrl()}/GETtableInsights`,
+    GET_TABLE_TRAITS: `${getBaseUrl()}/GETtableTraits`,
+    GET_ID_NAME_MAPPING: `${getBaseUrl()}/GETIDNameMapping`,
 };

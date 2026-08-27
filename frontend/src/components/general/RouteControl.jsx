@@ -9,6 +9,7 @@ import TierList from '../mainComponents/js/TierList';
 import Login from '../sideComponents/js/Login';
 import DraftSandbox from '../mainComponents/js/DraftSandbox';
 import UTA_Main from '../UTA_Components/main_components/js/UTA_Main';
+import Admin from '../mainComponents/js/Admin';
 
 function RouteControl() {
   return (
@@ -19,6 +20,7 @@ function RouteControl() {
         <Route exact path='/insights' element={<Insights />} />
         <Route exact path='/tier-list' element={<TierList />} />
         <Route exact path='/login' element={<Login />} />
+        <Route exact path='/admin' element={<Admin />} />
         <Route exact path='/UTA' element={<UTA_Main />} />
       </Routes>
   );

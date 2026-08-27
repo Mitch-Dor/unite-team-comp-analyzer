@@ -1,0 +1,104 @@
+#admin-main-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/assets/landingPageBackgrounds/Blurred/UNITE_Theia_Sky_Ruins.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    flex-direction: column;
+    overflow: hidden;
+    font-size: 16px;
+}
+
+#admin-mode-selector {
+    height: 15%;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
+.admin-mode-selector {
+    width: 8%;
+    height: 100%;
+    background-color: #555;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px solid white;
+    cursor: pointer;
+}
+
+#admin-edit-section {
+    height: 85%;
+    width: 100%;
+    background-color: rgba(33, 33, 33, 0.8);
+    box-sizing: border-box;
+    border: 10px solid rgb(33, 33, 33);
+    overflow-y: scroll;
+}
+
+.admin-edit-table {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(17, 17, 17, 0.8);
+}
+
+.admin-edit-table th {
+    background-color: rgba(128, 54, 54, 0.8);
+    color: white;
+}
+
+.admin-edit-table tr td:nth-child(1) {
+    background-color: rgba(131, 78, 78, 0.8);
+    color: white;
+}
+
+.admin-edit-table td {
+    text-align: center;
+}
+
+.special-attribute-tag {
+    color: black;
+    background-color: rgb(255, 255, 255);
+    padding-left: 3px;
+    padding-right: 3px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    box-sizing: border-box;
+}
+
+.special-attribute-tag button {
+    height: 12px;
+    width: 12px;
+    font-size: 8px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background-color: rgb(83, 83, 83);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-submit-button {
+    background-color: rgb(37, 149, 201);
+    color: white;
+}

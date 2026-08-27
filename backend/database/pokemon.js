@@ -100,6 +100,8 @@ class Pokemon {
         return tierList;
     }
 
+    //// INSIGHTS ////
+
     // Update a single character trait
     async updateInsights(pokemonId, data) {
         const sql = `UPDATE pokemon_insights SET text = $1, match_title = $2, match_link = $3, good_teammates = $4 WHERE pokemon_id = $5`;
@@ -158,6 +160,59 @@ class Pokemon {
         });
       }
 
+      //// DIRECT TABLE FETCHING (ADMIN)
+
+      async getTableDraftInformation(){
+        return new Promise((resolve, reject) => {
+            this.db.query('select * from pokemon_draft_information ORDER BY pokemon_id', (err, res) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                } else {
+                    resolve(res.rows);
+                }
+            });
+        });
+    }
+
+    async getTableInsights(){
+        return new Promise((resolve, reject) => {
+            this.db.query('select * from pokemon_insights ORDER BY pokemon_id', (err, res) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                } else {
+                    resolve(res.rows);
+                }
+            });
+        });
+    }
+
+    async getTableTraits(){
+        return new Promise((resolve, reject) => {
+            this.db.query('select * from pokemon_traits ORDER BY pokemon_id', (err, res) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                } else {
+                    resolve(res.rows);
+                }
+            });
+        });
+    }
+
+    async getIDNameMapping(){
+        return new Promise((resolve, reject) => {
+            this.db.query('select pokemon_id, pokemon_name from playable_characters ORDER BY pokemon_id', (err, res) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                } else {
+                    resolve(res.rows);
+                }
+            });
+        });
+    }
 
 }
     
