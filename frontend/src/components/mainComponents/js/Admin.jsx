@@ -31,7 +31,6 @@ function Traits() {
           const traits_table_data = traits_table_data_base.map(
             ({ level_strength, ...rest }) => rest
           );
-          console.log(level_strengths);
           const insights_table_data = await fetchTableInsights();
           const draft_information_table_data = await fetchTableDraftInformation();
           const name_id_mapping = await fetchIDNameMapping();
@@ -61,7 +60,7 @@ function Traits() {
       damage: 1,
       damage_area: 'SingleTarget',
       damage_consistency: 1,
-      playstyle: 'Teamfight',
+      play_style: 'Teamfight',
       classification: 'Artillery Mage',
       special_attributes: [],
     };
@@ -182,7 +181,7 @@ function Traits() {
   ///////// UPDATE & POST OPTIONS SECTION
   //// pokemon_traits TABLE SECTION
   function Pokemon_Traits_Table() {
-    // pokemon_id, bulk, cc, range, mobility, damage, damage_area, damage_consistency, playstyle, classification, special_attributes
+    // pokemon_id, bulk, cc, range, mobility, damage, damage_area, damage_consistency, play_style, classification, special_attributes
     return (
       <table className="admin-edit-table">
         <tr>
@@ -254,6 +253,7 @@ function Traits() {
                   );
                 }}
               >
+                <option value=""></option>
                 <option value="SingleTarget">Single Target</option>
                 <option value="SmallAOE">Small AOE</option>
                 <option value="MediumAOE">Medium AOE</option>
@@ -270,14 +270,15 @@ function Traits() {
             </td>
             <td>
               <select
-                value={row.playstyle}
+                value={row.play_style}
                 onChange={(e) => {
                   const newValue = e.target.value;
                   set_pokemon_traits_table_data(prev =>
-                    prev.map((r, i) => (i === idx ? { ...r, playstyle: newValue } : r))
+                    prev.map((r, i) => (i === idx ? { ...r, play_style: newValue } : r))
                   );
                 }}
               >
+                <option value=""></option>
                 <option value="Teamfight">Teamfight</option>
                 <option value="Dive">Dive</option>
                 <option value="Split Map">Split Map</option>
@@ -295,6 +296,7 @@ function Traits() {
                   );
                 }}
               >
+                <option value=""></option>
                 <option value="Artillery Mage">Artillery Mage</option>
                 <option value="Control Mage">Control Mage</option>
                 <option value="Bruiser">Bruiser</option>
@@ -464,11 +466,11 @@ function Traits() {
             </td>
             <td>
               <select
-                value={row.playstyle}
+                value={row.play_style}
                 onChange={(e) => {
                   const newValue = e.target.value;
                   set_new_trait_rows(prev =>
-                    prev.map((r, i) => (i === idx ? { ...r, playstyle: newValue } : r))
+                    prev.map((r, i) => (i === idx ? { ...r, play_style: newValue } : r))
                   );
                 }}
               >
