@@ -27,7 +27,7 @@ class Pokemon {
     // All information needed for draft pages (ids, names, classes, lanes, release date, pokedex number)
     async getAllCharacterDraftInformation(){
         return new Promise((resolve, reject) => {
-            this.db.query('SELECT pokemon_id, pokemon_name, pokemon_class, can_exp_share, can_top_lane_carry, can_jungle_carry, can_bottom_lane_carry, release_date, pokedex_number FROM playable_characters NATURAL JOIN pokemon_attributes ORDER BY pokedex_number', (err, res) => {
+            this.db.query('SELECT pokemon_id, pokemon_name, pokemon_class, can_exp_share, can_top_carry, can_jungle_carry, can_bottom_carry, best_lane, release_date, pokedex_number FROM playable_characters NATURAL JOIN pokemon_draft_information ORDER BY pokedex_number', (err, res) => {
                 if (err) {
                     console.error(err.message);
                     reject(err);
@@ -37,65 +37,6 @@ class Pokemon {
             });
         });
     } 
-
-    // Character Attributes By Name
-    async getIndividualCharacterAttributes(name){
-        return new Promise((resolve, reject) => {
-            this.db.query('select * from pokemon_attributes where pokemon_name = $1', [name], (err, res) => {
-                if (err) {
-                    console.error(err.message);
-                    reject(err);
-                } else {
-                    resolve(res.rows);
-                }
-            });
-        });
-    }
-
-    // All Character Attributes For All Pokemon
-    async getAllCharacterAttributes(){
-        return new Promise((resolve, reject) => {
-            this.db.query('select * from pokemon_attributes natural join playable_characters ORDER BY pokedex_number', (err, res) => {
-                if (err) {
-                    console.error(err.message);
-                    reject(err);
-                } else {
-                    resolve(res.rows);
-                }
-            });
-        });
-    }
-
-    // Update a single character attribute
-    async updateCharacterAttribute(pokemonId, column, value) {
-        // whitelist of valid column names to prevent SQL injection
-        const validColumns = new Set([
-          "early_game", "mid_game", "late_game", "mobility", "range", "bulk",
-          "damage", "damage_type", "damage_affect", "cc", "play_style",
-          "classification", "other_attr", "can_exp_share", "can_top_lane_carry",
-          "can_jungle_carry", "can_bottom_lane_carry", "best_lane",
-          "assumed_move_1", "assumed_move_2", "early_spike", "ult_level", "key_spike",
-          "laning_phase", "8_50_to_7_30", "7_30_to_6_30", "6_30_to_4", "4_to_end"
-        ]);
-      
-        if (!validColumns.has(column)) {
-          throw new Error(`Invalid column name: ${column}`);
-        }
-      
-        const sql = `UPDATE pokemon_attributes SET ${column} = $1 WHERE pokemon_id = $2`;
-      
-        return new Promise((resolve, reject) => {
-          this.db.query(sql, [value, pokemonId], (err, res) => {
-            if (err) {
-              console.error("SQL Error:", err.message);
-              reject(err);
-            } else {
-              resolve({ changes: res.rowCount, message: `Updated ${column} successfully` });
-            }
-          });
-        });
-      }
-      
 
     //// TIER LIST ////
 
@@ -159,20 +100,64 @@ class Pokemon {
         return tierList;
     }
 
-    //// INSIGHTS ////
-
-    async getAllInsights() {
+    // Update a single character trait
+    async updateInsights(pokemonId, data) {
+        const sql = `UPDATE pokemon_insights SET text = $1, match_title = $2, match_link = $3, good_teammates = $4 WHERE pokemon_id = $5`;
+      
         return new Promise((resolve, reject) => {
-          this.db.query('select * from pokemon_insights', (err, res) => {
+          this.db.query(sql, [data.text, data.match_title, data.match_link, data.good_teammates, pokemonId], (err, res) => {
             if (err) {
-              console.error(err.message);
+              console.error("SQL Error:", err.message);
               reject(err);
             } else {
-              resolve(res.rows);
+              resolve({ changes: res.rowCount, message: `Updated successfully` });
             }
           });
         });
+      }
+
+    // All Character Traits For All Pokemon
+    async getAllCharacterTraits(){
+        return new Promise((resolve, reject) => {
+            this.db.query('select * from pokemon_traits natural join playable_characters natural join pokemon_insights ORDER BY pokedex_number', (err, res) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                } else {
+                    resolve(res.rows);
+                }
+            });
+        });
     }
+
+    // Update a single character trait
+    async updateCharacterTrait(pokemonId, column, value) {
+        // whitelist of valid column names to prevent SQL injection
+        const validColumns = new Set([
+          'mobility', 'range', 'bulk', 'damage', 'damage_consistency', 'damage_area', 'cc',
+          ' play_style', 'classification', 'special_attributes', 'lvl_1', 'lvl_2', 'lvl_3',
+          'lvl_4', 'lvl_5', 'lvl_6', 'lvl_7', 'lvl_8', 'lvl_9', 'lvl_10', 'lvl_11', 'lvl_12', 
+          'lvl_13', 'lvl_14', 'lvl_15'
+        ]);
+      
+        if (!validColumns.has(column)) {
+          throw new Error(`Invalid column name: ${column}`);
+        }
+      
+        const sql = `UPDATE pokemon_traits SET ${column} = $1 WHERE pokemon_id = $2`;
+      
+        return new Promise((resolve, reject) => {
+          this.db.query(sql, [value, pokemonId], (err, res) => {
+            if (err) {
+              console.error("SQL Error:", err.message);
+              reject(err);
+            } else {
+              resolve({ changes: res.rowCount, message: `Updated ${column} successfully` });
+            }
+          });
+        });
+      }
+
 
 }
     

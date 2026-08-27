@@ -28,16 +28,16 @@ const DraftFiltering = ({ pokemonList, updateFilteredList, updatePokemonList }) 
         }
 
         function filterByLane(pokemon){
-            if (laneFilters.includes("top") && pokemon.can_top_lane_carry==="No"){
+            if (laneFilters.includes("top") && pokemon.can_top_carry===false){
                 return false;
             }
-            if (laneFilters.includes("jungle") && pokemon.can_jungle_carry==="No"){
+            if (laneFilters.includes("jungle") && pokemon.can_jungle_carry===false){
                 return false;
             }
-            if (laneFilters.includes("bot") && pokemon.can_bottom_lane_carry==="No"){
+            if (laneFilters.includes("bot") && pokemon.can_bottom_carry===false){
                 return false;
             }
-            if (laneFilters.includes("EXPShare") && pokemon.can_exp_share==="No"){
+            if (laneFilters.includes("EXPShare") && pokemon.can_exp_share===false){
                 return false;
             }
             return true;

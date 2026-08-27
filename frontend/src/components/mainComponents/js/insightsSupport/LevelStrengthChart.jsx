@@ -1,25 +1,4 @@
-import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Dot } from 'recharts';
-
-const mockData = {
-    levelStrength: [
-        {level: 1, relative_power: 3, explanation: "Bulbasaur has relatively few tools at low levels. His damage is low and inconsistent. He has little secure."}, 
-        {level: 2, relative_power: 3, explanation: null}, 
-        {level: 3, relative_power: 3, explanation: null}, 
-        {level: 4, relative_power: 2, explanation: null}, 
-        {level: 5, relative_power: 4, explanation: "Sludge bomb / Giga drain are strong but not game changing on their own."}, 
-        {level: 6, relative_power: 4, explanation: null}, 
-        {level: 7, relative_power: 7, explanation: "Solarbeam / Petal Blizzard are genuinely game changing and give Venu insane poke or brawling capabilities."}, 
-        {level: 8, relative_power: 6, explanation: null}, 
-        {level: 9, relative_power: 8, explanation: "Venu's ult does a lot of damage but also gives him every stat he wants for either moveset. His ult is a massive spike, especially if running amp."}, 
-        {level: 10, relative_power: 7, explanation: null}, 
-        {level: 11, relative_power: 7, explanation: "Giga Drain+ / Sludge Bomb+ are not overly impactful."}, 
-        {level: 12, relative_power: 6, explanation: null}, 
-        {level: 13, relative_power: 8, explanation: "Petal Blizzard+ / Solarbeam+ are Venu's greatest spike. If your Venu is 13 at 2:00 you are in a good spot."}, 
-        {level: 14, relative_power: 8, explanation: null}, 
-        {level: 15, relative_power: 8, explanation: null}
-    ],
-};
 
 // Custom dot: bigger + highlighted ring for points that have an explanation, small plain dot otherwise
 function CustomDot(props) {
@@ -65,7 +44,10 @@ function CustomTooltip({ active, payload }) {
     );
 }
 
-export default function LevelStrengthChart() {
+export default function LevelStrengthChart({data}) {
+    if (!data || !data[0].level) {
+        return <></>
+    }
     return (
         <div style={{ width: '100%', height: 420, background: '#111', padding: 20, boxSizing: 'border-box' }}>
             <div style={{ color: '#fff', fontSize: 16, fontWeight: 700, marginBottom: 4 }}>
@@ -75,7 +57,7 @@ export default function LevelStrengthChart() {
                 Hover a highlighted point for details
             </div>
             <ResponsiveContainer width="100%" height="85%">
-                <LineChart data={mockData.levelStrength} margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
+                <LineChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
                     <CartesianGrid stroke="#2a2a2a" strokeDasharray="3 3" />
                     <XAxis
                         dataKey="level"

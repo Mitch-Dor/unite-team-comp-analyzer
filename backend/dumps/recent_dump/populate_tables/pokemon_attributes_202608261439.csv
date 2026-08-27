@@ -89,3 +89,13 @@
 89,Strong,Strong,Medium,None,High,Low,High,Burst,MediumAOE,None,Poke,BurstMage,None,Yes,No,Yes,Yes,BottomCarry,Thunderbolt,ZapCannon,3,9,7,7,10,9,7,7
 90,Strong,Strong,Medium,Medium,Low,Medium,High,Consistent,SmallAOE,None,SplitMap,Bruiser,None,No,Yes,Yes,No,JungleCarry,HeatWave,SkyAttack,5,9,5,8,6,7,9,7
 85,Strong,Medium,Weak,Low,Medium,Low,Medium,Burst,SmallAOE,None,Teamfight,UtilityMage,None,No,No,No,Yes,EXPShareBot,DragonPulse,MistBall,5,8,7,6,4,5,6,5
+91,Strong,Medium,Medium,None,Low,High,Low,Consistent,MediumAOE,Medium,Teamfight,CCTank,SpaceControl,Yes,No,No,No,EXPShareBot,Blizzard,IceBeam,5,9,7,6,8,10,7,5
+92,Weak,Medium,Strong,Low,Medium,Medium,High,Consistent,MediumAOE,None,Teamfight,BurstMage,None,No,No,No,Yes,BottomCarry,FlameWheel,Eruption,5,9,7,8,4,5,8,8
+93,Medium,Strong,Medium,Medium,Low,Medium,High,Consistent,SingleTarget,Low,SplitMap,Bruiser,PickFinding,No,Yes,Yes,No,TopCarry,Crunch,Waterfall,5,9,7,7,6,7,9,7
+94,Strong,Strong,Medium,Low,Medium,Medium,Medium,Burst,MediumAOE,Low,Teamfight,Healer,None,Yes,No,No,No,EXPShareTop,Grass Knot,Petal Blizzard,5,7,7,6,9,8,7,6
+95,Medium,Strong,Strong,None,Medium,Low,High,Burst,MediumAOE,Low,Teamfight,BurstMage,None,No,No,Yes,Yes,BottomCarry,Hyper Voice,Snarl,5,9,5,7,7,9,7,7
+96,Medium,Strong,Medium,High,Low,Medium,High,Consistent,SmallAOE,Low,SplitMap,Bruiser,None,No,Yes,Yes,No,TopCarry,Low Sweep,Liquidation,5,9,7,7,7,9,8,6
+97,Strong,Strong,Medium,None,Medium,Low,High,Burst,MediumAOE,None,Teamfight,BurstMage,None,No,No,Yes,Yes,BottomCarry,Oblivion Wing,Dark Pulse,5,9,5,7,8,10,7,7
+98,Medium,Strong,Medium,High,Low,Medium,Medium,Burst,SmallAOE,Low,SplitMap,Assassin,None,No,Yes,No,No,TopCarry,Aura Sphere,Dragon Claw,5,9,7,7,7,6,8,7
+99,Strong,Strong,Medium,Medium,Medium,Low,High,Burst,SmallAOE,None,Teamfight,ADC,None,No,No,No,Yes,BottomCarry,Dragon Dance,Blue Flare,5,9,7,8,7,8,9,7
+100,Weak,Weak,Strong,Medium,Low,Medium,Medium,Burst,SmallAOE,None,SplitMap,Bruiser,None,No,Yes,No,No,TopCarry,Iron Head,Psyshock,7,7,7,8,3,2,2,8

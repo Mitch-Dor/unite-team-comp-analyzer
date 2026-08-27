@@ -109,17 +109,9 @@ app.get('/ping', (req, res) => {
   res.json({message: 'Pong'});
 });
 
-// Socket.IO connection handler
-require('./socket/socketManager')(io);
-
 // Routes - load AFTER all middleware is set up
-require('./routes/ai.js')(app, middleware, database);
 require('./routes/auth.js')(app, middleware, database, passport, process.env.NODE_ENV, process.env.HEROKU_APP_URL);
-require('./routes/comps.js')(app, middleware, database);
-require('./routes/draftRoom.js')(app, middleware, database, io);
 require('./routes/pokemon.js')(app, middleware, database);
-require('./routes/proLeague.js')(app, middleware, database);
-require('./routes/stats.js')(app, middleware, database);
 
 // Serve the frontend build
 if (process.env.NODE_ENV === 'production') {

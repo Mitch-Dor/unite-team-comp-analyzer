@@ -22,36 +22,6 @@ module.exports = function (app, middleware, database) {
         });
     });
 
-    app.get('/GETallCharacterAttributes', (req, res) => {
-        database.pokemon.getAllCharacterAttributes().then(data => {
-            res.json(data);
-        })
-        .catch(error => {
-            console.error('Error fetching character attributes:', error);
-            res.sendStatus(401);
-        });
-    });
-
-    app.put('/GETsingleCharacterAttributes', (req, res) => {
-        database.pokemon.getIndividualCharacterAttributes(req.body.name).then(data => {
-            res.json(data);
-        }) 
-        .catch(error => {
-            console.error('Error fetching character attributes:', error);
-            res.sendStatus(401);
-        });
-    });
-
-    app.put('/PUTCharacterAttribute', middleware.adminAuth, (req, res) => {
-        database.pokemon.updateCharacterAttribute(req.body.pokemonId, req.body.column, req.body.value).then(data => {
-            res.json(data);
-        })
-        .catch(error => {
-            console.error('Error updating character Attributes:', error);
-            res.sendStatus(401);
-        });
-    });
-
     //// TIER LIST ////
 
     app.get('/GETtierList', (req, res) => {
@@ -74,14 +44,32 @@ module.exports = function (app, middleware, database) {
         });
     });
 
-    //// INSIGHTS ////
-
-    app.get('/GETallInsights', (req, res) => {
-        database.pokemon.getAllInsights().then(data => {
+    app.put('/PUTallInsights', (req, res) => {
+        database.pokemon.updateInsights(req.body.pokemon_id, req.body.data).then(data => {
             res.json(data);
         })
         .catch(error => {
             console.error('Error fetching insights:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.get('/GETallCharacterTraits', (req, res) => {
+        database.pokemon.getAllCharacterTraits().then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error fetching character traits:', error);
+            res.sendStatus(401);
+        });
+    });
+
+    app.put('/PUTCharacterTrait', middleware.adminAuth, (req, res) => {
+        database.pokemon.updateCharacterTrait(req.body.pokemonId, req.body.column, req.body.value).then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error updating character trait:', error);
             res.sendStatus(401);
         });
     });

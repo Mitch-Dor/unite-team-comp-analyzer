@@ -25,26 +25,10 @@ pool.connect((err, client, release) => {
     }
 });
 
-const AI = require('./database/ai');
-const ai = new AI(pool);
-exports.ai = ai;
-
 const Auth = require('./database/auth');
 const auth = new Auth(pool);
 exports.auth = auth;
 
-const Comps = require('./database/comps');
-const comps = new Comps(pool);
-exports.comps = comps;
-
 const Pokemon = require('./database/pokemon');
 const pokemon = new Pokemon(pool);
 exports.pokemon = pokemon;
-
-const ProLeague = require('./database/proLeague');
-const proLeague = new ProLeague(pool);
-exports.proLeague = proLeague;
-
-const Stats = require('./database/stats');
-const stats = new Stats(pool);
-exports.stats = stats;
