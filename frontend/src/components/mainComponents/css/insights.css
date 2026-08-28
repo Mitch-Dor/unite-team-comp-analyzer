@@ -30,6 +30,7 @@
 
 #insights-pokemon-select-container {
     width: 100%;
+    max-height: 20%;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -38,7 +39,15 @@
     padding: 10px;
     box-sizing: border-box;
     position: relative;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
+
+#insights-pokemon-select-container::-webkit-scrollbar {
+    display: none;
+}
+
 
 .insights-pokemon-select {
     height: 50px;
@@ -162,36 +171,33 @@
 }
 
 @media (max-width: 720px) {
-    #insights-main-container {
-        font-size: 12px;
-    }
-
+    
     .insights-pokemon-select {
-        height: calc(10% - 2px);
+        width: 20px;
+        height: 20px;
     }
 
     .insights-data-container {
-        flex-wrap: wrap;
+        font-size: 10px;
     }
 
-    .insights-data-note {
-        width: 90%;
-        height: 50%;
+    .insights-notes-text { 
+        font-size: 0.7em;
+        overflow-y: scroll;
     }
 
-    .insights-data-pokemon-image {
-        height: calc(40% - 20px);
-        width: calc(50% - 20px);
-        padding: 10px;
+    .insights-characterIcon, .insights-characterMoveIcon {
+        width: 10px !important; 
+        height: 10px !important;
     }
 
-    .insights-data-example-match { 
-        height: 40%;
-        width: 40%;
+    .insights-characterIcon img, .insights-characterMoveIcon img {
+        width: 10px !important; 
+        height: 10px !important;
     }
 
-    .insights-data-example-match .insights-data-title {
-        font-size: 1em;
+    .best-partner-description {
+        width: 50px !important;
     }
 
 }
