@@ -53,70 +53,7 @@ class Pokemon {
         });
     }
 
-    async insertTierListEntry(tierName, pokemonId) {
-        // In one transaction, delete the entry containing the pokemon_id, then insert the new entry
-        return new Promise((resolve, reject) => {
-          this.db.query('BEGIN TRANSACTION');
-          this.db.query('DELETE FROM tier_list WHERE pokemon_id = $1', [pokemonId], (err) => {
-            if (err) {
-              reject(err);
-              return;
-            }
-            
-            const sql = 'INSERT INTO tier_list (tier_name, pokemon_id) VALUES ($1, $2)';
-            this.db.query(sql, [tierName, pokemonId], (err) => {
-              if (err) { 
-                reject(err);
-              } else {
-                this.db.query('COMMIT', (err) => {
-                  if (err) {
-                    reject(err);
-                  } else {
-                    resolve();
-                  }
-                });
-              }
-            });
-          });
-        });
-    }
-
-    async formatTierList() {
-        // Get the tier list data
-        const tierListData = await this.getAllTierListEntries();
-        
-        // Format the tier list data
-        // Should be an object with tier names "S" through "F" as keys, and an array of pokemon ids as values
-        const tierList = {};
-        tierListData.forEach(row => {
-            const tierName = row.tier_name;
-            const pokemonId = row.pokemon_id;
-            if (!tierList[tierName]) {
-                tierList[tierName] = [];
-            }
-            tierList[tierName].push(pokemonId);
-        });
-  
-        return tierList;
-    }
-
     //// INSIGHTS ////
-
-    // Update a single character trait
-    async updateInsights(pokemonId, data) {
-        const sql = `UPDATE pokemon_insights SET text = $1, match_title = $2, match_link = $3, good_teammates = $4 WHERE pokemon_id = $5`;
-      
-        return new Promise((resolve, reject) => {
-          this.db.query(sql, [data.text, data.match_title, data.match_link, data.good_teammates, pokemonId], (err, res) => {
-            if (err) {
-              console.error("SQL Error:", err.message);
-              reject(err);
-            } else {
-              resolve({ changes: res.rowCount, message: `Updated successfully` });
-            }
-          });
-        });
-      }
 
     // All Character Traits For All Pokemon
     async getAllCharacterTraits(){
@@ -131,34 +68,6 @@ class Pokemon {
             });
         });
     }
-
-    // Update a single character trait
-    async updateCharacterTrait(pokemonId, column, value) {
-        // whitelist of valid column names to prevent SQL injection
-        const validColumns = new Set([
-          'mobility', 'range', 'bulk', 'damage', 'damage_consistency', 'damage_area', 'cc',
-          ' play_style', 'classification', 'special_attributes', 'lvl_1', 'lvl_2', 'lvl_3',
-          'lvl_4', 'lvl_5', 'lvl_6', 'lvl_7', 'lvl_8', 'lvl_9', 'lvl_10', 'lvl_11', 'lvl_12', 
-          'lvl_13', 'lvl_14', 'lvl_15'
-        ]);
-      
-        if (!validColumns.has(column)) {
-          throw new Error(`Invalid column name: ${column}`);
-        }
-      
-        const sql = `UPDATE pokemon_traits SET ${column} = $1 WHERE pokemon_id = $2`;
-      
-        return new Promise((resolve, reject) => {
-          this.db.query(sql, [value, pokemonId], (err, res) => {
-            if (err) {
-              console.error("SQL Error:", err.message);
-              reject(err);
-            } else {
-              resolve({ changes: res.rowCount, message: `Updated ${column} successfully` });
-            }
-          });
-        });
-      }
 
       //// DIRECT TABLE FETCHING (ADMIN)
 
@@ -209,6 +118,205 @@ class Pokemon {
                     reject(err);
                 } else {
                     resolve(res.rows);
+                }
+            });
+        });
+    }
+
+    // Update a row on pokemon_traits table
+    async updateTraitsRow(row) {
+        const sql = `UPDATE pokemon_traits SET bulk = $1, range = $2, mobility = $3, cc = $4, damage = $5, damage_area = $6, damage_consistency = $7, play_style = $8, classification = $9, special_attributes = $10 WHERE pokemon_id = $11`;
+      
+        return new Promise((resolve, reject) => {
+          this.db.query(sql, [row.bulk, row.range, row.mobility, row.cc, row.damage, row.damage_area, row.damage_consistency, row.play_style, row.classification, row.special_attributes, row.pokemon_id], (err, res) => {
+            if (err) {
+              console.error("SQL Error:", err.message);
+              reject(err);
+            } else {
+              resolve({ changes: res.rowCount, message: `Updated successfully` });
+            }
+          });
+        });
+    }
+
+    // Update strength_level column on pokemon_traits table
+    async updateTraitsStrengthLevel(column) {
+        const sql = `UPDATE pokemon_traits SET level_strength = $1 WHERE pokemon_id = $2`;
+      
+        return new Promise((resolve, reject) => {
+          this.db.query(sql, [column.level_strength, column.pokemon_id], (err, res) => {
+            if (err) {
+              console.error("SQL Error:", err.message);
+              reject(err);
+            } else {
+              resolve({ changes: res.rowCount, message: `Updated successfully` });
+            }
+          });
+        });
+    }
+
+    // Update a row on pokemon_insights table
+    async updateInsightsRow(row) {
+        const sql = `UPDATE pokemon_insights SET text = $1, match_title = $2, match_link = $3, good_teammates = $4 WHERE pokemon_id = $5`;
+      
+        return new Promise((resolve, reject) => {
+          this.db.query(sql, [row.text, row.match_title, row.match_link, row.good_teammates, row.pokemon_id], (err, res) => {
+            if (err) {
+              console.error("SQL Error:", err.message);
+              reject(err);
+            } else {
+              resolve({ changes: res.rowCount, message: `Updated successfully` });
+            }
+          });
+        });
+    }
+
+    // Update a row on pokemon_draft_information table
+    async updateDraftInfoRow(row) {
+        const sql = `UPDATE pokemon_draft_information SET can_exp_share = $1, can_top_carry = $2, can_jungle_carry = $3, can_bottom_carry = $4, best_lane = $5 WHERE pokemon_id = $6`;
+      
+        return new Promise((resolve, reject) => {
+          this.db.query(sql, [row.can_exp_share, row.can_top_carry, row.can_jungle_carry, row.can_bottom_carry, row.best_lane, row.pokemon_id], (err, res) => {
+            if (err) {
+              console.error("SQL Error:", err.message);
+              reject(err);
+            } else {
+              resolve({ changes: res.rowCount, message: `Updated successfully` });
+            }
+          });
+        });
+    }
+
+    // Update a row on tier_list table
+    async updateTierListRow(row) {
+        const sql = `UPDATE tier_list SET tier_name = $1 WHERE pokemon_id = $2`;
+      
+        return new Promise((resolve, reject) => {
+          this.db.query(sql, [row.tier_name, row.pokemon_id], (err, res) => {
+            if (err) {
+              console.error("SQL Error:", err.message);
+              reject(err);
+            } else {
+              resolve({ changes: res.rowCount, message: `Updated successfully` });
+            }
+          });
+        });
+    }
+
+    // Insert a row into pokemon_traits table
+    async insertTraitsRow(row) {
+        const sql = `
+        INSERT INTO pokemon_traits
+            (pokemon_id, bulk, range, mobility, cc, damage, damage_area, damage_consistency, play_style, classification, special_attributes, level_strength)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        `;
+
+        return new Promise((resolve, reject) => {
+            this.db.query(sql, [row.pokemon_id, row.bulk, row.range, row.mobility, row.cc, row.damage, row.damage_area, row.damage_consistency, row.play_style, row.classification, row.special_attributes, row.level_strength], (err, res) => {
+                if (err) {
+                    console.error("SQL Error:", err.message);
+                    reject(err);
+                } else {
+                    resolve({ changes: res.rowCount, message: `Inserted successfully` });
+                }
+            });
+        });
+    }
+
+    // Insert a row into pokemon_insights table
+    async insertInsightsRow(row) {
+        const sql = `
+        INSERT INTO pokemon_insights 
+            (pokemon_id, text, match_title, match_link, good_teammates)
+        VALUES ($1, $2, $3, $4, $5)
+        `;
+      
+        return new Promise((resolve, reject) => {
+          this.db.query(sql, [row.pokemon_id, row.text, row.match_title, row.match_link, row.good_teammates], (err, res) => {
+            if (err) {
+              console.error("SQL Error:", err.message);
+              reject(err);
+            } else {
+              resolve({ changes: res.rowCount, message: `Inserted successfully` });
+            }
+          });
+        });
+    }
+
+    // Insert a row into pokemon_draft_information table
+    async insertDraftInfoRow(row) {
+        const sql = `
+        INSERT INTO pokemon_draft_information
+            (pokemon_id, can_exp_share, can_top_carry, can_jungle_carry, can_bottom_carry, best_lane)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+
+        return new Promise((resolve, reject) => {
+            this.db.query(sql, [row.pokemon_id, row.can_exp_share, row.can_top_carry, row.can_jungle_carry, row.can_bottom_carry, row.best_lane], (err, res) => {
+                if (err) {
+                    console.error("SQL Error:", err.message);
+                    reject(err);
+                } else {
+                    resolve({ changes: res.rowCount, message: `Inserted successfully` });
+                }
+            });
+        });
+    }
+
+    // Insert a row into tier_list table
+    async insertTierListRow(row) {
+        const sql = `
+        INSERT INTO tier_list (pokemon_id, tier_name)
+        VALUES ($1, $2)
+        `;
+
+        return new Promise((resolve, reject) => {
+            this.db.query(sql, [row.pokemon_id, row.tier_name], (err, res) => {
+                if (err) {
+                    console.error("SQL Error:", err.message);
+                    reject(err);
+                } else {
+                    resolve({ changes: res.rowCount, message: `Inserted successfully` });
+                }
+            });
+        });
+    }
+
+    // Insert a row into playable_characters table
+    async insertCharacterRow(row) {
+        const sql = `
+        INSERT INTO playable_characters (pokemon_name, pokemon_class, pokedex_number, release_date)
+        VALUES ($1, $2, $3, $4)
+        RETURNING pokemon_id
+        `;
+
+        return new Promise((resolve, reject) => {
+            this.db.query(sql, [row.pokemon_name, row.pokemon_class, row.pokedex_number, row.release_date], (err, res) => {
+                if (err) {
+                    console.error("SQL Error:", err.message);
+                    reject(err);
+                } else {
+                    resolve({ changes: res.rowCount, pokemon_id: res.rows[0]?.pokemon_id, message: `Inserted successfully` });
+                }
+            });
+        });
+    }
+
+    // Insert a row into pokemon_moves table
+    async insertMoveRow(row) {
+        const sql = `
+        INSERT INTO pokemon_moves (move_name, pokemon_id, move_position)
+        VALUES ($1, $2, $3)
+        RETURNING move_id
+        `;
+
+        return new Promise((resolve, reject) => {
+            this.db.query(sql, [row.move_name, row.pokemon_id, row.move_position], (err, res) => {
+                if (err) {
+                    console.error("SQL Error:", err.message);
+                    reject(err);
+                } else {
+                    resolve({ changes: res.rowCount, move_id: res.rows[0]?.move_id, message: `Inserted successfully` });
                 }
             });
         });

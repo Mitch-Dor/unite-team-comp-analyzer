@@ -3,7 +3,7 @@ module.exports = function (app, middleware, database, passport, node_env, app_ur
     //// OAUTH ////
 
     const frontendUrl = node_env === 'production' 
-        ? app_url : 'http://localhost:3000';
+        ? (app_url + "/admin") : 'http://localhost:3000/admin';
 
     app.get('/auth/google', passport.authenticate('google', {
         scope: ['profile', 'email']

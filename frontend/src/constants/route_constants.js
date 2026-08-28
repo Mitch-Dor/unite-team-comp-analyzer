@@ -12,7 +12,6 @@ export const routes = {
 
     //// TIER LIST ROUTES ////
     GET_TIER_LIST: `${getBaseUrl()}/GETtierList`,
-    POST_TIER_LIST_ENTRY: `${getBaseUrl()}/POSTtierListEntry`,
 
     //// USER PERMISSIONS ROUTES ////
     GET_IS_VERIFIED_USER: `${getBaseUrl()}/GETisVerifiedUser`,
@@ -23,11 +22,23 @@ export const routes = {
 
     //// TRAITS ROUTES ////
     GET_ALL_TRAITS: `${getBaseUrl()}/GETallCharacterTraits`,
-    PUT_CHARACTER_TRAIT: `${getBaseUrl()}/PUTCharacterTrait`,
 
     //// ADMIN ROUTES ////
     GET_TABLE_DRAFT_INFORMATION: `${getBaseUrl()}/GETtableDraftInformation`,
     GET_TABLE_INSIGHTS: `${getBaseUrl()}/GETtableInsights`,
     GET_TABLE_TRAITS: `${getBaseUrl()}/GETtableTraits`,
     GET_ID_NAME_MAPPING: `${getBaseUrl()}/GETIDNameMapping`,
+    // Update (PUT)
+    UPDATE_TRAITS_TABLE_ROW: `${getBaseUrl()}/PUTTraitsTableRow`,
+    UPDATE_STRENGTH_LEVEL: `${getBaseUrl()}/PUTStrengthLevel`,
+    UPDATE_INSIGHTS_TABLE_ROW: `${getBaseUrl()}/PUTInsightsTableRow`,
+    UPDATE_DRAFT_INFO_TABLE_ROW: `${getBaseUrl()}/PUTDraftInfoTableRow`,
+    UPDATE_TIER_LIST_TABLE_ROW: `${getBaseUrl()}/PUTTierListTableRow`,
+    // Create (POST)
+    POST_TRAITS_TABLE_ROW: `${getBaseUrl()}/POSTTraitsTableRow`,
+    POST_INSIGHTS_TABLE_ROW: `${getBaseUrl()}/POSTInsightsTableRow`,
+    POST_DRAFT_INFO_TABLE_ROW: `${getBaseUrl()}/POSTDraftInfoTableRow`,
+    POST_TIER_LIST_TABLE_ROW: `${getBaseUrl()}/POSTTierListTableRow`,
+    POST_CHARACTER_TABLE_ROW: `${getBaseUrl()}/POSTCharacterTableRow`,
+    POST_MOVE_TABLE_ROW: `${getBaseUrl()}/POSTMoveTableRow`,
 };

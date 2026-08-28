@@ -2,26 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/main.css';
 import '../css/base.css';
-import Login from '../../sideComponents/js/Login';
 import Information from '../../sideComponents/js/Information';
-import { isAdmin } from './common/http.js';
 
 
 function Main() {
   const [hoveredButton, setHoveredButton] = useState(null);
-  const [user, setUser] = useState(null);
-  const [admin, setAdmin] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    async function checkAdmin() {
-      if (user) {
-        const admin = await isAdmin();
-        setAdmin(admin);
-      }
-    }
-    checkAdmin();
-  }, [user]);
 
   function chooseBackgrounds(){
     let rand = Math.floor(Math.random() * 5); // 5 Possible backgrounds
@@ -65,7 +51,6 @@ function Main() {
         <div id="scrollingBackground"/>
         <div id="main-top-buttons-container">
             <div id="main-info-button"><Information /></div>
-            <Login setUser={setUser} />
         </div>
         <div id="main-title-container"></div>
         <div id="main-directory-buttons-container">
@@ -73,9 +58,6 @@ function Main() {
                 <button id="DraftSandbox-DirectoryButton" className="main-directory-button" onMouseEnter={() => {setHoveredButton("sandboxDraft")}} onMouseLeave={() => {setHoveredButton(null)}} onClick={() => navigate('/draft-sandbox')}>Draft Sandbox</button>
                 <button id="tierList-DirectoryButton" className="main-directory-button" onMouseEnter={() => {setHoveredButton("tierList")}} onMouseLeave={() => {setHoveredButton(null)}} onClick={() => navigate('/tier-list')}>Tier List</button>
                 <button id="compScoreBTN-DirectoryButton" className="main-directory-button" onMouseEnter={() => {setHoveredButton("insights")}} onMouseLeave={() => {setHoveredButton(null)}} onClick={() => navigate('/insights')}>Insights</button>
-                {admin && (
-                  <button id="traits" className="main-core-component-button main-directory-button" onClick={() => navigate('/traits', {state: {user: user}})}>Traits</button>
-                )}
         </div>
         <div id="preview-container" className={hoveredButton !== null ? hoveredButton.includes("Draft") ? "purple" : "orange" : ""}>
           <svg width="0" height="0" style={{ position: 'absolute' }}>

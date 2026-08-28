@@ -43,28 +43,6 @@ export async function fetchAllTierListEntries() {
     return tierListDataJson;
 }
 
-/* Function to insert a tier list entry */
-export async function insertTierListEntry(tierName, pokemonId, googleId) {
-    const response = await fetch(routes.POST_TIER_LIST_ENTRY, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            tierName: tierName,
-            pokemonId: pokemonId,
-            googleId: googleId
-        })
-    }); 
-    
-    // Just check if status is 200, no need to parse response
-    if (response.status === 200) {
-        return true;
-    }
-    throw new Error('Failed to update tier list entry');
-}
-
 //// USER PERMISSIONS ROUTES ////
 
 /* Function to check if a user is verified */
@@ -109,24 +87,6 @@ export async function fetchAllCharacterTraits() {
         headers: {
             'Content-Type': 'application/json',
         },
-    });
-    const characterTraitDataJson = await characterTraitData.json();
-    return characterTraitDataJson;
-}
-
-/* Function to update a single trait on a character */
-export async function updateCharacterTrait(pokemonId, column, value) {
-    const characterTraitData = await fetch(routes.PUT_CHARACTER_TRAIT, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            pokemonId: pokemonId,
-            column: column,
-            value: value
-        })
     });
     const characterTraitDataJson = await characterTraitData.json();
     return characterTraitDataJson;
@@ -181,3 +141,182 @@ export async function fetchIDNameMapping() {
     const mapDataJson = await mapData.json();
     return mapDataJson;
 }
+
+/* Function to update a single row on a pokemon_traits table */
+export async function updateTraitsTableRow(row) {
+    const successData = await fetch(routes.UPDATE_TRAITS_TABLE_ROW, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+/* Function to update a level_strength column on pokemon_traits table */
+export async function updateLevelStrengthColumn(column) {
+    const successData = await fetch(routes.UPDATE_STRENGTH_LEVEL, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            column: column
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+
+/* Function to update a single row on a pokemon_insights table */
+export async function updateInsightsTableRow(row) {
+    const successData = await fetch(routes.UPDATE_INSIGHTS_TABLE_ROW, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+/* Function to update a single row on pokemon_draft_information table */
+export async function updateDraftInfoTableRow(row) {
+    const successData = await fetch(routes.UPDATE_DRAFT_INFO_TABLE_ROW, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+/* Function to update a single row on tier_list table */
+export async function updateTierListTableRow(row) {
+    const successData = await fetch(routes.UPDATE_TIER_LIST_TABLE_ROW, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+/* Function to post a new row to pokemon_traits table */
+export async function postTraitsTableRow(row) {
+    const successData = await fetch(routes.POST_TRAITS_TABLE_ROW, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+/* Function to post a new row to pokemon_insights table */
+export async function postInsightsTableRow(row) {
+    const successData = await fetch(routes.POST_INSIGHTS_TABLE_ROW, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+
+/* Function to post a new row to pokemon_draft_information table */
+export async function postDraftInfoTableRow(row) {
+    const successData = await fetch(routes.POST_DRAFT_INFO_TABLE_ROW, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+/* Function to post a new row to tier_list table */
+export async function postTierListTableRow(row) {
+    const successData = await fetch(routes.POST_TIER_LIST_TABLE_ROW, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+/* Function to post a new row to playable_characters table */
+export async function postCharacterTableRow(row) {
+    const successData = await fetch(routes.POST_CHARACTER_TABLE_ROW, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
+/* Function to post a new row to pokemon_moves table */
+export async function postMoveTableRow(row) {
+    const successData = await fetch(routes.POST_MOVE_TABLE_ROW, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            row: row
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
