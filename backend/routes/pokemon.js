@@ -138,6 +138,16 @@ module.exports = function (app, middleware, database) {
         });
     });
 
+    app.put('/PUTTierListWholeTable', middleware.adminAuth, (req, res) => {
+        database.pokemon.updateTierListTable(req.body.table).then(data => {
+            res.json(data);
+        })
+        .catch(error => {
+            console.error('Error updating tier list:', error);
+            res.sendStatus(401);
+        });
+    });
+
     app.post('/POSTTraitsTableRow', middleware.adminAuth, (req, res) => {
         database.pokemon.insertTraitsRow(req.body.row).then(() => {
             res.sendStatus(200);

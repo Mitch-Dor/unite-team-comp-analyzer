@@ -223,6 +223,22 @@ export async function updateTierListTableRow(row) {
     return successDataJson;
 }
 
+/* Function to update the entire tier_list table */
+export async function updateTierListWholeTable(table) {
+    const successData = await fetch(routes.UPDATE_TIER_LIST_WHOLE_TABLE, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            table: table
+        })
+    });
+    const successDataJson = await successData.json();
+    return successDataJson;
+}
+
 /* Function to post a new row to pokemon_traits table */
 export async function postTraitsTableRow(row) {
     const successData = await fetch(routes.POST_TRAITS_TABLE_ROW, {

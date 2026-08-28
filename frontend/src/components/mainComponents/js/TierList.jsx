@@ -6,7 +6,7 @@ import Home from '../../sideComponents/js/Home.jsx';
 import { getCharactersMovesDictionary } from './common/common.js';
 import TileBackground from '../../../components/UTA_Components/helper_components/TileBackground.jsx';
 
-function TierList() {
+function TierList({ setAdminData }) {
   const [pokemonList, updatePokemonList] = useState([]);
   const [pokemonToMoves, setPokemonToMoves] = useState([]);
   const [items, setItems] = useState({
@@ -93,11 +93,17 @@ function TierList() {
         }))
       }));
     }
+    if (setAdminData) {
+      applyDefaultTiers();
+    }
   }, [pokemonList]);
 
   useEffect(() => {
     if (items && Object.values(items).some(arr => arr.length > 0)) {
       setLocalStorage('tierList', items);
+      if (setAdminData) {
+        setAdminData(items);
+      }
     }
   }, [items]);
 

@@ -193,3 +193,23 @@ tr.A {
 tr.S {
     background-color: blue;
 }
+
+#tier_list_visual_submit_button {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    z-index: 10000;
+    transform: translateX(-50%);
+    background-color: rgb(37, 75, 201);
+    color: white;
+    font-size: 20px;
+    box-sizing: border-box;
+    padding: 5px;
+    border: 1px solid white;
+}
+
+#admin-edit-section #tier-list-main-container {
+    width: 100%;
+    height: 100%;
+    position: relative;;
+}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../css/admin.css';
 import Login from "../../sideComponents/js/Login.jsx";
-import { fetchIDNameMapping, fetchTableDraftInformation, fetchTableInsights, fetchTableTraits, fetchAllTierListEntries, updateTraitsTableRow, updateLevelStrengthColumn, updateInsightsTableRow, updateDraftInfoTableRow, updateTierListTableRow, postTraitsTableRow, postInsightsTableRow, postDraftInfoTableRow, postTierListTableRow, postCharacterTableRow, postMoveTableRow, isAdmin } from './common/http.js';
+import TierList from "./TierList.jsx";
+import { fetchIDNameMapping, fetchTableDraftInformation, fetchTableInsights, fetchTableTraits, fetchAllTierListEntries, updateTraitsTableRow, updateLevelStrengthColumn, updateInsightsTableRow, updateDraftInfoTableRow, updateTierListTableRow, postTraitsTableRow, postInsightsTableRow, postDraftInfoTableRow, postTierListTableRow, postCharacterTableRow, postMoveTableRow, isAdmin, updateTierListWholeTable } from './common/http.js';
 
 ///////// BLANK ROW GENERATORS (used to seed "New" tables)
 function blankTraitRow() {
@@ -832,6 +833,17 @@ function Tier_List_Table({ tier_list_table_data, set_tier_list_table_data, id_na
   )
 }
 
+function Tier_List_Visual({ submitTierListVisual }) {
+  const [visual_tier_list_data, set_visual_tier_list_data] = useState([]);
+
+  return ( 
+    <>
+      < TierList setAdminData={set_visual_tier_list_data} />
+      <button id="tier_list_visual_submit_button" onClick={() => {submitTierListVisual(visual_tier_list_data)}}>Submit</button>
+    </>
+  );
+}
+
 function Tier_List_Table_New({ new_tier_rows, set_new_tier_rows, available_pokemon, postTierList }) {
   return (
     <table className="admin-edit-table">
@@ -1258,6 +1270,10 @@ function Traits() {
     updateTierListTableRow(row);
   }
 
+  function submitTierListVisual(table) {
+    updateTierListWholeTable(table);
+  }
+
   ///////// POST (NEW) FUNCTIONS - blank, fill in with API calls
   function postTraits(row) {
     postTraitsTableRow(row);
@@ -1374,12 +1390,13 @@ function Traits() {
           </>
         )}
         {current_state === "UPDATE_TIER_LIST" && (
-          <Tier_List_Table
-            tier_list_table_data={tier_list_table_data}
-            set_tier_list_table_data={set_tier_list_table_data}
-            id_name_mapping={id_name_mapping}
-            submitTierList={submitTierList}
-          />
+          // <Tier_List_Table
+          //   tier_list_table_data={tier_list_table_data}
+          //   set_tier_list_table_data={set_tier_list_table_data}
+          //   id_name_mapping={id_name_mapping}
+          //   submitTierList={submitTierList}
+          // />
+          < Tier_List_Visual submitTierListVisual={submitTierListVisual} />
         )}
         {current_state === "POST_TIER_LIST" && (
           <>

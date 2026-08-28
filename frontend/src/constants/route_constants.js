@@ -34,6 +34,7 @@ export const routes = {
     UPDATE_INSIGHTS_TABLE_ROW: `${getBaseUrl()}/PUTInsightsTableRow`,
     UPDATE_DRAFT_INFO_TABLE_ROW: `${getBaseUrl()}/PUTDraftInfoTableRow`,
     UPDATE_TIER_LIST_TABLE_ROW: `${getBaseUrl()}/PUTTierListTableRow`,
+    UPDATE_TIER_LIST_WHOLE_TABLE: `${getBaseUrl()}/PUTTierListWholeTable`,
     // Create (POST)
     POST_TRAITS_TABLE_ROW: `${getBaseUrl()}/POSTTraitsTableRow`,
     POST_INSIGHTS_TABLE_ROW: `${getBaseUrl()}/POSTInsightsTableRow`,

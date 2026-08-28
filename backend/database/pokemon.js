@@ -203,6 +203,45 @@ class Pokemon {
         });
     }
 
+    // Update entire tier_list table
+    async updateTierListTable(table) {
+        const sql = `
+        INSERT INTO tier_list (pokemon_id, tier_name)
+        VALUES ($1, $2)
+        ON CONFLICT (pokemon_id) DO UPDATE SET tier_name = EXCLUDED.tier_name
+        `;
+
+        const all_rows = Object.values(table).flat();
+
+        const results = await Promise.allSettled(
+        all_rows.map(row =>
+            new Promise((resolve, reject) => {
+            this.db.query(sql, [row.pokemon_id, row.tier], (err, res) => {
+                if (err) {
+                console.error("SQL Error:", err.message);
+                reject(err);
+                } else {
+                resolve({ pokemon_id: row.pokemon_id, changes: res.rowCount });
+                }
+            });
+            })
+        )
+        );
+
+        const failures = results
+        .map((r, i) => ({ result: r, pokemon_id: all_rows[i].pokemon_id }))
+        .filter(({ result }) => result.status === 'rejected');
+
+        return {
+        message: failures.length === 0
+            ? `Updated successfully (${results.length} rows)`
+            : `Updated with ${failures.length} failure(s)`,
+        total: results.length,
+        succeeded: results.length - failures.length,
+        failed: failures.map(f => f.pokemon_id),
+        };
+    }
+
     // Insert a row into pokemon_traits table
     async insertTraitsRow(row) {
         const sql = `
