@@ -48,6 +48,12 @@
     box-sizing: border-box;
     border: 10px solid rgb(33, 33, 33);
     overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.admin-edit-section::-webkit-scrollbar {
+    display: none;
 }
 
 .admin-edit-table {

@@ -40,3 +40,8 @@
     color: white;
     border: 2px solid rgb(26, 26, 26);
 }
+
+.UTA-Directory-Button.off {
+    filter: grayscale(0.7);
+    cursor: not-allowed;
+}

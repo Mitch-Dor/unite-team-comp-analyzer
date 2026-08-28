@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/main.css';
 import '../css/base.css';
 import Information from '../../sideComponents/js/Information';
 
+const PREVIEW_VIDEOS = {
+  singleDraft: '/assets/single-draft-preview.mp4',
+  sandboxDraft: '/assets/draft-sandbox-preview.mp4',
+  tierList: '/assets/tier-list-preview.mp4',
+  insights: '/assets/insights-preview.mp4',
+};
 
 function Main() {
   const [hoveredButton, setHoveredButton] = useState(null);
   const navigate = useNavigate();
+  const videoRef = useRef(null);
 
   function chooseBackgrounds(){
     let rand = Math.floor(Math.random() * 5); // 5 Possible backgrounds
@@ -45,6 +52,28 @@ function Main() {
     chooseBackgrounds(); // Choose the background on the component mounting
   }, []);
 
+  // Swap and play the correct preview video whenever the hovered button changes
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (hoveredButton && PREVIEW_VIDEOS[hoveredButton]) {
+      const src = PREVIEW_VIDEOS[hoveredButton];
+      // Avoid restarting the same video if it's already loaded
+      if (!video.currentSrc.endsWith(src)) {
+        video.src = src;
+        video.load();
+      }
+      video.play().catch((err) => {
+        console.error("Video playback failed:", err);
+      });
+    } else {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    }
+  }, [hoveredButton]);
+
   return (
     <div id="main-base-container">
         <div id="backgroundBlackCover"/>
@@ -60,6 +89,7 @@ function Main() {
                 <button id="compScoreBTN-DirectoryButton" className="main-directory-button" onMouseEnter={() => {setHoveredButton("insights")}} onMouseLeave={() => {setHoveredButton(null)}} onClick={() => navigate('/insights')}>Insights</button>
         </div>
         <div id="preview-container" className={hoveredButton !== null ? hoveredButton.includes("Draft") ? "purple" : "orange" : ""}>
+          
           <svg width="0" height="0" style={{ position: 'absolute' }}>
             <defs>
               <clipPath id="curvedBlob" clipPathUnits="objectBoundingBox">
@@ -76,8 +106,18 @@ function Main() {
               </clipPath>
             </defs>
           </svg>
-          {/* <video></video> */}
         </div>
+        <video
+            id = "preview-videos"
+            className = {hoveredButton ? 'visible': 'invis'}
+            ref={videoRef}
+            muted
+            autoPlay
+            loop
+            playsInline
+            disablePictureInPicture
+            controlsList="nodownload noplaybackrate nofullscreen"
+          />
         <div id="main-nametag">Created by Mitchell Dorward</div>
     </div>
   );
