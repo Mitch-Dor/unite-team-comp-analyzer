@@ -72,7 +72,7 @@ export default function NoteDisplay({noteData, characters}) {
             case 'high_range': return 'green';
             case 'low_range': return 'red';
             case 'LargeAOE_damage': return 'green';
-            default: return 'gray;'
+            default: return 'gray';
         }
     }
 

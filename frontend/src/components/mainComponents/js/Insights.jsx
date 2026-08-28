@@ -90,6 +90,11 @@ export default function Inights() {
             if (character.damage_area !== null) {
                 traits.push(character.damage_area + "_damage");
             }
+            if (character.special_attributes !== null) {
+                character.special_attributes.forEach((attr) => {
+                    traits.push(attr);
+                })
+            }
 
             return {
                 good_teammates: character.good_teammates,
