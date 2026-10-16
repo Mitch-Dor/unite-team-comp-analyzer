@@ -58,12 +58,7 @@ const DraftListing = ({ mode, pokemonList, purpleTeamDraft, orangeTeamDraft, dra
                 displayList.map(pokemon => {
                     const isUnavailable = isUnavailablePokemon(pokemon);
                     return (
-                        <div key={pokemon.pokemon_name} className={`draft-listing-character-container ${isUnavailable ? 'unavailable' : 'available'} ${targetPokemon === pokemon ? 'targeted' : ''} ${pokemonList.length < 60 && 'can_tank' in pokemon && 'can_supp' in pokemon
-                            ? (pokemon.can_tank === true && pokemon.can_supp === true ? 'uta_tank_supp_pick'
-                                : pokemon.can_tank === true ? 'uta_tank_pick'
-                                : pokemon.can_supp === true ? 'uta_supp_pick'
-                                : '')
-                            : ''}`} onClick={() => {handleTargetPokemon(pokemon)}}>
+                        <div key={pokemon.pokemon_name} className={`draft-listing-character-container ${isUnavailable ? 'unavailable' : 'available'} ${targetPokemon === pokemon ? 'targeted' : ''}`} onClick={() => {handleTargetPokemon(pokemon)}}>
                             <img className={`draft-character-portrait ${pokemon.pokemon_class}`} src={`/assets/Draft/headshots/${pokemon.pokemon_name}.png`} alt={pokemon.pokemon_name} />
                             <h4>{pokemon.pokemon_name}</h4>
                         </div>

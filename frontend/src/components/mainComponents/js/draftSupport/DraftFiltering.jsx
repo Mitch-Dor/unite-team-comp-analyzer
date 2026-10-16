@@ -6,7 +6,7 @@ const DraftFiltering = ({ pokemonList, updateFilteredList, updatePokemonList }) 
     const [classFilter, updateClassFilter] = useState("");
     const [searchTerm, setSearchTerm] = useState('');
 
-    const possibleLanes = ["top", "jungle", "bot", "EXPShare"];
+    const possibleLanes = window.location.pathname.includes("UTA") ? ["top", "jungle", "bot", "tank", "supp"] : ["top", "jungle", "bot", "EXPShare"];
     const possibleClasses = ["all_rounder", "supporter", "speedster", "attacker", "defender"];
     const orderByFilters = ["pokedex", "release"];
 
@@ -38,6 +38,12 @@ const DraftFiltering = ({ pokemonList, updateFilteredList, updatePokemonList }) 
                 return false;
             }
             if (laneFilters.includes("EXPShare") && pokemon.can_exp_share===false){
+                return false;
+            }
+            if (laneFilters.includes("tank") && pokemon.can_tank===false){
+                return false;
+            }
+            if (laneFilters.includes("supp") && pokemon.can_supp===false){
                 return false;
             }
             return true;
