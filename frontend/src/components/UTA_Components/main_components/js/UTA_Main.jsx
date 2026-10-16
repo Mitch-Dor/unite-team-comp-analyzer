@@ -9,7 +9,7 @@ export default function UTA_MAIN() {
         <div className='UTA-Main-Page-Container'>
             <img className='UTA-Logo' src='assets/UTA.png' />
             <div className='Directory-Button-Container'>
-                <button className='UTA-Directory-Button' onClick={() => navigate('/single-draft')}>Draft Practice</button>
+                <button className='UTA-Directory-Button' onClick={() => navigate('/UTA-Draft')}>Draft Practice</button>
                 <button className='UTA-Directory-Button off'>Draft Plans</button>
                 <button className='UTA-Directory-Button off'>Draft Review</button>
                 <button className='UTA-Directory-Button off'>VOD Review</button>
