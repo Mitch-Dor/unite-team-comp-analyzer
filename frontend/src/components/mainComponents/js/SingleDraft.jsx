@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ComposedDraftPage from './draftSupport/ComposedDraftPage.jsx';
-import { fetchCharacterDraftInfo } from './common/http.js';
+import { fetchCharacterDraftInfo, fetchUTADraftInfo } from './common/http.js';
 import '../css/draft.css';
 import '../css/classBackgrounds.css';
 import { genRandomPokemon } from './draftSupport/draftFunctions.js';
@@ -30,7 +30,8 @@ function SingleDraft() {
     useEffect(() => {
         async function fetchCharacterListing() {
             try {
-                const listing = await fetchCharacterDraftInfo();
+                const currentURL = window.location.pathname;
+                const listing = currentURL.includes("UTA") ? await fetchUTADraftInfo() : await fetchCharacterDraftInfo();
                 updatePokemonList(listing);
                 updateFilteredList(listing);
                 setLoading(false);

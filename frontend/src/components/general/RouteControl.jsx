@@ -22,6 +22,7 @@ function RouteControl() {
         <Route exact path='/login' element={<Login />} />
         <Route exact path='/admin' element={<Admin />} />
         <Route exact path='/UTA' element={<UTA_Main />} />
+        <Route exact path='/UTA-Draft' element={<SingleDraft />} />
       </Routes>
   );
 }

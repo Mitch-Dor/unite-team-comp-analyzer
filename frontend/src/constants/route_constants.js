@@ -8,6 +8,7 @@ const getBaseUrl = () => {
 export const routes = {
     //// DRAFT ROUTES ////
     GET_ALL_DRAFT_INFO: `${getBaseUrl()}/GETallDraftInfo`,
+    GET_ALL_UTA_DRAFT_INFO: `${getBaseUrl()}/GETallUTADraftInfo`,
     GET_ALL_CHARACTERS_AND_MOVES: `${getBaseUrl()}/GETallCharactersAndMoves`,
 
     //// TIER LIST ROUTES ////

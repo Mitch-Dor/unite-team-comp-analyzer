@@ -15,6 +15,19 @@ export async function fetchCharacterDraftInfo() {
     return characterDataJson;
 }
 
+/* Function to fetch all character draft information with UTA specific player's picks */
+export async function fetchUTADraftInfo() {
+    const characterData = await fetch(routes.GET_ALL_UTA_DRAFT_INFO, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const characterDataJson = await characterData.json();
+    return characterDataJson;
+}
+
 /* Function to fetch all characters and moves */
 export async function fetchAllCharactersAndMoves() {
     const characterMoveData = await fetch(routes.GET_ALL_CHARACTERS_AND_MOVES, {
