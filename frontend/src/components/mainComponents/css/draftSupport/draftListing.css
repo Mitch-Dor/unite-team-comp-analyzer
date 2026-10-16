@@ -27,6 +27,7 @@
     justify-content: flex-start;
     position: relative;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .draft-listing-character-container.available {
@@ -99,6 +100,18 @@
 .draft-listing-character-container.targeted {
     box-shadow: 0 0 10px gold;
     animation: pulse 1s infinite alternate;
+}
+
+.uta_tank_supp_pick {
+    border: 3px solid rgb(240, 61, 240);
+}
+
+.uta_tank_pick {
+    border: 3px solid rgb(2, 252, 2);
+}
+
+.uta_supp_pick { 
+    border: 3px solid rgb(255, 255, 0);
 }
 
 @keyframes pulse {

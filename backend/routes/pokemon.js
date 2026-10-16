@@ -35,6 +35,8 @@ module.exports = function (app, middleware, database) {
             const result = data.map(element => ({
                 ...element,
                 can_exp_share: supp_picks.has(element.pokemon_name) || def_picks.has(element.pokemon_name),
+                can_tank: def_picks.has(element.pokemon_name),
+                can_supp: supp_picks.has(element.pokemon_name),
                 can_top_carry: top_picks.has(element.pokemon_name),
                 can_jungle_carry: jungle_picks.has(element.pokemon_name),
                 can_bottom_carry: bot_picks.has(element.pokemon_name),
